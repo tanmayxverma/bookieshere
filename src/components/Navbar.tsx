@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import { BookOpen, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.jfif";
 
 const navLinks = [
   { path: "/", label: "Home" },
@@ -19,7 +20,7 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <BookOpen className="h-7 w-7 text-primary" />
+            <img src={logo} alt="BOOKIE Logo" className="h-10 w-10 rounded-lg object-cover" />
             <span className="font-display text-xl font-bold text-foreground">BOOKIE</span>
           </Link>
 
