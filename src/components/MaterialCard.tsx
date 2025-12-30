@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ export function MaterialCard({ material }: MaterialCardProps) {
     physics: "bg-physics text-white",
     chemistry: "bg-chemistry text-white",
     mathematics: "bg-mathematics text-white",
+    combined: "bg-primary text-primary-foreground",
   };
 
   const examColors: Record<string, string> = {
@@ -46,8 +47,8 @@ export function MaterialCard({ material }: MaterialCardProps) {
           className="w-full gap-2"
           onClick={() => window.open(material.download_link, "_blank", "noopener,noreferrer")}
         >
-          <ExternalLink className="h-4 w-4" />
-          Download / Open Link
+          <Download className="h-4 w-4" />
+          Download
         </Button>
       </CardContent>
     </Card>

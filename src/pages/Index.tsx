@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Download, MessageCircle, ArrowRight } from "lucide-react";
+import { BookOpen, Download, MessageCircle, ArrowRight, Send, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
@@ -28,7 +28,7 @@ const Index = () => {
               Books, notes, PYQs, and practice sheets for JEE and other competitive exams.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button asChild size="lg" className="gap-2">
                 <Link to="/materials">
                   <BookOpen className="h-5 w-5" />
@@ -49,6 +49,20 @@ const Index = () => {
                   <MessageCircle className="h-5 w-5" />
                   Chat Support
                 </Link>
+              </Button>
+            </div>
+
+            {/* Official Telegram Channel */}
+            <div className="inline-flex flex-col items-center gap-2 p-4 bg-card rounded-xl border border-border">
+              <p className="text-sm text-muted-foreground">Join our Official Telegram Channel</p>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => window.open("https://t.me/bookieshere", "_blank", "noopener,noreferrer")}
+              >
+                <Send className="h-4 w-4" />
+                BOOKIE Official Telegram
+                <ExternalLink className="h-3 w-3" />
               </Button>
             </div>
           </div>
