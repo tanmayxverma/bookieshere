@@ -84,8 +84,15 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       exam_type: "jee" | "other_pcm"
-      resource_type: "books" | "notes" | "pyqs" | "practice_sheets"
-      subject_type: "physics" | "chemistry" | "mathematics"
+      resource_type:
+        | "books"
+        | "notes"
+        | "pyqs"
+        | "practice_sheets"
+        | "test_series"
+        | "modules"
+        | "crux"
+      subject_type: "physics" | "chemistry" | "mathematics" | "combined"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -215,8 +222,16 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       exam_type: ["jee", "other_pcm"],
-      resource_type: ["books", "notes", "pyqs", "practice_sheets"],
-      subject_type: ["physics", "chemistry", "mathematics"],
+      resource_type: [
+        "books",
+        "notes",
+        "pyqs",
+        "practice_sheets",
+        "test_series",
+        "modules",
+        "crux",
+      ],
+      subject_type: ["physics", "chemistry", "mathematics", "combined"],
     },
   },
 } as const

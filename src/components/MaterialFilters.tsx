@@ -20,8 +20,8 @@ export function MaterialFilters({
   onTypeChange,
 }: MaterialFiltersProps) {
   const exams: ExamType[] = ['jee', 'other_pcm'];
-  const subjects: SubjectType[] = ['physics', 'chemistry', 'mathematics'];
-  const resourceTypes: ResourceType[] = ['books', 'notes', 'pyqs', 'practice_sheets'];
+  const subjects: SubjectType[] = ['physics', 'chemistry', 'mathematics', 'combined'];
+  const resourceTypes: ResourceType[] = ['books', 'notes', 'crux', 'pyqs', 'test_series', 'modules', 'practice_sheets'];
 
   const toggleFilter = <T extends string>(
     current: T[],
