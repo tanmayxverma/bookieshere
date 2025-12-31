@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import logo from "@/assets/logo.jfif";
 
 const navLinks = [
@@ -16,12 +17,12 @@ export function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+    <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="BOOKIE Logo" className="h-10 w-10 rounded-lg object-cover" />
-            <span className="font-display text-xl font-bold text-foreground">BOOKIE</span>
+            <span className="font-display text-xl font-extrabold text-foreground tracking-tight">BOOKIE</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -33,28 +34,33 @@ export function Navbar() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   location.pathname === link.path
                     ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
                 {link.label}
               </Link>
             ))}
+            <div className="ml-2">
+              <ThemeToggle />
+            </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          {/* Mobile Controls */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden pb-4">
+          <div className="md:hidden pb-4 animate-fade-in">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
@@ -64,7 +70,7 @@ export function Navbar() {
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                     location.pathname === link.path
                       ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
                 >
                   {link.label}
