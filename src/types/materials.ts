@@ -23,7 +23,7 @@ export const subjectLabels: Record<SubjectType, string> = {
   physics: 'Physics',
   chemistry: 'Chemistry',
   mathematics: 'Mathematics',
-  combined: 'All Subjects',
+  combined: 'Other / Mixed Materials',
 };
 
 export const resourceLabels: Record<ResourceType, string> = {

@@ -1,6 +1,29 @@
-import { MessageCircle, ExternalLink, Send } from "lucide-react";
+import { MessageCircle, ExternalLink, Send, AlertCircle, FileWarning, Link2Off, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
+
+const supportUses = [
+  {
+    icon: Link2Off,
+    title: "Report Broken Links",
+    description: "If a download link isn't working or redirects incorrectly, let us know.",
+  },
+  {
+    icon: FileWarning,
+    title: "File Opening Issues",
+    description: "Having trouble opening or viewing a downloaded file? We can help.",
+  },
+  {
+    icon: AlertCircle,
+    title: "Download Problems",
+    description: "If the download process isn't working as expected, report it here.",
+  },
+  {
+    icon: HelpCircle,
+    title: "Technical Assistance",
+    description: "Any other technical issues with accessing materials.",
+  },
+];
 
 const Support = () => {
   const telegramBotLink = "https://t.me/tellurdemandsbot";
@@ -8,47 +31,83 @@ const Support = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-6">
-            <MessageCircle className="h-8 w-8" />
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
+              <MessageCircle className="h-8 w-8" />
+            </div>
+
+            <h1 className="font-display text-3xl font-bold text-foreground mb-3">
+              Chat Support
+            </h1>
+
+            <p className="text-muted-foreground">
+              Need help with downloads or encountering issues? We're here to assist you.
+            </p>
           </div>
 
-          <h1 className="font-display text-3xl font-bold text-foreground mb-4">
-            Need Help?
-          </h1>
+          {/* Uses of Chat Support */}
+          <div className="bg-section rounded-xl border border-border p-6 mb-8">
+            <h2 className="font-display font-semibold text-foreground mb-4">
+              What can we help with?
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {supportUses.map((item) => (
+                <div key={item.title} className="flex gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-card flex items-center justify-center text-primary border border-border">
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-foreground text-sm">{item.title}</h3>
+                    <p className="text-muted-foreground text-xs">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          <p className="text-muted-foreground mb-8">
-            Facing issues with downloads or can't find a material you need? 
-            We're here to help! Reach out to us on Telegram for quick assistance.
-          </p>
-
-          <div className="flex flex-col gap-4">
+          {/* CTA Buttons */}
+          <div className="flex flex-col gap-3">
             <Button
               size="lg"
               className="gap-2 w-full"
               onClick={() => window.open(telegramBotLink, "_blank", "noopener,noreferrer")}
             >
               <MessageCircle className="h-5 w-5" />
-              Report Problem / Chat Support
+              Report a Problem / Chat Support
               <ExternalLink className="h-4 w-4" />
             </Button>
 
-            <Button
-              variant="outline"
-              size="lg"
-              className="gap-2 w-full"
-              onClick={() => window.open(telegramChannelLink, "_blank", "noopener,noreferrer")}
-            >
-              <Send className="h-5 w-5" />
-              BOOKIE Official Telegram
-              <ExternalLink className="h-4 w-4" />
-            </Button>
+            <div className="text-center py-4">
+              <p className="text-sm text-muted-foreground">
+                All support is handled via Telegram for faster response.
+              </p>
+            </div>
           </div>
 
-          <p className="text-sm text-muted-foreground mt-6">
-            All support is handled via Telegram for faster response.
-          </p>
+          {/* Telegram Channel - Informational */}
+          <div className="mt-8 pt-8 border-t border-border">
+            <div className="text-center">
+              <h3 className="font-display font-semibold text-foreground mb-2">
+                Stay Updated
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Join our Telegram channel for new material announcements, fixes, and downtime notices. 
+                No spam, no ads — just updates.
+              </p>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => window.open(telegramChannelLink, "_blank", "noopener,noreferrer")}
+              >
+                <Send className="h-4 w-4" />
+                BOOKIE Telegram Channel
+                <ExternalLink className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

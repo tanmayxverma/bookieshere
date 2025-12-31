@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Download, MessageCircle, ArrowRight, Send, ExternalLink } from "lucide-react";
+import { BookOpen, Download, MessageCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
@@ -7,28 +7,18 @@ const Index = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="py-20 md:py-32">
+      <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
-              <BookOpen className="h-4 w-4" />
-              <span className="text-sm font-medium">Your Study Material Companion</span>
-            </div>
-            
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-black text-foreground mb-4 tracking-tight">
               BOOKIE
             </h1>
             
-            <p className="text-lg md:text-xl text-muted-foreground mb-4">
-              Organized. Simple. Student-Focused.
-            </p>
-            
-            <p className="text-muted-foreground mb-10 max-w-xl mx-auto">
-              All competitive exam PCM study materials in one place. 
-              Books, notes, PYQs, and practice sheets for JEE and other competitive exams.
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+              A clean, organized hub for JEE (PCM) study materials — no clutter, no distractions.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button asChild size="lg" className="gap-2">
                 <Link to="/materials">
                   <BookOpen className="h-5 w-5" />
@@ -44,64 +34,84 @@ const Index = () => {
                 </Link>
               </Button>
               
-              <Button asChild size="lg" variant="secondary" className="gap-2">
+              <Button asChild size="lg" variant="ghost" className="gap-2">
                 <Link to="/support">
                   <MessageCircle className="h-5 w-5" />
                   Chat Support
                 </Link>
               </Button>
             </div>
-
-            {/* Official Telegram Channel */}
-            <div className="inline-flex flex-col items-center gap-2 p-4 bg-card rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground">Join our Official Telegram Channel</p>
-              <Button
-                variant="outline"
-                className="gap-2"
-                onClick={() => window.open("https://t.me/bookieshere", "_blank", "noopener,noreferrer")}
-              >
-                <Send className="h-4 w-4" />
-                BOOKIE Official Telegram
-                <ExternalLink className="h-3 w-3" />
-              </Button>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-card">
+      {/* Explore Subjects Section */}
+      <section className="py-16 bg-section border-y border-border">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-physics/10 text-physics mb-4">
-                <BookOpen className="h-6 w-6" />
+          <div className="text-center mb-10">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">
+              Explore Subjects
+            </h2>
+            <p className="text-muted-foreground">
+              Select a subject to browse related study materials.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <Link
+              to="/materials?subject=physics"
+              className="group p-8 bg-card rounded-xl border border-border hover:border-physics/50 hover:shadow-lg transition-all duration-200"
+            >
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-physics/10 text-physics mb-4 group-hover:scale-105 transition-transform duration-200">
+                <BookOpen className="h-7 w-7" />
               </div>
-              <h3 className="font-display font-semibold text-lg mb-2">Physics</h3>
+              <h3 className="font-display font-bold text-xl mb-2 text-foreground">Physics</h3>
               <p className="text-muted-foreground text-sm">
-                Comprehensive study materials for mechanics, thermodynamics, optics, and more.
+                Mechanics, thermodynamics, electromagnetism, optics, and more.
               </p>
-            </div>
+            </Link>
             
-            <div className="text-center p-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-chemistry/10 text-chemistry mb-4">
-                <BookOpen className="h-6 w-6" />
+            <Link
+              to="/materials?subject=chemistry"
+              className="group p-8 bg-card rounded-xl border border-border hover:border-chemistry/50 hover:shadow-lg transition-all duration-200"
+            >
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-chemistry/10 text-chemistry mb-4 group-hover:scale-105 transition-transform duration-200">
+                <BookOpen className="h-7 w-7" />
               </div>
-              <h3 className="font-display font-semibold text-lg mb-2">Chemistry</h3>
+              <h3 className="font-display font-bold text-xl mb-2 text-foreground">Chemistry</h3>
               <p className="text-muted-foreground text-sm">
-                Organic, inorganic, and physical chemistry resources for exam preparation.
+                Organic, inorganic, and physical chemistry resources.
               </p>
-            </div>
+            </Link>
             
-            <div className="text-center p-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-mathematics/10 text-mathematics mb-4">
-                <BookOpen className="h-6 w-6" />
+            <Link
+              to="/materials?subject=mathematics"
+              className="group p-8 bg-card rounded-xl border border-border hover:border-mathematics/50 hover:shadow-lg transition-all duration-200"
+            >
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-mathematics/10 text-mathematics mb-4 group-hover:scale-105 transition-transform duration-200">
+                <BookOpen className="h-7 w-7" />
               </div>
-              <h3 className="font-display font-semibold text-lg mb-2">Mathematics</h3>
+              <h3 className="font-display font-bold text-xl mb-2 text-foreground">Mathematics</h3>
               <p className="text-muted-foreground text-sm">
-                Calculus, algebra, coordinate geometry, and problem-solving materials.
+                Calculus, algebra, coordinate geometry, and problem sets.
               </p>
-            </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Info Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="font-display text-2xl font-bold text-foreground mb-4">
+              Why BOOKIE?
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              BOOKIE is a curated collection of high-quality study materials for JEE and other PCM competitive exams. 
+              We keep things simple — just study materials, organized and ready to download. 
+              No courses, no lectures, no distractions.
+            </p>
           </div>
         </div>
       </section>
