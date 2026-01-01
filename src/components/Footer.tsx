@@ -1,8 +1,18 @@
 import { Link } from "react-router-dom";
 import { Send } from "lucide-react";
+import { useState } from "react";
 import logo from "@/assets/logo.jfif";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export function Footer() {
+  const [open, setOpen] = useState(false);
+
   return (
     <footer className="border-t border-border bg-background py-8">
       <div className="container mx-auto px-4">
@@ -24,6 +34,24 @@ export function Footer() {
             <Link to="/support" className="hover:text-foreground transition-colors">
               Support
             </Link>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <button className="hover:text-foreground transition-colors">
+                  Why shortened links?
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="font-display">Why Shortened Links?</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-3 text-sm text-muted-foreground">
+                  <p>Some users ask why we don't provide direct PDF links.</p>
+                  <p>The reason is to support website maintenance and server costs.</p>
+                  <p>This platform is run by a student to help other students, and all materials remain completely free.</p>
+                  <p className="font-medium text-foreground">No content is locked or paid.</p>
+                </div>
+              </DialogContent>
+            </Dialog>
           </nav>
 
           {/* Telegram as subtle text link */}

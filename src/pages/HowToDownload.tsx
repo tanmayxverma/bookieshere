@@ -92,6 +92,15 @@ const HowToDownload = () => {
           ))}
         </div>
 
+        {/* Why Shortened Links */}
+        <Alert className="border-muted bg-muted/30 mb-6">
+          <Info className="h-4 w-4 text-muted-foreground" />
+          <AlertTitle className="text-foreground">Why shortened links?</AlertTitle>
+          <AlertDescription className="text-muted-foreground">
+            Links are shortened to support website and server costs. This is a free, student-run platform.
+          </AlertDescription>
+        </Alert>
+
         {/* Important Notes */}
         <div className="space-y-4">
           <Alert variant="destructive" className="border-destructive/50 bg-destructive/10">
