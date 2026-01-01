@@ -152,7 +152,7 @@ const Materials = () => {
             )}
 
             {/* Handwritten Notes Section */}
-            <HandwrittenNotes />
+            <HandwrittenNotes searchQuery={search} />
           </div>
         </div>
       </div>
