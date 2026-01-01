@@ -16,6 +16,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMaterials, useCreateMaterial, useUpdateMaterial, useDeleteMaterial } from "@/hooks/useMaterials";
 import { Material, ExamType, SubjectType, ResourceType, examLabels, subjectLabels, resourceLabels } from "@/types/materials";
 
+const isSafeUrl = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:'].includes(parsed.protocol);
+  } catch {
+    return false;
+  }
+};
+
 const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -89,6 +98,15 @@ const Admin = () => {
         variant: "destructive",
         title: "Validation Error",
         description: "Name and download link are required.",
+      });
+      return;
+    }
+
+    if (!isSafeUrl(formData.download_link)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid URL",
+        description: "Download link must be a valid HTTP or HTTPS URL.",
       });
       return;
     }
