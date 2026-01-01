@@ -14,8 +14,11 @@ const Index = () => {
               BOOKIE
             </h1>
             
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-              A clean, organized hub for JEE (PCM) study materials — no clutter, no distractions.
+            <p className="text-lg md:text-xl text-foreground mb-2 max-w-2xl mx-auto leading-relaxed font-medium">
+              One trusted platform for JEE materials, batches, tests, and guidance.
+            </p>
+            <p className="text-base text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Built for serious aspirants who value clarity.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -107,10 +110,14 @@ const Index = () => {
             <h2 className="font-display text-2xl font-bold text-foreground mb-4">
               Why BOOKIE?
             </h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              BOOKIE is built to support serious JEE aspirants with reliable, high-quality resources.
+            </p>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              Materials, batches, tests, and guidance are carefully curated and organised to keep preparation simple, focused, and effective.
+            </p>
             <p className="text-muted-foreground leading-relaxed">
-              BOOKIE is a curated collection of high-quality study materials for JEE and other PCM competitive exams. 
-              We keep things simple — just study materials, organized and ready to download. 
-              No courses, no lectures, no distractions.
+              Built for serious aspirants who value clarity.
             </p>
           </div>
         </div>

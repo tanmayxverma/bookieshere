@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Layout } from "@/components/Layout";
 import { MaterialCard } from "@/components/MaterialCard";
 import { MaterialFilters } from "@/components/MaterialFilters";
+import { HandwrittenNotes } from "@/components/HandwrittenNotes";
 import { useMaterials } from "@/hooks/useMaterials";
 import { ExamType, SubjectType, ResourceType } from "@/types/materials";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -149,6 +150,9 @@ const Materials = () => {
                 )}
               </div>
             )}
+
+            {/* Handwritten Notes Section */}
+            <HandwrittenNotes />
           </div>
         </div>
       </div>
