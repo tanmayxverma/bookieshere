@@ -8,6 +8,15 @@ interface MaterialCardProps {
   material: Material;
 }
 
+const isSafeUrl = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:'].includes(parsed.protocol);
+  } catch {
+    return false;
+  }
+};
+
 export function MaterialCard({ material }: MaterialCardProps) {
   const subjectColors: Record<string, string> = {
     physics: "bg-physics text-white",
@@ -19,6 +28,12 @@ export function MaterialCard({ material }: MaterialCardProps) {
   const examColors: Record<string, string> = {
     jee: "bg-jee text-white",
     other_pcm: "bg-other-exam text-white",
+  };
+
+  const handleDownload = () => {
+    if (isSafeUrl(material.download_link)) {
+      window.open(material.download_link, "_blank", "noopener,noreferrer");
+    }
   };
 
   return (
@@ -45,7 +60,8 @@ export function MaterialCard({ material }: MaterialCardProps) {
       <CardContent className="mt-auto pt-0">
         <Button
           className="w-full gap-2"
-          onClick={() => window.open(material.download_link, "_blank", "noopener,noreferrer")}
+          onClick={handleDownload}
+          disabled={!isSafeUrl(material.download_link)}
         >
           <Download className="h-4 w-4" />
           Download
