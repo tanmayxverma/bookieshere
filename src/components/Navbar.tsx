@@ -19,12 +19,12 @@ const navLinks = [
 
 const batches = [
   {
-    title: "Arjuna JEE 2026 / 2027",
+    title: "Arjuna JEE 2027",
     includes: ["Video Lectures", "DPPs", "Notes", "Tests & Practice Material"],
     link: "https://t.me/arjunajee2027batch",
   },
   {
-    title: "Lakshya JEE 2026 / 2027",
+    title: "Lakshya JEE 2027",
     includes: ["Video Lectures", "DPPs", "Notes", "Tests & Practice Material"],
     link: "https://t.me/lakshayajee2027",
   },
