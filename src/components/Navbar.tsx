@@ -47,7 +47,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="BOOKIE Logo" className="h-10 w-10 rounded-lg object-cover shadow-md" />
-            <span className="font-display text-xl font-extrabold tracking-tight bg-gradient-to-r from-primary via-blue-400 to-violet-500 bg-clip-text text-transparent">BOOKIE</span>
+            <span className="font-display text-xl font-extrabold tracking-tight text-foreground">BOOKIE</span>
           </Link>
 
           {/* Desktop Navigation */}

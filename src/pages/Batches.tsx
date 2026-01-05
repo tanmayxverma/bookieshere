@@ -27,7 +27,7 @@ const Batches = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
-            Available Batches
+            Available <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Batches</span>
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Access comprehensive JEE preparation batches with video lectures, practice materials, and more.
