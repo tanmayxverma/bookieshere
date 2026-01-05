@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search, Filter, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,15 +8,23 @@ import { Layout } from "@/components/Layout";
 import { MaterialCard } from "@/components/MaterialCard";
 import { MaterialFilters } from "@/components/MaterialFilters";
 import { useMaterials } from "@/hooks/useMaterials";
-import { ExamType, SubjectType, ResourceType } from "@/types/materials";
+import { SubjectType, ResourceType } from "@/types/materials";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Materials = () => {
   const { data: materials, isLoading } = useMaterials();
+  const [searchParams] = useSearchParams();
   const [search, setSearch] = useState("");
-  const [selectedExams, setSelectedExams] = useState<ExamType[]>([]);
   const [selectedSubjects, setSelectedSubjects] = useState<SubjectType[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<ResourceType[]>([]);
+
+  // Handle URL params for subject filter
+  useEffect(() => {
+    const subjectParam = searchParams.get('subject');
+    if (subjectParam && ['physics', 'chemistry', 'mathematics', 'combined'].includes(subjectParam)) {
+      setSelectedSubjects([subjectParam as SubjectType]);
+    }
+  }, [searchParams]);
 
   const filteredMaterials = useMemo(() => {
     if (!materials) return [];
@@ -25,18 +34,16 @@ const Materials = () => {
         material.name.toLowerCase().includes(search.toLowerCase()) ||
         (material.description?.toLowerCase().includes(search.toLowerCase()) ?? false);
 
-      const matchesExam = selectedExams.length === 0 || selectedExams.includes(material.exam);
       const matchesSubject = selectedSubjects.length === 0 || selectedSubjects.includes(material.subject);
       const matchesType = selectedTypes.length === 0 || selectedTypes.includes(material.resource_type);
 
-      return matchesSearch && matchesExam && matchesSubject && matchesType;
+      return matchesSearch && matchesSubject && matchesType;
     });
-  }, [materials, search, selectedExams, selectedSubjects, selectedTypes]);
+  }, [materials, search, selectedSubjects, selectedTypes]);
 
-  const hasActiveFilters = selectedExams.length > 0 || selectedSubjects.length > 0 || selectedTypes.length > 0;
+  const hasActiveFilters = selectedSubjects.length > 0 || selectedTypes.length > 0;
 
   const clearFilters = () => {
-    setSelectedExams([]);
     setSelectedSubjects([]);
     setSelectedTypes([]);
   };
@@ -47,27 +54,25 @@ const Materials = () => {
         <div className="mb-8">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Materials Library</h1>
           <p className="text-muted-foreground">
-            Browse and download study materials for JEE and other PCM competitive exams.
+            Browse and download curated study materials for JEE preparation.
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Filters Sidebar */}
           <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-24 bg-card rounded-xl border border-border p-6">
+            <div className="sticky top-24 bg-card rounded-xl border border-border p-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-display font-semibold">Filters</h2>
+                <h2 className="font-display font-semibold text-foreground">Filters</h2>
                 {hasActiveFilters && (
-                  <Button variant="ghost" size="sm" onClick={clearFilters} className="h-auto p-1 text-xs">
+                  <Button variant="ghost" size="sm" onClick={clearFilters} className="h-auto p-1 text-xs text-muted-foreground hover:text-foreground">
                     Clear all
                   </Button>
                 )}
               </div>
               <MaterialFilters
-                selectedExams={selectedExams}
                 selectedSubjects={selectedSubjects}
                 selectedTypes={selectedTypes}
-                onExamChange={setSelectedExams}
                 onSubjectChange={setSelectedSubjects}
                 onTypeChange={setSelectedTypes}
               />
@@ -107,10 +112,8 @@ const Materials = () => {
                       </Button>
                     )}
                     <MaterialFilters
-                      selectedExams={selectedExams}
                       selectedSubjects={selectedSubjects}
                       selectedTypes={selectedTypes}
-                      onExamChange={setSelectedExams}
                       onSubjectChange={setSelectedSubjects}
                       onTypeChange={setSelectedTypes}
                     />

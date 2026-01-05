@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Download, MessageCircle, ArrowRight } from "lucide-react";
+import { BookOpen, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
+import { ActionStrip } from "@/components/ActionStrip";
 
 const Index = () => {
   return (
@@ -21,32 +22,19 @@ const Index = () => {
               Built for serious aspirants who value clarity.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button asChild size="lg" className="gap-2">
-                <Link to="/materials">
-                  <BookOpen className="h-5 w-5" />
-                  Browse Materials
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              
-              <Button asChild size="lg" variant="outline" className="gap-2">
-                <Link to="/how-to-download">
-                  <Download className="h-5 w-5" />
-                  How to Download
-                </Link>
-              </Button>
-              
-              <Button asChild size="lg" variant="ghost" className="gap-2">
-                <Link to="/support">
-                  <MessageCircle className="h-5 w-5" />
-                  Chat Support
-                </Link>
-              </Button>
-            </div>
+            <Button asChild size="lg" className="gap-2">
+              <Link to="/materials">
+                <BookOpen className="h-5 w-5" />
+                Browse Materials
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
+
+      {/* Guided Action Strip */}
+      <ActionStrip variant="mid" />
 
       {/* Explore Subjects Section */}
       <section className="py-16 bg-section border-y border-border">
@@ -122,6 +110,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Bottom Action Strip */}
+      <ActionStrip variant="bottom" />
     </Layout>
   );
 };
