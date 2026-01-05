@@ -11,6 +11,7 @@ import {
 import logo from "@/assets/logo.jfif";
 
 const navLinks = [
+  { path: "/", label: "Home" },
   { path: "/materials", label: "Materials" },
   { path: "/batches", label: "Batches" },
   { path: "/how-to-download", label: "How to Download" },
@@ -35,15 +36,18 @@ export function Navbar() {
   const [batchesOpen, setBatchesOpen] = useState(false);
   const location = useLocation();
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (path === "/") return location.pathname === "/";
+    return location.pathname === path;
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="BOOKIE Logo" className="h-10 w-10 rounded-lg object-cover" />
-            <span className="font-display text-xl font-extrabold text-foreground tracking-tight">BOOKIE</span>
+            <img src={logo} alt="BOOKIE Logo" className="h-10 w-10 rounded-lg object-cover shadow-md" />
+            <span className="font-display text-xl font-extrabold tracking-tight bg-gradient-to-r from-primary via-blue-400 to-violet-500 bg-clip-text text-transparent">BOOKIE</span>
           </Link>
 
           {/* Desktop Navigation */}
