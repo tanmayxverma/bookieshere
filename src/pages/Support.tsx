@@ -87,27 +87,6 @@ const Support = () => {
             </div>
           </div>
 
-          {/* Telegram Channel - Informational */}
-          <div className="mt-8 pt-8 border-t border-border">
-            <div className="text-center">
-              <h3 className="font-display font-semibold text-foreground mb-2">
-                Stay Updated
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Join our Telegram channel for new material announcements, fixes, and downtime notices. 
-                No spam, no ads — just updates.
-              </p>
-              <Button
-                variant="outline"
-                className="gap-2"
-                onClick={() => window.open(telegramChannelLink, "_blank", "noopener,noreferrer")}
-              >
-                <Send className="h-4 w-4" />
-                BOOKIE Telegram Channel
-                <ExternalLink className="h-3 w-3" />
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
     </Layout>
