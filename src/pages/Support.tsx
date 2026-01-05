@@ -40,7 +40,7 @@ const Support = () => {
             </div>
 
             <h1 className="font-display text-3xl font-bold text-foreground mb-3">
-              Chat Support
+              Chat <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Support</span>
             </h1>
 
             <p className="text-muted-foreground">
@@ -49,7 +49,7 @@ const Support = () => {
           </div>
 
           {/* Uses of Chat Support */}
-          <div className="bg-section rounded-xl border border-border p-6 mb-8">
+          <div className="bg-muted/30 rounded-xl border border-border p-6 mb-8">
             <h2 className="font-display font-semibold text-foreground mb-4">
               What can we help with?
             </h2>
@@ -76,7 +76,7 @@ const Support = () => {
               onClick={() => window.open(telegramBotLink, "_blank", "noopener,noreferrer")}
             >
               <MessageCircle className="h-5 w-5" />
-              Report a Problem / Chat Support
+              Chat Support
               <ExternalLink className="h-4 w-4" />
             </Button>
 

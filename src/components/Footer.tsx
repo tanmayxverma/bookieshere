@@ -51,30 +51,32 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Footer Bottom */}
-      <div className="py-8">
+      <div className="py-10">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center gap-6">
+          <div className="flex flex-col items-center gap-8">
             {/* Logo and Brand */}
             <div className="flex items-center gap-2">
               <img src={logo} alt="BOOKIE Logo" className="h-8 w-8 rounded-lg object-cover" />
-              <span className="font-display font-extrabold bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent tracking-tight">BOOKIE</span>
+              <span className="font-display font-extrabold text-foreground tracking-tight">BOOKIE</span>
             </div>
 
             {/* Navigation Links */}
-            <nav className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-              <Link to="/materials" className="hover:text-foreground transition-colors">
+            <nav className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm">
+              <Link to="/materials" className="text-muted-foreground hover:text-foreground transition-colors">
                 Materials
               </Link>
-              <Link to="/how-to-download" className="hover:text-foreground transition-colors">
+              <Link to="/batches" className="text-muted-foreground hover:text-foreground transition-colors">
+                Batches
+              </Link>
+              <Link to="/how-to-download" className="text-muted-foreground hover:text-foreground transition-colors">
                 How to Download
               </Link>
-              <Link to="/support" className="hover:text-foreground transition-colors">
+              <Link to="/support" className="text-muted-foreground hover:text-foreground transition-colors">
                 Support
               </Link>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <button className="hover:text-foreground transition-colors">
+                  <button className="text-muted-foreground/70 hover:text-foreground transition-colors">
                     Why shortened links?
                   </button>
                 </DialogTrigger>
@@ -93,7 +95,7 @@ export function Footer() {
             </nav>
 
             {/* Copyright */}
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground/60">
               © {new Date().getFullYear()} BOOKIE. All rights reserved.
             </p>
           </div>

@@ -52,7 +52,9 @@ const Materials = () => {
     <Layout>
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="font-display text-3xl font-bold text-foreground mb-2">Materials Library</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground mb-2">
+            Materials <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Library</span>
+          </h1>
           <p className="text-muted-foreground">
             Browse and download curated study materials for JEE preparation.
           </p>

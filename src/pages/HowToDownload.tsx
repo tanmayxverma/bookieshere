@@ -39,7 +39,7 @@ const HowToDownload = () => {
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         <div className="mb-8">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">
-            How to Download Materials from BOOKIE
+            How to <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Download</span> Materials
           </h1>
           <p className="text-muted-foreground">
             Follow these simple steps to download your study materials.
