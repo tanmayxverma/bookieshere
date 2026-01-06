@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Materials from "./pages/Materials";
 import Batches from "./pages/Batches";
-import HowToDownload from "./pages/HowToDownload";
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
@@ -24,7 +23,6 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/materials" element={<Materials />} />
           <Route path="/batches" element={<Batches />} />
-          <Route path="/how-to-download" element={<HowToDownload />} />
           <Route path="/support" element={<Support />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
