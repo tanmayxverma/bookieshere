@@ -9,6 +9,7 @@ export function useMaterials() {
       const { data, error } = await supabase
         .from("materials")
         .select("*")
+        .order("popularity", { ascending: false })
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -21,10 +22,10 @@ export function useCreateMaterial() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (material: Omit<Material, "id" | "created_at" | "updated_at">) => {
+    mutationFn: async (material: Omit<Material, "id" | "created_at" | "updated_at" | "popularity">) => {
       const { data, error } = await supabase
         .from("materials")
-        .insert(material)
+        .insert({ ...material, popularity: 0 })
         .select()
         .single();
 
