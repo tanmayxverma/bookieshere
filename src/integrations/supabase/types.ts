@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       materials: {
         Row: {
+          badge: string | null
           created_at: string
           description: string | null
           download_link: string
@@ -28,6 +29,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          badge?: string | null
           created_at?: string
           description?: string | null
           download_link: string
@@ -40,6 +42,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          badge?: string | null
           created_at?: string
           description?: string | null
           download_link?: string

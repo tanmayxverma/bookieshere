@@ -22,7 +22,7 @@ export function useCreateMaterial() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (material: Omit<Material, "id" | "created_at" | "updated_at" | "popularity">) => {
+    mutationFn: async (material: Omit<Material, "id" | "created_at" | "updated_at" | "popularity" | "badge">) => {
       const { data, error } = await supabase
         .from("materials")
         .insert({ ...material, popularity: 0 })
