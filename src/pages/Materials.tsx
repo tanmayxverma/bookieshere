@@ -48,6 +48,10 @@ const Materials = () => {
     setSelectedTypes([]);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
@@ -77,6 +81,7 @@ const Materials = () => {
                 selectedTypes={selectedTypes}
                 onSubjectChange={setSelectedSubjects}
                 onTypeChange={setSelectedTypes}
+                onResourceTypeSelect={scrollToTop}
               />
             </div>
           </aside>
@@ -118,6 +123,7 @@ const Materials = () => {
                       selectedTypes={selectedTypes}
                       onSubjectChange={setSelectedSubjects}
                       onTypeChange={setSelectedTypes}
+                      onResourceTypeSelect={scrollToTop}
                     />
                   </div>
                 </SheetContent>

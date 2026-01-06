@@ -22,6 +22,7 @@ export type Database = {
           exam: Database["public"]["Enums"]["exam_type"]
           id: string
           name: string
+          popularity: number
           resource_type: Database["public"]["Enums"]["resource_type"]
           subject: Database["public"]["Enums"]["subject_type"]
           updated_at: string
@@ -33,6 +34,7 @@ export type Database = {
           exam: Database["public"]["Enums"]["exam_type"]
           id?: string
           name: string
+          popularity?: number
           resource_type: Database["public"]["Enums"]["resource_type"]
           subject: Database["public"]["Enums"]["subject_type"]
           updated_at?: string
@@ -44,6 +46,7 @@ export type Database = {
           exam?: Database["public"]["Enums"]["exam_type"]
           id?: string
           name?: string
+          popularity?: number
           resource_type?: Database["public"]["Enums"]["resource_type"]
           subject?: Database["public"]["Enums"]["subject_type"]
           updated_at?: string

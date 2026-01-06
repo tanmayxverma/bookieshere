@@ -10,6 +10,7 @@ export interface Material {
   subject: SubjectType;
   resource_type: ResourceType;
   download_link: string;
+  popularity: number;
   created_at: string;
   updated_at: string;
 }
@@ -23,7 +24,7 @@ export const subjectLabels: Record<SubjectType, string> = {
   physics: 'Physics',
   chemistry: 'Chemistry',
   mathematics: 'Mathematics',
-  combined: 'Other / Mixed Materials',
+  combined: 'PCM Mix',
 };
 
 export const resourceLabels: Record<ResourceType, string> = {

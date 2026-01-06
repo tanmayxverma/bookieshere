@@ -8,6 +8,7 @@ interface MaterialFiltersProps {
   selectedTypes: ResourceType[];
   onSubjectChange: (subjects: SubjectType[]) => void;
   onTypeChange: (types: ResourceType[]) => void;
+  onResourceTypeSelect?: () => void;
 }
 
 export function MaterialFilters({
@@ -15,19 +16,26 @@ export function MaterialFilters({
   selectedTypes,
   onSubjectChange,
   onTypeChange,
+  onResourceTypeSelect,
 }: MaterialFiltersProps) {
   const subjects: SubjectType[] = ['physics', 'chemistry', 'mathematics', 'combined'];
   const resourceTypes: ResourceType[] = ['books', 'notes', 'crux', 'pyqs', 'test_series', 'modules', 'practice_sheets'];
 
-  const toggleFilter = <T extends string>(
-    current: T[],
-    value: T,
-    onChange: (values: T[]) => void
-  ) => {
-    if (current.includes(value)) {
-      onChange(current.filter((v) => v !== value));
+  const toggleSubject = (subject: SubjectType) => {
+    if (selectedSubjects.includes(subject)) {
+      onSubjectChange(selectedSubjects.filter((v) => v !== subject));
     } else {
-      onChange([...current, value]);
+      onSubjectChange([...selectedSubjects, subject]);
+    }
+  };
+
+  // Single-select for resource type with auto-scroll
+  const selectResourceType = (type: ResourceType) => {
+    if (selectedTypes.includes(type)) {
+      onTypeChange([]);
+    } else {
+      onTypeChange([type]);
+      onResourceTypeSelect?.();
     }
   };
 
@@ -45,14 +53,14 @@ export function MaterialFilters({
                 <Checkbox
                   id={`subject-${subject}`}
                   checked={selectedSubjects.includes(subject)}
-                  onCheckedChange={() => toggleFilter(selectedSubjects, subject, onSubjectChange)}
+                  onCheckedChange={() => toggleSubject(subject)}
                   className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <Label 
                   htmlFor={`subject-${subject}`} 
                   className="text-sm cursor-pointer text-foreground/90 hover:text-foreground transition-colors"
                 >
-                  {subject === 'combined' ? 'Mixed Materials' : subjectLabels[subject]}
+                  {subject === 'combined' ? 'PCM Mix' : subjectLabels[subject]}
                 </Label>
               </div>
             ))}
@@ -70,7 +78,7 @@ export function MaterialFilters({
                 <Checkbox
                   id={`type-${type}`}
                   checked={selectedTypes.includes(type)}
-                  onCheckedChange={() => toggleFilter(selectedTypes, type, onTypeChange)}
+                  onCheckedChange={() => selectResourceType(type)}
                   className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <Label 
