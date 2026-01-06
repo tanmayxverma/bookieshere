@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, ArrowRight, Download, MessageCircle } from "lucide-react";
+import { BookOpen, ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
@@ -30,13 +30,6 @@ const Index = () => {
                   <BookOpen className="h-5 w-5" />
                   Browse Materials
                   <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" size="lg" className="gap-2 hover:bg-muted/50">
-                <Link to="/how-to-download">
-                  <Download className="h-4 w-4" />
-                  How to Download
                 </Link>
               </Button>
               

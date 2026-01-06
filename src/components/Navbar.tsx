@@ -14,7 +14,6 @@ const navLinks = [
   { path: "/", label: "Home" },
   { path: "/materials", label: "Materials" },
   { path: "/batches", label: "Batches" },
-  { path: "/how-to-download", label: "How to Download" },
   { path: "/support", label: "Support" },
 ];
 

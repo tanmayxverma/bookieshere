@@ -1,19 +1,9 @@
 import { Link } from "react-router-dom";
-import { Send, BookOpen, Download } from "lucide-react";
-import { useState } from "react";
+import { Send, BookOpen } from "lucide-react";
 import logo from "@/assets/logo.jfif";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 export function Footer() {
-  const [open, setOpen] = useState(false);
-
   return (
     <footer className="border-t border-border/50 bg-gradient-to-b from-background via-muted/20 to-muted/40">
       {/* Stay Updated Section - Integrated into Footer */}
@@ -68,30 +58,9 @@ export function Footer() {
               <Link to="/batches" className="text-muted-foreground hover:text-foreground transition-colors">
                 Batches
               </Link>
-              <Link to="/how-to-download" className="text-muted-foreground hover:text-foreground transition-colors">
-                How to Download
-              </Link>
               <Link to="/support" className="text-muted-foreground hover:text-foreground transition-colors">
                 Support
               </Link>
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <button className="text-muted-foreground/70 hover:text-foreground transition-colors">
-                    Why shortened links?
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle className="font-display">Why Shortened Links?</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-3 text-sm text-muted-foreground">
-                    <p>Some users ask why we don't provide direct PDF links.</p>
-                    <p>The reason is to support website maintenance and server costs.</p>
-                    <p>This platform is run by a student to help other students, and all materials remain completely free.</p>
-                    <p className="font-medium text-foreground">No content is locked or paid.</p>
-                  </div>
-                </DialogContent>
-              </Dialog>
             </nav>
 
             {/* Copyright */}
