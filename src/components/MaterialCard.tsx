@@ -2,7 +2,7 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Material, examLabels, subjectLabels, resourceLabels } from "@/types/materials";
+import { Material, examLabels, subjectLabels, resourceLabels, badgeLabels } from "@/types/materials";
 
 interface MaterialCardProps {
   material: Material;
@@ -30,6 +30,12 @@ export function MaterialCard({ material }: MaterialCardProps) {
     other_pcm: "bg-other-exam text-white",
   };
 
+  const badgeColors: Record<string, string> = {
+    premium: "bg-amber-500 text-white",
+    air: "bg-blue-600 text-white",
+    core: "bg-orange-600 text-white",
+  };
+
   const handleDownload = () => {
     if (isSafeUrl(material.download_link)) {
       window.open(material.download_link, "_blank", "noopener,noreferrer");
@@ -40,6 +46,11 @@ export function MaterialCard({ material }: MaterialCardProps) {
     <Card className="flex flex-col h-full hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
         <div className="flex flex-wrap gap-2 mb-2">
+          {material.badge && (
+            <Badge className={badgeColors[material.badge]}>
+              {badgeLabels[material.badge].icon} {badgeLabels[material.badge].label}
+            </Badge>
+          )}
           <Badge className={examColors[material.exam]}>
             {examLabels[material.exam]}
           </Badge>

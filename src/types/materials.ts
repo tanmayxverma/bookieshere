@@ -1,6 +1,7 @@
 export type ExamType = 'jee' | 'other_pcm';
 export type SubjectType = 'physics' | 'chemistry' | 'mathematics' | 'combined';
 export type ResourceType = 'books' | 'notes' | 'pyqs' | 'practice_sheets' | 'test_series' | 'modules' | 'crux';
+export type BadgeType = 'premium' | 'air' | 'core' | null;
 
 export interface Material {
   id: string;
@@ -11,9 +12,16 @@ export interface Material {
   resource_type: ResourceType;
   download_link: string;
   popularity: number;
+  badge?: BadgeType;
   created_at: string;
   updated_at: string;
 }
+
+export const badgeLabels: Record<Exclude<BadgeType, null>, { label: string; icon: string }> = {
+  premium: { label: 'Premium', icon: '⭐' },
+  air: { label: 'AIR', icon: '📘' },
+  core: { label: 'Core', icon: '🔥' },
+};
 
 export const examLabels: Record<ExamType, string> = {
   jee: 'JEE',
