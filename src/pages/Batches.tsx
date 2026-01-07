@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
@@ -31,6 +32,9 @@ const Batches = () => {
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Access comprehensive JEE preparation batches with video lectures, practice materials, and more.
+          </p>
+          <p className="text-xs text-muted-foreground/70 mt-3">
+            This link redirects to an external platform. BOOKIE does not host, control, or store any files.
           </p>
         </div>
 
@@ -86,6 +90,16 @@ const Batches = () => {
         <p className="text-center text-sm text-muted-foreground mt-10 max-w-lg mx-auto">
           These batches are hosted externally on Telegram. BOOKIE curates and shares these resources but does not host video lectures directly.
         </p>
+
+        {/* Bottom Protection Line */}
+        <div className="mt-8 pt-6 border-t border-border/50 text-center max-w-lg mx-auto">
+          <p className="text-xs text-muted-foreground">
+            All materials are shared strictly for educational purposes. © Respective owners. This website does not host any files.{" "}
+            <Link to="/copyright-terms" className="text-primary hover:underline">
+              Copyright & Terms
+            </Link>
+          </p>
+        </div>
       </div>
     </Layout>
   );

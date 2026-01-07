@@ -63,6 +63,27 @@ export function Footer() {
               </Link>
             </nav>
 
+            {/* Legal Links */}
+            <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs">
+              <Link to="/copyright-terms" className="text-muted-foreground/70 hover:text-foreground transition-colors">
+                Copyright & Terms
+              </Link>
+              <Link to="/dmca" className="text-muted-foreground/70 hover:text-foreground transition-colors">
+                DMCA
+              </Link>
+              <Link to="/privacy-policy" className="text-muted-foreground/70 hover:text-foreground transition-colors">
+                Privacy Policy
+              </Link>
+              <a 
+                href="https://t.me/tellurdemandsbot" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground/70 hover:text-foreground transition-colors"
+              >
+                Contact
+              </a>
+            </nav>
+
             {/* Copyright */}
             <p className="text-xs text-muted-foreground/60">
               © {new Date().getFullYear()} BOOKIE. All rights reserved.
