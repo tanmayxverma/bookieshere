@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { Search, Filter, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -60,7 +60,10 @@ const Materials = () => {
             Materials <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Library</span>
           </h1>
           <p className="text-muted-foreground">
-            Browse and download curated study materials for JEE preparation.
+            Browse and access curated study materials for JEE preparation.
+          </p>
+          <p className="text-xs text-muted-foreground/70 mt-2">
+            This link redirects to an external platform. BOOKIE does not host, control, or store any files.
           </p>
         </div>
 
@@ -160,6 +163,16 @@ const Materials = () => {
                 )}
               </div>
             )}
+
+            {/* Bottom Protection Line */}
+            <div className="mt-12 pt-6 border-t border-border/50 text-center">
+              <p className="text-xs text-muted-foreground">
+                All materials are shared strictly for educational purposes. © Respective owners. This website does not host any files.{" "}
+                <Link to="/copyright-terms" className="text-primary hover:underline">
+                  Copyright & Terms
+                </Link>
+              </p>
+            </div>
 
           </div>
         </div>
