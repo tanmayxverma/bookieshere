@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, ArrowRight, MessageCircle } from "lucide-react";
+import { BookOpen, ArrowRight, MessageCircle, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
@@ -34,9 +34,16 @@ const Index = () => {
               </Button>
               
               <Button asChild variant="outline" size="lg" className="gap-2 hover:bg-muted/50">
+                <Link to="/batches">
+                  <Users className="h-4 w-4" />
+                  Batches
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline" size="lg" className="gap-2 hover:bg-muted/50">
                 <Link to="/support">
                   <MessageCircle className="h-4 w-4" />
-                  Chat Support
+                  Support
                 </Link>
               </Button>
             </div>
