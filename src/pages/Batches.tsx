@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import arjunaImage from "@/assets/arjuna-jee-2027.png";
 import lakshyaImage from "@/assets/lakshya-jee-2027.png";
 
@@ -26,7 +27,7 @@ const Batches = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 opacity-0 animate-fade-in">
           <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
             Available <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Batches</span>
           </h1>
@@ -42,21 +43,24 @@ const Batches = () => {
           {batches.map((batch, index) => (
             <div
               key={index}
-              className="group relative bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1"
+              className={`group relative bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/40 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 card-glow opacity-0 animate-fade-in-up ${
+                index === 0 ? "stagger-1" : "stagger-2"
+              }`}
             >
-              {/* Image */}
-              <div className="aspect-video overflow-hidden">
-                <img
-                  src={batch.image}
-                  alt={batch.title}
-                  className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
+              {/* Image with optimized loading */}
+              <OptimizedImage
+                src={batch.image}
+                alt={batch.title}
+                className="aspect-video"
+              />
+              
+              {/* Overlay gradient on hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
               {/* Content */}
               <div className="p-6 space-y-4">
                 <div>
-                  <h2 className="font-display text-xl font-bold text-foreground mb-1">
+                  <h2 className="font-display text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors duration-300">
                     {batch.title}
                   </h2>
                   <p className="text-sm text-muted-foreground">
@@ -68,17 +72,20 @@ const Batches = () => {
                   {batch.includes.map((item, i) => (
                     <span
                       key={i}
-                      className="text-xs px-2.5 py-1 rounded-full bg-muted text-muted-foreground"
+                      className="text-xs px-2.5 py-1 rounded-full bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary/80 transition-colors duration-300"
                     >
                       {item}
                     </span>
                   ))}
                 </div>
 
-                <Button asChild className="w-full gap-2 group-hover:bg-primary/90">
+                <Button 
+                  asChild 
+                  className="w-full gap-2 btn-press transition-all duration-200 hover:shadow-lg hover:shadow-primary/20"
+                >
                   <a href={batch.link} target="_blank" rel="noopener noreferrer">
                     Explore Batch
-                    <ExternalLink className="h-4 w-4" />
+                    <ExternalLink className="h-4 w-4 group-hover:translate-x-0.5 transition-transform duration-200" />
                   </a>
                 </Button>
               </div>
@@ -87,12 +94,12 @@ const Batches = () => {
         </div>
 
         {/* Disclaimer */}
-        <p className="text-center text-sm text-muted-foreground mt-10 max-w-lg mx-auto">
+        <p className="text-center text-sm text-muted-foreground mt-10 max-w-lg mx-auto opacity-0 animate-fade-in stagger-3">
           These batches are hosted externally on Telegram. BOOKIE curates and shares these resources but does not host video lectures directly.
         </p>
 
         {/* Bottom Protection Line */}
-        <div className="mt-8 pt-6 border-t border-border/50 text-center max-w-lg mx-auto">
+        <div className="mt-8 pt-6 border-t border-border/50 text-center max-w-lg mx-auto opacity-0 animate-fade-in stagger-4">
           <p className="text-xs text-muted-foreground">
             All materials are shared strictly for educational purposes. © Respective owners. This website does not host any files.{" "}
             <Link to="/copyright-terms" className="text-primary hover:underline">

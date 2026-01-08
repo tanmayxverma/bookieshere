@@ -55,7 +55,7 @@ const Materials = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
+        <div className="mb-8 opacity-0 animate-fade-in">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">
             Materials <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Library</span>
           </h1>
@@ -69,7 +69,7 @@ const Materials = () => {
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Filters Sidebar */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
+          <aside className="hidden lg:block w-64 flex-shrink-0 opacity-0 animate-fade-in stagger-1">
             <div className="sticky top-24 bg-card rounded-xl border border-border p-5">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-display font-semibold text-foreground">Filters</h2>
@@ -92,21 +92,21 @@ const Materials = () => {
           {/* Main Content */}
           <div className="flex-1">
             {/* Search and Mobile Filter */}
-            <div className="flex gap-3 mb-6">
+            <div className="flex gap-3 mb-6 opacity-0 animate-fade-in stagger-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search materials..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 transition-all duration-200 focus:shadow-md focus:shadow-primary/10"
                 />
               </div>
 
               {/* Mobile Filter Sheet */}
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="lg:hidden">
+                  <Button variant="outline" size="icon" className="lg:hidden btn-press">
                     <Filter className="h-4 w-4" />
                   </Button>
                 </SheetTrigger>
@@ -134,7 +134,7 @@ const Materials = () => {
             </div>
 
             {/* Results Count */}
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-4 opacity-0 animate-fade-in stagger-3">
               {isLoading ? "Loading..." : `${filteredMaterials.length} materials found`}
             </p>
 
@@ -149,12 +149,18 @@ const Materials = () => {
               </div>
             ) : filteredMaterials.length > 0 ? (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                {filteredMaterials.map((material) => (
-                  <MaterialCard key={material.id} material={material} />
+                {filteredMaterials.map((material, index) => (
+                  <div
+                    key={material.id}
+                    className="opacity-0 animate-scale-in"
+                    style={{ animationDelay: `${Math.min(index * 50, 300)}ms` }}
+                  >
+                    <MaterialCard material={material} />
+                  </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16">
+              <div className="text-center py-16 opacity-0 animate-fade-in">
                 <p className="text-muted-foreground">No materials found matching your criteria.</p>
                 {hasActiveFilters && (
                   <Button variant="link" onClick={clearFilters} className="mt-2">
@@ -165,7 +171,7 @@ const Materials = () => {
             )}
 
             {/* Bottom Protection Line */}
-            <div className="mt-12 pt-6 border-t border-border/50 text-center">
+            <div className="mt-12 pt-6 border-t border-border/50 text-center opacity-0 animate-fade-in stagger-4">
               <p className="text-xs text-muted-foreground">
                 All materials are shared strictly for educational purposes. © Respective owners. This website does not host any files.{" "}
                 <Link to="/copyright-terms" className="text-primary hover:underline">
