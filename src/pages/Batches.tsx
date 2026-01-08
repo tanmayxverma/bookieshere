@@ -43,7 +43,7 @@ const Batches = () => {
           {batches.map((batch, index) => (
             <div
               key={index}
-              className={`group relative bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/40 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 card-glow opacity-0 animate-fade-in-up ${
+              className={`group relative bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/15 hover:-translate-y-3 hover:scale-[1.02] card-glow opacity-0 animate-fade-in-up ${
                 index === 0 ? "stagger-1" : "stagger-2"
               }`}
             >
@@ -81,7 +81,7 @@ const Batches = () => {
 
                 <Button 
                   asChild 
-                  className="w-full gap-2 btn-press transition-all duration-200 hover:shadow-lg hover:shadow-primary/20"
+                  className="w-full gap-2 bg-gradient-to-r from-primary to-violet-500 hover:from-primary/90 hover:to-violet-500/90 shadow-lg shadow-primary/25 btn-press transition-all duration-300 group-hover:shadow-xl group-hover:shadow-primary/30 group-hover:scale-[1.02]"
                 >
                   <a href={batch.link} target="_blank" rel="noopener noreferrer">
                     Explore Batch
