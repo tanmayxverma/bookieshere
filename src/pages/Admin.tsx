@@ -15,15 +15,7 @@ import { Layout } from "@/components/Layout";
 import { useAuth } from "@/hooks/useAuth";
 import { useMaterials, useCreateMaterial, useUpdateMaterial, useDeleteMaterial } from "@/hooks/useMaterials";
 import { Material, ExamType, SubjectType, ResourceType, examLabels, subjectLabels, resourceLabels } from "@/types/materials";
-
-const isSafeUrl = (url: string): boolean => {
-  try {
-    const parsed = new URL(url);
-    return ['http:', 'https:'].includes(parsed.protocol);
-  } catch {
-    return false;
-  }
-};
+import { isSafeUrl, getUrlValidationError, getAllowedDomains } from "@/lib/urlValidation";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -102,11 +94,12 @@ const Admin = () => {
       return;
     }
 
-    if (!isSafeUrl(formData.download_link)) {
+    const urlError = getUrlValidationError(formData.download_link);
+    if (urlError) {
       toast({
         variant: "destructive",
         title: "Invalid URL",
-        description: "Download link must be a valid HTTP or HTTPS URL.",
+        description: urlError,
       });
       return;
     }
