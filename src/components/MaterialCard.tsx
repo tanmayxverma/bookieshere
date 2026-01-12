@@ -4,19 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Material, examLabels, subjectLabels, resourceLabels, badgeLabels } from "@/types/materials";
+import { isSafeUrl } from "@/lib/urlValidation";
 
 interface MaterialCardProps {
   material: Material;
 }
-
-const isSafeUrl = (url: string): boolean => {
-  try {
-    const parsed = new URL(url);
-    return ['http:', 'https:'].includes(parsed.protocol);
-  } catch {
-    return false;
-  }
-};
 
 export function MaterialCard({ material }: MaterialCardProps) {
   const [isOpening, setIsOpening] = useState(false);
