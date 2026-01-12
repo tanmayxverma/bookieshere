@@ -12,14 +12,14 @@ const batches = [
     subtitle: "Complete JEE Preparation Package",
     includes: ["Video Lectures", "DPPs", "Notes", "Tests & Practice Material"],
     image: arjunaImage,
-    link: "https://t.me/arjunajee2027batch",
+    link: "https://t.me/+_IBf4DPaq0RiOWY1",
   },
   {
     title: "Lakshya JEE 2027",
     subtitle: "Comprehensive JEE Study Program",
     includes: ["Video Lectures", "DPPs", "Notes", "Tests & Practice Material"],
     image: lakshyaImage,
-    link: "https://t.me/lakshayajee2027",
+    link: "https://t.me/+-KXICKXs3XYyZjc1",
   },
 ];
 
