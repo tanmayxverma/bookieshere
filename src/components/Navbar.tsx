@@ -13,22 +13,9 @@ import logo from "@/assets/logo.jfif";
 const navLinks = [
   { path: "/", label: "Home" },
   { path: "/materials", label: "Materials" },
-  { path: "/batches", label: "Batches" },
   { path: "/support", label: "Support" },
 ];
 
-const batchesData = [
-  {
-    title: "Arjuna JEE 2027",
-    includes: ["Video Lectures", "DPPs", "Notes", "Tests & Practice Material"],
-    link: "https://t.me/arjunajee2027batch",
-  },
-  {
-    title: "Lakshya JEE 2027",
-    includes: ["Video Lectures", "DPPs", "Notes", "Tests & Practice Material"],
-    link: "https://t.me/lakshayajee2027",
-  },
-];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

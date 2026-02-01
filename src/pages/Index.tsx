@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, ArrowRight, MessageCircle, Users } from "lucide-react";
+import { BookOpen, ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
@@ -16,7 +16,7 @@ const Index = () => {
             
             <div className="space-y-2 opacity-0 animate-fade-in stagger-1">
               <p className="text-lg md:text-xl text-foreground/90 max-w-2xl mx-auto leading-relaxed font-medium">
-                One trusted platform for JEE materials, batches, tests, and guidance.
+                One trusted platform for JEE materials, tests, and guidance.
               </p>
               <p className="text-base text-muted-foreground max-w-2xl mx-auto">
                 Built for serious aspirants who value clarity.
@@ -33,12 +33,6 @@ const Index = () => {
                 </Link>
               </Button>
               
-              <Button asChild variant="outline" size="lg" className="gap-2 hover:bg-muted/50 btn-press transition-all duration-200 hover:-translate-y-0.5">
-                <Link to="/batches">
-                  <Users className="h-4 w-4" />
-                  Batches
-                </Link>
-              </Button>
               
               <Button asChild variant="outline" size="lg" className="gap-2 hover:bg-muted/50 btn-press transition-all duration-200 hover:-translate-y-0.5">
                 <Link to="/support">
@@ -117,7 +111,7 @@ const Index = () => {
               BOOKIE is built to support serious JEE aspirants with reliable, high-quality resources.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-3">
-              Materials, batches, tests, and guidance are carefully curated and organised to keep preparation simple, focused, and effective.
+              Materials, tests, and guidance are carefully curated and organised to keep preparation simple, focused, and effective.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               Built for serious aspirants who value clarity.
