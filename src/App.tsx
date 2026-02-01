@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ScrollToTop } from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Materials from "./pages/Materials";
-import Batches from "./pages/Batches";
+
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
@@ -27,7 +27,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/materials" element={<Materials />} />
-          <Route path="/batches" element={<Batches />} />
+          
           <Route path="/support" element={<Support />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
