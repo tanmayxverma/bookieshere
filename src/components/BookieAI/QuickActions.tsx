@@ -1,5 +1,6 @@
 import { HelpCircle, BookOpen, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface QuickActionsProps {
   onAction: (message: string) => void;
@@ -14,7 +15,7 @@ const actions = [
   },
   {
     icon: BookOpen,
-    label: "Find Study Material",
+    label: "Find Material",
     message: "I'm looking for study materials. What books and resources are available on BOOKIE?",
   },
   {
@@ -26,7 +27,7 @@ const actions = [
 
 export function QuickActions({ onAction, disabled }: QuickActionsProps) {
   return (
-    <div className="flex flex-wrap gap-2 p-3 border-t border-border/50">
+    <div className="flex flex-wrap gap-2 px-4 py-3">
       {actions.map((action) => (
         <Button
           key={action.label}
@@ -34,9 +35,17 @@ export function QuickActions({ onAction, disabled }: QuickActionsProps) {
           size="sm"
           onClick={() => onAction(action.message)}
           disabled={disabled}
-          className="gap-1.5 text-xs bg-background/50 hover:bg-accent/50 border-border/50 hover:border-pink-500/30 transition-all duration-200 hover:shadow-[0_0_10px_rgba(236,72,153,0.1)]"
+          className={cn(
+            "gap-1.5 text-xs font-medium",
+            "bg-background/60 hover:bg-purple-500/10",
+            "border-border/50 hover:border-purple-500/40",
+            "text-muted-foreground hover:text-purple-400",
+            "transition-all duration-200",
+            "hover:shadow-[0_0_15px_rgba(168,85,247,0.15)]",
+            "rounded-xl"
+          )}
         >
-          <action.icon className="h-3.5 w-3.5 text-pink-400" />
+          <action.icon className="h-3.5 w-3.5" />
           {action.label}
         </Button>
       ))}
