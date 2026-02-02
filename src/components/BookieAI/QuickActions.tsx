@@ -27,28 +27,30 @@ const actions = [
 
 export function QuickActions({ onAction, disabled }: QuickActionsProps) {
   return (
-    <div className="flex flex-wrap gap-2 px-4 py-3">
-      {actions.map((action) => (
-        <Button
-          key={action.label}
-          variant="outline"
-          size="sm"
-          onClick={() => onAction(action.message)}
-          disabled={disabled}
-          className={cn(
-            "gap-1.5 text-xs font-medium",
-            "bg-background/60 hover:bg-purple-500/10",
-            "border-border/50 hover:border-purple-500/40",
-            "text-muted-foreground hover:text-purple-400",
-            "transition-all duration-200",
-            "hover:shadow-[0_0_15px_rgba(168,85,247,0.15)]",
-            "rounded-xl"
-          )}
-        >
-          <action.icon className="h-3.5 w-3.5" />
-          {action.label}
-        </Button>
-      ))}
+    <div className="px-4 py-3 border-t border-border/30">
+      <p className="text-xs text-muted-foreground mb-2.5">Quick actions</p>
+      <div className="flex flex-nowrap gap-2 overflow-x-auto scrollbar-hidden">
+        {actions.map((action) => (
+          <Button
+            key={action.label}
+            variant="outline"
+            size="sm"
+            onClick={() => onAction(action.message)}
+            disabled={disabled}
+            className={cn(
+              "flex-shrink-0 gap-1.5 text-xs font-medium h-9",
+              "bg-surface-2 hover:bg-primary/5",
+              "border-border/40 hover:border-primary/30",
+              "text-muted-foreground hover:text-primary",
+              "transition-all duration-200",
+              "rounded-lg"
+            )}
+          >
+            <action.icon className="h-3.5 w-3.5" />
+            {action.label}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 }
