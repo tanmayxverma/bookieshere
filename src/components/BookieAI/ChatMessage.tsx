@@ -14,37 +14,34 @@ export function ChatMessage({ role, content, isLatest }: ChatMessageProps) {
   return (
     <div
       className={cn(
-        "flex gap-3 py-2 animate-fade-in",
+        "flex gap-3 animate-fade-in",
         isBot ? "" : "flex-row-reverse"
       )}
     >
       {/* Avatar */}
       <div
         className={cn(
-          "flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center",
+          "flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center border",
           isBot
-            ? "bg-gradient-to-br from-pink-500/20 via-purple-500/20 to-violet-500/20"
-            : "bg-primary/15"
+            ? "bg-surface-1 border-border/40"
+            : "bg-primary/10 border-primary/20"
         )}
       >
         {isBot ? (
-          <Sparkles className="h-4 w-4 text-purple-400" />
+          <Sparkles className="h-4 w-4 text-primary" />
         ) : (
           <User className="h-4 w-4 text-primary" />
         )}
       </div>
 
       {/* Message Content */}
-      <div className={cn("flex-1 min-w-0", !isBot && "text-right")}>
-        <div className="text-xs font-medium text-muted-foreground mb-1.5">
-          {isBot ? "Bookie AI" : "You"}
-        </div>
+      <div className={cn("flex-1 min-w-0 max-w-[85%]", !isBot && "flex flex-col items-end")}>
         <div
           className={cn(
-            "inline-block rounded-2xl px-4 py-3 max-w-[85%]",
+            "inline-block rounded-xl px-4 py-2.5 border",
             isBot
-              ? "bg-muted/50 rounded-tl-md text-left"
-              : "bg-gradient-to-br from-pink-500/90 via-purple-500/90 to-violet-600/90 text-white rounded-tr-md"
+              ? "bg-surface-1 border-border/30 rounded-tl-sm text-left"
+              : "bg-gradient-to-br from-primary to-blue-500 text-white border-transparent rounded-tr-sm"
           )}
         >
           {isBot ? (
@@ -52,16 +49,16 @@ export function ChatMessage({ role, content, isLatest }: ChatMessageProps) {
               <ReactMarkdown
                 components={{
                   p: ({ children }) => (
-                    <p className="mb-2 last:mb-0 text-sm">{children}</p>
+                    <p className="mb-2 last:mb-0 text-sm leading-relaxed">{children}</p>
                   ),
                   ul: ({ children }) => (
-                    <ul className="list-disc pl-4 mb-2 text-sm">{children}</ul>
+                    <ul className="list-disc pl-4 mb-2 text-sm space-y-1">{children}</ul>
                   ),
                   ol: ({ children }) => (
-                    <ol className="list-decimal pl-4 mb-2 text-sm">{children}</ol>
+                    <ol className="list-decimal pl-4 mb-2 text-sm space-y-1">{children}</ol>
                   ),
                   li: ({ children }) => (
-                    <li className="mb-1">{children}</li>
+                    <li className="leading-relaxed">{children}</li>
                   ),
                   strong: ({ children }) => (
                     <strong className="font-semibold text-foreground">{children}</strong>
@@ -69,7 +66,7 @@ export function ChatMessage({ role, content, isLatest }: ChatMessageProps) {
                   a: ({ href, children }) => (
                     <a
                       href={href}
-                      className="text-purple-400 hover:text-purple-300 hover:underline transition-colors"
+                      className="text-primary hover:underline transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -82,16 +79,16 @@ export function ChatMessage({ role, content, isLatest }: ChatMessageProps) {
                     </code>
                   ),
                   h1: ({ children }) => (
-                    <h1 className="text-base font-semibold mb-2 mt-3 first:mt-0">{children}</h1>
+                    <h1 className="text-base font-semibold mb-2 mt-3 first:mt-0 text-foreground">{children}</h1>
                   ),
                   h2: ({ children }) => (
-                    <h2 className="text-sm font-semibold mb-2 mt-3 first:mt-0">{children}</h2>
+                    <h2 className="text-sm font-semibold mb-2 mt-3 first:mt-0 text-foreground">{children}</h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="text-sm font-medium mb-1 mt-2 first:mt-0">{children}</h3>
+                    <h3 className="text-sm font-medium mb-1 mt-2 first:mt-0 text-foreground">{children}</h3>
                   ),
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-2 border-purple-400/50 pl-3 my-2 italic text-muted-foreground">
+                    <blockquote className="border-l-2 border-primary/40 pl-3 my-2 italic text-muted-foreground">
                       {children}
                     </blockquote>
                   ),
