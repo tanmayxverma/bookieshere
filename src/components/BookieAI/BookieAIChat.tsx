@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { X, Send, Trash2, Loader2, Mic, ImagePlus, Sparkles, MicOff } from "lucide-react";
+import { X, Send, Trash2, Loader2, Mic, ImagePlus, Sparkles, MicOff, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBookieChat } from "@/hooks/useBookieChat";
 import { ChatMessage } from "./ChatMessage";
@@ -7,15 +7,21 @@ import { QuickActions } from "./QuickActions";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
+type VoiceState = "idle" | "listening" | "processing";
+
 export function BookieAIChat() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [input, setInput] = useState("");
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [isListening, setIsListening] = useState(false);
+  const [voiceState, setVoiceState] = useState<VoiceState>("idle");
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isAnalyzingImage, setIsAnalyzingImage] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { messages, isLoading, error, sendMessage, clearChat } = useBookieChat();
 
@@ -31,7 +37,6 @@ export function BookieAIChat() {
 
   // Scroll when messages change
   useEffect(() => {
-    // Small delay to ensure content is rendered
     const timer = setTimeout(scrollToBottom, 50);
     return () => clearTimeout(timer);
   }, [messages, isLoading, scrollToBottom]);
@@ -51,6 +56,17 @@ export function BookieAIChat() {
     }
   }, [input]);
 
+  // ESC to exit fullscreen
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isFullscreen]);
+
   // Initialize speech recognition
   useEffect(() => {
     if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
@@ -60,21 +76,26 @@ export function BookieAIChat() {
       recognitionRef.current.interimResults = false;
       recognitionRef.current.lang = 'en-IN';
 
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
-        setInput(prev => prev + transcript);
-        setIsListening(false);
+        setVoiceState("processing");
+        setTimeout(() => {
+          setInput(prev => prev + transcript);
+          setVoiceState("idle");
+        }, 500);
       };
 
       recognitionRef.current.onerror = () => {
-        setIsListening(false);
+        setVoiceState("idle");
         toast.error("Speech recognition error", {
           description: "Please try again or type your message."
         });
       };
 
       recognitionRef.current.onend = () => {
-        setIsListening(false);
+        if (voiceState === "listening") {
+          setVoiceState("idle");
+        }
       };
     }
   }, []);
@@ -85,6 +106,7 @@ export function BookieAIChat() {
       if (!hasInteracted) setHasInteracted(true);
       sendMessage(input);
       setInput("");
+      setUploadedImage(null);
       if (inputRef.current) {
         inputRef.current.style.height = "auto";
       }
@@ -111,31 +133,65 @@ export function BookieAIChat() {
       return;
     }
 
-    if (isListening) {
+    if (voiceState === "listening") {
       recognitionRef.current.stop();
-      setIsListening(false);
+      setVoiceState("idle");
     } else {
       recognitionRef.current.start();
-      setIsListening(true);
+      setVoiceState("listening");
     }
   };
 
   const handleImageUpload = () => {
-    toast.info("Image analysis coming soon!", {
-      description: "We're working on adding image question analysis."
-    });
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error("Please upload an image file");
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setUploadedImage(event.target?.result as string);
+        setIsAnalyzingImage(true);
+        
+        // Simulate analysis state (in production, this would trigger actual AI analysis)
+        setTimeout(() => {
+          setIsAnalyzingImage(false);
+          setInput(prev => prev + (prev ? " " : "") + "[Image attached - describe your question about this image]");
+          toast.success("Image ready", {
+            description: "Add your question about the image and send."
+          });
+        }, 1500);
+      };
+      reader.readAsDataURL(file);
+    }
+    e.target.value = '';
   };
 
   const handleClearChat = () => {
     clearChat();
     setHasInteracted(false);
+    setUploadedImage(null);
   };
 
-  // Show quick actions only before first interaction
   const showQuickActions = !hasInteracted && messages.length <= 1;
 
   return (
     <>
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
@@ -160,21 +216,23 @@ export function BookieAIChat() {
       {/* Chat Window */}
       <div
         className={cn(
-          "fixed bottom-5 right-5 z-50",
-          "w-[400px] max-w-[calc(100vw-40px)] h-[600px] max-h-[calc(100vh-100px)]",
-          "rounded-2xl overflow-hidden",
+          "fixed z-50 flex flex-col",
           "bg-surface-2 backdrop-blur-xl",
           "border border-border/50",
           "shadow-2xl shadow-primary/10",
-          "flex flex-col",
-          "transition-all duration-300 ease-out origin-bottom-right",
+          "transition-all duration-300 ease-out",
+          // Docked mode
+          !isFullscreen && "bottom-5 right-5 w-[420px] max-w-[calc(100vw-40px)] h-[620px] max-h-[calc(100vh-100px)] rounded-2xl origin-bottom-right",
+          // Fullscreen mode
+          isFullscreen && "inset-4 md:inset-8 rounded-2xl max-w-none max-h-none",
+          // Open/close state
           isOpen
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-4 pointer-events-none"
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-surface-1">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-surface-1 rounded-t-2xl">
           <div className="flex items-center gap-3">
             {/* AI Logo */}
             <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-blue-500 to-violet-500 flex items-center justify-center shadow-md">
@@ -198,7 +256,19 @@ export function BookieAIChat() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsOpen(false)}
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
+              title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+            >
+              {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setIsOpen(false);
+                setIsFullscreen(false);
+              }}
               className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
               title="Close chat"
             >
@@ -212,7 +282,7 @@ export function BookieAIChat() {
           ref={messagesContainerRef}
           className="flex-1 overflow-y-auto scrollbar-thin px-4 py-4"
         >
-          <div className="space-y-3">
+          <div className={cn("space-y-4", isFullscreen && "max-w-3xl mx-auto")}>
             {messages.map((msg, i) => (
               <ChatMessage 
                 key={i} 
@@ -249,40 +319,100 @@ export function BookieAIChat() {
           </div>
         )}
 
+        {/* Image Preview */}
+        {uploadedImage && (
+          <div className="mx-4 mb-2 p-2 bg-surface-1 rounded-lg border border-border/40">
+            <div className="flex items-center gap-3">
+              <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-muted">
+                <img src={uploadedImage} alt="Upload preview" className="w-full h-full object-cover" />
+                {isAnalyzingImage && (
+                  <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  </div>
+                )}
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-medium text-foreground">
+                  {isAnalyzingImage ? "Analyzing image..." : "Image ready"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {isAnalyzingImage ? "Please wait" : "Add your question and send"}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setUploadedImage(null)}
+                className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Quick Actions - Only before first interaction */}
         {showQuickActions && (
           <QuickActions onAction={handleQuickAction} disabled={isLoading} />
         )}
 
         {/* Input Area */}
-        <div className="border-t border-border/40 bg-surface-1 p-3">
-          <form onSubmit={handleSubmit} className="flex items-end gap-2">
+        <div className="border-t border-border/40 bg-surface-1 p-3 rounded-b-2xl">
+          <form onSubmit={handleSubmit} className={cn("flex items-end gap-2", isFullscreen && "max-w-3xl mx-auto")}>
             {/* Side Action Buttons */}
             <div className="flex gap-1 pb-0.5">
+              {/* Voice Input Button with 3 states */}
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
                 onClick={handleVoiceInput}
+                disabled={voiceState === "processing"}
                 className={cn(
-                  "h-9 w-9 rounded-lg transition-all",
-                  isListening 
-                    ? "text-destructive bg-destructive/10 hover:bg-destructive/20" 
-                    : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  "h-9 w-9 rounded-lg transition-all relative",
+                  voiceState === "idle" && "text-muted-foreground hover:text-primary hover:bg-primary/10",
+                  voiceState === "listening" && "text-destructive bg-destructive/10 mic-listening",
+                  voiceState === "processing" && "text-primary bg-primary/10"
                 )}
-                title={isListening ? "Stop listening" : "Voice input"}
+                title={voiceState === "idle" ? "Voice input" : voiceState === "listening" ? "Stop listening" : "Processing..."}
               >
-                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                {voiceState === "listening" ? (
+                  <div className="flex items-center gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-0.5 h-3 bg-destructive rounded-full waveform-bar"
+                        style={{ animationDelay: `${i * 0.1}s` }}
+                      />
+                    ))}
+                  </div>
+                ) : voiceState === "processing" ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Mic className="h-4 w-4" />
+                )}
               </Button>
+              
+              {/* Image Upload Button */}
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
                 onClick={handleImageUpload}
-                className="h-9 w-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+                disabled={isAnalyzingImage}
+                className={cn(
+                  "h-9 w-9 rounded-lg transition-all",
+                  isAnalyzingImage 
+                    ? "text-primary bg-primary/10" 
+                    : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                )}
                 title="Upload image"
               >
-                <ImagePlus className="h-4 w-4" />
+                {isAnalyzingImage ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ImagePlus className="h-4 w-4" />
+                )}
               </Button>
             </div>
 

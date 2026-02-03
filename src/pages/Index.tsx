@@ -1,33 +1,38 @@
 import { Link } from "react-router-dom";
-import { BookOpen, ArrowRight, MessageCircle, Sparkles, Target, Shield } from "lucide-react";
+import { BookOpen, ArrowRight, MessageCircle, Sparkles, Target, Shield, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
 const Index = () => {
   return (
     <Layout>
-      {/* Hero Section - Surface Level 0 */}
-      <section className="relative py-16 md:py-24 overflow-hidden">
-        {/* Subtle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.02] via-transparent to-transparent pointer-events-none" />
+      {/* Hero Section - Surface Level 0 with background glow */}
+      <section className="relative py-20 md:py-28 overflow-hidden">
+        {/* Hero background glow - static with subtle breathing */}
+        <div className="hero-glow" />
         
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="max-w-3xl mx-auto space-y-8">
-            {/* Brand pill */}
+            {/* Brand pill with breathing - ONLY hero pill breathes */}
             <div className="opacity-0 animate-fade-in">
-              <span className="pill pill-primary">
+              <span className="pill pill-hero">
                 <Sparkles className="h-3 w-3" />
                 Trusted by serious aspirants
               </span>
             </div>
 
-            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-black tracking-tight bg-gradient-to-r from-primary via-blue-400 to-violet-500 bg-clip-text text-transparent opacity-0 animate-fade-in stagger-1">
-              BOOKIE
+            {/* Heavy headline */}
+            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-black tracking-tight opacity-0 animate-fade-in stagger-1">
+              <span className="bg-gradient-to-r from-primary via-blue-400 to-violet-500 bg-clip-text text-transparent">
+                BOOKIE
+              </span>
             </h1>
             
-            <div className="space-y-3 opacity-0 animate-fade-in stagger-2">
-              <p className="text-lg md:text-xl text-foreground max-w-2xl mx-auto leading-relaxed font-medium">
-                One trusted platform for JEE materials, tests, and guidance.
+            {/* Treated tagline */}
+            <div className="space-y-4 opacity-0 animate-fade-in stagger-2">
+              <p className="text-xl md:text-2xl text-foreground max-w-2xl mx-auto leading-relaxed font-semibold">
+                One trusted platform for{" "}
+                <span className="tagline-treated">JEE materials</span>, tests, and guidance.
               </p>
               <p className="text-base text-muted-foreground max-w-xl mx-auto">
                 Built for serious aspirants who value clarity and focus.
@@ -35,8 +40,8 @@ const Index = () => {
             </div>
 
             {/* CTA Group */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-2 opacity-0 animate-fade-in stagger-3">
-              <Button asChild size="lg" className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:from-primary/90 hover:to-violet-500/90 shadow-lg shadow-primary/25 btn-press transition-all duration-200 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-4 opacity-0 animate-fade-in stagger-3">
+              <Button asChild size="lg" className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:from-primary/90 hover:to-violet-500/90 shadow-lg shadow-primary/25 btn-press transition-all duration-200 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 px-8">
                 <Link to="/materials">
                   <BookOpen className="h-5 w-5" />
                   Browse Materials
@@ -55,15 +60,15 @@ const Index = () => {
         </div>
 
         {/* Section divider */}
-        <div className="pinch-bar mt-12 opacity-0 animate-fade-in stagger-4">
+        <div className="pinch-bar mt-16 opacity-0 animate-fade-in stagger-4">
           <span className="pinch-bar-line" />
         </div>
       </section>
 
       {/* Explore Subjects Section - Surface Level 1 */}
-      <section className="py-16 bg-surface-1 border-y border-border/30">
+      <section className="py-20 bg-surface-1 border-y border-border/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-10 opacity-0 animate-fade-in">
+          <div className="text-center mb-12 opacity-0 animate-fade-in">
             <span className="pill mb-4">
               <Target className="h-3 w-3" />
               Core Subjects
@@ -132,14 +137,19 @@ const Index = () => {
             </Link>
           </div>
         </div>
+
+        {/* Section exit divider */}
+        <div className="pinch-bar mt-12">
+          <span className="pinch-bar-line" />
+        </div>
       </section>
 
       {/* Why BOOKIE Section - Surface Level 0 */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             {/* Section header */}
-            <div className="text-center mb-10 opacity-0 animate-fade-in">
+            <div className="text-center mb-12 opacity-0 animate-fade-in">
               <span className="pill mb-4">
                 <Shield className="h-3 w-3" />
                 Our Promise
@@ -150,42 +160,58 @@ const Index = () => {
             </div>
 
             {/* Content cards grid */}
-            <div className="grid sm:grid-cols-3 gap-4 opacity-0 animate-fade-in stagger-1">
-              <div className="p-6 bg-surface-1 rounded-xl border border-border/30 text-center">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
-                  <Target className="h-5 w-5" />
+            <div className="grid sm:grid-cols-3 gap-5 opacity-0 animate-fade-in stagger-1">
+              <div className="p-6 bg-surface-1 rounded-xl border border-border/30 text-center hover:-translate-y-0.5 transition-transform duration-200">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
+                  <Target className="h-6 w-6" />
                 </div>
-                <h3 className="font-display font-semibold text-foreground mb-2 text-sm">Curated Resources</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <h3 className="font-display font-semibold text-foreground mb-2">Curated Resources</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Carefully selected materials from trusted sources.
                 </p>
               </div>
 
-              <div className="p-6 bg-surface-1 rounded-xl border border-border/30 text-center">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
-                  <Sparkles className="h-5 w-5" />
+              <div className="p-6 bg-surface-1 rounded-xl border border-border/30 text-center hover:-translate-y-0.5 transition-transform duration-200">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="h-6 w-6" />
                 </div>
-                <h3 className="font-display font-semibold text-foreground mb-2 text-sm">Clean Interface</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <h3 className="font-display font-semibold text-foreground mb-2">Clean Interface</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   No clutter. Find what you need, fast.
                 </p>
               </div>
 
-              <div className="p-6 bg-surface-1 rounded-xl border border-border/30 text-center">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
-                  <Shield className="h-5 w-5" />
+              <div className="p-6 bg-surface-1 rounded-xl border border-border/30 text-center hover:-translate-y-0.5 transition-transform duration-200">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
+                  <Shield className="h-6 w-6" />
                 </div>
-                <h3 className="font-display font-semibold text-foreground mb-2 text-sm">Always Updated</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <h3 className="font-display font-semibold text-foreground mb-2">Always Updated</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Regular updates with new materials.
                 </p>
               </div>
             </div>
 
-            {/* Bottom text anchor */}
-            <div className="mt-10 text-center opacity-0 animate-fade-in stagger-2">
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Built for serious aspirants who value <span className="text-foreground font-medium">clarity</span>, <span className="text-foreground font-medium">focus</span>, and <span className="text-foreground font-medium">consistency</span>.
+            {/* Bottom commitment strip */}
+            <div className="mt-14 p-6 bg-surface-1 rounded-xl border border-border/30 opacity-0 animate-fade-in stagger-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <CheckCircle className="h-4 w-4 text-primary" />
+                  <span>Clarity</span>
+                </div>
+                <div className="hidden sm:block w-1 h-1 rounded-full bg-border" />
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <CheckCircle className="h-4 w-4 text-primary" />
+                  <span>Focus</span>
+                </div>
+                <div className="hidden sm:block w-1 h-1 rounded-full bg-border" />
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <CheckCircle className="h-4 w-4 text-primary" />
+                  <span>Consistency</span>
+                </div>
+              </div>
+              <p className="text-center text-muted-foreground/80 text-sm mt-4">
+                Built for serious aspirants who value quality over quantity.
               </p>
             </div>
           </div>
