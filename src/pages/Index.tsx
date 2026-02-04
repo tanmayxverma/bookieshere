@@ -6,8 +6,8 @@ import { Layout } from "@/components/Layout";
 const Index = () => {
   return (
     <Layout>
-      {/* Hero Section - Vertically centered in viewport */}
-      <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden">
+      {/* Hero Section - Vertically centered with slight top offset from navbar */}
+      <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden pt-8 md:pt-12">
         {/* Hero background glow - enhanced with multiple layers */}
         <div className="hero-glow" />
         <div className="hero-glow-secondary" />
