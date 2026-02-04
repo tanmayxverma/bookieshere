@@ -1,12 +1,23 @@
 import { useState, useCallback } from "react";
 
-type Message = { role: "user" | "assistant"; content: string };
+type MessageContent = 
+  | string 
+  | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>;
+
+export type Message = { 
+  role: "user" | "assistant"; 
+  content: MessageContent;
+  // For UI display purposes
+  displayContent?: string;
+  imageUrl?: string;
+};
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bookie-chat`;
 
 const INITIAL_MESSAGE: Message = {
   role: "assistant",
   content: "Hi 👋 I'm Bookie AI — your personal study assistant. Ask me doubts or find the right study material 📚",
+  displayContent: "Hi 👋 I'm Bookie AI — your personal study assistant. Ask me doubts or find the right study material 📚",
 };
 
 export function useBookieChat() {
@@ -14,10 +25,43 @@ export function useBookieChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const sendMessage = useCallback(async (input: string) => {
-    if (!input.trim() || isLoading) return;
+  const sendMessage = useCallback(async (input: string, imageBase64?: string) => {
+    if ((!input.trim() && !imageBase64) || isLoading) return;
 
-    const userMsg: Message = { role: "user", content: input.trim() };
+    // Build user message content
+    let userContent: MessageContent;
+    let displayContent = input.trim();
+    
+    if (imageBase64) {
+      // Multimodal message with image
+      const contentParts: Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }> = [];
+      
+      // Add image first
+      contentParts.push({
+        type: "image_url",
+        image_url: { url: imageBase64 }
+      });
+      
+      // Add text (or default prompt if no text)
+      const textContent = input.trim() || "Please analyze this image and help me understand it.";
+      contentParts.push({
+        type: "text",
+        text: textContent
+      });
+      
+      userContent = contentParts;
+      displayContent = textContent;
+    } else {
+      userContent = input.trim();
+    }
+
+    const userMsg: Message = { 
+      role: "user", 
+      content: userContent,
+      displayContent,
+      imageUrl: imageBase64 || undefined
+    };
+    
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
     setError(null);
@@ -30,21 +74,29 @@ export function useBookieChat() {
         const last = prev[prev.length - 1];
         if (last?.role === "assistant" && prev.length > 1 && prev[prev.length - 2].role === "user") {
           return prev.map((m, i) =>
-            i === prev.length - 1 ? { ...m, content: assistantContent } : m
+            i === prev.length - 1 ? { ...m, content: assistantContent, displayContent: assistantContent } : m
           );
         }
-        return [...prev, { role: "assistant", content: assistantContent }];
+        return [...prev, { role: "assistant", content: assistantContent, displayContent: assistantContent }];
       });
     };
 
     try {
+      // Prepare messages for API - convert to proper format
+      const apiMessages = [...messages, userMsg]
+        .filter(m => m !== INITIAL_MESSAGE)
+        .map(m => ({
+          role: m.role,
+          content: m.content
+        }));
+
       const response = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: [...messages, userMsg].filter(m => m !== INITIAL_MESSAGE) }),
+        body: JSON.stringify({ messages: apiMessages }),
       });
 
       if (!response.ok) {
@@ -106,7 +158,7 @@ export function useBookieChat() {
       // Remove the pending assistant message if there was an error
       setMessages((prev) => {
         const last = prev[prev.length - 1];
-        if (last?.role === "assistant" && !last.content) {
+        if (last?.role === "assistant" && !last.displayContent) {
           return prev.slice(0, -1);
         }
         return prev;
