@@ -5,10 +5,11 @@ import { cn } from "@/lib/utils";
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
+  imageUrl?: string;
   isLatest?: boolean;
 }
 
-export function ChatMessage({ role, content, isLatest }: ChatMessageProps) {
+export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessageProps) {
   const isBot = role === "assistant";
 
   // Clean content - ensure no raw markdown breaks through
@@ -41,6 +42,17 @@ export function ChatMessage({ role, content, isLatest }: ChatMessageProps) {
 
       {/* Message Content */}
       <div className={cn("flex-1 min-w-0 max-w-[85%]", !isBot && "flex flex-col items-end")}>
+        {/* Image attachment (shown above text for user messages) */}
+        {imageUrl && !isBot && (
+          <div className="mb-2 rounded-xl overflow-hidden border border-primary/20 max-w-[200px]">
+            <img 
+              src={imageUrl} 
+              alt="Uploaded image" 
+              className="w-full h-auto object-cover"
+            />
+          </div>
+        )}
+        
         <div
           className={cn(
             "inline-block rounded-xl px-4 py-3 border",

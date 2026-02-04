@@ -102,14 +102,18 @@ export function BookieAIChat() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() && !isLoading) {
-      if (!hasInteracted) setHasInteracted(true);
-      sendMessage(input);
-      setInput("");
-      setUploadedImage(null);
-      if (inputRef.current) {
-        inputRef.current.style.height = "auto";
-      }
+    if ((!input.trim() && !uploadedImage) || isLoading) return;
+    
+    if (!hasInteracted) setHasInteracted(true);
+    
+    // Send message with image if present
+    sendMessage(input, uploadedImage || undefined);
+    setInput("");
+    setUploadedImage(null);
+    setIsAnalyzingImage(false);
+    
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
     }
   };
 
@@ -283,7 +287,8 @@ export function BookieAIChat() {
               <ChatMessage 
                 key={i} 
                 role={msg.role} 
-                content={msg.content} 
+                content={msg.displayContent || (typeof msg.content === 'string' ? msg.content : '')}
+                imageUrl={msg.imageUrl}
                 isLatest={i === messages.length - 1}
               />
             ))}
@@ -434,7 +439,7 @@ export function BookieAIChat() {
             <Button
               type="submit"
               size="icon"
-              disabled={!input.trim() || isLoading}
+              disabled={(!input.trim() && !uploadedImage) || isLoading}
               className={cn(
                 "h-10 w-10 rounded-xl",
                 "bg-gradient-to-br from-primary via-blue-500 to-violet-500",
