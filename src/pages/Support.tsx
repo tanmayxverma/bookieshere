@@ -33,25 +33,31 @@ const Support = () => {
       <div className="min-h-[80vh] py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
-            {/* Header */}
-            <div className="text-center mb-14 opacity-0 animate-fade-in">
-              {/* Icon with subtle static glow */}
-              <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary mb-6">
+            {/* Header - Perfectly aligned on single vertical axis */}
+            <div className="flex flex-col items-center text-center mb-14 opacity-0 animate-fade-in">
+              {/* Icon with subtle static glow - centered */}
+              <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary mb-5">
                 <Headphones className="h-8 w-8" />
                 <div className="absolute inset-0 rounded-2xl bg-primary/5 blur-xl" />
               </div>
 
-              <span className="pill pill-primary mb-4">
+              {/* Pill - centered below icon */}
+              <span className="pill pill-primary mb-5 shadow-sm shadow-primary/10">
                 <MessageCircle className="h-3 w-3" />
                 Quick Response
               </span>
 
+              {/* Heading - centered with gradient emphasis */}
               <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Chat <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Support</span>
+                Chat{" "}
+                <span className="text-gradient-glow">Support</span>
               </h1>
 
-              <p className="text-muted-foreground max-w-md mx-auto text-base">
-                Need help with downloads or encountering issues? We're here to assist you.
+              {/* Description with visual anchors */}
+              <p className="text-muted-foreground max-w-md mx-auto text-base flex items-center justify-center gap-2">
+                <span className="w-6 h-px bg-border/60" />
+                Need help with downloads or encountering issues? We're here to assist.
+                <span className="w-6 h-px bg-border/60" />
               </p>
             </div>
 
