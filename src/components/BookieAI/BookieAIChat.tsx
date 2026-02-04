@@ -157,16 +157,12 @@ export function BookieAIChat() {
       const reader = new FileReader();
       reader.onload = (event) => {
         setUploadedImage(event.target?.result as string);
+        // Brief analysis state - NO forced text, NO toasts
         setIsAnalyzingImage(true);
-        
-        // Simulate analysis state (in production, this would trigger actual AI analysis)
         setTimeout(() => {
           setIsAnalyzingImage(false);
-          setInput(prev => prev + (prev ? " " : "") + "[Image attached - describe your question about this image]");
-          toast.success("Image ready", {
-            description: "Add your question about the image and send."
-          });
-        }, 1500);
+          // Input stays empty - user types naturally
+        }, 800);
       };
       reader.readAsDataURL(file);
     }
@@ -319,33 +315,28 @@ export function BookieAIChat() {
           </div>
         )}
 
-        {/* Image Preview */}
+        {/* Inline Image Preview - Compact, non-intrusive */}
         {uploadedImage && (
-          <div className="mx-4 mb-2 p-2 bg-surface-1 rounded-lg border border-border/40">
-            <div className="flex items-center gap-3">
-              <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-muted">
-                <img src={uploadedImage} alt="Upload preview" className="w-full h-full object-cover" />
+          <div className="mx-4 mb-2">
+            <div className="inline-flex items-center gap-2 px-2 py-1.5 bg-surface-1 rounded-lg border border-border/40">
+              <div className="relative w-10 h-10 rounded-md overflow-hidden bg-muted flex-shrink-0">
+                <img src={uploadedImage} alt="Upload" className="w-full h-full object-cover" />
                 {isAnalyzingImage && (
                   <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
                   </div>
                 )}
               </div>
-              <div className="flex-1">
-                <p className="text-xs font-medium text-foreground">
-                  {isAnalyzingImage ? "Analyzing image..." : "Image ready"}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {isAnalyzingImage ? "Please wait" : "Add your question and send"}
-                </p>
-              </div>
+              <span className="text-xs text-muted-foreground">
+                {isAnalyzingImage ? "Analyzing..." : "Image attached"}
+              </span>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setUploadedImage(null)}
-                className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+                className="h-6 w-6 rounded-md text-muted-foreground hover:text-foreground"
               >
-                <X className="h-4 w-4" />
+                <X className="h-3 w-3" />
               </Button>
             </div>
           </div>
