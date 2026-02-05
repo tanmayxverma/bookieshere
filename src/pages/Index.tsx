@@ -61,20 +61,28 @@ const Index = () => {
             </div>
             
             {/* Trust indicators strip */}
-            <div className="pt-8 opacity-0 animate-fade-in stagger-4">
-              <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground/70">
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle className="h-3.5 w-3.5 text-primary/60" />
+           <div className="pt-10 md:pt-12 opacity-0 animate-fade-in stagger-4">
+             {/* Subtle separator line */}
+             <div className="flex items-center justify-center gap-3 mb-6">
+               <span className="w-12 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+               <span className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-medium">Trusted Platform</span>
+               <span className="w-12 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+             </div>
+             
+             {/* Trust indicators - improved spacing */}
+             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground/60">
+               <span className="flex items-center gap-2">
+                 <CheckCircle className="h-4 w-4 text-primary/50" />
                   Free access
                 </span>
-                <span className="w-1 h-1 rounded-full bg-border" />
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle className="h-3.5 w-3.5 text-primary/60" />
+               <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-border/40" />
+               <span className="flex items-center gap-2">
+                 <CheckCircle className="h-4 w-4 text-primary/50" />
                   No signup required
                 </span>
-                <span className="w-1 h-1 rounded-full bg-border" />
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle className="h-3.5 w-3.5 text-primary/60" />
+               <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-border/40" />
+               <span className="flex items-center gap-2">
+                 <CheckCircle className="h-4 w-4 text-primary/50" />
                   Daily updates
                 </span>
               </div>
