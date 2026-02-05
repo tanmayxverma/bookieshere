@@ -20,6 +20,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
+import { jsPDF } from "jspdf";
 import { 
   useTestBuilder, 
   ExamType, 
@@ -69,151 +71,274 @@ export function TestConfiguration({ testBuilder, onStartTest }: TestConfiguratio
     }
   };
 
-  const handleDownloadPDF = () => {
-    // Generate and download PDF
+  const handleDownloadPDF = async () => {
     const questions = testBuilder.questions;
     if (questions.length === 0) return;
 
+    toast.info("Generating PDFs...", { duration: 2000 });
+
     // Generate Question Paper PDF
-    const questionContent = generateQuestionPaperContent(questions, testBuilder.examType);
-    downloadPDF(questionContent, `JEE_${testBuilder.examType === "jee_main" ? "Main" : "Advanced"}_Question_Paper.html`);
-
+    await generateQuestionPaperPDF(questions, testBuilder.examType);
+    
     // Generate Solution PDF
-    const solutionContent = generateSolutionContent(questions, testBuilder.examType);
-    downloadPDF(solutionContent, `JEE_${testBuilder.examType === "jee_main" ? "Main" : "Advanced"}_Solutions.html`);
+    await generateSolutionPDF(questions, testBuilder.examType);
+    
+    toast.success("PDFs downloaded successfully!");
   };
 
-  const generateQuestionPaperContent = (questions: any[], examType: string) => {
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>JEE ${examType === "jee_main" ? "Main" : "Advanced"} Question Paper</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-  <style>
-    body { font-family: 'Times New Roman', serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-    h1 { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; }
-    .question { margin: 20px 0; padding: 15px; border: 1px solid #ddd; page-break-inside: avoid; }
-    .question-num { font-weight: bold; color: #333; }
-    .options { margin-left: 20px; margin-top: 10px; }
-    .option { margin: 8px 0; }
-    .subject-header { background: #f0f0f0; padding: 10px; margin: 20px 0; font-weight: bold; }
-    .marks { float: right; color: #666; font-size: 12px; }
-    @media print { .question { page-break-inside: avoid; } }
-  </style>
-</head>
-<body>
-  <h1>JEE ${examType === "jee_main" ? "Main" : "Advanced"} - Question Paper</h1>
-  <p style="text-align: center;">Total Questions: ${questions.length} | Time: 3 Hours</p>
-  
-  ${["physics", "chemistry", "mathematics"].map(subject => {
-    const subjectQs = questions.filter(q => q.subject === subject);
-    if (subjectQs.length === 0) return "";
-    return `
-      <div class="subject-header">${subject.toUpperCase()} (${subjectQs.length} Questions)</div>
-      ${subjectQs.map(q => `
-        <div class="question">
-          <span class="question-num">Q${q.question_number}.</span>
-          <span class="marks">[+${q.marks_positive}/-${q.marks_negative}]</span>
-          <div style="margin-top: 10px;">${q.question_text}</div>
-          ${q.options ? `
-            <div class="options">
-              ${q.options.map((opt: any) => `
-                <div class="option">(${opt.label}) ${opt.text}</div>
-              `).join("")}
-            </div>
-          ` : '<div style="margin-top: 10px; font-style: italic;">Answer: _____________</div>'}
-        </div>
-      `).join("")}
-    `;
-  }).join("")}
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      renderMathInElement(document.body, {
-        delimiters: [
-          {left: "$$", right: "$$", display: true},
-          {left: "$", right: "$", display: false}
-        ]
-      });
-    });
-  </script>
-</body>
-</html>`;
+  const cleanLatex = (text: string): string => {
+    // Remove LaTeX delimiters and simplify for PDF
+    return text
+      .replace(/\$\$(.*?)\$\$/g, '$1')
+      .replace(/\$(.*?)\$/g, '$1')
+      .replace(/\\frac\{(.*?)\}\{(.*?)\}/g, '($1)/($2)')
+      .replace(/\\sqrt\{(.*?)\}/g, '√($1)')
+      .replace(/\\times/g, '×')
+      .replace(/\\div/g, '÷')
+      .replace(/\\pm/g, '±')
+      .replace(/\\leq/g, '≤')
+      .replace(/\\geq/g, '≥')
+      .replace(/\\neq/g, '≠')
+      .replace(/\\pi/g, 'π')
+      .replace(/\\theta/g, 'θ')
+      .replace(/\\alpha/g, 'α')
+      .replace(/\\beta/g, 'β')
+      .replace(/\\gamma/g, 'γ')
+      .replace(/\\delta/g, 'δ')
+      .replace(/\\omega/g, 'ω')
+      .replace(/\\mu/g, 'μ')
+      .replace(/\\lambda/g, 'λ')
+      .replace(/\\infty/g, '∞')
+      .replace(/\\degree/g, '°')
+      .replace(/\^(\d+)/g, '^$1')
+      .replace(/\_(\d+)/g, '_$1')
+      .replace(/\\[a-zA-Z]+/g, '')
+      .replace(/[{}]/g, '')
+      .trim();
   };
 
-  const generateSolutionContent = (questions: any[], examType: string) => {
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>JEE ${examType === "jee_main" ? "Main" : "Advanced"} Solutions</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-  <style>
-    body { font-family: 'Times New Roman', serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-    h1 { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; }
-    .solution { margin: 20px 0; padding: 15px; border: 1px solid #ddd; page-break-inside: avoid; }
-    .question-num { font-weight: bold; color: #333; }
-    .answer { background: #e8f5e9; padding: 10px; margin: 10px 0; border-radius: 4px; }
-    .explanation { margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 4px; }
-    .subject-header { background: #f0f0f0; padding: 10px; margin: 20px 0; font-weight: bold; }
-    @media print { .solution { page-break-inside: avoid; } }
-  </style>
-</head>
-<body>
-  <h1>JEE ${examType === "jee_main" ? "Main" : "Advanced"} - Solutions</h1>
-  
-  ${["physics", "chemistry", "mathematics"].map(subject => {
-    const subjectQs = questions.filter(q => q.subject === subject);
-    if (subjectQs.length === 0) return "";
-    return `
-      <div class="subject-header">${subject.toUpperCase()}</div>
-      ${subjectQs.map(q => `
-        <div class="solution">
-          <span class="question-num">Q${q.question_number}.</span>
-          <div style="margin-top: 10px;">${q.question_text}</div>
-          <div class="answer">
-            <strong>Answer:</strong> ${Array.isArray(q.correct_answer) ? q.correct_answer.join(", ") : q.correct_answer}
-          </div>
-          <div class="explanation">
-            <strong>Solution:</strong><br>
-            ${q.solution || "Solution not available for this question."}
-          </div>
-        </div>
-      `).join("")}
-    `;
-  }).join("")}
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      renderMathInElement(document.body, {
-        delimiters: [
-          {left: "$$", right: "$$", display: true},
-          {left: "$", right: "$", display: false}
-        ]
-      });
-    });
-  </script>
-</body>
-</html>`;
+  const wrapText = (doc: jsPDF, text: string, maxWidth: number): string[] => {
+    const lines: string[] = [];
+    const words = text.split(' ');
+    let currentLine = '';
+
+    for (const word of words) {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      const testWidth = doc.getTextWidth(testLine);
+      
+      if (testWidth > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+    
+    return lines;
   };
 
-  const downloadPDF = (content: string, filename: string) => {
-    const blob = new Blob([content], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const generateQuestionPaperPDF = async (questions: any[], examType: string) => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    const contentWidth = pageWidth - margin * 2;
+    let y = margin;
+
+    // Title
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    const title = `JEE ${examType === "jee_main" ? "Main" : "Advanced"} - Question Paper`;
+    doc.text(title, pageWidth / 2, y, { align: "center" });
+    y += 10;
+
+    // Subtitle
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Total Questions: ${questions.length} | Time: 3 Hours`, pageWidth / 2, y, { align: "center" });
+    y += 15;
+
+    // Questions by subject
+    const subjects = ["physics", "chemistry", "mathematics"];
+    
+    for (const subject of subjects) {
+      const subjectQs = questions.filter(q => q.subject === subject);
+      if (subjectQs.length === 0) continue;
+
+      // Subject header
+      if (y > pageHeight - 40) {
+        doc.addPage();
+        y = margin;
+      }
+      
+      doc.setFillColor(240, 240, 240);
+      doc.rect(margin, y - 5, contentWidth, 10, "F");
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${subject.toUpperCase()} (${subjectQs.length} Questions)`, margin + 5, y + 2);
+      y += 15;
+
+      // Questions
+      for (const q of subjectQs) {
+        const questionText = cleanLatex(q.question_text);
+        const wrappedQuestion = wrapText(doc, `Q${q.question_number}. ${questionText}`, contentWidth - 40);
+        
+        // Check if we need a new page
+        const questionHeight = wrappedQuestion.length * 5 + (q.options ? q.options.length * 6 : 10) + 15;
+        if (y + questionHeight > pageHeight - margin) {
+          doc.addPage();
+          y = margin;
+        }
+
+        // Question number and marks
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.text(`Q${q.question_number}.`, margin, y);
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8);
+        doc.text(`[+${q.marks_positive}/-${q.marks_negative}]`, pageWidth - margin - 20, y);
+        y += 5;
+
+        // Question text
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        for (const line of wrappedQuestion.slice(0, 1).length ? [wrappedQuestion[0].replace(/^Q\d+\.\s*/, '')] : []) {
+          doc.text(line, margin + 8, y);
+          y += 5;
+        }
+        for (let i = 1; i < wrappedQuestion.length; i++) {
+          doc.text(wrappedQuestion[i], margin + 8, y);
+          y += 5;
+        }
+
+        // Options
+        if (q.options && q.options.length > 0) {
+          y += 2;
+          for (const opt of q.options) {
+            const optionText = cleanLatex(`(${opt.label}) ${opt.text}`);
+            const wrappedOption = wrapText(doc, optionText, contentWidth - 20);
+            
+            for (const line of wrappedOption) {
+              if (y > pageHeight - margin) {
+                doc.addPage();
+                y = margin;
+              }
+              doc.text(line, margin + 15, y);
+              y += 5;
+            }
+          }
+        } else {
+          // Numerical answer space
+          doc.text("Answer: _____________", margin + 15, y);
+          y += 5;
+        }
+
+        y += 8; // Space between questions
+      }
+    }
+
+    doc.save(`JEE_${examType === "jee_main" ? "Main" : "Advanced"}_Question_Paper.pdf`);
+  };
+
+  const generateSolutionPDF = async (questions: any[], examType: string) => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    const contentWidth = pageWidth - margin * 2;
+    let y = margin;
+
+    // Title
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    const title = `JEE ${examType === "jee_main" ? "Main" : "Advanced"} - Solutions`;
+    doc.text(title, pageWidth / 2, y, { align: "center" });
+    y += 15;
+
+    // Questions by subject
+    const subjects = ["physics", "chemistry", "mathematics"];
+    
+    for (const subject of subjects) {
+      const subjectQs = questions.filter(q => q.subject === subject);
+      if (subjectQs.length === 0) continue;
+
+      // Subject header
+      if (y > pageHeight - 40) {
+        doc.addPage();
+        y = margin;
+      }
+      
+      doc.setFillColor(240, 240, 240);
+      doc.rect(margin, y - 5, contentWidth, 10, "F");
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${subject.toUpperCase()}`, margin + 5, y + 2);
+      y += 15;
+
+      // Solutions
+      for (const q of subjectQs) {
+        const questionText = cleanLatex(q.question_text);
+        const wrappedQuestion = wrapText(doc, `Q${q.question_number}. ${questionText}`, contentWidth - 10);
+        const solutionText = q.solution ? cleanLatex(q.solution) : "Solution not available for this question.";
+        const wrappedSolution = wrapText(doc, solutionText, contentWidth - 10);
+        
+        // Calculate height needed
+        const totalHeight = wrappedQuestion.length * 5 + 15 + wrappedSolution.length * 5 + 20;
+        
+        if (y + totalHeight > pageHeight - margin) {
+          doc.addPage();
+          y = margin;
+        }
+
+        // Question
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        for (const line of wrappedQuestion) {
+          doc.text(line, margin, y);
+          y += 5;
+        }
+        y += 3;
+
+        // Answer box
+        doc.setFillColor(232, 245, 233);
+        doc.rect(margin, y - 4, contentWidth, 8, "F");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        const answerText = Array.isArray(q.correct_answer) 
+          ? q.correct_answer.join(", ") 
+          : String(q.correct_answer);
+        doc.text(`Answer: ${answerText}`, margin + 3, y + 1);
+        y += 12;
+
+        // Solution
+        doc.setFillColor(245, 245, 245);
+        const solutionBoxHeight = wrappedSolution.length * 5 + 10;
+        doc.rect(margin, y - 4, contentWidth, solutionBoxHeight, "F");
+        
+        doc.setFont("helvetica", "bold");
+        doc.text("Solution:", margin + 3, y + 1);
+        y += 6;
+        
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        for (const line of wrappedSolution) {
+          if (y > pageHeight - margin) {
+            doc.addPage();
+            y = margin;
+          }
+          doc.text(line, margin + 3, y);
+          y += 5;
+        }
+
+        y += 12; // Space between solutions
+      }
+    }
+
+    doc.save(`JEE_${examType === "jee_main" ? "Main" : "Advanced"}_Solutions.pdf`);
   };
 
   const getChaptersBySubject = (subject: string, classLevel: "11" | "12") => {
@@ -552,10 +677,7 @@ export function TestConfiguration({ testBuilder, onStartTest }: TestConfiguratio
               <div className="flex gap-4 mt-4 animate-fade-in">
                 <Button
                   variant="outline"
-                  onClick={() => {
-                    const content = generateQuestionPaperContent(testBuilder.questions, testBuilder.examType);
-                    downloadPDF(content, `JEE_${testBuilder.examType === "jee_main" ? "Main" : "Advanced"}_Questions.html`);
-                  }}
+                  onClick={() => generateQuestionPaperPDF(testBuilder.questions, testBuilder.examType)}
                   className="gap-2"
                 >
                   <FileText className="h-4 w-4" />
@@ -563,10 +685,7 @@ export function TestConfiguration({ testBuilder, onStartTest }: TestConfiguratio
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => {
-                    const content = generateSolutionContent(testBuilder.questions, testBuilder.examType);
-                    downloadPDF(content, `JEE_${testBuilder.examType === "jee_main" ? "Main" : "Advanced"}_Solutions.html`);
-                  }}
+                  onClick={() => generateSolutionPDF(testBuilder.questions, testBuilder.examType)}
                   className="gap-2"
                 >
                   <BookOpen className="h-4 w-4" />
