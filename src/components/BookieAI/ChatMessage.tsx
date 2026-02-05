@@ -1,4 +1,7 @@
-import ReactMarkdown from "react-markdown";
+ import ReactMarkdown from "react-markdown";
+ import remarkMath from "remark-math";
+ import rehypeKatex from "rehype-katex";
+ import "katex/dist/katex.min.css";
 import { Sparkles, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,10 +15,16 @@ interface ChatMessageProps {
 export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessageProps) {
   const isBot = role === "assistant";
 
-  // Clean content - ensure no raw markdown breaks through
-  const cleanContent = content
-    .replace(/\*\*\*/g, '') // Remove triple asterisks
-    .replace(/---/g, '—'); // Replace horizontal rules with em dash
+   // Prepare content for math rendering - normalize LaTeX delimiters
+   const processedContent = content
+     // Ensure proper spacing around block math
+     .replace(/\$\$\s*/g, '\n$$')
+     .replace(/\s*\$\$/g, '$$\n')
+     // Clean up triple asterisks
+     .replace(/\*\*\*/g, '**')
+     // Replace horizontal rules with em dash
+     .replace(/---/g, '—')
+     .trim();
 
   return (
     <div
@@ -64,10 +73,12 @@ export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessagePr
           {isBot ? (
             <div className="prose prose-sm dark:prose-invert max-w-none text-foreground/90 leading-relaxed">
               <ReactMarkdown
+               remarkPlugins={[remarkMath]}
+               rehypePlugins={[rehypeKatex]}
                 components={{
                   // Paragraphs
                   p: ({ children }) => (
-                    <p className="mb-3 last:mb-0 text-sm leading-relaxed">{children}</p>
+                   <p className="mb-3 last:mb-0 text-sm leading-relaxed [&_.katex]:text-[0.95em]">{children}</p>
                   ),
                   // Lists
                   ul: ({ children }) => (
@@ -115,6 +126,33 @@ export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessagePr
                       {children}
                     </pre>
                   ),
+                 // Math display - ensure proper styling
+                 span: ({ className, children, ...props }) => {
+                   if (className?.includes('katex')) {
+                     return (
+                       <span 
+                         className={cn(className, "text-foreground")} 
+                         {...props}
+                       >
+                         {children}
+                       </span>
+                     );
+                   }
+                   return <span className={className} {...props}>{children}</span>;
+                 },
+                 div: ({ className, children, ...props }) => {
+                   if (className?.includes('katex')) {
+                     return (
+                       <div 
+                         className={cn(className, "my-3 overflow-x-auto text-foreground")} 
+                         {...props}
+                       >
+                         {children}
+                       </div>
+                     );
+                   }
+                   return <div className={className} {...props}>{children}</div>;
+                 },
                   // Headings
                   h1: ({ children }) => (
                     <h1 className="text-base font-bold mb-2 mt-4 first:mt-0 text-foreground">{children}</h1>
@@ -137,7 +175,7 @@ export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessagePr
                   ),
                 }}
               >
-                {cleanContent}
+               {processedContent}
               </ReactMarkdown>
             </div>
           ) : (
