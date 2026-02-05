@@ -11,7 +11,10 @@
    Download,
    Play,
    CheckCircle,
-   Sparkles
+  Sparkles,
+  Atom,
+  FlaskConical,
+  Calculator
  } from "lucide-react";
  import { Button } from "@/components/ui/button";
  import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +24,7 @@
  import { ScrollArea } from "@/components/ui/scroll-area";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
  import { 
    useTestBuilder, 
    ExamType, 
@@ -340,30 +344,63 @@
  
            {/* Generate Button */}
            <div className="flex flex-col items-center gap-4 pt-4">
-             <Button
-               size="lg"
-               onClick={handleGenerate}
-               disabled={testBuilder.isGenerating || (testBuilder.syllabusType === "custom" && testBuilder.selectedChapters.length === 0)}
-               className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:from-primary/90 hover:to-violet-500/90 shadow-lg shadow-primary/25 px-8"
-             >
-               {testBuilder.isGenerating ? (
-                 <>
-                   <Loader2 className="h-5 w-5 animate-spin" />
-                   Generating Questions...
-                 </>
-               ) : (
-                 <>
-                   <Sparkles className="h-5 w-5" />
-                   Generate {mode === "online" ? "& Start Test" : "& Download PDF"}
-                   <ChevronRight className="h-4 w-4" />
-                 </>
-               )}
-             </Button>
-             
-             <p className="text-xs text-muted-foreground flex items-center gap-1">
-               <CheckCircle className="h-3 w-3" />
-               AI-generated questions with detailed solutions
-             </p>
+            {testBuilder.isGenerating && testBuilder.generationProgress ? (
+              <div className="space-y-4 w-full max-w-md">
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    {testBuilder.generationProgress.message.includes("physics") ? (
+                      <Atom className="h-4 w-4 animate-pulse text-primary" />
+                    ) : testBuilder.generationProgress.message.includes("chemistry") ? (
+                      <FlaskConical className="h-4 w-4 animate-pulse text-primary" />
+                    ) : testBuilder.generationProgress.message.includes("mathematics") ? (
+                      <Calculator className="h-4 w-4 animate-pulse text-primary" />
+                    ) : (
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    )}
+                    <span className="text-muted-foreground">{testBuilder.generationProgress.message}</span>
+                  </div>
+                  <span className="font-medium">
+                    {testBuilder.generationProgress.total > 0
+                      ? Math.round((testBuilder.generationProgress.completed / testBuilder.generationProgress.total) * 100)
+                      : 0}%
+                  </span>
+                </div>
+                <Progress 
+                  value={testBuilder.generationProgress.total > 0
+                    ? (testBuilder.generationProgress.completed / testBuilder.generationProgress.total) * 100
+                    : 0} 
+                  className="h-2" 
+                />
+                <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <FileText className="h-3 w-3" />
+                    {testBuilder.generationProgress.questionsGenerated} questions generated
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Target className="h-3 w-3" />
+                    {testBuilder.generationProgress.completed}/{testBuilder.generationProgress.total} batches
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <>
+                <Button
+                  size="lg"
+                  onClick={handleGenerate}
+                  disabled={testBuilder.syllabusType === "custom" && testBuilder.selectedChapters.length === 0}
+                  className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:from-primary/90 hover:to-violet-500/90 shadow-lg shadow-primary/25 px-8"
+                >
+                  <Sparkles className="h-5 w-5" />
+                  Generate {mode === "online" ? "& Start Test" : "& Download PDF"}
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <CheckCircle className="h-3 w-3" />
+                  AI-generated questions with detailed solutions
+                </p>
+              </>
+            )}
            </div>
          </div>
        </div>

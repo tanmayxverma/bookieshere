@@ -1,5 +1,5 @@
  import { useState, useCallback } from "react";
- import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
  import { useToast } from "@/hooks/use-toast";
  import { useAuth } from "@/hooks/useAuth";
  
@@ -57,6 +57,12 @@
    currentQuestionIndex: number;
    timeRemaining: number;
    isSubmitting: boolean;
+  generationProgress: {
+    completed: number;
+    total: number;
+    message: string;
+    questionsGenerated: number;
+  } | null;
  }
  
  // JEE Chapters by class and subject
@@ -176,6 +182,7 @@
      currentQuestionIndex: 0,
      timeRemaining: 180 * 60,
      isSubmitting: false,
+    generationProgress: null,
    });
  
    const setExamType = useCallback((type: ExamType) => {
@@ -219,6 +226,7 @@
  
    const generateTest = useCallback(async () => {
      setState(prev => ({ ...prev, isGenerating: true }));
+    setState(prev => ({ ...prev, generationProgress: { completed: 0, total: 0, message: "Initializing...", questionsGenerated: 0 } }));
      
      try {
        const chapters = state.syllabusType === "custom" 
@@ -231,26 +239,82 @@
          return;
        }
  
-       const { data, error } = await supabase.functions.invoke("generate-test", {
-         body: {
-           examType: state.examType,
-           syllabusType: state.syllabusType,
-           chapters: chapters.map(c => ({ name: c.name, subject: c.subject })),
-           userId: user?.id || null,
-         },
+      // Use streaming for progress updates
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-test`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          examType: state.examType,
+          syllabusType: state.syllabusType,
+          chapters: chapters.map(c => ({ name: c.name, subject: c.subject })),
+          userId: user?.id || null,
+          stream: true,
+        }),
        });
  
-       if (error) throw error;
+      if (!response.ok || !response.body) {
+        throw new Error("Failed to start test generation");
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let finalData: { test: any; questions: any[] } | null = null;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (!jsonStr) continue;
+
+          try {
+            const event = JSON.parse(jsonStr);
+            
+            if (event.type === "progress" || event.type === "start" || event.type === "saving") {
+              setState(prev => ({
+                ...prev,
+                generationProgress: {
+                  completed: event.completed || 0,
+                  total: event.total || 0,
+                  message: event.message || "",
+                  questionsGenerated: event.questionsGenerated || 0,
+                },
+              }));
+            } else if (event.type === "complete") {
+              finalData = { test: event.test, questions: event.questions };
+            } else if (event.type === "error") {
+              throw new Error(event.message);
+            }
+          } catch (parseErr) {
+            // Skip invalid JSON
+          }
+        }
+      }
+
+      if (!finalData) {
+        throw new Error("No response received from server");
+      }
  
        setState(prev => ({
          ...prev,
          isGenerating: false,
-         currentTest: data.test,
-         questions: data.questions,
-         timeRemaining: data.test.duration_minutes * 60,
+        generationProgress: null,
+        currentTest: finalData!.test,
+        questions: finalData!.questions,
+        timeRemaining: finalData!.test.duration_minutes * 60,
        }));
  
-       toast({ title: "Test generated!", description: `${data.questions.length} questions ready` });
+      toast({ title: "Test generated!", description: `${finalData.questions.length} questions ready` });
        return true;
      } catch (error: any) {
        console.error("Generate test error:", error);
@@ -259,7 +323,7 @@
          title: "Failed to generate test",
          description: error.message || "Please try again"
        });
-       setState(prev => ({ ...prev, isGenerating: false }));
+      setState(prev => ({ ...prev, isGenerating: false, generationProgress: null }));
        return false;
      }
    }, [state.examType, state.syllabusType, state.selectedChapters, getChaptersForSyllabus, user, toast]);
@@ -354,6 +418,7 @@
        currentQuestionIndex: 0,
        timeRemaining: 180 * 60,
        isSubmitting: false,
+      generationProgress: null,
      });
    }, []);
  
