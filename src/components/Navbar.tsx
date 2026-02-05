@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import logo from "@/assets/logo.jfif";
 
-const navLinks = [
-  { path: "/", label: "Home" },
-  { path: "/materials", label: "Materials" },
-  { path: "/support", label: "Support" },
-];
+ const navLinks = [
+   { path: "/", label: "Home" },
+   { path: "/materials", label: "Materials" },
+   { path: "/tests", label: "Tests" },
+   { path: "/support", label: "Support" },
+ ];
 
 
 export function Navbar() {

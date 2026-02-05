@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { BookOpen, ArrowRight, MessageCircle, Sparkles, Target, Shield, CheckCircle } from "lucide-react";
+ import { Link } from "react-router-dom";
+ import { BookOpen, ArrowRight, MessageCircle, Sparkles, Target, Shield, CheckCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
@@ -42,23 +42,24 @@ const Index = () => {
               </p>
             </div>
 
-            {/* CTA Group with enriched layout */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-6 opacity-0 animate-fade-in stagger-3">
-              <Button asChild size="lg" className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:from-primary/90 hover:to-violet-500/90 shadow-lg shadow-primary/25 btn-press transition-all duration-200 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 px-8">
-                <Link to="/materials">
-                  <BookOpen className="h-5 w-5" />
-                  Browse Materials
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" size="lg" className="gap-2 hover:bg-surface-2 btn-press transition-all duration-200 hover:-translate-y-0.5 border-border/60">
-                <Link to="/support">
-                  <MessageCircle className="h-4 w-4" />
-                  Support
-                </Link>
-              </Button>
-            </div>
+             {/* CTA Group with enriched layout */}
+             <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-6 opacity-0 animate-fade-in stagger-3">
+               <Button asChild size="lg" className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:from-primary/90 hover:to-violet-500/90 shadow-lg shadow-primary/25 btn-press transition-all duration-200 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 px-8">
+                 <Link to="/materials">
+                   <BookOpen className="h-5 w-5" />
+                   Browse Materials
+                   <ArrowRight className="h-4 w-4" />
+                 </Link>
+               </Button>
+               
+               <Button asChild size="lg" className="gap-2 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-500/90 hover:to-purple-500/90 shadow-lg shadow-violet-500/25 btn-press transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5 px-8">
+                 <Link to="/tests">
+                   <FileText className="h-5 w-5" />
+                   Practice Tests
+                   <ArrowRight className="h-4 w-4" />
+                 </Link>
+               </Button>
+             </div>
             
             {/* Trust indicators strip */}
            <div className="pt-10 md:pt-12 opacity-0 animate-fade-in stagger-4">
