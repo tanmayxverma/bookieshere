@@ -1,4 +1,5 @@
-import { MessageCircle, ExternalLink, Send, AlertCircle, FileWarning, Link2Off, HelpCircle, Headphones } from "lucide-react";
+import { Link } from "react-router-dom";
+import { MessageCircle, ExternalLink, Send, AlertCircle, FileWarning, Link2Off, HelpCircle, Headphones, BookOpen, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
@@ -61,13 +62,44 @@ const Support = () => {
               </p>
             </div>
 
+            {/* Quick Actions - Browse Materials & Practice Tests */}
+            <div className="grid sm:grid-cols-2 gap-4 mb-6 opacity-0 animate-fade-in stagger-1">
+              <Link
+                to="/materials"
+                className="group flex items-center gap-4 p-5 bg-surface-1 rounded-xl border border-border/40 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-display font-semibold text-foreground mb-1">Browse Materials</h3>
+                  <p className="text-sm text-muted-foreground">Access study resources</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+              </Link>
+
+              <Link
+                to="/tests"
+                className="group flex items-center gap-4 p-5 bg-surface-1 rounded-xl border border-border/40 hover:border-violet-500/40 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 rounded-xl bg-violet-500/10 text-violet-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <FileText className="h-6 w-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-display font-semibold text-foreground mb-1">Practice Tests</h3>
+                  <p className="text-sm text-muted-foreground">Take JEE mock tests</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-violet-500 group-hover:translate-x-1 transition-all" />
+              </Link>
+            </div>
+
             {/* Divider */}
-            <div className="pinch-bar opacity-0 animate-fade-in stagger-1">
+            <div className="pinch-bar opacity-0 animate-fade-in stagger-2">
               <span className="pinch-bar-line" />
             </div>
 
             {/* Support Uses Card - Surface Level 1 */}
-            <div className="bg-surface-1 rounded-2xl border border-border/40 p-6 md:p-8 mb-6 opacity-0 animate-fade-in stagger-2">
+            <div className="bg-surface-1 rounded-2xl border border-border/40 p-6 md:p-8 mb-6 opacity-0 animate-fade-in stagger-3">
               <h2 className="font-display font-semibold text-foreground mb-6 flex items-center gap-2">
                 <span className="w-1 h-5 rounded-full bg-primary" />
                 What can we help with?
@@ -91,7 +123,7 @@ const Support = () => {
             </div>
 
             {/* CTA Section - Surface Level 2 */}
-            <div className="bg-surface-2 rounded-2xl border border-border/40 p-6 md:p-8 text-center opacity-0 animate-fade-in stagger-3">
+            <div className="bg-surface-2 rounded-2xl border border-border/40 p-6 md:p-8 text-center opacity-0 animate-fade-in stagger-4">
               <h3 className="font-display font-semibold text-foreground mb-3 text-lg">
                 Ready to get help?
               </h3>
@@ -101,7 +133,7 @@ const Support = () => {
               
               <Button
                 size="lg"
-                className="gap-2 bg-gradient-to-r from-[#0088cc] to-[#0066aa] hover:from-[#0088cc]/90 hover:to-[#0066aa]/90 shadow-lg shadow-[#0088cc]/25 btn-press transition-all duration-200 hover:-translate-y-0.5"
+                className="gap-2 bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--primary)/0.8)] hover:opacity-90 shadow-lg shadow-primary/25 btn-press transition-all duration-200 hover:-translate-y-0.5"
                 onClick={() => window.open(telegramBotLink, "_blank", "noopener,noreferrer")}
               >
                 <Send className="h-5 w-5" />
