@@ -15,8 +15,8 @@ interface ChatMessageProps {
 export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessageProps) {
   const isBot = role === "assistant";
 
-   // Prepare content for math rendering - normalize LaTeX delimiters
-   const processedContent = content
+   // Prepare content for proper rendering
+   let processedContent = content
      // Ensure proper spacing around block math
      .replace(/\$\$\s*/g, '\n$$')
      .replace(/\s*\$\$/g, '$$\n')
@@ -25,6 +25,15 @@ export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessagePr
      // Replace horizontal rules with em dash
      .replace(/---/g, '—')
      .trim();
+   
+   // Fix inline heading syntax - convert mid-line ### to bold
+   // Match heading markers that are NOT at the start of a line
+   processedContent = processedContent
+     // Convert inline ### heading to **bold**
+     .replace(/([^\n])#{1,6}\s+([^\n]+)/g, '$1**$2**')
+     // Ensure headings at start of line are properly formatted
+     .replace(/^(#{1,6})\s*$/gm, '') // Remove empty headings
+     .replace(/^(#{1,6})([^\s#])/gm, '$1 $2'); // Add space after # if missing
 
   return (
     <div
