@@ -56,6 +56,131 @@ export type Database = {
         }
         Relationships: []
       }
+      test_questions: {
+        Row: {
+          chapter: string | null
+          correct_answer: Json
+          created_at: string
+          diagram_url: string | null
+          id: string
+          is_answered: boolean | null
+          is_marked_for_review: boolean | null
+          marks_negative: number
+          marks_positive: number
+          options: Json | null
+          partial_marking: boolean | null
+          question_number: number
+          question_text: string
+          question_type: Database["public"]["Enums"]["question_type"]
+          solution: string | null
+          subject: Database["public"]["Enums"]["subject_type"]
+          test_id: string
+          user_answer: Json | null
+        }
+        Insert: {
+          chapter?: string | null
+          correct_answer: Json
+          created_at?: string
+          diagram_url?: string | null
+          id?: string
+          is_answered?: boolean | null
+          is_marked_for_review?: boolean | null
+          marks_negative?: number
+          marks_positive?: number
+          options?: Json | null
+          partial_marking?: boolean | null
+          question_number: number
+          question_text: string
+          question_type: Database["public"]["Enums"]["question_type"]
+          solution?: string | null
+          subject: Database["public"]["Enums"]["subject_type"]
+          test_id: string
+          user_answer?: Json | null
+        }
+        Update: {
+          chapter?: string | null
+          correct_answer?: Json
+          created_at?: string
+          diagram_url?: string | null
+          id?: string
+          is_answered?: boolean | null
+          is_marked_for_review?: boolean | null
+          marks_negative?: number
+          marks_positive?: number
+          options?: Json | null
+          partial_marking?: boolean | null
+          question_number?: number
+          question_text?: string
+          question_type?: Database["public"]["Enums"]["question_type"]
+          solution?: string | null
+          subject?: Database["public"]["Enums"]["subject_type"]
+          test_id?: string
+          user_answer?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_questions_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tests: {
+        Row: {
+          completed_at: string | null
+          correct_count: number | null
+          created_at: string
+          duration_minutes: number
+          exam_type: Database["public"]["Enums"]["jee_exam_type"]
+          id: string
+          incorrect_count: number | null
+          score: number | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["test_status"]
+          syllabus: Json
+          total_marks: number
+          total_questions: number
+          unattempted_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          correct_count?: number | null
+          created_at?: string
+          duration_minutes?: number
+          exam_type: Database["public"]["Enums"]["jee_exam_type"]
+          id?: string
+          incorrect_count?: number | null
+          score?: number | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["test_status"]
+          syllabus?: Json
+          total_marks?: number
+          total_questions?: number
+          unattempted_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          correct_count?: number | null
+          created_at?: string
+          duration_minutes?: number
+          exam_type?: Database["public"]["Enums"]["jee_exam_type"]
+          id?: string
+          incorrect_count?: number | null
+          score?: number | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["test_status"]
+          syllabus?: Json
+          total_marks?: number
+          total_questions?: number
+          unattempted_count?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -90,6 +215,14 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       exam_type: "jee" | "other_pcm"
+      jee_exam_type: "jee_main" | "jee_advanced"
+      question_type:
+        | "single_correct"
+        | "multi_correct"
+        | "numerical"
+        | "integer"
+        | "matrix_match"
+        | "paragraph"
       resource_type:
         | "books"
         | "notes"
@@ -99,6 +232,7 @@ export type Database = {
         | "modules"
         | "crux"
       subject_type: "physics" | "chemistry" | "mathematics" | "combined"
+      test_status: "draft" | "in_progress" | "completed" | "abandoned"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -228,6 +362,15 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       exam_type: ["jee", "other_pcm"],
+      jee_exam_type: ["jee_main", "jee_advanced"],
+      question_type: [
+        "single_correct",
+        "multi_correct",
+        "numerical",
+        "integer",
+        "matrix_match",
+        "paragraph",
+      ],
       resource_type: [
         "books",
         "notes",
@@ -238,6 +381,7 @@ export const Constants = {
         "crux",
       ],
       subject_type: ["physics", "chemistry", "mathematics", "combined"],
+      test_status: ["draft", "in_progress", "completed", "abandoned"],
     },
   },
 } as const
