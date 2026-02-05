@@ -13,7 +13,9 @@ import {
   Loader2,
   Sun,
   Moon,
-  Layers
+  Layers,
+  AlertTriangle,
+  Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +25,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { jsPDF } from "jspdf";
 import { usePYQTest, ExamType, TestMode, AttemptMode, ClassLevel } from "@/hooks/usePYQTest";
@@ -35,6 +37,7 @@ interface PYQTestConfigProps {
 
 export function PYQTestConfig({ testState, onStartTest }: PYQTestConfigProps) {
   const [step, setStep] = useState(1);
+  const [unavailableMessage, setUnavailableMessage] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     if (!testState.isConfigValid()) {
@@ -42,8 +45,10 @@ export function PYQTestConfig({ testState, onStartTest }: PYQTestConfigProps) {
       return;
     }
 
-    const success = await testState.loadQuestions();
-    if (success) {
+    setUnavailableMessage(null);
+    const result = await testState.loadQuestions();
+    
+    if (result.success) {
       if (testState.attemptMode === "online") {
         onStartTest();
       } else {
@@ -51,7 +56,8 @@ export function PYQTestConfig({ testState, onStartTest }: PYQTestConfigProps) {
         handleDownloadPDF();
       }
     } else {
-      toast.error("No questions found for the selected criteria");
+      // Show the unavailable message
+      setUnavailableMessage(result.message || "Official question data is currently unavailable.");
     }
   };
 
@@ -202,7 +208,13 @@ export function PYQTestConfig({ testState, onStartTest }: PYQTestConfigProps) {
     sDoc.setFontSize(16);
     sDoc.setFont("helvetica", "bold");
     sDoc.text(`${title} - Solutions`, pageWidth / 2, y, { align: "center" });
-    y += 15;
+    y += 8;
+
+    // Add disclaimer about solution sources
+    sDoc.setFontSize(8);
+    sDoc.setFont("helvetica", "italic");
+    sDoc.text("Solutions sourced from trusted online resources (non-official)", pageWidth / 2, y, { align: "center" });
+    y += 12;
 
     for (const subject of subjects) {
       const subjectQs = questions.filter(q => q.subject === subject);
@@ -745,8 +757,29 @@ export function PYQTestConfig({ testState, onStartTest }: PYQTestConfigProps) {
                   </div>
                 </div>
 
+                {/* Unavailable Message Alert */}
+                {unavailableMessage && (
+                  <Alert variant="destructive" className="animate-fade-in">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Official Data Unavailable</AlertTitle>
+                    <AlertDescription>
+                      {unavailableMessage}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Source Authenticity Notice */}
+                <Alert className="bg-muted/50 border-primary/20">
+                  <Info className="h-4 w-4 text-primary" />
+                  <AlertTitle className="text-sm">100% Authentic Questions</AlertTitle>
+                  <AlertDescription className="text-xs text-muted-foreground">
+                    All questions are sourced exclusively from official NTA JEE Main and IIT JEE Advanced question papers. 
+                    We do not include coaching reconstructions or memory-based questions.
+                  </AlertDescription>
+                </Alert>
+
                 <div className="flex justify-between pt-4">
-                  <Button variant="outline" onClick={() => setStep(3)}>Back</Button>
+                  <Button variant="outline" onClick={() => { setStep(3); setUnavailableMessage(null); }}>Back</Button>
                   <Button 
                     onClick={handleGenerate}
                     className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:shadow-lg"

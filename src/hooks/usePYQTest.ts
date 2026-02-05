@@ -1,14 +1,15 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { 
-  PYQ_BANK, 
   PYQQuestion, 
   JEE_MAIN_YEARS, 
   JEE_MAIN_SHIFTS,
   JEE_ADVANCED_YEARS,
   JEE_ADVANCED_PAPERS,
   TOPICS_BY_SUBJECT,
-  getPYQs
+  getYearWiseTest,
+  getTopicWiseTest,
+  getUnavailableMessage
 } from "@/data/pyqBank";
 
 export type ExamType = "jee_main" | "jee_advanced";
@@ -183,7 +184,7 @@ export function usePYQTest() {
   }, [state.testMode, state.selectedYear, state.selectedShift, state.selectedPaper, state.examType, state.selectedSubject, state.selectedTopics]);
 
   // Load questions with fake loading for better UX
-  const loadQuestions = useCallback(async () => {
+  const loadQuestions = useCallback(async (): Promise<{ success: boolean; message?: string }> => {
     setState(prev => ({ ...prev, isLoading: true, loadingProgress: 0 }));
 
     // Simulate controlled loading for better UX
@@ -194,43 +195,46 @@ export function usePYQTest() {
       setState(prev => ({ ...prev, loadingProgress: progressSteps[i] }));
     }
 
-    let questions: PYQQuestion[] = [];
+    let result: { questions: PYQQuestion[]; isAvailable: boolean; message?: string };
 
     if (state.testMode === "year_wise") {
-      questions = getPYQs({
-        examType: state.examType,
-        year: state.selectedYear!,
-        shift: state.selectedShift || undefined,
-        paper: state.selectedPaper || undefined,
-      });
+      result = getYearWiseTest(
+        state.examType,
+        state.selectedYear!,
+        state.selectedShift || undefined,
+        state.selectedPaper || undefined
+      );
     } else {
       // Topic-wise - filter by class level
-      if (state.classLevel === "custom") {
-        questions = getPYQs({
-          examType: state.examType,
-          subject: state.selectedSubject!,
-          topics: state.selectedTopics,
-        });
-      } else {
-        questions = getPYQs({
-          examType: state.examType,
-          subject: state.selectedSubject!,
-          classLevel: state.classLevel,
-          topics: state.selectedTopics,
-        });
-      }
+      result = getTopicWiseTest(
+        state.examType,
+        state.selectedSubject!,
+        state.classLevel,
+        state.selectedTopics
+      );
     }
 
-    // If no questions found, show all questions for the exam type as fallback
-    if (questions.length === 0) {
-      questions = PYQ_BANK.filter(q => q.examType === state.examType);
-      if (questions.length === 0) {
-        questions = PYQ_BANK; // Ultimate fallback
-      }
+    // If no questions available, return with message
+    if (!result.isAvailable || result.questions.length === 0) {
+      setState(prev => ({
+        ...prev,
+        isLoading: false,
+        loadingProgress: 0,
+        questions: [],
+      }));
+      
+      const message = result.message || getUnavailableMessage(
+        state.examType,
+        state.selectedYear || undefined,
+        state.selectedShift || undefined,
+        state.selectedPaper || undefined
+      );
+      
+      return { success: false, message };
     }
 
     // Shuffle questions for variety
-    questions = questions.sort(() => Math.random() - 0.5);
+    const questions = result.questions.sort(() => Math.random() - 0.5);
 
     // Set duration based on exam type
     const duration = state.examType === "jee_main" ? 180 * 60 : 180 * 60; // 3 hours
@@ -247,7 +251,7 @@ export function usePYQTest() {
       currentQuestionIndex: 0,
     }));
 
-    return questions.length > 0;
+    return { success: true };
   }, [state.testMode, state.examType, state.selectedYear, state.selectedShift, state.selectedPaper, state.classLevel, state.selectedSubject, state.selectedTopics, state.attemptMode]);
 
   // Answer a question
