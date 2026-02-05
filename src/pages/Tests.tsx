@@ -1,44 +1,37 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
 import { Layout } from "@/components/Layout";
-import { TestConfiguration } from "@/components/Tests/TestConfiguration";
-import { ExamSimulator } from "@/components/Tests/ExamSimulator";
-import { TestResults } from "@/components/Tests/TestResults";
-import { useTestBuilder } from "@/hooks/useTestBuilder";
+import { PYQTestConfig } from "@/components/Tests/PYQTestConfig";
+import { PYQCBTSimulator } from "@/components/Tests/PYQCBTSimulator";
+import { PYQTestResults } from "@/components/Tests/PYQTestResults";
+import { usePYQTest } from "@/hooks/usePYQTest";
 
 export type TestView = "config" | "exam" | "results";
 
 // Persist test state globally to survive navigation
-let persistedState: {
-  view: TestView;
-  testBuilder: ReturnType<typeof useTestBuilder> | null;
-} | null = null;
+let persistedTestState: ReturnType<typeof usePYQTest> | null = null;
+let persistedView: TestView = "config";
 
 const Tests = () => {
-  const location = useLocation();
-  const [currentView, setCurrentView] = useState<TestView>(
-    persistedState?.view || "config"
-  );
-  const testBuilder = useTestBuilder();
+  const [currentView, setCurrentView] = useState<TestView>(persistedView);
+  const testState = usePYQTest();
   const isInitialMount = useRef(true);
 
   // Restore state on mount if we had an active test
   useEffect(() => {
-    if (isInitialMount.current && persistedState?.view === "exam") {
-      // Don't reset if returning from navigation
+    if (isInitialMount.current) {
+      if (persistedView === "exam" && persistedTestState?.testStarted) {
+        // Restore the persisted state
+        setCurrentView("exam");
+      }
       isInitialMount.current = false;
-      return;
     }
-    isInitialMount.current = false;
   }, []);
 
   // Persist state when view changes
   useEffect(() => {
-    persistedState = {
-      view: currentView,
-      testBuilder: testBuilder,
-    };
-  }, [currentView, testBuilder]);
+    persistedView = currentView;
+    persistedTestState = testState;
+  }, [currentView, testState]);
 
   // Scroll to top when entering exam mode
   useEffect(() => {
@@ -56,15 +49,16 @@ const Tests = () => {
   };
 
   const handleNewTest = () => {
-    testBuilder.resetTest();
-    persistedState = null; // Clear persisted state
+    testState.resetTest();
+    persistedTestState = null;
+    persistedView = "config";
     setCurrentView("config");
   };
 
   // Warn user before leaving during active test
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (currentView === "exam" && testBuilder.questions.length > 0) {
+      if (currentView === "exam" && testState.questions.length > 0) {
         e.preventDefault();
         e.returnValue = "You have an active test. Are you sure you want to leave?";
         return e.returnValue;
@@ -73,13 +67,13 @@ const Tests = () => {
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [currentView, testBuilder.questions.length]);
+  }, [currentView, testState.questions.length]);
 
   // For exam mode, render without Layout to prevent navigation issues
   if (currentView === "exam") {
     return (
-      <ExamSimulator
-        testBuilder={testBuilder}
+      <PYQCBTSimulator
+        testState={testState}
         onSubmit={handleSubmitTest}
       />
     );
@@ -88,14 +82,14 @@ const Tests = () => {
   return (
     <Layout>
       {currentView === "config" && (
-        <TestConfiguration
-          testBuilder={testBuilder}
+        <PYQTestConfig
+          testState={testState}
           onStartTest={handleStartTest}
         />
       )}
       {currentView === "results" && (
-        <TestResults
-          testBuilder={testBuilder}
+        <PYQTestResults
+          testState={testState}
           onNewTest={handleNewTest}
         />
       )}
