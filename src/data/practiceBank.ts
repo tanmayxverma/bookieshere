@@ -803,12 +803,10 @@ export function getFilteredQuestions(options: {
   subjects: ("physics" | "chemistry" | "mathematics")[];
   topics: string[];
 }): PracticeQuestion[] {
-  let filtered = PRACTICE_BANK.filter(q => {
-    // Filter by difficulty
-    if (options.testType === "jee_advanced" && q.difficulty === "main") {
-      // For advanced, include both main and advanced difficulty questions
-      // but prefer advanced ones
-    }
+  const filtered = PRACTICE_BANK.filter(q => {
+    // STRICT difficulty filtering — Main questions NEVER in Advanced tests, vice versa
+    if (options.testType === "jee_main" && q.difficulty !== "main") return false;
+    if (options.testType === "jee_advanced" && q.difficulty !== "advanced") return false;
 
     // Filter by syllabus level
     if (options.syllabusLevel === "11" && q.classLevel !== "11") return false;
@@ -818,11 +816,18 @@ export function getFilteredQuestions(options: {
     // Filter by subjects
     if (options.subjects.length > 0 && !options.subjects.includes(q.subject)) return false;
 
-    // Filter by topics
+    // Filter by topics — EXACT match only, no related/prerequisite topics
     if (options.topics.length > 0 && !options.topics.includes(q.chapter)) return false;
 
     return true;
   });
 
-  return shuffleArray(filtered);
+  // Enforce fixed marking: +4 correct, -1 incorrect
+  const withFixedMarking = filtered.map(q => ({
+    ...q,
+    marks_positive: 4,
+    marks_negative: 1,
+  }));
+
+  return shuffleArray(withFixedMarking);
 }

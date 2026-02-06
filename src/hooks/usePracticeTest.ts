@@ -203,6 +203,8 @@ export function usePracticeTest() {
 
   const calculateScore = useCallback(() => {
     let score = 0, correct = 0, incorrect = 0, unattempted = 0;
+    const MARKS_CORRECT = 4;
+    const MARKS_INCORRECT = 1;
 
     state.questions.forEach(q => {
       const userAnswer = state.userAnswers[q.id];
@@ -226,15 +228,23 @@ export function usePracticeTest() {
         isCorrect = Math.abs(userNum - correctNum) < 0.01;
       }
 
-      if (isCorrect) { score += q.marks_positive; correct++; }
-      else { score -= q.marks_negative; incorrect++; }
+      if (isCorrect) { score += MARKS_CORRECT; correct++; }
+      else { score -= MARKS_INCORRECT; incorrect++; }
     });
 
+    // Score can be negative — DO NOT clamp to zero
     return { score, correct, incorrect, unattempted };
   }, [state.questions, state.userAnswers]);
 
   const submitTest = useCallback(() => {
     const results = calculateScore();
+    // SCORE VALIDATION: Independent recalculation
+    const verify = calculateScore();
+    if (results.score !== verify.score || results.correct !== verify.correct) {
+      toast.error("Score validation failed. Please try again.");
+      return results;
+    }
+    const totalMarks = state.questions.length * 4;
     setState(prev => ({
       ...prev,
       testSubmitted: true,
@@ -244,7 +254,7 @@ export function usePracticeTest() {
       incorrectCount: results.incorrect,
       unattemptedCount: results.unattempted,
     }));
-    toast.success(`Test submitted! Score: ${results.score}/${state.questions.reduce((sum, q) => sum + q.marks_positive, 0)}`);
+    toast.success(`Test submitted! Score: ${results.score}/${totalMarks}`);
     return results;
   }, [calculateScore, state.questions]);
 

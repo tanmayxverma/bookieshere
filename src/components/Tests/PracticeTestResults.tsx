@@ -22,8 +22,8 @@ interface PracticeTestResultsProps {
 export function PracticeTestResults({ testState, onNewTest }: PracticeTestResultsProps) {
   const [expandedQuestions, setExpandedQuestions] = useState<Set<string>>(new Set());
 
-  const totalMarks = testState.questions.reduce((sum, q) => sum + q.marks_positive, 0);
-  const percentage = totalMarks > 0 ? Math.round((testState.score / totalMarks) * 100) : 0;
+  const totalMarks = testState.questions.length * 4; // Fixed: +4 per question
+  const percentage = totalMarks > 0 ? Math.round((Math.max(0, testState.score) / totalMarks) * 100) : 0;
 
   const toggleQuestion = (id: string) => {
     setExpandedQuestions(prev => {
@@ -64,12 +64,8 @@ export function PracticeTestResults({ testState, onNewTest }: PracticeTestResult
     return isCorrect ? "correct" : "incorrect";
   };
 
-  // Calculate negative marking impact
-  const negativeMarksLost = testState.questions.reduce((total, q) => {
-    const result = getQuestionResult(q);
-    if (result === "incorrect") return total + q.marks_negative;
-    return total;
-  }, 0);
+  // Fixed marking: -1 per incorrect
+  const negativeMarksLost = testState.incorrectCount * 1;
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -219,8 +215,8 @@ export function PracticeTestResults({ testState, onNewTest }: PracticeTestResult
 
                             {/* Marking impact */}
                             <div className="text-xs text-muted-foreground">
-                              {result === "correct" && <span className="text-green-600">+{q.marks_positive} marks</span>}
-                              {result === "incorrect" && <span className="text-destructive">-{q.marks_negative} marks (negative marking)</span>}
+                              {result === "correct" && <span className="text-green-600">+4 marks</span>}
+                              {result === "incorrect" && <span className="text-destructive">−1 mark (negative marking)</span>}
                               {result === "unattempted" && <span>0 marks (not attempted)</span>}
                             </div>
 
