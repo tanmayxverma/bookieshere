@@ -785,6 +785,36 @@ export const PRACTICE_BANK: PracticeQuestion[] = [
   },
 ];
 
+// ==================== USAGE TRACKING ====================
+
+const USAGE_STORAGE_KEY = "bookie_question_usage";
+
+interface QuestionUsage {
+  timesUsed: number;
+  lastUsed: number; // timestamp
+}
+
+function getUsageMap(): Record<string, QuestionUsage> {
+  try {
+    const raw = localStorage.getItem(USAGE_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function recordUsage(questionIds: string[]) {
+  const map = getUsageMap();
+  const now = Date.now();
+  for (const id of questionIds) {
+    const prev = map[id] || { timesUsed: 0, lastUsed: 0 };
+    map[id] = { timesUsed: prev.timesUsed + 1, lastUsed: now };
+  }
+  try {
+    localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify(map));
+  } catch { /* storage full — silently ignore */ }
+}
+
 // Helper functions
 export function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -811,23 +841,57 @@ export function getFilteredQuestions(options: {
     // Filter by syllabus level
     if (options.syllabusLevel === "11" && q.classLevel !== "11") return false;
     if (options.syllabusLevel === "12" && q.classLevel !== "12") return false;
-    // "both" allows all, "custom" uses topic filtering
 
     // Filter by subjects
     if (options.subjects.length > 0 && !options.subjects.includes(q.subject)) return false;
 
-    // Filter by topics — EXACT match only, no related/prerequisite topics
+    // Filter by topics — EXACT match only
     if (options.topics.length > 0 && !options.topics.includes(q.chapter)) return false;
 
     return true;
   });
 
+  // Sort by least-recently-used first to maximize uniqueness
+  const usageMap = getUsageMap();
+  const sorted = filtered.sort((a, b) => {
+    const ua = usageMap[a.id] || { timesUsed: 0, lastUsed: 0 };
+    const ub = usageMap[b.id] || { timesUsed: 0, lastUsed: 0 };
+    // Prefer unused, then least used, then least recently used
+    if (ua.timesUsed !== ub.timesUsed) return ua.timesUsed - ub.timesUsed;
+    return ua.lastUsed - ub.lastUsed;
+  });
+
+  // After LRU sort, shuffle within same-usage tiers for variety
+  const tiered = tieredShuffle(sorted, usageMap);
+
   // Enforce fixed marking: +4 correct, -1 incorrect
-  const withFixedMarking = filtered.map(q => ({
+  const withFixedMarking = tiered.map(q => ({
     ...q,
     marks_positive: 4,
     marks_negative: 1,
   }));
 
-  return shuffleArray(withFixedMarking);
+  // Record usage for selected questions
+  recordUsage(withFixedMarking.map(q => q.id));
+
+  return withFixedMarking;
+}
+
+/** Shuffle questions within the same usage tier to add variety */
+function tieredShuffle(sorted: PracticeQuestion[], usageMap: Record<string, QuestionUsage>): PracticeQuestion[] {
+  const result: PracticeQuestion[] = [];
+  let tierStart = 0;
+
+  for (let i = 1; i <= sorted.length; i++) {
+    const prevUsage = usageMap[sorted[tierStart].id]?.timesUsed || 0;
+    const currUsage = i < sorted.length ? (usageMap[sorted[i].id]?.timesUsed || 0) : -1;
+
+    if (currUsage !== prevUsage || i === sorted.length) {
+      const tier = sorted.slice(tierStart, i);
+      result.push(...shuffleArray(tier));
+      tierStart = i;
+    }
+  }
+
+  return result;
 }
