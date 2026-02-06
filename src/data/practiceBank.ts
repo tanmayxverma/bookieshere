@@ -6,21 +6,9 @@
  * Source does not matter — quality and uniqueness do.
  */
 
-export interface PracticeQuestion {
-  id: string;
-  subject: "physics" | "chemistry" | "mathematics";
-  chapter: string;
-  classLevel: "11" | "12";
-  question_type: "single_correct" | "multi_correct" | "numerical" | "integer";
-  question_text: string;
-  options: { label: string; text: string }[] | null;
-  correct_answer: string | string[] | number;
-  marks_positive: number;
-  marks_negative: number;
-  solution: string | null;
-  diagram_url?: string;
-  difficulty: "main" | "advanced"; // JEE Main level or JEE Advanced level
-}
+export type { PracticeQuestion } from "./questions/types";
+import type { PracticeQuestion } from "./questions/types";
+import { PHYSICS_QUESTIONS } from "./questions/physics";
 
 // Chapter to Class mapping
 export const CHAPTER_CLASS_MAP: Record<string, "11" | "12"> = {
@@ -214,13 +202,8 @@ export const TOPICS_BY_SUBJECT: Record<string, { name: string; classLevel: "11" 
   ],
 };
 
-/**
- * PRACTICE QUESTION BANK
- * Curated for quality, concept relevance, and difficulty matching.
- */
 export const PRACTICE_BANK: PracticeQuestion[] = [
-  // ==================== PHYSICS ====================
-  // Class 11 - Laws of Motion
+  ...PHYSICS_QUESTIONS,
   {
     id: "ph_001", subject: "physics", chapter: "Laws of Motion", classLevel: "11",
     question_type: "single_correct", difficulty: "main",
