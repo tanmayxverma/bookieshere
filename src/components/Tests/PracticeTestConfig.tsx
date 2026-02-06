@@ -37,6 +37,18 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
   const [step, setStep] = useState(1);
   const [unavailableMessage, setUnavailableMessage] = useState<string | null>(null);
 
+  // Custom mode requires topic selection (step 3), otherwise skip to step 4
+  const isCustomMode = testState.syllabusLevel === "custom";
+  const totalSteps = isCustomMode ? 4 : 3;
+
+  // Map visual step to actual step number for non-custom mode
+  const getActualStep = (visualStep: number) => {
+    if (isCustomMode) return visualStep;
+    // Non-custom: step 1=type, step 2=syllabus+subjects, step 3=attempt mode (skip topics)
+    if (visualStep >= 3) return 4; // attempt mode
+    return visualStep;
+  };
+
   const handleGenerate = async () => {
     if (!testState.isConfigValid()) {
       toast.error("Please complete all required selections");
@@ -156,6 +168,9 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
     qDoc.setFontSize(9);
     qDoc.setFont("helvetica", "italic");
     qDoc.text("Practice questions curated for concept relevance and quality", pageWidth / 2, y, { align: "center" });
+    y += 6;
+    qDoc.setFontSize(8);
+    qDoc.text("Marking: +4 (Correct) / -1 (Incorrect) / 0 (Unattempted)", pageWidth / 2, y, { align: "center" });
     y += 12;
 
     const subjects = ["physics", "chemistry", "mathematics"] as const;
@@ -193,10 +208,9 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
           y += 5;
         }
 
-        // Show marking scheme
         qDoc.setFontSize(7);
         qDoc.setTextColor(100, 100, 100);
-        qDoc.text(`[+${q.marks_positive} / -${q.marks_negative}]`, margin, y);
+        qDoc.text("[+4 / -1]", margin, y);
         qDoc.setTextColor(0, 0, 0);
         qDoc.setFontSize(9);
         y += 8;
@@ -258,20 +272,37 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
     window.scrollTo({ top: 0, behavior: "instant" });
   };
 
+  // When moving from step 2, auto-select all topics if not custom mode
+  const handleStep2Continue = () => {
+    if (testState.selectedSubjects.length === 0) return;
+    if (isCustomMode) {
+      goToStep(3); // Show topic selection
+    } else {
+      // Auto-select all topics for the selected subjects + syllabus level
+      testState.selectAllTopics();
+      goToStep(4); // Skip directly to attempt mode
+    }
+  };
+
   const renderStepIndicator = () => (
     <div className="flex items-center justify-center gap-2 mb-8">
-      {[1, 2, 3, 4].map((s) => (
-        <div key={s} className="flex items-center">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
-            s < step ? "bg-primary text-primary-foreground" :
-            s === step ? "bg-primary text-primary-foreground ring-4 ring-primary/20" :
-            "bg-muted text-muted-foreground"
-          }`}>
-            {s < step ? <CheckCircle2 className="h-4 w-4" /> : s}
+      {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => {
+        const actualStep = isCustomMode ? s : (s >= 3 ? 4 : s);
+        const isBefore = isCustomMode ? s < step : (actualStep < step);
+        const isCurrent = isCustomMode ? s === step : (actualStep === step);
+        return (
+          <div key={s} className="flex items-center">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
+              isBefore ? "bg-primary text-primary-foreground" :
+              isCurrent ? "bg-primary text-primary-foreground ring-4 ring-primary/20" :
+              "bg-muted text-muted-foreground"
+            }`}>
+              {isBefore ? <CheckCircle2 className="h-4 w-4" /> : s}
+            </div>
+            {s < totalSteps && <div className={`w-12 h-0.5 mx-1 ${isBefore ? "bg-primary" : "bg-muted"}`} />}
           </div>
-          {s < 4 && <div className={`w-12 h-0.5 mx-1 ${s < step ? "bg-primary" : "bg-muted"}`} />}
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 
@@ -408,7 +439,32 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
 
                 {/* Subjects */}
                 <div>
-                  <Label className="text-sm font-medium mb-3 block">Select Subject(s)</Label>
+                  <div className="flex items-center justify-between mb-3">
+                    <Label className="text-sm font-medium">Select Subject(s)</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => {
+                        const all: ("physics" | "chemistry" | "mathematics")[] = ["physics", "chemistry", "mathematics"];
+                        const allSelected = all.every(s => testState.selectedSubjects.includes(s));
+                        if (allSelected) {
+                          // Deselect all
+                          all.forEach(s => {
+                            if (testState.selectedSubjects.includes(s)) testState.toggleSubject(s);
+                          });
+                        } else {
+                          // Select all
+                          all.forEach(s => {
+                            if (!testState.selectedSubjects.includes(s)) testState.toggleSubject(s);
+                          });
+                        }
+                      }}
+                    >
+                      {["physics", "chemistry", "mathematics"].every(s => testState.selectedSubjects.includes(s as any))
+                        ? "Deselect All" : "Select All"}
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-3 gap-3">
                     {(["physics", "chemistry", "mathematics"] as const).map(subject => (
                       <Button
@@ -429,7 +485,7 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
                 <div className="flex justify-between pt-4">
                   <Button variant="outline" onClick={() => goToStep(1)}>Back</Button>
                   <Button 
-                    onClick={() => goToStep(3)} 
+                    onClick={handleStep2Continue} 
                     className="gap-2"
                     disabled={testState.selectedSubjects.length === 0}
                   >
@@ -440,15 +496,15 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
             </Card>
           )}
 
-          {/* Step 3: Topics */}
-          {step === 3 && (
+          {/* Step 3: Topics (ONLY for Custom mode) */}
+          {step === 3 && isCustomMode && (
             <Card className="animate-fade-in">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">3</div>
                   Select Topics
                 </CardTitle>
-                <CardDescription>Choose specific chapters for your practice</CardDescription>
+                <CardDescription>Choose specific chapters for your practice — ONLY these topics will be included</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -493,12 +549,12 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
             </Card>
           )}
 
-          {/* Step 4: Attempt Mode */}
+          {/* Step 4 (or 3 for non-custom): Attempt Mode */}
           {step === 4 && (
             <Card className="animate-fade-in">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">4</div>
+                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">{totalSteps}</div>
                   Select Attempt Mode
                 </CardTitle>
                 <CardDescription>Choose how you want to attempt this test</CardDescription>
@@ -572,8 +628,8 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
                       <span className="capitalize">{testState.selectedSubjects.join(", ")}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground">Topics:</span>
-                      <span>{testState.selectedTopics.length} selected</span>
+                      <span className="text-muted-foreground">Marking:</span>
+                      <span className="text-sm font-medium">+4 / −1 / 0</span>
                     </div>
                   </div>
                 </div>
@@ -581,22 +637,22 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
                 {unavailableMessage && (
                   <Alert variant="destructive" className="animate-fade-in">
                     <AlertTriangle className="h-4 w-4" />
-                    <AlertTitle>No Questions Available</AlertTitle>
+                    <AlertTitle>Not Enough Questions</AlertTitle>
                     <AlertDescription>{unavailableMessage}</AlertDescription>
                   </Alert>
                 )}
 
-                {/* Negative Marking Notice */}
+                {/* Marking Scheme Notice */}
                 <Alert className="bg-muted/50 border-primary/20">
                   <Info className="h-4 w-4 text-primary" />
-                  <AlertTitle className="text-sm">Marking Scheme</AlertTitle>
+                  <AlertTitle className="text-sm">Marking Scheme (Fixed)</AlertTitle>
                   <AlertDescription className="text-xs text-muted-foreground">
-                    Each question has its marking scheme shown clearly. Negative marking applies to incorrect answers. Unattempted questions carry no penalty.
+                    +4 for correct answer • −1 for incorrect answer • 0 for skipped. Negative scores are shown as-is.
                   </AlertDescription>
                 </Alert>
 
                 <div className="flex justify-between pt-4">
-                  <Button variant="outline" onClick={() => { goToStep(3); setUnavailableMessage(null); }}>Back</Button>
+                  <Button variant="outline" onClick={() => { goToStep(isCustomMode ? 3 : 2); setUnavailableMessage(null); }}>Back</Button>
                   <Button 
                     onClick={handleGenerate}
                     className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:shadow-lg"
@@ -613,19 +669,25 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
             </Card>
           )}
 
-          {/* PYQ Redirect - Secondary */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-muted-foreground mb-2">Looking for official PYQ-only practice?</p>
-            <a
-              href="https://novatra.in/exams/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-              Try PYQ practice here
-            </a>
-          </div>
+          {/* PYQ Redirect - Secondary Card */}
+          <Card className="mt-8 border-dashed animate-fade-in">
+            <CardContent className="p-5 flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium">Looking for PYQ-only practice?</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Attempt official Previous Year Questions separately</p>
+              </div>
+              <a
+                href="https://novatra.in/exams/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline" size="sm" className="gap-2">
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Try PYQ Practice
+                </Button>
+              </a>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>
