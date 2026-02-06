@@ -9,6 +9,7 @@
 export type { PracticeQuestion } from "./questions/types";
 import type { PracticeQuestion } from "./questions/types";
 import { PHYSICS_QUESTIONS } from "./questions/physics";
+import { CHEMISTRY_CLASS11_QUESTIONS } from "./questions/chemistry_class11";
 
 // Chapter to Class mapping
 export const CHAPTER_CLASS_MAP: Record<string, "11" | "12"> = {
@@ -204,6 +205,7 @@ export const TOPICS_BY_SUBJECT: Record<string, { name: string; classLevel: "11" 
 
 export const PRACTICE_BANK: PracticeQuestion[] = [
   ...PHYSICS_QUESTIONS,
+  ...CHEMISTRY_CLASS11_QUESTIONS,
   {
     id: "ph_001", subject: "physics", chapter: "Laws of Motion", classLevel: "11",
     question_type: "single_correct", difficulty: "main",
