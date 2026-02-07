@@ -12,6 +12,7 @@ import { PHYSICS_QUESTIONS } from "./questions/physics";
 import { CHEMISTRY_CLASS11_QUESTIONS } from "./questions/chemistry_class11";
 import { CHEMISTRY_CLASS12_QUESTIONS } from "./questions/chemistry_class12";
 import { MATH_CLASS11_QUESTIONS } from "./questions/math_class11";
+import { MATH_CLASS12_QUESTIONS } from "./questions/math_class12";
 
 // Chapter to Class mapping
 export const CHAPTER_CLASS_MAP: Record<string, "11" | "12"> = {
@@ -208,6 +209,9 @@ export const TOPICS_BY_SUBJECT: Record<string, { name: string; classLevel: "11" 
 export const PRACTICE_BANK: PracticeQuestion[] = [
   ...PHYSICS_QUESTIONS,
   ...CHEMISTRY_CLASS11_QUESTIONS,
+  ...CHEMISTRY_CLASS12_QUESTIONS,
+  ...MATH_CLASS11_QUESTIONS,
+  ...MATH_CLASS12_QUESTIONS,
   {
     id: "ph_001", subject: "physics", chapter: "Laws of Motion", classLevel: "11",
     question_type: "single_correct", difficulty: "main",
