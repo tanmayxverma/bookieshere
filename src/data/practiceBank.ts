@@ -10,6 +10,7 @@ export type { PracticeQuestion } from "./questions/types";
 import type { PracticeQuestion } from "./questions/types";
 import { PHYSICS_QUESTIONS } from "./questions/physics";
 import { CHEMISTRY_CLASS11_QUESTIONS } from "./questions/chemistry_class11";
+import { CHEMISTRY_CLASS12_QUESTIONS } from "./questions/chemistry_class12";
 
 // Chapter to Class mapping
 export const CHAPTER_CLASS_MAP: Record<string, "11" | "12"> = {
