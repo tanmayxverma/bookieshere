@@ -3,6 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { TIMER_STORAGE_KEY, type TimerState } from '@/types/ypt';
 
 const THREE_HOURS = 3 * 60 * 60;
+const HEARTBEAT_INTERVAL = 30_000; // 30s
+const INACTIVITY_COUNTDOWN = 15; // seconds
 
 function getTimerState(): TimerState | null {
   const raw = localStorage.getItem(TIMER_STORAGE_KEY);
@@ -19,7 +21,10 @@ export function useStudyTimer(yptUserId: string | undefined) {
   const [timerState, setTimerStateLocal] = useState<TimerState | null>(getTimerState);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [showInactivityModal, setShowInactivityModal] = useState(false);
+  const [inactivityCountdown, setInactivityCountdown] = useState(INACTIVITY_COUNTDOWN);
   const intervalRef = useRef<number | null>(null);
+  const heartbeatRef = useRef<number | null>(null);
+  const countdownRef = useRef<number | null>(null);
 
   const calcElapsed = useCallback((state: TimerState | null) => {
     if (!state) return 0;
@@ -27,6 +32,49 @@ export function useStudyTimer(yptUserId: string | undefined) {
     return Math.max(0, Math.floor((now - state.startedAt - state.totalPausedMs) / 1000));
   }, []);
 
+  // End session helper (used by auto-stop and manual end)
+  const endSessionNow = useCallback(async (state: TimerState | null) => {
+    if (!state) return;
+    const duration = Math.max(0, Math.floor(((state.pausedAt || Date.now()) - state.startedAt - state.totalPausedMs) / 1000));
+    await (supabase as any)
+      .from('study_sessions')
+      .update({
+        ended_at: new Date().toISOString(),
+        duration_seconds: duration,
+        status: 'completed',
+      })
+      .eq('id', state.sessionId);
+    saveTimerState(null);
+    setTimerStateLocal(null);
+    setElapsedSeconds(0);
+    setShowInactivityModal(false);
+    setInactivityCountdown(INACTIVITY_COUNTDOWN);
+    if (countdownRef.current) clearInterval(countdownRef.current);
+  }, []);
+
+  // Heartbeat: periodically update last_heartbeat + duration in DB
+  useEffect(() => {
+    if (heartbeatRef.current) clearInterval(heartbeatRef.current);
+
+    if (timerState && !timerState.pausedAt) {
+      const sendHeartbeat = async () => {
+        const duration = calcElapsed(timerState);
+        await (supabase as any)
+          .from('study_sessions')
+          .update({
+            last_heartbeat: new Date().toISOString(),
+            duration_seconds: duration,
+          })
+          .eq('id', timerState.sessionId);
+      };
+      sendHeartbeat(); // immediate
+      heartbeatRef.current = window.setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
+    }
+
+    return () => { if (heartbeatRef.current) clearInterval(heartbeatRef.current); };
+  }, [timerState, calcElapsed]);
+
+  // Timer tick
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -36,6 +84,7 @@ export function useStudyTimer(yptUserId: string | undefined) {
         setElapsedSeconds(elapsed);
         if (elapsed >= THREE_HOURS && !showInactivityModal) {
           setShowInactivityModal(true);
+          setInactivityCountdown(INACTIVITY_COUNTDOWN);
         }
       };
       tick();
@@ -47,11 +96,94 @@ export function useStudyTimer(yptUserId: string | undefined) {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [timerState, calcElapsed, showInactivityModal]);
 
+  // Inactivity countdown - auto-end after 15 seconds
+  useEffect(() => {
+    if (countdownRef.current) clearInterval(countdownRef.current);
+
+    if (showInactivityModal && timerState) {
+      setInactivityCountdown(INACTIVITY_COUNTDOWN);
+      countdownRef.current = window.setInterval(() => {
+        setInactivityCountdown((prev) => {
+          if (prev <= 1) {
+            // Auto-end session
+            endSessionNow(timerState);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => { if (countdownRef.current) clearInterval(countdownRef.current); };
+  }, [showInactivityModal, timerState, endSessionNow]);
+
+  // Auto-stop on tab close / beforeunload
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const state = getTimerState();
+      if (!state) return;
+      const duration = Math.max(0, Math.floor(((state.pausedAt || Date.now()) - state.startedAt - state.totalPausedMs) / 1000));
+      // Use sendBeacon for reliable delivery on tab close
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/study_sessions?id=eq.${state.sessionId}`;
+      const body = JSON.stringify({
+        ended_at: new Date().toISOString(),
+        duration_seconds: duration,
+        status: 'completed',
+      });
+      navigator.sendBeacon(
+        url,
+        new Blob([body], { type: 'application/json' })
+      );
+      // Note: sendBeacon with REST API needs auth headers which Blob doesn't support well.
+      // As a fallback, we clear localStorage so on next load the session is ended.
+      saveTimerState(null);
+    };
+
+    const handleOffline = () => {
+      const state = getTimerState();
+      if (state) {
+        endSessionNow(state);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [endSessionNow]);
+
+  // On mount: check if there's a stale session from a previous tab close
+  useEffect(() => {
+    const state = getTimerState();
+    if (state && yptUserId) {
+      // Check if session is still active in DB
+      (supabase as any)
+        .from('study_sessions')
+        .select('status')
+        .eq('id', state.sessionId)
+        .maybeSingle()
+        .then(({ data }: any) => {
+          if (!data || data.status !== 'active') {
+            // Session was already ended (by heartbeat cleanup or beforeunload)
+            saveTimerState(null);
+            setTimerStateLocal(null);
+            setElapsedSeconds(0);
+          }
+        });
+    }
+  }, [yptUserId]);
+
   const startSession = async (subject: string) => {
     if (!yptUserId) return;
+    // First, clean up stale sessions
+    await (supabase as any).rpc('cleanup_stale_sessions');
+    
     const { data } = await (supabase as any)
       .from('study_sessions')
-      .insert({ ypt_user_id: yptUserId, subject, status: 'active' })
+      .insert({ ypt_user_id: yptUserId, subject, status: 'active', last_heartbeat: new Date().toISOString() })
       .select()
       .single();
     if (data) {
@@ -84,23 +216,14 @@ export function useStudyTimer(yptUserId: string | undefined) {
   };
 
   const endSession = async () => {
-    if (!timerState) return;
-    const duration = calcElapsed(timerState);
-    await (supabase as any)
-      .from('study_sessions')
-      .update({
-        ended_at: new Date().toISOString(),
-        duration_seconds: duration,
-        status: 'completed',
-      })
-      .eq('id', timerState.sessionId);
-    saveTimerState(null);
-    setTimerStateLocal(null);
-    setElapsedSeconds(0);
-    setShowInactivityModal(false);
+    await endSessionNow(timerState);
   };
 
-  const dismissInactivity = () => setShowInactivityModal(false);
+  const dismissInactivity = () => {
+    setShowInactivityModal(false);
+    setInactivityCountdown(INACTIVITY_COUNTDOWN);
+    if (countdownRef.current) clearInterval(countdownRef.current);
+  };
 
   return {
     isActive: !!timerState,
@@ -113,6 +236,7 @@ export function useStudyTimer(yptUserId: string | undefined) {
     resumeSession,
     endSession,
     showInactivityModal,
+    inactivityCountdown,
     dismissInactivity,
   };
 }

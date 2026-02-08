@@ -12,10 +12,11 @@ import { YPTDashboard } from '@/components/YPT/YPTDashboard';
 import { YPTLeaderboard } from '@/components/YPT/YPTLeaderboard';
 import { YPTHistory } from '@/components/YPT/YPTHistory';
 import { YPTPresence } from '@/components/YPT/YPTPresence';
+import { YPTNameChange } from '@/components/YPT/YPTNameChange';
 import { Users, Timer } from 'lucide-react';
 
 export default function YPT() {
-  const { user, isLoading, isOnboarded, createUser } = useYPTUser();
+  const { user, isLoading, isOnboarded, createUser, changeName } = useYPTUser();
   const timer = useStudyTimer(user?.id);
   const { activeUsers } = useYPTPresence();
   const [tab, setTab] = useState('study');
@@ -48,10 +49,15 @@ export default function YPT() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Bookie YPT</h1>
-              <p className="text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                {activeUsers.length} studying now
-              </p>
+              <div className="flex items-center gap-2 mt-0.5">
+                <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                  <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  {activeUsers.length} studying now
+                </p>
+                <span className="text-muted-foreground/40">·</span>
+                <span className="text-sm font-medium">{user.name}</span>
+                <YPTNameChange user={user} onChangeName={changeName} />
+              </div>
             </div>
             {/* Mobile presence toggle */}
             <div className="lg:hidden">
@@ -84,10 +90,10 @@ export default function YPT() {
                   <YPTStudyView user={user} timer={timer} />
                 </TabsContent>
                 <TabsContent value="dashboard">
-                  <YPTDashboard userId={user.id} />
+                  <YPTDashboard userId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />
                 </TabsContent>
                 <TabsContent value="leaderboard">
-                  <YPTLeaderboard currentUserId={user.id} />
+                  <YPTLeaderboard currentUserId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />
                 </TabsContent>
                 <TabsContent value="history">
                   <YPTHistory userId={user.id} />

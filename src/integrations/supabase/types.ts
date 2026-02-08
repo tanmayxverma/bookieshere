@@ -62,6 +62,7 @@ export type Database = {
           duration_seconds: number | null
           ended_at: string | null
           id: string
+          last_heartbeat: string | null
           started_at: string
           status: string
           subject: string
@@ -72,6 +73,7 @@ export type Database = {
           duration_seconds?: number | null
           ended_at?: string | null
           id?: string
+          last_heartbeat?: string | null
           started_at?: string
           status?: string
           subject: string
@@ -82,6 +84,7 @@ export type Database = {
           duration_seconds?: number | null
           ended_at?: string | null
           id?: string
+          last_heartbeat?: string | null
           started_at?: string
           status?: string
           subject?: string
@@ -283,6 +286,7 @@ export type Database = {
           jee_focus_year: string
           last_active_at: string
           name: string
+          name_change_history: Json
         }
         Insert: {
           created_at?: string
@@ -291,6 +295,7 @@ export type Database = {
           jee_focus_year: string
           last_active_at?: string
           name: string
+          name_change_history?: Json
         }
         Update: {
           created_at?: string
@@ -299,6 +304,7 @@ export type Database = {
           jee_focus_year?: string
           last_active_at?: string
           name?: string
+          name_change_history?: Json
         }
         Relationships: []
       }
@@ -307,6 +313,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_sessions: { Args: never; Returns: undefined }
+      cleanup_stale_sessions: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

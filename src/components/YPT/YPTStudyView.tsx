@@ -3,8 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { YPTTodoList } from './YPTTodoList';
-import { SUBJECTS, formatTime, formatHours } from '@/types/ypt';
+import { SUBJECTS, formatTime, formatHours, getISTTodayStartUTC } from '@/types/ypt';
 import { supabase } from '@/integrations/supabase/client';
 import { Play, Pause, Square, BookOpen, Clock, TrendingUp } from 'lucide-react';
 import type { YPTUser } from '@/types/ypt';
@@ -19,6 +20,7 @@ interface TimerControls {
   resumeSession: () => void;
   endSession: () => Promise<void>;
   showInactivityModal: boolean;
+  inactivityCountdown: number;
   dismissInactivity: () => void;
 }
 
@@ -34,23 +36,20 @@ export function YPTStudyView({ user, timer }: Props) {
 
   useEffect(() => {
     const fetchStats = async () => {
-      const todayStart = new Date();
-      todayStart.setHours(0, 0, 0, 0);
-      const weekStart = new Date();
-      weekStart.setDate(weekStart.getDate() - 6);
-      weekStart.setHours(0, 0, 0, 0);
+      const todayStartUTC = getISTTodayStartUTC();
+      const weekStart = new Date(new Date(todayStartUTC).getTime() - 6 * 24 * 60 * 60 * 1000).toISOString();
 
       const { data } = await (supabase as any)
         .from('study_sessions')
-        .select('duration_seconds, started_at')
+        .select('duration_seconds, started_at, status')
         .eq('ypt_user_id', user.id)
-        .eq('status', 'completed')
-        .gte('started_at', weekStart.toISOString());
+        .in('status', ['completed', 'active'])
+        .gte('started_at', weekStart);
 
       if (data) {
-        const todayStr = new Date().toDateString();
+        const todayStart = new Date(todayStartUTC).getTime();
         const todaySecs = data
-          .filter((s: any) => new Date(s.started_at).toDateString() === todayStr)
+          .filter((s: any) => new Date(s.started_at).getTime() >= todayStart)
           .reduce((sum: number, s: any) => sum + (s.duration_seconds || 0), 0);
         const weekSecs = data.reduce((sum: number, s: any) => sum + (s.duration_seconds || 0), 0);
         setTodaySeconds(todaySecs);
@@ -58,7 +57,10 @@ export function YPTStudyView({ user, timer }: Props) {
       }
     };
     fetchStats();
-  }, [user.id, timer.isActive]);
+  }, [user.id, timer.isActive, timer.elapsedSeconds]);
+
+  // Add live session time to today's total
+  const liveTodaySeconds = todaySeconds + (timer.isActive ? timer.elapsedSeconds : 0);
 
   const handleStart = async (subject: string) => {
     setShowSubjectSelect(false);
@@ -116,14 +118,14 @@ export function YPTStudyView({ user, timer }: Props) {
             <Clock className="h-4 w-4" />
             <span className="text-xs font-medium">Today</span>
           </div>
-          <p className="text-2xl font-bold">{formatHours(todaySeconds)}</p>
+          <p className="text-2xl font-bold">{formatHours(liveTodaySeconds)}</p>
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <TrendingUp className="h-4 w-4" />
             <span className="text-xs font-medium">This Week</span>
           </div>
-          <p className="text-2xl font-bold">{formatHours(weekSeconds)}</p>
+          <p className="text-2xl font-bold">{formatHours(weekSeconds + (timer.isActive ? timer.elapsedSeconds : 0))}</p>
         </Card>
       </div>
 
@@ -151,15 +153,16 @@ export function YPTStudyView({ user, timer }: Props) {
         </DialogContent>
       </Dialog>
 
-      {/* Inactivity Modal */}
+      {/* Inactivity Modal with 15s countdown */}
       <AlertDialog open={timer.showInactivityModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you still studying?</AlertDialogTitle>
             <AlertDialogDescription>
-              You've been studying for 3 hours straight. Take a break if needed.
+              You've been studying for 3 hours straight. Your session will auto-end in {timer.inactivityCountdown} seconds if you don't respond.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          <Progress value={(timer.inactivityCountdown / 15) * 100} className="h-2" />
           <AlertDialogFooter>
             <AlertDialogCancel onClick={timer.endSession}>End Session</AlertDialogCancel>
             <AlertDialogAction onClick={timer.dismissInactivity}>Yes, continue</AlertDialogAction>

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { formatHours } from '@/types/ypt';
+import { formatHours, getISTTodayStartUTC } from '@/types/ypt';
 import { Trophy } from 'lucide-react';
 
 interface Props {
   currentUserId: string;
+  /** Current user's live elapsed seconds from an active session */
+  liveElapsed?: number;
 }
 
 interface LeaderboardEntry {
@@ -15,59 +17,75 @@ interface LeaderboardEntry {
   totalSeconds: number;
 }
 
-export function YPTLeaderboard({ currentUserId }: Props) {
+export function YPTLeaderboard({ currentUserId, liveElapsed = 0 }: Props) {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchLeaderboard = async () => {
+    // Clean stale sessions first
+    await (supabase as any).rpc('cleanup_stale_sessions');
+
+    const todayStartUTC = getISTTodayStartUTC();
+
+    // Fetch both completed and active sessions (active = live time via duration_seconds heartbeat)
+    const { data: sessions } = await (supabase as any)
+      .from('study_sessions')
+      .select('ypt_user_id, duration_seconds, status, ypt_users(name, jee_focus_year)')
+      .in('status', ['completed', 'active'])
+      .gte('started_at', todayStartUTC);
+
+    if (!sessions) { setLoading(false); return; }
+
+    const userMap: Record<string, LeaderboardEntry> = {};
+    sessions.forEach((s: any) => {
+      const uid = s.ypt_user_id;
+      if (!userMap[uid]) {
+        userMap[uid] = {
+          userId: uid,
+          name: s.ypt_users?.name || 'Unknown',
+          jeeYear: s.ypt_users?.jee_focus_year || '',
+          totalSeconds: 0,
+        };
+      }
+      userMap[uid].totalSeconds += s.duration_seconds || 0;
+    });
+
+    setLeaderboard(Object.values(userMap).sort((a, b) => b.totalSeconds - a.totalSeconds));
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchLeaderboard = async () => {
-      const todayStart = new Date();
-      todayStart.setHours(0, 0, 0, 0);
-
-      const { data: sessions } = await (supabase as any)
-        .from('study_sessions')
-        .select('ypt_user_id, duration_seconds, ypt_users(name, jee_focus_year)')
-        .eq('status', 'completed')
-        .gte('started_at', todayStart.toISOString());
-
-      if (!sessions) { setLoading(false); return; }
-
-      const userMap: Record<string, LeaderboardEntry> = {};
-      sessions.forEach((s: any) => {
-        const uid = s.ypt_user_id;
-        if (!userMap[uid]) {
-          userMap[uid] = {
-            userId: uid,
-            name: s.ypt_users?.name || 'Unknown',
-            jeeYear: s.ypt_users?.jee_focus_year || '',
-            totalSeconds: 0,
-          };
-        }
-        userMap[uid].totalSeconds += s.duration_seconds || 0;
-      });
-
-      setLeaderboard(Object.values(userMap).sort((a, b) => b.totalSeconds - a.totalSeconds));
-      setLoading(false);
-    };
     fetchLeaderboard();
+    // Auto-refresh every 30s
+    const interval = setInterval(fetchLeaderboard, 30_000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
     return <div className="text-center py-12 text-muted-foreground animate-pulse">Loading leaderboard...</div>;
   }
 
-  const top10 = leaderboard.slice(0, 10);
-  const userRank = leaderboard.findIndex((u) => u.userId === currentUserId) + 1;
-  const userEntry = leaderboard.find((u) => u.userId === currentUserId);
+  // Merge live elapsed into current user's total for display
+  const displayBoard = leaderboard.map((u) => {
+    if (u.userId === currentUserId && liveElapsed > 0) {
+      return { ...u, totalSeconds: u.totalSeconds + liveElapsed };
+    }
+    return u;
+  }).sort((a, b) => b.totalSeconds - a.totalSeconds);
+
+  const top10 = displayBoard.slice(0, 10);
+  const userRank = displayBoard.findIndex((u) => u.userId === currentUserId) + 1;
+  const userEntry = displayBoard.find((u) => u.userId === currentUserId);
 
   const rankEmoji = (i: number) => (i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`);
 
   return (
     <div className="space-y-6">
       <Card className="p-5">
-        <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
+        <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
           <Trophy className="h-4 w-4 text-primary" /> Today's Leaderboard
         </h3>
+        <p className="text-xs text-muted-foreground mb-4">Resets daily at 12:00 AM IST</p>
         {top10.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">No study sessions recorded today. Be the first!</p>
         ) : (
@@ -93,7 +111,8 @@ export function YPTLeaderboard({ currentUserId }: Props) {
         )}
       </Card>
 
-      {userRank > 10 && userEntry && (
+      {/* Always show user rank if they have studied */}
+      {userEntry && userRank > 10 && (
         <Card className="p-4 border-primary/20">
           <p className="text-xs text-muted-foreground mb-2">Your Rank</p>
           <div className="flex items-center gap-3">
@@ -105,6 +124,14 @@ export function YPTLeaderboard({ currentUserId }: Props) {
             <span className="font-semibold tabular-nums">{formatHours(userEntry.totalSeconds)}</span>
           </div>
         </Card>
+      )}
+
+      {userEntry && userRank > 0 && userRank <= 10 && (
+        <p className="text-center text-sm text-muted-foreground">You are ranked <strong>#{userRank}</strong> today 🎯</p>
+      )}
+
+      {!userEntry && (
+        <p className="text-center text-sm text-muted-foreground">Start a study session to appear on the leaderboard!</p>
       )}
     </div>
   );
