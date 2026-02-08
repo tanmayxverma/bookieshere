@@ -1,22 +1,28 @@
 import { Link } from "react-router-dom";
-import { BookOpen, ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText, HeadphonesIcon, Unlock, UserX, RefreshCw } from "lucide-react";
+import { BookOpen, ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText, HeadphonesIcon, Unlock, UserX, RefreshCw, Flame, Copy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { toast } from "sonner";
 
 const Index = () => {
   const scrollRef = useScrollReveal();
+
+  const handleCopyCoupon = () => {
+    navigator.clipboard.writeText("9906DZRL");
+    toast.success("Coupon code copied!");
+  };
 
   return (
     <Layout>
       <div ref={scrollRef}>
         {/* Hero Section */}
-        <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden py-16 md:py-24">
+        <section className="relative overflow-hidden pt-6 pb-10 md:pt-8 md:pb-14">
           <div className="hero-glow" />
           <div className="hero-glow-secondary" />
           
           <div className="w-full max-w-6xl mx-auto px-6 text-center relative z-10">
-            <div className="space-y-12">
+            <div className="space-y-8 md:space-y-10">
               {/* Trust pill */}
               <div className="opacity-0 animate-fade-in">
                 <span className="inline-flex items-center gap-2.5 px-7 py-2.5 rounded-full border border-border/40 bg-surface-1/60 text-[15px] font-medium text-muted-foreground/90 tracking-wide backdrop-blur-sm">
@@ -31,7 +37,7 @@ const Index = () => {
               </h1>
               
               {/* Subtitle */}
-              <div className="space-y-4 opacity-0 animate-fade-in stagger-2">
+              <div className="space-y-3 opacity-0 animate-fade-in stagger-2">
                 <p className="text-2xl md:text-3xl text-foreground max-w-3xl mx-auto leading-relaxed font-semibold">
                   Your single platform for{" "}
                   <span className="text-emphasis">JEE materials</span>, tests, and guidance.
@@ -42,7 +48,7 @@ const Index = () => {
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-5 justify-center items-center pt-4 opacity-0 animate-fade-in stagger-3 flex-wrap">
+              <div className="flex flex-col sm:flex-row gap-5 justify-center items-center opacity-0 animate-fade-in stagger-3 flex-wrap">
                 <Button asChild className="gap-2.5 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/25 btn-press btn-lift px-10 h-[52px] text-[15px] font-medium rounded-xl">
                   <Link to="/materials">
                     <BookOpen className="h-5 w-5" />
@@ -69,7 +75,7 @@ const Index = () => {
               </div>
               
               {/* Trust benefit blocks */}
-              <div className="pt-8 opacity-0 animate-fade-in stagger-4">
+              <div className="opacity-0 animate-fade-in stagger-4">
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
                   {[
                     { icon: Unlock, label: "Free access" },
@@ -85,10 +91,49 @@ const Index = () => {
               </div>
             </div>
           </div>
+        </section>
 
-          <div className="absolute bottom-0 left-0 right-0">
-            <div className="pinch-bar opacity-0 animate-fade-in stagger-5">
-              <span className="pinch-bar-line" />
+        {/* Promotional Banner */}
+        <section className="pb-10 md:pb-14 relative">
+          <div className="max-w-2xl mx-auto px-6">
+            <div className="relative rounded-xl border border-border/30 bg-surface-1/60 backdrop-blur-sm p-5 sm:p-6 shadow-sm scroll-reveal">
+              {/* LIMITED badge */}
+              <span className="absolute -top-2.5 right-4 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full bg-primary/15 text-primary border border-primary/20">
+                Limited
+              </span>
+              
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground/80">
+                  <Flame className="h-4 w-4 text-primary/70 shrink-0" />
+                  <span className="font-medium">Limited Physics Offer</span>
+                </div>
+                
+                <div className="hidden sm:block w-px h-5 bg-border/30" />
+                
+                <p className="text-[13px] sm:text-sm text-foreground/90 font-medium text-center sm:text-left">
+                  Get <span className="text-primary">10% OFF</span> on any PW batch
+                </p>
+                
+                <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    onClick={handleCopyCoupon}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/60 border border-border/30 text-xs font-mono font-semibold text-foreground/90 hover:bg-muted transition-colors cursor-pointer"
+                  >
+                    9906DZRL
+                    <Copy className="h-3 w-3 text-muted-foreground" />
+                  </button>
+                  
+                  <a
+                    href="https://physicswallah.onelink.me/ZAZB/km5qwl9y"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                  >
+                    Get Discount
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
