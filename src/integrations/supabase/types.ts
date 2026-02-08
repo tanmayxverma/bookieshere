@@ -56,6 +56,47 @@ export type Database = {
         }
         Relationships: []
       }
+      study_sessions: {
+        Row: {
+          created_at: string
+          duration_seconds: number | null
+          ended_at: string | null
+          id: string
+          started_at: string
+          status: string
+          subject: string
+          ypt_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+          subject: string
+          ypt_user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+          subject?: string
+          ypt_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_sessions_ypt_user_id_fkey"
+            columns: ["ypt_user_id"]
+            isOneToOne: false
+            referencedRelation: "ypt_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       test_questions: {
         Row: {
           chapter: string | null
@@ -196,6 +237,68 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      ypt_todos: {
+        Row: {
+          completed: boolean
+          created_at: string
+          created_date: string
+          id: string
+          text: string
+          ypt_user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          created_date?: string
+          id?: string
+          text: string
+          ypt_user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          created_date?: string
+          id?: string
+          text?: string
+          ypt_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ypt_todos_ypt_user_id_fkey"
+            columns: ["ypt_user_id"]
+            isOneToOne: false
+            referencedRelation: "ypt_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ypt_users: {
+        Row: {
+          created_at: string
+          device_id: string
+          id: string
+          jee_focus_year: string
+          last_active_at: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          id?: string
+          jee_focus_year: string
+          last_active_at?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          id?: string
+          jee_focus_year?: string
+          last_active_at?: string
+          name?: string
         }
         Relationships: []
       }

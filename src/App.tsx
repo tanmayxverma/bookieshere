@@ -4,10 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ScrollToTop } from "./components/ScrollToTop";
- import Index from "./pages/Index";
- import Materials from "./pages/Materials";
- import Tests from "./pages/Tests";
-
+import Index from "./pages/Index";
+import Materials from "./pages/Materials";
+import Tests from "./pages/Tests";
+import YPT from "./pages/YPT";
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
@@ -27,9 +27,9 @@ const App = () => (
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
-           <Route path="/materials" element={<Materials />} />
-           <Route path="/tests" element={<Tests />} />
-          
+          <Route path="/materials" element={<Materials />} />
+          <Route path="/tests" element={<Tests />} />
+          <Route path="/ypt" element={<YPT />} />
           <Route path="/support" element={<Support />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />

@@ -1,6 +1,7 @@
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { BookieAIChat } from "./BookieAI";
+import { YPTFloatingTimer } from "./YPT/YPTFloatingTimer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export function Layout({ children }: LayoutProps) {
       <main className="flex-1">{children}</main>
       <Footer />
       <BookieAIChat />
+      <YPTFloatingTimer />
     </div>
   );
 }
