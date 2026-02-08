@@ -18,9 +18,9 @@ const Index = () => {
           <div className="container mx-auto px-4 text-center relative z-10">
             <div className="max-w-3xl mx-auto space-y-8">
               <div className="opacity-0 animate-fade-in">
-                <span className="pill pill-hero shadow-sm shadow-primary/10">
-                  <Sparkles className="h-3 w-3" />
-                  Trusted by serious aspirants
+                <span className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-border/40 bg-surface-1/60 text-[13px] font-normal text-muted-foreground tracking-wide">
+                  <Sparkles className="h-3.5 w-3.5 text-primary/60" />
+                  Built for serious aspirants
                 </span>
               </div>
 
@@ -28,20 +28,18 @@ const Index = () => {
                 <span className="text-gradient-glow">BOOKIE</span>
               </h1>
               
-              <div className="space-y-4 opacity-0 animate-fade-in stagger-2">
+              <div className="space-y-3 opacity-0 animate-fade-in stagger-2">
                 <p className="text-xl md:text-2xl text-foreground max-w-2xl mx-auto leading-relaxed font-semibold">
-                  One trusted platform for{" "}
+                  Your single platform for{" "}
                   <span className="text-emphasis">JEE materials</span>, tests, and guidance.
                 </p>
-                <p className="text-base text-muted-foreground max-w-xl mx-auto flex items-center justify-center gap-2">
-                  <span className="w-8 h-px bg-border/60" />
-                  Built for serious aspirants who value clarity and focus.
-                  <span className="w-8 h-px bg-border/60" />
+                <p className="text-base text-muted-foreground/80 max-w-xl mx-auto">
+                  Clarity and focus for every aspirant.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-6 opacity-0 animate-fade-in stagger-3 flex-wrap">
-                <Button asChild size="lg" className="gap-2 bg-primary hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8 opacity-0 animate-fade-in stagger-3 flex-wrap">
+                <Button asChild size="lg" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8 font-medium">
                   <Link to="/materials">
                     <BookOpen className="h-5 w-5" />
                     Browse Materials
@@ -49,7 +47,7 @@ const Index = () => {
                   </Link>
                 </Button>
                 
-                <Button asChild size="lg" className="gap-2 bg-primary hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8">
+                <Button asChild size="lg" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8 font-medium">
                   <Link to="/tests">
                     <FileText className="h-5 w-5" />
                     Practice Tests
@@ -57,7 +55,7 @@ const Index = () => {
                   </Link>
                 </Button>
 
-                <Button asChild size="lg" className="gap-2 bg-primary hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8">
+                <Button asChild size="lg" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8 font-medium">
                   <Link to="/support">
                     <HeadphonesIcon className="h-5 w-5" />
                     Chat Support
@@ -67,26 +65,18 @@ const Index = () => {
               </div>
               
               {/* Trust indicators */}
-              <div className="pt-10 md:pt-12 opacity-0 animate-fade-in stagger-4">
-                <div className="flex items-center justify-center gap-3 mb-6">
-                  <span className="w-12 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
-                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-medium">Trusted Platform</span>
-                  <span className="w-12 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
-                </div>
-                
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground/60">
-                  <span className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-primary/50" />
+              <div className="pt-10 opacity-0 animate-fade-in stagger-4">
+                <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 text-[13px] text-muted-foreground/50">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle className="h-3.5 w-3.5" />
                     Free access
                   </span>
-                  <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-border/40" />
-                  <span className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-primary/50" />
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle className="h-3.5 w-3.5" />
                     No signup required
                   </span>
-                  <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-border/40" />
-                  <span className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-primary/50" />
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle className="h-3.5 w-3.5" />
                     Daily updates
                   </span>
                 </div>
