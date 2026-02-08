@@ -142,14 +142,12 @@ export function YPTDashboard({ userId, liveElapsed = 0 }: Props) {
       <Card className="p-5">
         <h3 className="text-sm font-semibold mb-4">{monthName}</h3>
         {/* Day labels */}
-        <div className="grid grid-cols-7 gap-1.5 mb-1">
-          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-            <span key={i} className="text-[10px] text-muted-foreground text-center font-medium">{d}</span>
+        <div className="grid grid-cols-7 gap-2 mb-2">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, i) => (
+            <span key={i} className="text-xs text-muted-foreground text-center font-semibold">{d}</span>
           ))}
         </div>
-        {/* Calendar grid — offset first day */}
-        <div className="grid grid-cols-7 gap-1.5">
-          {/* Empty cells for offset */}
+        <div className="grid grid-cols-7 gap-2">
           {Array.from({ length: new Date(currentYear, currentMonth, 1).getDay() }).map((_, i) => (
             <div key={`empty-${i}`} className="aspect-square" />
           ))}
@@ -170,14 +168,14 @@ export function YPTDashboard({ userId, liveElapsed = 0 }: Props) {
             return (
               <div
                 key={d.day}
-                className={`aspect-square rounded-md flex flex-col items-center justify-center relative transition-colors ${bgClass} ${d.isToday ? 'ring-2 ring-primary ring-offset-1 ring-offset-background' : ''}`}
+                className={`aspect-square rounded-lg flex flex-col items-center justify-center transition-colors ${bgClass} ${d.isToday ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
                 title={d.isFuture ? '' : `${d.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}: ${formatHours(d.seconds)}`}
               >
-                <span className={`text-[10px] leading-none font-medium ${d.isFuture ? 'text-muted-foreground/40' : intensity >= 2 ? 'text-primary-foreground' : 'text-foreground/70'}`}>
+                <span className={`text-sm leading-none font-semibold ${d.isFuture ? 'text-muted-foreground/40' : intensity >= 2 ? 'text-primary-foreground' : 'text-foreground/80'}`}>
                   {d.day}
                 </span>
                 {!d.isFuture && d.seconds > 0 && (
-                  <span className={`text-[8px] leading-none mt-0.5 ${intensity >= 2 ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                  <span className={`text-[11px] leading-none mt-1 font-medium ${intensity >= 2 ? 'text-primary-foreground/90' : 'text-muted-foreground'}`}>
                     {(d.seconds / 3600).toFixed(1)}h
                   </span>
                 )}
