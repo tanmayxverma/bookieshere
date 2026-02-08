@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText, HeadphonesIcon } from "lucide-react";
+import { BookOpen, ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText, HeadphonesIcon, Unlock, UserX, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -11,35 +11,39 @@ const Index = () => {
     <Layout>
       <div ref={scrollRef}>
         {/* Hero Section */}
-        <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden pt-8 md:pt-12">
+        <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden py-16 md:py-24">
           <div className="hero-glow" />
           <div className="hero-glow-secondary" />
           
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="max-w-3xl mx-auto space-y-8">
+          <div className="w-full max-w-6xl mx-auto px-6 text-center relative z-10">
+            <div className="space-y-12">
+              {/* Trust pill */}
               <div className="opacity-0 animate-fade-in">
-                <span className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-border/40 bg-surface-1/60 text-[13px] font-normal text-muted-foreground tracking-wide">
-                  <Sparkles className="h-3.5 w-3.5 text-primary/60" />
+                <span className="inline-flex items-center gap-2.5 px-7 py-2.5 rounded-full border border-border/40 bg-surface-1/60 text-[15px] font-medium text-muted-foreground/90 tracking-wide backdrop-blur-sm">
+                  <Sparkles className="h-4 w-4 text-primary/70" />
                   Built for serious aspirants
                 </span>
               </div>
 
-              <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-black tracking-tight opacity-0 animate-fade-in stagger-1">
+              {/* Brand heading */}
+              <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-black tracking-tight opacity-0 animate-fade-in stagger-1 leading-none">
                 <span className="text-gradient-glow">BOOKIE</span>
               </h1>
               
-              <div className="space-y-3 opacity-0 animate-fade-in stagger-2">
-                <p className="text-xl md:text-2xl text-foreground max-w-2xl mx-auto leading-relaxed font-semibold">
+              {/* Subtitle */}
+              <div className="space-y-4 opacity-0 animate-fade-in stagger-2">
+                <p className="text-2xl md:text-3xl text-foreground max-w-3xl mx-auto leading-relaxed font-semibold">
                   Your single platform for{" "}
                   <span className="text-emphasis">JEE materials</span>, tests, and guidance.
                 </p>
-                <p className="text-base text-muted-foreground/80 max-w-xl mx-auto">
+                <p className="text-lg text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
                   Clarity and focus for every aspirant.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8 opacity-0 animate-fade-in stagger-3 flex-wrap">
-                <Button asChild size="lg" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8 font-medium">
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-5 justify-center items-center pt-4 opacity-0 animate-fade-in stagger-3 flex-wrap">
+                <Button asChild className="gap-2.5 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/25 btn-press btn-lift px-10 h-[52px] text-[15px] font-medium rounded-xl">
                   <Link to="/materials">
                     <BookOpen className="h-5 w-5" />
                     Browse Materials
@@ -47,7 +51,7 @@ const Index = () => {
                   </Link>
                 </Button>
                 
-                <Button asChild size="lg" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8 font-medium">
+                <Button asChild className="gap-2.5 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/25 btn-press btn-lift px-10 h-[52px] text-[15px] font-medium rounded-xl">
                   <Link to="/tests">
                     <FileText className="h-5 w-5" />
                     Practice Tests
@@ -55,7 +59,7 @@ const Index = () => {
                   </Link>
                 </Button>
 
-                <Button asChild size="lg" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8 font-medium">
+                <Button asChild className="gap-2.5 bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/25 btn-press btn-lift px-10 h-[52px] text-[15px] font-medium rounded-xl">
                   <Link to="/support">
                     <HeadphonesIcon className="h-5 w-5" />
                     Chat Support
@@ -64,21 +68,19 @@ const Index = () => {
                 </Button>
               </div>
               
-              {/* Trust indicators */}
-              <div className="pt-10 opacity-0 animate-fade-in stagger-4">
-                <div className="flex flex-row items-center justify-center gap-6 sm:gap-10 text-[13px] text-muted-foreground/50">
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle className="h-3.5 w-3.5" />
-                    Free access
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle className="h-3.5 w-3.5" />
-                    No signup required
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle className="h-3.5 w-3.5" />
-                    Daily updates
-                  </span>
+              {/* Trust benefit blocks */}
+              <div className="pt-8 opacity-0 animate-fade-in stagger-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+                  {[
+                    { icon: Unlock, label: "Free access" },
+                    { icon: UserX, label: "No signup required" },
+                    { icon: RefreshCw, label: "Daily updates" },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-center gap-3 px-5 py-3 rounded-xl bg-surface-1/50 border border-border/20">
+                      <item.icon className="h-5 w-5 text-primary/60 shrink-0" />
+                      <span className="text-[15px] text-muted-foreground/70 font-medium">{item.label}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
