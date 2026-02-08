@@ -13,7 +13,8 @@ import { YPTLeaderboard } from '@/components/YPT/YPTLeaderboard';
 import { YPTHistory } from '@/components/YPT/YPTHistory';
 import { YPTPresence } from '@/components/YPT/YPTPresence';
 import { YPTNameChange } from '@/components/YPT/YPTNameChange';
-import { Users, Timer } from 'lucide-react';
+import { YPTLoadingSkeleton } from '@/components/YPT/YPTSkeletons';
+import { Users } from 'lucide-react';
 
 export default function YPT() {
   const { user, isLoading, isOnboarded, createUser, changeName } = useYPTUser();
@@ -24,12 +25,7 @@ export default function YPT() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center min-h-[50vh]">
-          <div className="flex items-center gap-3 text-muted-foreground animate-pulse">
-            <Timer className="h-5 w-5" />
-            <span>Loading YPT...</span>
-          </div>
-        </div>
+        <YPTLoadingSkeleton />
       </Layout>
     );
   }

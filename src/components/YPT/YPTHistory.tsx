@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { supabase } from '@/integrations/supabase/client';
 import { formatTime, SUBJECTS } from '@/types/ypt';
 import { BookOpen } from 'lucide-react';
+import { YPTHistorySkeleton } from './YPTSkeletons';
 
 interface Props {
   userId: string;
@@ -58,7 +59,7 @@ export function YPTHistory({ userId }: Props) {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-muted-foreground animate-pulse">Loading history...</div>
+        <YPTHistorySkeleton />
       ) : sessions.length === 0 ? (
         <Card className="p-8 text-center text-muted-foreground">
           No completed sessions in the last 7 days. Start studying to build your history!

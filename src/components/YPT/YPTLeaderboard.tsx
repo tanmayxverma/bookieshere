@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { formatHours, getISTTodayStartUTC } from '@/types/ypt';
 import { Trophy } from 'lucide-react';
+import { YPTLeaderboardSkeleton } from './YPTSkeletons';
 
 interface Props {
   currentUserId: string;
@@ -62,7 +63,7 @@ export function YPTLeaderboard({ currentUserId, liveElapsed = 0 }: Props) {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-12 text-muted-foreground animate-pulse">Loading leaderboard...</div>;
+    return <YPTLeaderboardSkeleton />;
   }
 
   // Merge live elapsed into current user's total for display

@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { formatHours, getISTDate, getISTDateString, getISTTodayStartUTC } from '@/types/ypt';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Clock, Flame, TrendingUp, Calendar } from 'lucide-react';
+import { YPTContentSkeleton } from './YPTSkeletons';
 
 interface Props {
   userId: string;
@@ -32,7 +33,7 @@ export function YPTDashboard({ userId, liveElapsed = 0 }: Props) {
   }, [userId]);
 
   if (loading) {
-    return <div className="text-center py-12 text-muted-foreground animate-pulse">Loading dashboard...</div>;
+    return <YPTContentSkeleton />;
   }
 
   // Use IST date strings for grouping
