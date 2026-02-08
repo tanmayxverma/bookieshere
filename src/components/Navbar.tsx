@@ -30,38 +30,38 @@ export function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 border-b transition-all duration-300 navbar-glass ${
+      className={`sticky top-0 z-50 transition-all duration-500 navbar-glass ${
         scrolled
-          ? "border-border/60 bg-background/80 shadow-sm"
-          : "border-border/30 bg-background/95"
+          ? "border-b border-border/30 bg-background/70 shadow-[0_1px_12px_-4px_hsl(var(--primary)/0.08)] h-14"
+          : "border-b border-transparent bg-background/50 h-16"
       }`}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="BOOKIE Logo" className="h-10 w-10 rounded-lg object-cover shadow-md" />
-            <span className="font-display text-xl font-extrabold tracking-tight text-foreground">BOOKIE</span>
+      <div className="container mx-auto px-4 h-full">
+        <div className="flex h-full items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5">
+            <img src={logo} alt="BOOKIE Logo" className={`rounded-lg object-cover shadow-md transition-all duration-500 ${scrolled ? "h-8 w-8" : "h-9 w-9"}`} />
+            <span className="font-display text-lg font-bold tracking-tight text-foreground">BOOKIE</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-1">
+          <div className="hidden md:flex md:items-center md:gap-2">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`relative px-4 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${
                   isActive(link.path)
                     ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                 }`}
               >
                 {link.label}
                 {isActive(link.path) && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full" />
+                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
                 )}
               </Link>
             ))}
-            <div className="ml-2">
+            <div className="ml-3 pl-3 border-l border-border/30">
               <ThemeToggle />
             </div>
           </div>
@@ -72,6 +72,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
+              className="h-9 w-9"
               onClick={() => setIsOpen(!isOpen)}
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -81,17 +82,17 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden pb-4 pop-in">
+          <div className="md:hidden pb-4 pop-in border-t border-border/20 mt-1 pt-2">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive(link.path)
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                   }`}
                 >
                   {link.label}
