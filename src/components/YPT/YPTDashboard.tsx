@@ -93,16 +93,23 @@ export function YPTDashboard({ userId, liveElapsed = 0 }: Props) {
   });
   const bestDaySeconds = Math.max(0, ...allDayValues);
 
-  // Calendar heatmap (last 30 IST days)
+  // Calendar heatmap — current month's actual days
+  const istNow = getISTDate();
+  const currentMonth = istNow.getMonth();
+  const currentYear = istNow.getFullYear();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const todayDay = istNow.getDate(); // 1-indexed
+
   const calendarData = [];
-  for (let i = 29; i >= 0; i--) {
-    const d = getISTDate();
-    d.setDate(d.getDate() - i);
-    const key = d.toISOString().split('T')[0];
+  for (let day = 1; day <= daysInMonth; day++) {
+    const d = new Date(currentYear, currentMonth, day);
+    const key = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     let secs = dayMap[key] || 0;
-    if (i === 0) secs += liveElapsed;
-    calendarData.push({ date: d, seconds: secs });
+    if (day === todayDay) secs += liveElapsed;
+    calendarData.push({ date: d, day, seconds: secs, isFuture: day > todayDay, isToday: day === todayDay });
   }
+
+  const monthName = istNow.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
 
   return (
     <div className="space-y-6">
@@ -133,24 +140,48 @@ export function YPTDashboard({ userId, liveElapsed = 0 }: Props) {
       </Card>
 
       <Card className="p-5">
-        <h3 className="text-sm font-semibold mb-4">Monthly Activity</h3>
-        <div className="flex flex-wrap gap-1.5">
-          {calendarData.map((d, i) => {
-            const intensity =
-              d.seconds === 0 ? 0 : d.seconds < 1800 ? 1 : d.seconds < 3600 ? 2 : d.seconds < 7200 ? 3 : 4;
-            const colors = [
-              'bg-muted',
-              'bg-primary/20',
-              'bg-primary/40',
-              'bg-primary/60',
-              'bg-primary/80',
-            ];
+        <h3 className="text-sm font-semibold mb-4">{monthName}</h3>
+        {/* Day labels */}
+        <div className="grid grid-cols-7 gap-1.5 mb-1">
+          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+            <span key={i} className="text-[10px] text-muted-foreground text-center font-medium">{d}</span>
+          ))}
+        </div>
+        {/* Calendar grid — offset first day */}
+        <div className="grid grid-cols-7 gap-1.5">
+          {/* Empty cells for offset */}
+          {Array.from({ length: new Date(currentYear, currentMonth, 1).getDay() }).map((_, i) => (
+            <div key={`empty-${i}`} className="aspect-square" />
+          ))}
+          {calendarData.map((d) => {
+            const intensity = d.isFuture ? -1
+              : d.seconds === 0 ? 0
+              : d.seconds < 1800 ? 1
+              : d.seconds < 3600 ? 2
+              : d.seconds < 7200 ? 3
+              : 4;
+            const bgClass = intensity === -1
+              ? 'bg-muted/30'
+              : intensity === 0 ? 'bg-muted'
+              : intensity === 1 ? 'bg-primary/20'
+              : intensity === 2 ? 'bg-primary/40'
+              : intensity === 3 ? 'bg-primary/60'
+              : 'bg-primary/80';
             return (
               <div
-                key={i}
-                className={`w-7 h-7 rounded-sm ${colors[intensity]} transition-colors`}
-                title={`${d.date.toLocaleDateString()}: ${formatHours(d.seconds)}`}
-              />
+                key={d.day}
+                className={`aspect-square rounded-md flex flex-col items-center justify-center relative transition-colors ${bgClass} ${d.isToday ? 'ring-2 ring-primary ring-offset-1 ring-offset-background' : ''}`}
+                title={d.isFuture ? '' : `${d.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}: ${formatHours(d.seconds)}`}
+              >
+                <span className={`text-[10px] leading-none font-medium ${d.isFuture ? 'text-muted-foreground/40' : intensity >= 2 ? 'text-primary-foreground' : 'text-foreground/70'}`}>
+                  {d.day}
+                </span>
+                {!d.isFuture && d.seconds > 0 && (
+                  <span className={`text-[8px] leading-none mt-0.5 ${intensity >= 2 ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                    {(d.seconds / 3600).toFixed(1)}h
+                  </span>
+                )}
+              </div>
             );
           })}
         </div>
