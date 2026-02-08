@@ -1,27 +1,27 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import logo from "@/assets/logo.jfif";
 
- const navLinks = [
-   { path: "/", label: "Home" },
-   { path: "/materials", label: "Materials" },
-   { path: "/tests", label: "Tests" },
-   { path: "/support", label: "Support" },
- ];
-
+const navLinks = [
+  { path: "/", label: "Home" },
+  { path: "/materials", label: "Materials" },
+  { path: "/tests", label: "Tests" },
+  { path: "/support", label: "Support" },
+];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [batchesOpen, setBatchesOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
@@ -29,7 +29,13 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <nav
+      className={`sticky top-0 z-50 border-b transition-all duration-300 navbar-glass ${
+        scrolled
+          ? "border-border/60 bg-background/80 shadow-sm"
+          : "border-border/30 bg-background/95"
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
@@ -43,7 +49,7 @@ export function Navbar() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(link.path)
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -75,14 +81,14 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden pb-4 animate-fade-in">
+          <div className="md:hidden pb-4 pop-in">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive(link.path)
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
