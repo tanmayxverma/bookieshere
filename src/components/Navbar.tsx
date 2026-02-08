@@ -32,15 +32,15 @@ export function Navbar() {
     <nav
       className={`sticky top-0 z-50 transition-all duration-500 navbar-glass ${
         scrolled
-          ? "border-b border-border/30 bg-background/70 shadow-[0_1px_12px_-4px_hsl(var(--primary)/0.08)] h-14"
-          : "border-b border-transparent bg-background/50 h-16"
+          ? "border-b border-primary/15 bg-background/70 shadow-[0_1px_15px_-4px_hsl(var(--primary)/0.12)] h-14"
+          : "border-b border-primary/10 bg-background/50 shadow-[0_1px_8px_-3px_hsl(var(--primary)/0.08)] h-16"
       }`}
     >
       <div className="container mx-auto px-4 h-full">
         <div className="flex h-full items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
             <img src={logo} alt="BOOKIE Logo" className={`rounded-lg object-cover shadow-md transition-all duration-500 ${scrolled ? "h-8 w-8" : "h-9 w-9"}`} />
-            <span className="font-display text-lg font-bold tracking-tight text-foreground">BOOKIE</span>
+            <span className="font-display text-xl font-bold tracking-tight text-foreground">BOOKIE</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -49,7 +49,7 @@ export function Navbar() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative px-4 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${
+                className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
                   isActive(link.path)
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
