@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { formatHours } from '@/types/ypt';
+import { formatHours, getISTDate, getISTDateString, getISTTodayStartUTC } from '@/types/ypt';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Clock, Flame, TrendingUp, Calendar } from 'lucide-react';
 
 interface Props {
   userId: string;
+  liveElapsed?: number;
 }
 
-export function YPTDashboard({ userId }: Props) {
+export function YPTDashboard({ userId, liveElapsed = 0 }: Props) {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,7 +22,7 @@ export function YPTDashboard({ userId }: Props) {
         .from('study_sessions')
         .select('*')
         .eq('ypt_user_id', userId)
-        .eq('status', 'completed')
+        .in('status', ['completed', 'active'])
         .gte('started_at', thirtyDaysAgo.toISOString())
         .order('started_at', { ascending: false });
       setSessions(data || []);
@@ -34,60 +35,72 @@ export function YPTDashboard({ userId }: Props) {
     return <div className="text-center py-12 text-muted-foreground animate-pulse">Loading dashboard...</div>;
   }
 
-  const today = new Date().toDateString();
-  const todaySeconds = sessions
-    .filter((s) => new Date(s.started_at).toDateString() === today)
-    .reduce((sum, s) => sum + (s.duration_seconds || 0), 0);
+  // Use IST date strings for grouping
+  const istToday = getISTDate().toDateString();
+  
+  // Group seconds by IST date
+  const dayMap: Record<string, number> = {};
+  sessions.forEach((s) => {
+    const dateStr = getISTDateString(s.started_at);
+    dayMap[dateStr] = (dayMap[dateStr] || 0) + (s.duration_seconds || 0);
+  });
 
-  const weekStart = new Date();
-  weekStart.setDate(weekStart.getDate() - 6);
-  const weekSeconds = sessions
-    .filter((s) => new Date(s.started_at) >= weekStart)
-    .reduce((sum, s) => sum + (s.duration_seconds || 0), 0);
+  // Today in IST
+  const istTodayStr = getISTDate().toISOString().split('T')[0];
+  const todaySeconds = (dayMap[istTodayStr] || 0) + liveElapsed;
 
-  // Daily chart data
+  // Week total (last 7 IST days)
+  let weekSeconds = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = getISTDate();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    weekSeconds += dayMap[key] || 0;
+  }
+  weekSeconds += liveElapsed;
+
+  // Daily chart data (last 7 IST days)
   const dailyData = [];
   for (let i = 6; i >= 0; i--) {
-    const d = new Date();
+    const d = getISTDate();
     d.setDate(d.getDate() - i);
-    const dateStr = d.toDateString();
-    const secs = sessions
-      .filter((s) => new Date(s.started_at).toDateString() === dateStr)
-      .reduce((sum, s) => sum + (s.duration_seconds || 0), 0);
+    const key = d.toISOString().split('T')[0];
+    let secs = dayMap[key] || 0;
+    if (i === 0) secs += liveElapsed; // Add live time to today
     dailyData.push({
       day: d.toLocaleDateString('en', { weekday: 'short' }),
       hours: +(secs / 3600).toFixed(1),
     });
   }
 
-  // Streak
+  // Streak (minimum 15 min / day)
   let streak = 0;
   for (let i = 0; i < 365; i++) {
-    const d = new Date();
+    const d = getISTDate();
     d.setDate(d.getDate() - i);
-    const dateStr = d.toDateString();
-    const daySecs = sessions
-      .filter((s) => new Date(s.started_at).toDateString() === dateStr)
-      .reduce((sum, s) => sum + (s.duration_seconds || 0), 0);
+    const key = d.toISOString().split('T')[0];
+    let daySecs = dayMap[key] || 0;
+    if (i === 0) daySecs += liveElapsed;
     if (daySecs >= 900) streak++;
     else break;
   }
 
   // Best day
-  const dayMap: Record<string, number> = {};
-  sessions.forEach((s) => {
-    const dateStr = new Date(s.started_at).toDateString();
-    dayMap[dateStr] = (dayMap[dateStr] || 0) + (s.duration_seconds || 0);
+  const allDayValues = Object.entries(dayMap).map(([k, v]) => {
+    if (k === istTodayStr) return v + liveElapsed;
+    return v;
   });
-  const bestDaySeconds = Math.max(0, ...Object.values(dayMap));
+  const bestDaySeconds = Math.max(0, ...allDayValues);
 
-  // Calendar heatmap
+  // Calendar heatmap (last 30 IST days)
   const calendarData = [];
   for (let i = 29; i >= 0; i--) {
-    const d = new Date();
+    const d = getISTDate();
     d.setDate(d.getDate() - i);
-    const dateStr = d.toDateString();
-    calendarData.push({ date: d, seconds: dayMap[dateStr] || 0 });
+    const key = d.toISOString().split('T')[0];
+    let secs = dayMap[key] || 0;
+    if (i === 0) secs += liveElapsed;
+    calendarData.push({ date: d, seconds: secs });
   }
 
   return (
