@@ -818,48 +818,55 @@ export function shuffleArray<T>(array: T[]): T[] {
 
 export type SyllabusLevel = "11" | "12" | "both" | "custom";
 
+// Question limits per subject
+const QUESTIONS_PER_SUBJECT = {
+  jee_main: 25,     // 25 × 3 = 75 total
+  jee_advanced: 34,  // 34 × 3 = 102 total
+};
+
 export function getFilteredQuestions(options: {
   testType: "jee_main" | "jee_advanced";
   syllabusLevel: SyllabusLevel;
   subjects: ("physics" | "chemistry" | "mathematics")[];
   topics: string[];
 }): PracticeQuestion[] {
-  const filtered = PRACTICE_BANK.filter(q => {
-    // STRICT difficulty filtering — Main questions NEVER in Advanced tests, vice versa
-    if (options.testType === "jee_main" && q.difficulty !== "main") return false;
-    if (options.testType === "jee_advanced" && q.difficulty !== "advanced") return false;
+  const perSubject = QUESTIONS_PER_SUBJECT[options.testType];
+  const allSelected: PracticeQuestion[] = [];
 
-    // Filter by syllabus level
-    if (options.syllabusLevel === "11" && q.classLevel !== "11") return false;
-    if (options.syllabusLevel === "12" && q.classLevel !== "12") return false;
+  // Select questions per subject independently to enforce distribution
+  for (const subject of options.subjects) {
+    const subjectFiltered = PRACTICE_BANK.filter(q => {
+      if (q.subject !== subject) return false;
+      if (options.testType === "jee_main" && q.difficulty !== "main") return false;
+      if (options.testType === "jee_advanced" && q.difficulty !== "advanced") return false;
+      if (options.syllabusLevel === "11" && q.classLevel !== "11") return false;
+      if (options.syllabusLevel === "12" && q.classLevel !== "12") return false;
+      if (options.topics.length > 0 && !options.topics.includes(q.chapter)) return false;
+      return true;
+    });
 
-    // Filter by subjects
-    if (options.subjects.length > 0 && !options.subjects.includes(q.subject)) return false;
+    // Sort by LRU for uniqueness
+    const usageMap = getUsageMap();
+    const sorted = subjectFiltered.sort((a, b) => {
+      const ua = usageMap[a.id] || { timesUsed: 0, lastUsed: 0 };
+      const ub = usageMap[b.id] || { timesUsed: 0, lastUsed: 0 };
+      if (ua.timesUsed !== ub.timesUsed) return ua.timesUsed - ub.timesUsed;
+      return ua.lastUsed - ub.lastUsed;
+    });
 
-    // Filter by topics — EXACT match only
-    if (options.topics.length > 0 && !options.topics.includes(q.chapter)) return false;
+    const tiered = tieredShuffle(sorted, usageMap);
 
-    return true;
-  });
+    // Take only the required number per subject
+    allSelected.push(...tiered.slice(0, perSubject));
+  }
 
-  // Sort by least-recently-used first to maximize uniqueness
-  const usageMap = getUsageMap();
-  const sorted = filtered.sort((a, b) => {
-    const ua = usageMap[a.id] || { timesUsed: 0, lastUsed: 0 };
-    const ub = usageMap[b.id] || { timesUsed: 0, lastUsed: 0 };
-    // Prefer unused, then least used, then least recently used
-    if (ua.timesUsed !== ub.timesUsed) return ua.timesUsed - ub.timesUsed;
-    return ua.lastUsed - ub.lastUsed;
-  });
+  if (allSelected.length === 0) return [];
 
-  // After LRU sort, shuffle within same-usage tiers for variety
-  const tiered = tieredShuffle(sorted, usageMap);
-
-  // Enforce fixed marking: +4 correct, -1 incorrect
-  const withFixedMarking = tiered.map(q => ({
+  // Enforce fixed marking: +4 correct, -1 incorrect (0 for numerical)
+  const withFixedMarking = allSelected.map(q => ({
     ...q,
     marks_positive: 4,
-    marks_negative: 1,
+    marks_negative: (q.question_type === "numerical" || q.question_type === "integer") ? 0 : 1,
   }));
 
   // Record usage for selected questions

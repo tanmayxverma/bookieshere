@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Target, 
   Clock, 
@@ -59,16 +59,40 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
     window.scrollTo({ top: 0, behavior: "instant" });
     const result = await testState.loadQuestions();
     
-    if (result.success) {
-      if (testState.attemptMode === "online") {
-        onStartTest();
-      } else {
-        handleDownloadPDF();
-      }
-    } else {
-      setUnavailableMessage(result.message || "No questions available for the selected configuration.");
+    if (!result.success) {
+      setUnavailableMessage(result.message || "Not enough questions available for the selected criteria.");
+      return;
     }
+
+    // Questions are now loaded and locked in memory — safe to proceed
+    if (testState.attemptMode === "online") {
+      onStartTest();
+    }
+    // PDF mode: questions will be available in state after loadQuestions resolves
+    // We use a small delay to ensure state has propagated
   };
+
+  // Separate effect to handle PDF download after questions are loaded
+  const [pendingPdf, setPendingPdf] = useState(false);
+
+  const handleGenerateWithPdf = async () => {
+    if (!testState.isConfigValid()) {
+      toast.error("Please complete all required selections");
+      return;
+    }
+    if (testState.attemptMode === "pdf") {
+      setPendingPdf(true);
+    }
+    await handleGenerate();
+  };
+
+  // Effect: trigger PDF download once questions are loaded and pending
+  useEffect(() => {
+    if (pendingPdf && testState.questions.length > 0 && !testState.isLoading) {
+      setPendingPdf(false);
+      handleDownloadPDF();
+    }
+  }, [pendingPdf, testState.questions.length, testState.isLoading]);
 
   const cleanLatex = (text: string): string => {
     return text
@@ -654,7 +678,7 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
                 <div className="flex justify-between pt-4">
                   <Button variant="outline" onClick={() => { goToStep(isCustomMode ? 3 : 2); setUnavailableMessage(null); }}>Back</Button>
                   <Button 
-                    onClick={handleGenerate}
+                    onClick={testState.attemptMode === "pdf" ? handleGenerateWithPdf : handleGenerate}
                     className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:shadow-lg"
                     size="lg"
                   >
