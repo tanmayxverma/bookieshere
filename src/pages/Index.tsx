@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText } from "lucide-react";
+import { BookOpen, ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText, HeadphonesIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -40,8 +40,8 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-6 opacity-0 animate-fade-in stagger-3">
-                <Button asChild size="lg" className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:from-primary/90 hover:to-violet-500/90 shadow-lg shadow-primary/20 btn-press btn-lift px-8">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-6 opacity-0 animate-fade-in stagger-3 flex-wrap">
+                <Button asChild size="lg" className="gap-2 bg-primary hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8">
                   <Link to="/materials">
                     <BookOpen className="h-5 w-5" />
                     Browse Materials
@@ -49,10 +49,18 @@ const Index = () => {
                   </Link>
                 </Button>
                 
-                <Button asChild size="lg" className="gap-2 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-500/90 hover:to-purple-500/90 shadow-lg shadow-violet-500/20 btn-press btn-lift px-8">
+                <Button asChild size="lg" className="gap-2 bg-primary hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8">
                   <Link to="/tests">
                     <FileText className="h-5 w-5" />
                     Practice Tests
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+
+                <Button asChild size="lg" className="gap-2 bg-primary hover:bg-primary/85 shadow-lg shadow-primary/20 btn-press btn-lift px-8">
+                  <Link to="/support">
+                    <HeadphonesIcon className="h-5 w-5" />
+                    Chat Support
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
