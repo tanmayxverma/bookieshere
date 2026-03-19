@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { formatHours, getISTTodayStartUTC, getISTDate } from '@/types/ypt';
-import { Trophy, Medal } from 'lucide-react';
+import { Trophy, Flame } from 'lucide-react';
 import { YPTLeaderboardSkeleton } from '@/components/YPT/YPTSkeletons';
 
 interface Props {
@@ -16,6 +16,7 @@ interface LeaderboardEntry {
   name: string;
   jeeYear: string;
   totalSeconds: number;
+  streak?: number;
 }
 
 export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
@@ -97,41 +98,53 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
           </Card>
         ) : (
           <div className="space-y-2">
-            {top10.map((u, i) => (
-              <div
-                key={u.userId}
-                className={`flex items-center gap-3 p-3.5 rounded-xl transition-all pop-in ${
-                  u.userId === currentUserId
-                    ? 'bg-primary/8 border border-primary/20'
-                    : 'bg-card border border-border/30 card-glow'
-                }`}
-                style={{ animationDelay: `${i * 0.04}s` }}
-              >
-                <div className="w-8 text-center">
-                  {i === 0 ? <span className="text-lg">🥇</span>
-                    : i === 1 ? <span className="text-lg">🥈</span>
-                    : i === 2 ? <span className="text-lg">🥉</span>
-                    : <span className="text-sm font-bold text-muted-foreground">#{i + 1}</span>
-                  }
+            {top10.map((u, i) => {
+              const isMe = u.userId === currentUserId;
+              return (
+                <div
+                  key={u.userId}
+                  className={`flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200 pop-in ${
+                    isMe
+                      ? 'bg-primary/8 border border-primary/20 shadow-sm'
+                      : 'bg-card border border-border/30 card-glow'
+                  }`}
+                  style={{ animationDelay: `${i * 0.04}s` }}
+                >
+                  {/* Rank */}
+                  <div className="w-8 text-center shrink-0">
+                    {i === 0 ? <span className="text-lg">🥇</span>
+                      : i === 1 ? <span className="text-lg">🥈</span>
+                      : i === 2 ? <span className="text-lg">🥉</span>
+                      : <span className="text-sm font-bold text-muted-foreground">#{i + 1}</span>
+                    }
+                  </div>
+                  {/* Avatar */}
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                    i < 3 ? 'bg-primary/10 text-primary' : 'bg-muted text-foreground/70'
+                  }`}>
+                    {u.name.charAt(0).toUpperCase()}
+                  </div>
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-medium text-sm truncate ${isMe ? 'text-primary' : ''}`}>
+                      {u.name} {isMe && <span className="text-[10px] text-muted-foreground">(you)</span>}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{u.jeeYear}</p>
+                  </div>
+                  {/* Time */}
+                  <span className="font-semibold text-sm tabular-nums">{formatHours(u.totalSeconds)}</span>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-foreground/70 shrink-0">
-                  {u.name.charAt(0).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate">{u.name}</p>
-                  <p className="text-xs text-muted-foreground">{u.jeeYear}</p>
-                </div>
-                <span className="font-semibold text-sm tabular-nums">{formatHours(u.totalSeconds)}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
+        {/* Show user rank if outside top 10 */}
         {userEntry && userRank > 10 && (
-          <Card className="p-4 border-primary/20">
+          <Card className="p-4 border-primary/20 bg-primary/5">
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">Your Rank</p>
             <div className="flex items-center gap-3">
-              <span className="w-8 text-center font-bold">#{userRank}</span>
+              <span className="w-8 text-center font-bold text-primary">#{userRank}</span>
               <div className="flex-1">
                 <p className="font-medium text-sm">{userEntry.name}</p>
               </div>
@@ -141,7 +154,9 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
         )}
 
         {userEntry && userRank > 0 && userRank <= 10 && (
-          <p className="text-center text-sm text-muted-foreground">You're ranked <strong>#{userRank}</strong> 🎯</p>
+          <p className="text-center text-sm text-muted-foreground py-1">
+            You're ranked <strong className="text-foreground">#{userRank}</strong> 🎯
+          </p>
         )}
       </div>
     );

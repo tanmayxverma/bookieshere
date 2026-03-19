@@ -4,16 +4,35 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, Trash2, ListTodo, CheckCircle2 } from 'lucide-react';
+import { SUBJECTS } from '@/types/ypt';
+import { Plus, Trash2, ListTodo, CheckCircle2, Play, Timer } from 'lucide-react';
+
+interface TimerControls {
+  isActive: boolean;
+  isPaused: boolean;
+  subject: string | null;
+  elapsedSeconds: number;
+  startSession: (subject: string) => Promise<void>;
+  pauseSession: () => void;
+  resumeSession: () => void;
+  endSession: () => Promise<void>;
+  showInactivityModal: boolean;
+  inactivityCountdown: number;
+  dismissInactivity: () => void;
+}
 
 interface Props {
   userId: string;
+  timer: TimerControls;
 }
 
-export function V2TasksTab({ userId }: Props) {
+export function V2TasksTab({ userId, timer }: Props) {
   const [todos, setTodos] = useState<any[]>([]);
   const [newText, setNewText] = useState('');
+  const [showSubjectPicker, setShowSubjectPicker] = useState(false);
+  const [pendingTaskId, setPendingTaskId] = useState<string | null>(null);
   const today = new Date().toISOString().split('T')[0];
 
   const fetchTodos = async () => {
@@ -54,6 +73,18 @@ export function V2TasksTab({ userId }: Props) {
     fetchTodos();
   };
 
+  const startStudyForTask = (taskId: string) => {
+    if (timer.isActive) return; // Already studying
+    setPendingTaskId(taskId);
+    setShowSubjectPicker(true);
+  };
+
+  const handleSubjectSelect = async (subject: string) => {
+    setShowSubjectPicker(false);
+    setPendingTaskId(null);
+    await timer.startSession(subject);
+  };
+
   const completedCount = todos.filter(t => t.completed).length;
   const totalCount = todos.length;
   const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
@@ -88,7 +119,7 @@ export function V2TasksTab({ userId }: Props) {
           onKeyDown={(e) => e.key === 'Enter' && addTodo()}
           maxLength={100}
         />
-        <Button size="sm" onClick={addTodo} className="h-10 px-4 shrink-0 btn-lift">
+        <Button size="sm" onClick={addTodo} className="h-10 px-4 shrink-0 btn-lift active:scale-95 transition-transform">
           <Plus className="h-4 w-4 mr-1" /> Add
         </Button>
       </div>
@@ -114,9 +145,23 @@ export function V2TasksTab({ userId }: Props) {
                 onCheckedChange={() => toggleTodo(t.id, t.completed)}
                 className="shrink-0"
               />
-              <span className={`flex-1 text-sm ${t.completed ? 'line-through text-muted-foreground' : ''}`}>
+              <span className={`flex-1 text-sm transition-all duration-200 ${t.completed ? 'line-through text-muted-foreground' : ''}`}>
                 {t.text}
               </span>
+              {/* Start study from task */}
+              {!t.completed && !timer.isActive && (
+                <button
+                  onClick={() => startStudyForTask(t.id)}
+                  className="opacity-0 group-hover:opacity-100 transition-all p-1.5 rounded-md hover:bg-primary/10 text-primary"
+                  title="Start studying this task"
+                >
+                  <Play className="h-3.5 w-3.5" />
+                </button>
+              )}
+              {/* Show timer indicator if studying */}
+              {timer.isActive && !t.completed && (
+                <Timer className="h-3.5 w-3.5 text-muted-foreground/30 shrink-0" />
+              )}
               <button
                 onClick={() => deleteTodo(t.id)}
                 className="opacity-0 group-hover:opacity-100 transition-opacity p-1"
@@ -127,6 +172,27 @@ export function V2TasksTab({ userId }: Props) {
           ))}
         </div>
       )}
+
+      {/* Subject picker for task-initiated study */}
+      <Dialog open={showSubjectPicker} onOpenChange={setShowSubjectPicker}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>What subject for this task?</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            {SUBJECTS.map((s) => (
+              <Button
+                key={s}
+                variant="outline"
+                className="h-16 text-base font-medium card-glow active:scale-95 transition-transform"
+                onClick={() => handleSubjectSelect(s)}
+              >
+                {s}
+              </Button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
