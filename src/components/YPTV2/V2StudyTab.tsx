@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,8 @@ const MOTIVATIONAL_QUOTES = [
   "Consistency beats intensity",
   "Every second counts",
   "Focus is your superpower",
+  "The grind never lies",
+  "Silence the noise. Study.",
 ];
 
 export function V2StudyTab({ user, timer }: Props) {
@@ -45,22 +47,42 @@ export function V2StudyTab({ user, timer }: Props) {
   const [weekSeconds, setWeekSeconds] = useState(0);
   const [sessionCount, setSessionCount] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [longestStreak, setLongestStreak] = useState(0);
   const [focusMode, setFocusMode] = useState(false);
-  const [quoteIndex] = useState(() => Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length));
+  const [quoteIndex, setQuoteIndex] = useState(() => Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length));
+
+  // ESC handler for focus mode
+  useEffect(() => {
+    if (!focusMode) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setFocusMode(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [focusMode]);
+
+  // Rotate quotes every 30s in focus mode
+  useEffect(() => {
+    if (!focusMode) return;
+    const interval = setInterval(() => {
+      setQuoteIndex(prev => (prev + 1) % MOTIVATIONAL_QUOTES.length);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [focusMode]);
 
   useEffect(() => {
     const fetchStats = async () => {
       const todayStartUTC = getISTTodayStartUTC();
       const weekStart = new Date(new Date(todayStartUTC).getTime() - 6 * 24 * 60 * 60 * 1000).toISOString();
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 365);
+      const yearAgo = new Date();
+      yearAgo.setDate(yearAgo.getDate() - 365);
 
       const { data } = await (supabase as any)
         .from('study_sessions')
         .select('duration_seconds, started_at, status')
         .eq('ypt_user_id', user.id)
         .in('status', ['completed', 'active'])
-        .gte('started_at', thirtyDaysAgo.toISOString());
+        .gte('started_at', yearAgo.toISOString());
 
       if (data) {
         const todayStart = new Date(todayStartUTC).getTime();
@@ -75,7 +97,7 @@ export function V2StudyTab({ user, timer }: Props) {
         setWeekSeconds(weekSecs);
         setSessionCount(todaySessions.filter((s: any) => s.status === 'completed').length);
 
-        // Calculate streak
+        // Calculate streaks
         const dayMap: Record<string, number> = {};
         data.forEach((s: any) => {
           const d = new Date(s.started_at);
@@ -85,6 +107,7 @@ export function V2StudyTab({ user, timer }: Props) {
           dayMap[key] = (dayMap[key] || 0) + (s.duration_seconds || 0);
         });
 
+        // Current streak
         let s = 0;
         for (let i = 0; i < 365; i++) {
           const now = new Date();
@@ -98,6 +121,22 @@ export function V2StudyTab({ user, timer }: Props) {
           else break;
         }
         setStreak(s);
+
+        // Longest streak
+        const sortedDays = Object.entries(dayMap)
+          .filter(([, v]) => v >= 900)
+          .map(([k]) => k)
+          .sort();
+        let longest = 0, current = 1;
+        for (let i = 1; i < sortedDays.length; i++) {
+          const prev = new Date(sortedDays[i - 1] + 'T00:00:00');
+          const curr = new Date(sortedDays[i] + 'T00:00:00');
+          const diffDays = (curr.getTime() - prev.getTime()) / (86400000);
+          if (diffDays === 1) current++;
+          else { longest = Math.max(longest, current); current = 1; }
+        }
+        longest = Math.max(longest, current, s);
+        setLongestStreak(sortedDays.length > 0 ? longest : 0);
       }
     };
     fetchStats();
@@ -117,13 +156,14 @@ export function V2StudyTab({ user, timer }: Props) {
   if (focusMode && timer.isActive) {
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
-        {/* Subtle gradient glow */}
+        {/* Gradient background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[100px] breathing-glow" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px] breathing-glow" />
+          <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-primary/3 blur-[100px] breathing-glow" style={{ animationDelay: '3s' }} />
         </div>
 
         <div className="relative z-10 flex flex-col items-center gap-8 pop-in">
-          {/* Subject */}
+          {/* Subject badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/50 bg-card/50 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             <span className="text-sm font-medium text-muted-foreground">{timer.subject}</span>
@@ -131,18 +171,27 @@ export function V2StudyTab({ user, timer }: Props) {
 
           {/* Timer */}
           <div className="relative">
-            <p className="text-7xl md:text-8xl lg:text-9xl font-mono font-bold tracking-tight tabular-nums text-foreground">
+            <p className="text-7xl md:text-8xl lg:text-9xl font-mono font-bold tracking-tight tabular-nums text-foreground select-none">
               {formatTime(timer.elapsedSeconds)}
             </p>
             {!timer.isPaused && (
-              <div className="absolute -inset-4 rounded-3xl bg-primary/5 animate-[pulse_3s_ease-in-out_infinite] -z-10" />
+              <div className="absolute -inset-6 rounded-3xl bg-primary/5 animate-[pulse_3s_ease-in-out_infinite] -z-10" />
             )}
           </div>
 
-          {/* Quote */}
-          <p className="text-sm text-muted-foreground/60 italic font-medium">
+          {/* Quote with fade transition */}
+          <p className="text-sm text-muted-foreground/60 italic font-medium transition-opacity duration-500 h-5">
             "{MOTIVATIONAL_QUOTES[quoteIndex]}"
           </p>
+
+          {/* Today's progress mini */}
+          <div className="w-64 space-y-1.5">
+            <div className="flex justify-between text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+              <span>Today</span>
+              <span>{formatHours(liveTodaySeconds)} / {DAILY_GOAL_HOURS}h</span>
+            </div>
+            <Progress value={dailyProgress} className="h-1" />
+          </div>
 
           {/* Controls */}
           <div className="flex items-center gap-3">
@@ -151,11 +200,11 @@ export function V2StudyTab({ user, timer }: Props) {
                 <Play className="h-4 w-4 mr-2" /> Resume
               </Button>
             ) : (
-              <Button onClick={timer.pauseSession} variant="secondary" size="lg" className="px-8">
+              <Button onClick={timer.pauseSession} variant="secondary" size="lg" className="px-8 active:scale-95 transition-transform">
                 <Pause className="h-4 w-4 mr-2" /> Pause
               </Button>
             )}
-            <Button onClick={timer.endSession} variant="destructive" size="lg" className="px-8">
+            <Button onClick={timer.endSession} variant="destructive" size="lg" className="px-8 active:scale-95 transition-transform">
               <Square className="h-4 w-4 mr-2" /> Stop
             </Button>
           </div>
@@ -163,9 +212,9 @@ export function V2StudyTab({ user, timer }: Props) {
           {/* Exit focus */}
           <button
             onClick={() => setFocusMode(false)}
-            className="flex items-center gap-2 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors mt-4"
+            className="flex items-center gap-2 text-xs text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors mt-4"
           >
-            <Minimize2 className="h-3.5 w-3.5" /> Press ESC or click to exit focus mode
+            <Minimize2 className="h-3.5 w-3.5" /> Press ESC to exit focus mode
           </button>
         </div>
 
@@ -175,7 +224,7 @@ export function V2StudyTab({ user, timer }: Props) {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you still studying?</AlertDialogTitle>
               <AlertDialogDescription>
-                3 hours straight. Session auto-ends in {timer.inactivityCountdown}s.
+                3 hours straight — session auto-ends in {timer.inactivityCountdown}s.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <Progress value={(timer.inactivityCountdown / 15) * 100} className="h-2" />
@@ -187,15 +236,6 @@ export function V2StudyTab({ user, timer }: Props) {
         </AlertDialog>
       </div>
     );
-  }
-
-  // ESC handler for focus mode
-  if (focusMode) {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setFocusMode(false);
-    };
-    window.addEventListener('keydown', handleEsc);
-    setTimeout(() => window.removeEventListener('keydown', handleEsc), 100);
   }
 
   return (
@@ -217,7 +257,7 @@ export function V2StudyTab({ user, timer }: Props) {
               </div>
 
               {/* Timer display */}
-              <p className="text-6xl md:text-7xl font-mono font-bold tracking-tight tabular-nums">
+              <p className="text-6xl md:text-7xl font-mono font-bold tracking-tight tabular-nums select-none">
                 {formatTime(timer.elapsedSeconds)}
               </p>
 
@@ -228,18 +268,18 @@ export function V2StudyTab({ user, timer }: Props) {
                     <Play className="h-4 w-4 mr-2" /> Resume
                   </Button>
                 ) : (
-                  <Button onClick={timer.pauseSession} variant="secondary" size="lg" className="px-6">
+                  <Button onClick={timer.pauseSession} variant="secondary" size="lg" className="px-6 active:scale-95 transition-transform">
                     <Pause className="h-4 w-4 mr-2" /> Pause
                   </Button>
                 )}
-                <Button onClick={timer.endSession} variant="destructive" size="lg" className="px-6">
+                <Button onClick={timer.endSession} variant="destructive" size="lg" className="px-6 active:scale-95 transition-transform">
                   <Square className="h-4 w-4 mr-2" /> Stop
                 </Button>
                 <Button
                   onClick={() => setFocusMode(true)}
                   variant="outline"
                   size="lg"
-                  className="px-4"
+                  className="px-4 active:scale-95 transition-transform"
                   title="Focus Mode"
                 >
                   <Maximize2 className="h-4 w-4" />
@@ -268,7 +308,7 @@ export function V2StudyTab({ user, timer }: Props) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard icon={<Clock className="h-4 w-4" />} label="Today" value={formatHours(liveTodaySeconds)} />
         <StatCard icon={<TrendingUp className="h-4 w-4" />} label="This Week" value={formatHours(liveWeekSeconds)} />
-        <StatCard icon={<Flame className="h-4 w-4" />} label="Streak" value={`${streak} 🔥`} highlight={streak > 0} />
+        <StatCard icon={<Flame className="h-4 w-4" />} label="Streak" value={`${streak} 🔥`} subtitle={longestStreak > 0 ? `Best: ${longestStreak}d` : undefined} highlight={streak > 0} />
         <StatCard icon={<Zap className="h-4 w-4" />} label="Sessions" value={`${sessionCount}`} />
       </div>
 
@@ -304,7 +344,7 @@ export function V2StudyTab({ user, timer }: Props) {
               <Button
                 key={s}
                 variant="outline"
-                className="h-16 text-base font-medium card-glow"
+                className="h-16 text-base font-medium card-glow active:scale-95 transition-transform"
                 onClick={() => handleStart(s)}
               >
                 {s}
@@ -320,7 +360,7 @@ export function V2StudyTab({ user, timer }: Props) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you still studying?</AlertDialogTitle>
             <AlertDialogDescription>
-              3 hours straight. Session auto-ends in {timer.inactivityCountdown}s.
+              3 hours straight — session auto-ends in {timer.inactivityCountdown}s.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <Progress value={(timer.inactivityCountdown / 15) * 100} className="h-2" />
@@ -334,7 +374,7 @@ export function V2StudyTab({ user, timer }: Props) {
   );
 }
 
-function StatCard({ icon, label, value, highlight }: { icon: React.ReactNode; label: string; value: string; highlight?: boolean }) {
+function StatCard({ icon, label, value, subtitle, highlight }: { icon: React.ReactNode; label: string; value: string; subtitle?: string; highlight?: boolean }) {
   return (
     <Card className={`p-4 card-glow border-border/50 ${highlight ? 'border-primary/20' : ''}`}>
       <div className="flex items-center gap-2 text-muted-foreground mb-1.5">
@@ -342,6 +382,7 @@ function StatCard({ icon, label, value, highlight }: { icon: React.ReactNode; la
         <span className="text-xs font-medium uppercase tracking-wider">{label}</span>
       </div>
       <p className="text-xl font-bold tabular-nums">{value}</p>
+      {subtitle && <p className="text-[10px] text-muted-foreground mt-0.5">{subtitle}</p>}
     </Card>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Layout } from '@/components/Layout';
 import { useYPTUser } from '@/hooks/useYPTUser';
 import { useStudyTimer } from '@/hooks/useStudyTimer';
@@ -7,7 +7,7 @@ import { YPTOnboarding } from '@/components/YPT/YPTOnboarding';
 import { YPTLoadingSkeleton } from '@/components/YPT/YPTSkeletons';
 import { YPTNameChange } from '@/components/YPT/YPTNameChange';
 import { V2StudyTab, V2StatsTab, V2TasksTab, V2RoomsTab, V2LeaderboardTab } from '@/components/YPTV2';
-import { Timer, BarChart3, Users, ListTodo, Trophy, Pencil } from 'lucide-react';
+import { Timer, BarChart3, Users, ListTodo, Trophy } from 'lucide-react';
 
 const TABS = [
   { id: 'study', label: 'Study', icon: Timer },
@@ -24,8 +24,23 @@ export default function YPT() {
   const timer = useStudyTimer(user?.id);
   const { activeUsers } = useYPTPresence();
   const [tab, setTab] = useState<TabId>('study');
+  const [animating, setAnimating] = useState(false);
+  const [direction, setDirection] = useState<'left' | 'right'>('right');
+  const prevTab = useRef<TabId>('study');
 
-  // ESC to exit focus mode handled in V2StudyTab
+  const switchTab = (newTab: TabId) => {
+    if (newTab === tab || animating) return;
+    const oldIdx = TABS.findIndex(t => t.id === tab);
+    const newIdx = TABS.findIndex(t => t.id === newTab);
+    setDirection(newIdx > oldIdx ? 'right' : 'left');
+    setAnimating(true);
+    prevTab.current = tab;
+    // Small delay for exit animation
+    setTimeout(() => {
+      setTab(newTab);
+      setTimeout(() => setAnimating(false), 300);
+    }, 150);
+  };
 
   if (isLoading) {
     return (
@@ -68,8 +83,8 @@ export default function YPT() {
                 return (
                   <button
                     key={t.id}
-                    onClick={() => setTab(t.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    onClick={() => switchTab(t.id)}
+                    className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive
                         ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
@@ -83,13 +98,21 @@ export default function YPT() {
             </nav>
           </div>
 
-          {/* Content */}
+          {/* Content with tab transitions */}
           <main className="max-w-3xl mx-auto">
-            {tab === 'study' && <V2StudyTab user={user} timer={timer} />}
-            {tab === 'stats' && <V2StatsTab userId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
-            {tab === 'rooms' && <V2RoomsTab activeUsers={activeUsers} />}
-            {tab === 'tasks' && <V2TasksTab userId={user.id} />}
-            {tab === 'leaderboard' && <V2LeaderboardTab currentUserId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
+            <div
+              className={`transition-all duration-300 ease-out ${
+                animating
+                  ? 'opacity-0 translate-y-3 scale-[0.98]'
+                  : 'opacity-100 translate-y-0 scale-100'
+              }`}
+            >
+              {tab === 'study' && <V2StudyTab user={user} timer={timer} />}
+              {tab === 'stats' && <V2StatsTab userId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
+              {tab === 'rooms' && <V2RoomsTab activeUsers={activeUsers} currentUser={user} timer={timer} />}
+              {tab === 'tasks' && <V2TasksTab userId={user.id} timer={timer} />}
+              {tab === 'leaderboard' && <V2LeaderboardTab currentUserId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
+            </div>
           </main>
 
           {/* Mobile Bottom Nav */}
@@ -101,8 +124,8 @@ export default function YPT() {
                 return (
                   <button
                     key={t.id}
-                    onClick={() => setTab(t.id)}
-                    className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all duration-200 min-w-[52px] ${
+                    onClick={() => switchTab(t.id)}
+                    className={`relative flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all duration-200 min-w-[52px] active:scale-95 ${
                       isActive
                         ? 'text-primary'
                         : 'text-muted-foreground'
@@ -111,7 +134,7 @@ export default function YPT() {
                     <Icon className={`h-5 w-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
                     <span className="text-[10px] font-medium">{t.label}</span>
                     {isActive && (
-                      <div className="absolute -bottom-0 w-6 h-0.5 rounded-full bg-primary" />
+                      <div className="absolute -bottom-0.5 w-6 h-0.5 rounded-full bg-primary transition-all duration-300" />
                     )}
                   </button>
                 );
