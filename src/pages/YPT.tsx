@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Layout } from '@/components/Layout';
 import { useYPTUser } from '@/hooks/useYPTUser';
 import { useStudyTimer } from '@/hooks/useStudyTimer';
@@ -25,21 +25,16 @@ export default function YPT() {
   const { activeUsers } = useYPTPresence();
   const [tab, setTab] = useState<TabId>('study');
   const [animating, setAnimating] = useState(false);
-  const [direction, setDirection] = useState<'left' | 'right'>('right');
   const prevTab = useRef<TabId>('study');
 
   const switchTab = (newTab: TabId) => {
     if (newTab === tab || animating) return;
-    const oldIdx = TABS.findIndex(t => t.id === tab);
-    const newIdx = TABS.findIndex(t => t.id === newTab);
-    setDirection(newIdx > oldIdx ? 'right' : 'left');
     setAnimating(true);
     prevTab.current = tab;
-    // Small delay for exit animation
     setTimeout(() => {
       setTab(newTab);
-      setTimeout(() => setAnimating(false), 300);
-    }, 150);
+      setTimeout(() => setAnimating(false), 250);
+    }, 120);
   };
 
   if (isLoading) {
@@ -84,7 +79,7 @@ export default function YPT() {
                   <button
                     key={t.id}
                     onClick={() => switchTab(t.id)}
-                    className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-95 ${
                       isActive
                         ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
@@ -98,18 +93,18 @@ export default function YPT() {
             </nav>
           </div>
 
-          {/* Content with tab transitions */}
+          {/* Content */}
           <main className="max-w-3xl mx-auto">
             <div
-              className={`transition-all duration-300 ease-out ${
+              className={`transition-all duration-250 ease-out ${
                 animating
-                  ? 'opacity-0 translate-y-3 scale-[0.98]'
+                  ? 'opacity-0 translate-y-2 scale-[0.99]'
                   : 'opacity-100 translate-y-0 scale-100'
               }`}
             >
               {tab === 'study' && <V2StudyTab user={user} timer={timer} />}
               {tab === 'stats' && <V2StatsTab userId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
-              {tab === 'rooms' && <V2RoomsTab activeUsers={activeUsers} currentUser={user} timer={timer} />}
+              {tab === 'rooms' && <V2RoomsTab currentUser={user} timer={timer} />}
               {tab === 'tasks' && <V2TasksTab userId={user.id} timer={timer} />}
               {tab === 'leaderboard' && <V2LeaderboardTab currentUserId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
             </div>
