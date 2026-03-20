@@ -22,7 +22,7 @@ type TabId = typeof TABS[number]['id'];
 export default function YPT() {
   const { user, isLoading, isOnboarded, createUser, changeName } = useYPTUser();
   const timer = useStudyTimer(user?.id);
-  const { activeUsers } = useYPTPresence();
+  const { onlineCount, activeUsers } = useYPTPresence(user?.id, user?.name, user?.jee_focus_year);
   const [tab, setTab] = useState<TabId>('study');
   const [animating, setAnimating] = useState(false);
   const prevTab = useRef<TabId>('study');
@@ -63,7 +63,7 @@ export default function YPT() {
               <div className="flex items-center gap-2 mt-0.5">
                 <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  {activeUsers.length} online
+                  {onlineCount} online
                 </p>
                 <span className="text-muted-foreground/30">·</span>
                 <span className="text-xs font-medium">{user.name}</span>
