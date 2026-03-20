@@ -243,12 +243,93 @@ export type Database = {
         }
         Relationships: []
       }
+      ypt_room_members: {
+        Row: {
+          id: string
+          joined_at: string
+          room_id: string
+          ypt_user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          room_id: string
+          ypt_user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          room_id?: string
+          ypt_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ypt_room_members_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "ypt_rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ypt_room_members_ypt_user_id_fkey"
+            columns: ["ypt_user_id"]
+            isOneToOne: false
+            referencedRelation: "ypt_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ypt_rooms: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          emoji: string | null
+          id: string
+          is_permanent: boolean
+          last_activity_at: string
+          max_participants: number | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          is_permanent?: boolean
+          last_activity_at?: string
+          max_participants?: number | null
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          is_permanent?: boolean
+          last_activity_at?: string
+          max_participants?: number | null
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ypt_rooms_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "ypt_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ypt_todos: {
         Row: {
           completed: boolean
           created_at: string
           created_date: string
           id: string
+          priority: string | null
           text: string
           ypt_user_id: string
         }
@@ -257,6 +338,7 @@ export type Database = {
           created_at?: string
           created_date?: string
           id?: string
+          priority?: string | null
           text: string
           ypt_user_id: string
         }
@@ -265,6 +347,7 @@ export type Database = {
           created_at?: string
           created_date?: string
           id?: string
+          priority?: string | null
           text?: string
           ypt_user_id?: string
         }
@@ -313,6 +396,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_inactive_rooms: { Args: never; Returns: undefined }
       cleanup_old_sessions: { Args: never; Returns: undefined }
       cleanup_stale_sessions: { Args: never; Returns: undefined }
       has_role: {
