@@ -22,7 +22,7 @@ type TabId = typeof TABS[number]['id'];
 export default function YPT() {
   const { user, isLoading, isOnboarded, createUser, changeName } = useYPTUser();
   const timer = useStudyTimer(user?.id);
-  const { activeUsers } = useYPTPresence();
+  const { onlineCount, activeUsers } = useYPTPresence(user?.id, user?.name, user?.jee_focus_year);
   const [tab, setTab] = useState<TabId>('study');
   const [animating, setAnimating] = useState(false);
   const prevTab = useRef<TabId>('study');
