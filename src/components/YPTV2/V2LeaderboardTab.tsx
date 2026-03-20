@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { formatHours, getISTTodayStartUTC, getISTDate } from '@/types/ypt';
-import { Trophy, Flame } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { YPTLeaderboardSkeleton } from '@/components/YPT/YPTSkeletons';
 
 interface Props {
@@ -16,7 +16,6 @@ interface LeaderboardEntry {
   name: string;
   jeeYear: string;
   totalSeconds: number;
-  streak?: number;
 }
 
 export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
@@ -54,11 +53,9 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
         totalSeconds: 0,
       };
 
-      // Week
       if (!weekMap[uid]) weekMap[uid] = { ...entry };
       weekMap[uid].totalSeconds += s.duration_seconds || 0;
 
-      // Today
       if (new Date(s.started_at).toISOString() >= todayStartUTC) {
         if (!todayMap[uid]) todayMap[uid] = { ...entry };
         todayMap[uid].totalSeconds += s.duration_seconds || 0;
@@ -106,11 +103,10 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
                   className={`flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200 pop-in ${
                     isMe
                       ? 'bg-primary/8 border border-primary/20 shadow-sm'
-                      : 'bg-card border border-border/30 card-glow'
+                      : 'bg-card border border-border/30 card-glow hover:shadow-sm hover:border-border/60'
                   }`}
                   style={{ animationDelay: `${i * 0.04}s` }}
                 >
-                  {/* Rank */}
                   <div className="w-8 text-center shrink-0">
                     {i === 0 ? <span className="text-lg">🥇</span>
                       : i === 1 ? <span className="text-lg">🥈</span>
@@ -118,20 +114,17 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
                       : <span className="text-sm font-bold text-muted-foreground">#{i + 1}</span>
                     }
                   </div>
-                  {/* Avatar */}
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
                     i < 3 ? 'bg-primary/10 text-primary' : 'bg-muted text-foreground/70'
                   }`}>
                     {u.name.charAt(0).toUpperCase()}
                   </div>
-                  {/* Info */}
                   <div className="flex-1 min-w-0">
                     <p className={`font-medium text-sm truncate ${isMe ? 'text-primary' : ''}`}>
                       {u.name} {isMe && <span className="text-[10px] text-muted-foreground">(you)</span>}
                     </p>
                     <p className="text-xs text-muted-foreground">{u.jeeYear}</p>
                   </div>
-                  {/* Time */}
                   <span className="font-semibold text-sm tabular-nums">{formatHours(u.totalSeconds)}</span>
                 </div>
               );
@@ -139,7 +132,6 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
           </div>
         )}
 
-        {/* Show user rank if outside top 10 */}
         {userEntry && userRank > 10 && (
           <Card className="p-4 border-primary/20 bg-primary/5">
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">Your Rank</p>
@@ -172,8 +164,8 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
 
       <Tabs value={period} onValueChange={setPeriod}>
         <TabsList className="w-full">
-          <TabsTrigger value="today" className="flex-1">Today</TabsTrigger>
-          <TabsTrigger value="weekly" className="flex-1">This Week</TabsTrigger>
+          <TabsTrigger value="today" className="flex-1">Daily</TabsTrigger>
+          <TabsTrigger value="weekly" className="flex-1">Weekly</TabsTrigger>
         </TabsList>
         <TabsContent value="today" className="mt-4">
           {renderBoard(todayBoard)}
