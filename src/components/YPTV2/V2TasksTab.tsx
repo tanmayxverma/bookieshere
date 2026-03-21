@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { SUBJECTS } from '@/types/ypt';
-import { Plus, Trash2, ListTodo, CheckCircle2, Play, Timer, Pencil, Flag, X, Check, GripVertical, Clock } from 'lucide-react';
+import { Plus, Trash2, ListTodo, CheckCircle2, Play, Timer, Pencil, Flag, X, Check, GripVertical, Clock, Target } from 'lucide-react';
 
 interface TimerControls {
   isActive: boolean;
@@ -29,10 +29,10 @@ interface Props {
   timer: TimerControls;
 }
 
-const PRIORITY_BG: Record<string, string> = {
-  high: 'bg-red-500/10 text-red-500 border-red-500/20',
-  normal: 'bg-muted text-muted-foreground border-border/30',
-  low: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+const PRIORITY_CONFIG: Record<string, { bg: string; label: string; color: string }> = {
+  high: { bg: 'bg-red-500/15 border-red-500/30', label: 'High', color: 'text-red-400' },
+  normal: { bg: 'bg-muted/60 border-border/40', label: 'Normal', color: 'text-muted-foreground' },
+  low: { bg: 'bg-blue-500/15 border-blue-500/30', label: 'Low', color: 'text-blue-400' },
 };
 
 const TIME_OPTIONS = [
@@ -95,32 +95,20 @@ export function V2TasksTab({ userId, timer }: Props) {
   };
 
   const toggleTodo = async (id: string, completed: boolean) => {
-    await (supabase as any)
-      .from('ypt_todos')
-      .update({ completed: !completed })
-      .eq('id', id);
+    await (supabase as any).from('ypt_todos').update({ completed: !completed }).eq('id', id);
     fetchTodos();
   };
 
   const deleteTodo = async (id: string) => {
-    await (supabase as any)
-      .from('ypt_todos')
-      .delete()
-      .eq('id', id);
+    await (supabase as any).from('ypt_todos').delete().eq('id', id);
     fetchTodos();
   };
 
-  const startEdit = (todo: any) => {
-    setEditingId(todo.id);
-    setEditText(todo.text);
-  };
+  const startEdit = (todo: any) => { setEditingId(todo.id); setEditText(todo.text); };
 
   const saveEdit = async () => {
     if (!editingId || !editText.trim()) return;
-    await (supabase as any)
-      .from('ypt_todos')
-      .update({ text: editText.trim() })
-      .eq('id', editingId);
+    await (supabase as any).from('ypt_todos').update({ text: editText.trim() }).eq('id', editingId);
     setEditingId(null);
     setEditText('');
     fetchTodos();
@@ -128,135 +116,106 @@ export function V2TasksTab({ userId, timer }: Props) {
 
   const startStudyForTask = async (task: any) => {
     if (timer.isActive) return;
-    const subject = task.subject || 'Physics';
-    await timer.startSession(subject);
+    await timer.startSession(task.subject || 'Physics');
   };
 
-  // Drag and drop handlers
-  const handleDragStart = (id: string) => {
-    setDraggedId(id);
-  };
-
-  const handleDragOver = (e: React.DragEvent, id: string) => {
-    e.preventDefault();
-    if (id !== draggedId) setDragOverId(id);
-  };
-
-  const handleDragLeave = () => {
-    setDragOverId(null);
-  };
-
+  const handleDragStart = (id: string) => setDraggedId(id);
+  const handleDragOver = (e: React.DragEvent, id: string) => { e.preventDefault(); if (id !== draggedId) setDragOverId(id); };
+  const handleDragLeave = () => setDragOverId(null);
   const handleDrop = async (targetId: string) => {
-    if (!draggedId || draggedId === targetId) {
-      setDraggedId(null);
-      setDragOverId(null);
-      return;
-    }
-
-    const incompleteTodos = todos.filter(t => !t.completed);
-    const completedTodos = todos.filter(t => t.completed);
-
-    const dragIdx = incompleteTodos.findIndex(t => t.id === draggedId);
-    const dropIdx = incompleteTodos.findIndex(t => t.id === targetId);
-
-    if (dragIdx === -1 || dropIdx === -1) {
-      setDraggedId(null);
-      setDragOverId(null);
-      return;
-    }
-
-    const reordered = [...incompleteTodos];
+    if (!draggedId || draggedId === targetId) { setDraggedId(null); setDragOverId(null); return; }
+    const incomplete = todos.filter(t => !t.completed);
+    const completed = todos.filter(t => t.completed);
+    const dragIdx = incomplete.findIndex(t => t.id === draggedId);
+    const dropIdx = incomplete.findIndex(t => t.id === targetId);
+    if (dragIdx === -1 || dropIdx === -1) { setDraggedId(null); setDragOverId(null); return; }
+    const reordered = [...incomplete];
     const [moved] = reordered.splice(dragIdx, 1);
     reordered.splice(dropIdx, 0, moved);
-
-    // Update sort_order for all reordered items
     const updates = reordered.map((t, i) => ({ ...t, sort_order: i }));
-    const allUpdated = [...updates, ...completedTodos.map((t, i) => ({ ...t, sort_order: updates.length + i }))];
-    setTodos(allUpdated);
-
-    // Persist to DB
+    setTodos([...updates, ...completed.map((t, i) => ({ ...t, sort_order: updates.length + i }))]);
     for (const item of updates) {
-      await (supabase as any)
-        .from('ypt_todos')
-        .update({ sort_order: item.sort_order })
-        .eq('id', item.id);
+      await (supabase as any).from('ypt_todos').update({ sort_order: item.sort_order }).eq('id', item.id);
     }
-
     setDraggedId(null);
     setDragOverId(null);
   };
-
-  const handleDragEnd = () => {
-    setDraggedId(null);
-    setDragOverId(null);
-  };
+  const handleDragEnd = () => { setDraggedId(null); setDragOverId(null); };
 
   const completedCount = todos.filter(t => t.completed).length;
   const totalCount = todos.length;
   const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
-  // Sort: incomplete by sort_order, then completed
   const sortedTodos = [...todos].sort((a, b) => {
     if (a.completed !== b.completed) return a.completed ? 1 : -1;
     return (a.sort_order ?? 0) - (b.sort_order ?? 0);
   });
-
   const incompleteTasks = sortedTodos.filter(t => !t.completed);
   const completedTasks = sortedTodos.filter(t => t.completed);
 
   const formatTime = (mins: number) => {
-    if (mins < 60) return `${mins}m`;
+    if (mins < 60) return `${mins} min`;
     const h = Math.floor(mins / 60);
     const m = mins % 60;
     return m > 0 ? `${h}h ${m}m` : `${h}h`;
   };
 
   return (
-    <div className="space-y-6 pop-in">
+    <div className="space-y-5 pop-in">
       {/* Progress Header */}
-      <Card className="p-5 border-border/50">
+      <Card className="p-5 border-border/50 bg-card/80">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <ListTodo className="h-3.5 w-3.5" /> Today's Tasks
-          </h3>
+          <div className="flex items-center gap-2.5">
+            <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Target className="h-4.5 w-4.5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-base font-semibold text-foreground">Today's Tasks</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {totalCount === 0 ? 'No tasks yet' : `${completedCount} of ${totalCount} completed`}
+              </p>
+            </div>
+          </div>
           {totalCount > 0 && (
-            <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-              <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-              {completedCount}/{totalCount} completed
-            </span>
+            <div className="text-right">
+              <span className="text-2xl font-bold text-foreground">{Math.round(progress)}%</span>
+            </div>
           )}
         </div>
-        {totalCount > 0 && (
-          <Progress value={progress} className="h-1.5" />
-        )}
+        {totalCount > 0 && <Progress value={progress} className="h-2 mt-1" />}
       </Card>
 
       {/* Add Task Button */}
       <Button
         onClick={() => setShowCreateDialog(true)}
-        className="w-full h-12 text-sm font-medium btn-lift active:scale-[0.98] transition-transform"
+        className="w-full h-14 text-base font-semibold btn-lift active:scale-[0.98] transition-transform gap-2.5"
       >
-        <Plus className="h-4 w-4 mr-2" /> Create New Task
+        <Plus className="h-5 w-5" /> Create New Task
       </Button>
 
       {/* Drag hint */}
       {incompleteTasks.length > 1 && (
-        <p className="text-[10px] text-muted-foreground/50 text-center">
-          Drag tasks to reorder priority — top = highest
+        <p className="text-xs text-muted-foreground/60 text-center flex items-center justify-center gap-1.5">
+          <GripVertical className="h-3.5 w-3.5" /> Drag to reorder — top is highest priority
         </p>
       )}
 
-      {/* Task List */}
+      {/* Empty State */}
       {sortedTodos.length === 0 ? (
-        <Card className="p-8 text-center border-border/50">
-          <div className="flex flex-col items-center gap-3 text-muted-foreground">
-            <ListTodo className="h-8 w-8 opacity-30" />
-            <p className="text-sm">No tasks for today. Create one above!</p>
+        <Card className="p-10 text-center border-border/50 bg-card/50">
+          <div className="flex flex-col items-center gap-4 text-muted-foreground">
+            <div className="h-16 w-16 rounded-2xl bg-muted/50 flex items-center justify-center">
+              <ListTodo className="h-8 w-8 opacity-40" />
+            </div>
+            <div>
+              <p className="text-base font-medium text-foreground/70">No tasks for today</p>
+              <p className="text-sm text-muted-foreground mt-1">Create a task to start tracking your study goals</p>
+            </div>
           </div>
         </Card>
       ) : (
-        <div className="space-y-2">
-          {/* Incomplete tasks - draggable */}
+        <div className="space-y-2.5">
+          {/* Incomplete Tasks */}
           {incompleteTasks.map((t, i) => (
             <Card
               key={t.id}
@@ -266,126 +225,138 @@ export function V2TasksTab({ userId, timer }: Props) {
               onDragLeave={handleDragLeave}
               onDrop={() => handleDrop(t.id)}
               onDragEnd={handleDragEnd}
-              className={`p-3 sm:p-4 flex items-center gap-2 sm:gap-3 group border-border/30 card-glow pop-in transition-all duration-200 hover:shadow-sm cursor-grab active:cursor-grabbing ${
+              className={`p-4 border-border/40 card-glow pop-in transition-all duration-200 cursor-grab active:cursor-grabbing ${
                 draggedId === t.id ? 'opacity-40 scale-95' : ''
-              } ${dragOverId === t.id ? 'border-primary/50 shadow-md' : ''}`}
+              } ${dragOverId === t.id ? 'border-primary/50 shadow-lg scale-[1.01]' : ''}`}
               style={{ animationDelay: `${i * 0.04}s` }}
             >
-              <GripVertical className="h-4 w-4 text-muted-foreground/30 shrink-0 hidden sm:block" />
-
-              <Checkbox
-                checked={false}
-                onCheckedChange={() => toggleTodo(t.id, t.completed)}
-                className="shrink-0"
-              />
-
               {editingId === t.id ? (
-                <div className="flex-1 flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Input
                     value={editText}
                     onChange={e => setEditText(e.target.value)}
-                    className="h-8 text-sm"
+                    className="h-11 text-base flex-1"
                     autoFocus
                     onKeyDown={e => e.key === 'Enter' && saveEdit()}
                   />
-                  <button onClick={saveEdit} className="p-1 text-primary hover:bg-primary/10 rounded">
-                    <Check className="h-3.5 w-3.5" />
-                  </button>
-                  <button onClick={() => setEditingId(null)} className="p-1 text-muted-foreground hover:bg-muted rounded">
-                    <X className="h-3.5 w-3.5" />
-                  </button>
+                  <Button size="sm" onClick={saveEdit} className="h-9 px-3">
+                    <Check className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setEditingId(null)} className="h-9 px-3">
+                    <X className="h-4 w-4" />
+                  </Button>
                 </div>
               ) : (
-                <>
+                <div className="flex items-start gap-3">
+                  {/* Drag Handle + Checkbox */}
+                  <div className="flex items-center gap-2 pt-0.5 shrink-0">
+                    <GripVertical className="h-5 w-5 text-muted-foreground/30 hidden sm:block" />
+                    <Checkbox
+                      checked={false}
+                      onCheckedChange={() => toggleTodo(t.id, t.completed)}
+                      className="h-5 w-5"
+                    />
+                  </div>
+
+                  {/* Task Content */}
                   <div className="flex-1 min-w-0">
-                    <span className="text-sm font-medium block truncate">{t.text}</span>
-                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <p className="text-base font-medium text-foreground leading-snug">{t.text}</p>
+                    <div className="flex items-center gap-2.5 mt-2 flex-wrap">
                       {t.subject && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                        <span className="text-xs px-2.5 py-1 rounded-lg bg-primary/10 text-primary font-medium border border-primary/20">
                           {t.subject}
                         </span>
                       )}
                       {t.time_allotted && (
-                        <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
-                          <Clock className="h-2.5 w-2.5" /> {formatTime(t.time_allotted)}
+                        <span className="text-xs text-muted-foreground flex items-center gap-1 bg-muted/50 px-2.5 py-1 rounded-lg">
+                          <Clock className="h-3.5 w-3.5" /> {formatTime(t.time_allotted)}
                         </span>
                       )}
                       {t.priority && t.priority !== 'normal' && (
-                        <span className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-medium border ${PRIORITY_BG[t.priority]}`}>
-                          <Flag className="h-2 w-2" />
-                          {t.priority}
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium border ${PRIORITY_CONFIG[t.priority].bg} ${PRIORITY_CONFIG[t.priority].color}`}>
+                          <Flag className="h-3 w-3" />
+                          {PRIORITY_CONFIG[t.priority].label}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Start study directly using task subject */}
-                  {!timer.isActive && (
-                    <button
-                      onClick={() => startStudyForTask(t)}
-                      className="opacity-0 group-hover:opacity-100 transition-all p-1.5 rounded-md hover:bg-primary/10 text-primary shrink-0"
-                      title={`Start studying ${t.subject || ''}`}
+                  {/* Actions — always visible */}
+                  <div className="flex items-center gap-1 shrink-0">
+                    {!timer.isActive ? (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => startStudyForTask(t)}
+                        className="h-9 w-9 p-0 text-primary hover:bg-primary/10 hover:text-primary"
+                        title={`Start studying ${t.subject || ''}`}
+                      >
+                        <Play className="h-4.5 w-4.5" />
+                      </Button>
+                    ) : (
+                      <div className="h-9 w-9 flex items-center justify-center">
+                        <Timer className="h-4 w-4 text-muted-foreground/40" />
+                      </div>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => startEdit(t)}
+                      className="h-9 w-9 p-0 text-muted-foreground hover:text-foreground"
                     >
-                      <Play className="h-3.5 w-3.5" />
-                    </button>
-                  )}
-                  {timer.isActive && (
-                    <Timer className="h-3.5 w-3.5 text-muted-foreground/30 shrink-0" />
-                  )}
-                  <button
-                    onClick={() => startEdit(t)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 shrink-0"
-                  >
-                    <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground transition-colors" />
-                  </button>
-                  <button
-                    onClick={() => deleteTodo(t.id)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 shrink-0"
-                  >
-                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive transition-colors" />
-                  </button>
-                </>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => deleteTodo(t.id)}
+                      className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               )}
             </Card>
           ))}
 
-          {/* Completed tasks */}
+          {/* Completed Tasks */}
           {completedTasks.length > 0 && (
-            <>
-              <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider pt-3 pl-1">
-                Completed
-              </p>
+            <div className="pt-4 space-y-2">
+              <div className="flex items-center gap-2 px-1">
+                <CheckCircle2 className="h-4 w-4 text-primary/50" />
+                <p className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
+                  Completed ({completedTasks.length})
+                </p>
+              </div>
               {completedTasks.map((t, i) => (
                 <Card
                   key={t.id}
-                  className="p-3 sm:p-4 flex items-center gap-2 sm:gap-3 border-border/20 opacity-50 pop-in"
+                  className="p-4 flex items-center gap-3 border-border/20 opacity-50 hover:opacity-70 transition-opacity pop-in"
                   style={{ animationDelay: `${i * 0.04}s` }}
                 >
-                  <div className="w-4 hidden sm:block" />
                   <Checkbox
                     checked={true}
                     onCheckedChange={() => toggleTodo(t.id, t.completed)}
-                    className="shrink-0"
+                    className="h-5 w-5 shrink-0"
                   />
                   <div className="flex-1 min-w-0">
-                    <span className="text-sm line-through text-muted-foreground truncate block">{t.text}</span>
-                    <div className="flex items-center gap-2 mt-1">
-                      {t.subject && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                          {t.subject}
-                        </span>
-                      )}
-                    </div>
+                    <p className="text-sm line-through text-muted-foreground">{t.text}</p>
+                    {t.subject && (
+                      <span className="text-xs text-muted-foreground/60 mt-1 block">{t.subject}</span>
+                    )}
                   </div>
-                  <button
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={() => deleteTodo(t.id)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 shrink-0"
+                    className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
                   >
-                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive transition-colors" />
-                  </button>
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </Card>
               ))}
-            </>
+            </div>
           )}
         </div>
       )}
@@ -394,50 +365,47 @@ export function V2TasksTab({ userId, timer }: Props) {
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-base">Create New Task</DialogTitle>
+            <DialogTitle className="text-lg font-semibold">Create New Task</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 pt-2">
-            {/* Title */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Task Title</label>
+          <div className="space-y-5 pt-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Task Title</label>
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="e.g. Solve 20 integration problems"
-                className="h-10 text-sm"
+                className="h-12 text-base"
                 maxLength={100}
                 autoFocus
               />
             </div>
 
-            {/* Subject */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Subject</label>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Subject</label>
               <Select value={newSubject} onValueChange={setNewSubject}>
-                <SelectTrigger className="h-10 text-sm">
+                <SelectTrigger className="h-12 text-base">
                   <SelectValue placeholder="Select subject" />
                 </SelectTrigger>
                 <SelectContent>
                   {SUBJECTS.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                    <SelectItem key={s} value={s} className="text-base">{s}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Time Allotted */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Time Allotted (optional)</label>
-              <div className="flex flex-wrap gap-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Time Allotted <span className="text-muted-foreground font-normal">(optional)</span></label>
+              <div className="grid grid-cols-4 gap-2">
                 {TIME_OPTIONS.map(opt => (
                   <button
                     key={opt.value}
                     onClick={() => setNewTime(prev => prev === String(opt.value) ? '' : String(opt.value))}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                    className={`px-3 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                       newTime === String(opt.value)
-                        ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-muted/50 text-muted-foreground border-border/50 hover:border-border'
+                        ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                        : 'bg-muted/40 text-muted-foreground border-border/50 hover:border-border hover:bg-muted/60'
                     }`}
                   >
                     {opt.label}
@@ -446,42 +414,37 @@ export function V2TasksTab({ userId, timer }: Props) {
               </div>
             </div>
 
-            {/* Priority */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Priority</label>
-              <div className="flex gap-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Priority</label>
+              <div className="grid grid-cols-3 gap-2">
                 {(['high', 'normal', 'low'] as const).map(p => (
                   <button
                     key={p}
                     onClick={() => setNewPriority(p)}
-                    className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
+                    className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium border transition-all ${
                       newPriority === p
-                        ? PRIORITY_BG[p]
-                        : 'border-border/30 text-muted-foreground/50 hover:text-muted-foreground hover:border-border/50'
+                        ? `${PRIORITY_CONFIG[p].bg} ${PRIORITY_CONFIG[p].color}`
+                        : 'border-border/30 text-muted-foreground/60 hover:text-muted-foreground hover:border-border/50'
                     }`}
                   >
-                    <Flag className="h-3 w-3" />
-                    {p.charAt(0).toUpperCase() + p.slice(1)}
+                    <Flag className="h-3.5 w-3.5" />
+                    {PRIORITY_CONFIG[p].label}
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          <DialogFooter className="pt-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowCreateDialog(false)}
-              className="text-sm"
-            >
+          <DialogFooter className="pt-4 gap-2">
+            <Button variant="outline" onClick={() => setShowCreateDialog(false)} className="h-11 text-sm px-5">
               Cancel
             </Button>
             <Button
               onClick={addTodo}
               disabled={!newTitle.trim() || !newSubject}
-              className="text-sm btn-lift active:scale-95 transition-transform"
+              className="h-11 text-sm px-6 btn-lift active:scale-95 transition-transform"
             >
-              <Plus className="h-4 w-4 mr-1" /> Create Task
+              <Plus className="h-4 w-4 mr-1.5" /> Create Task
             </Button>
           </DialogFooter>
         </DialogContent>
