@@ -1,0 +1,5 @@
+
+ALTER TABLE public.ypt_todos
+ADD COLUMN IF NOT EXISTS subject text DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS time_allotted integer DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS sort_order integer DEFAULT 0;
