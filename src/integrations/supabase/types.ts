@@ -330,7 +330,10 @@ export type Database = {
           created_date: string
           id: string
           priority: string | null
+          sort_order: number | null
+          subject: string | null
           text: string
+          time_allotted: number | null
           ypt_user_id: string
         }
         Insert: {
@@ -339,7 +342,10 @@ export type Database = {
           created_date?: string
           id?: string
           priority?: string | null
+          sort_order?: number | null
+          subject?: string | null
           text: string
+          time_allotted?: number | null
           ypt_user_id: string
         }
         Update: {
@@ -348,7 +354,10 @@ export type Database = {
           created_date?: string
           id?: string
           priority?: string | null
+          sort_order?: number | null
+          subject?: string | null
           text?: string
+          time_allotted?: number | null
           ypt_user_id?: string
         }
         Relationships: [
