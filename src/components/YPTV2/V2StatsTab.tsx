@@ -43,7 +43,6 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
   const istTodayStr = getISTDate().toISOString().split('T')[0];
 
-  // Group by IST date
   const dayMap: Record<string, number> = {};
   const subjectMap: Record<string, number> = {};
   const hourMap: Record<number, number> = {};
@@ -51,20 +50,15 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
   sessions.forEach((s) => {
     const dateStr = getISTDateString(s.started_at);
     dayMap[dateStr] = (dayMap[dateStr] || 0) + (s.duration_seconds || 0);
-
     const subject = s.subject || 'Other';
     subjectMap[subject] = (subjectMap[subject] || 0) + (s.duration_seconds || 0);
-
-    // Peak hours
     const ist = getISTDate(new Date(s.started_at));
     const hour = ist.getHours();
     hourMap[hour] = (hourMap[hour] || 0) + (s.duration_seconds || 0);
   });
 
-  // Today
   const todaySeconds = (dayMap[istTodayStr] || 0) + liveElapsed;
 
-  // Week total
   let weekSeconds = 0;
   for (let i = 0; i < 7; i++) {
     const d = getISTDate();
@@ -74,10 +68,8 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
   }
   weekSeconds += liveElapsed;
 
-  // Month total
   let monthSeconds = Object.values(dayMap).reduce((a, b) => a + b, 0) + liveElapsed;
 
-  // Streak
   let streak = 0;
   for (let i = 0; i < 365; i++) {
     const d = getISTDate();
@@ -89,7 +81,6 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
     else break;
   }
 
-  // Weekly chart
   const dailyData = [];
   for (let i = 6; i >= 0; i--) {
     const d = getISTDate();
@@ -103,14 +94,12 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
     });
   }
 
-  // Subject distribution
   const subjectData = Object.entries(subjectMap).map(([name, secs]) => ({
     name,
     hours: +(secs / 3600).toFixed(1),
     color: SUBJECT_COLORS[name] || 'hsl(var(--muted))',
   }));
 
-  // Best day
   const dayEntries = Object.entries(dayMap).map(([k, v]) => ({
     date: k,
     seconds: k === istTodayStr ? v + liveElapsed : v,
@@ -120,22 +109,18 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
     ? new Date(bestDay.date + 'T00:00:00').toLocaleDateString('en', { weekday: 'long' })
     : 'N/A';
 
-  // Peak hour
   const peakHour = Object.entries(hourMap).sort((a, b) => b[1] - a[1])[0];
   const peakHourStr = peakHour ? `${parseInt(peakHour[0])}:00 – ${parseInt(peakHour[0]) + 1}:00` : 'N/A';
 
-  // Average daily
   const activeDays = Object.keys(dayMap).length || 1;
   const avgDaily = monthSeconds / activeDays;
 
-  // Heatmap (hours of day)
   const heatmapData = [];
   for (let h = 0; h < 24; h++) {
     heatmapData.push({ hour: h, seconds: hourMap[h] || 0 });
   }
   const maxHourSecs = Math.max(...heatmapData.map(d => d.seconds), 1);
 
-  // Calendar heatmap
   const istNow = getISTDate();
   const currentMonth = istNow.getMonth();
   const currentYear = istNow.getFullYear();
@@ -156,27 +141,27 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
     <div className="space-y-6 pop-in">
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <MiniStat icon={<Clock className="h-4 w-4" />} label="Today" value={formatHours(todaySeconds)} />
-        <MiniStat icon={<TrendingUp className="h-4 w-4" />} label="This Week" value={formatHours(weekSeconds)} />
-        <MiniStat icon={<Flame className="h-4 w-4" />} label="Streak" value={`${streak} 🔥`} />
-        <MiniStat icon={<Calendar className="h-4 w-4" />} label="This Month" value={formatHours(monthSeconds)} />
+        <MiniStat icon={<Clock className="h-5 w-5" />} label="Today" value={formatHours(todaySeconds)} />
+        <MiniStat icon={<TrendingUp className="h-5 w-5" />} label="This Week" value={formatHours(weekSeconds)} />
+        <MiniStat icon={<Flame className="h-5 w-5" />} label="Streak" value={`${streak} 🔥`} />
+        <MiniStat icon={<Calendar className="h-5 w-5" />} label="This Month" value={formatHours(monthSeconds)} />
       </div>
 
       {/* Weekly Study Graph */}
       <Card className="p-5 border-border/50">
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
-          <BarChart3 className="h-3.5 w-3.5" /> Weekly Overview
+        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+          <BarChart3 className="h-4 w-4" /> Weekly Overview
         </h3>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={220}>
           <BarChart data={dailyData}>
-            <XAxis dataKey="day" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" unit="h" axisLine={false} tickLine={false} />
+            <XAxis dataKey="day" tick={{ fontSize: 12, fontWeight: 600 }} stroke="hsl(var(--muted-foreground))" axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" unit="h" axisLine={false} tickLine={false} />
             <Tooltip
               contentStyle={{
                 backgroundColor: 'hsl(var(--card))',
                 border: '1px solid hsl(var(--border))',
-                borderRadius: '8px',
-                fontSize: '12px',
+                borderRadius: '10px',
+                fontSize: '13px',
               }}
             />
             <Bar dataKey="hours" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
@@ -186,27 +171,15 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
       {/* Insight Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <InsightCard
-          icon={<Flame className="h-4 w-4 text-primary" />}
-          title="Best Day"
-          value={bestDay ? `${bestDayName} (${formatHours(bestDay.seconds)})` : 'N/A'}
-        />
-        <InsightCard
-          icon={<Brain className="h-4 w-4 text-primary" />}
-          title="Peak Study Hour"
-          value={peakHourStr}
-        />
-        <InsightCard
-          icon={<TrendingUp className="h-4 w-4 text-primary" />}
-          title="Avg Daily Time"
-          value={formatHours(avgDaily)}
-        />
+        <InsightCard icon={<Flame className="h-5 w-5 text-primary" />} title="Best Day" value={bestDay ? `${bestDayName} (${formatHours(bestDay.seconds)})` : 'N/A'} />
+        <InsightCard icon={<Brain className="h-5 w-5 text-primary" />} title="Peak Hour" value={peakHourStr} />
+        <InsightCard icon={<TrendingUp className="h-5 w-5 text-primary" />} title="Avg Daily" value={formatHours(avgDaily)} />
       </div>
 
       {/* Subject Distribution */}
       {subjectData.length > 0 && (
         <Card className="p-5 border-border/50">
-          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Subject Distribution</h3>
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">Subject Distribution</h3>
           <div className="flex flex-col md:flex-row items-center gap-6">
             <ResponsiveContainer width={180} height={180}>
               <PieChart>
@@ -229,19 +202,19 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                   contentStyle={{
                     backgroundColor: 'hsl(var(--card))',
                     border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    fontSize: '12px',
+                    borderRadius: '10px',
+                    fontSize: '13px',
                   }}
                   formatter={(val: number) => [`${val}h`, '']}
                 />
               </PieChart>
             </ResponsiveContainer>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-4">
               {subjectData.map((s) => (
                 <div key={s.name} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }} />
-                  <span className="text-sm text-muted-foreground">{s.name}</span>
-                  <span className="text-sm font-semibold">{s.hours}h</span>
+                  <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: s.color }} />
+                  <span className="text-sm text-muted-foreground font-medium">{s.name}</span>
+                  <span className="text-sm font-bold">{s.hours}h</span>
                 </div>
               ))}
             </div>
@@ -251,7 +224,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
       {/* Peak Hours Heatmap */}
       <Card className="p-5 border-border/50">
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Peak Study Hours</h3>
+        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">Peak Study Hours</h3>
         <div className="grid grid-cols-12 gap-1.5">
           {heatmapData.map((d) => {
             const intensity = d.seconds / maxHourSecs;
@@ -259,7 +232,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
             return (
               <div
                 key={d.hour}
-                className="aspect-square rounded-md flex items-center justify-center text-[10px] font-medium transition-colors"
+                className="aspect-square rounded-lg flex items-center justify-center text-xs font-semibold transition-colors"
                 style={{ backgroundColor: `hsl(var(--primary) / ${opacity})` }}
                 title={`${d.hour}:00 – ${formatHours(d.seconds)}`}
               >
@@ -270,15 +243,15 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
             );
           })}
         </div>
-        <p className="text-[10px] text-muted-foreground mt-2">Hours 0–23 IST · Darker = more study time</p>
+        <p className="text-xs text-muted-foreground mt-2">Hours 0–23 IST · Darker = more study time</p>
       </Card>
 
       {/* Monthly Calendar */}
       <Card className="p-5 border-border/50">
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">{monthName}</h3>
+        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">{monthName}</h3>
         <div className="grid grid-cols-7 gap-1.5 mb-2">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-            <span key={d} className="text-[10px] text-muted-foreground text-center font-semibold uppercase">{d}</span>
+            <span key={d} className="text-xs text-muted-foreground text-center font-bold uppercase">{d}</span>
           ))}
         </div>
         <div className="grid grid-cols-7 gap-1.5">
@@ -302,14 +275,14 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
             return (
               <div
                 key={d.day}
-                className={`aspect-square rounded-md flex flex-col items-center justify-center transition-colors ${bgClass} ${d.isToday ? 'ring-2 ring-primary ring-offset-1 ring-offset-background' : ''}`}
+                className={`aspect-square rounded-lg flex flex-col items-center justify-center transition-colors ${bgClass} ${d.isToday ? 'ring-2 ring-primary ring-offset-1 ring-offset-background' : ''}`}
                 title={d.isFuture ? '' : `Day ${d.day}: ${formatHours(d.seconds)}`}
               >
-                <span className={`text-xs leading-none font-semibold ${d.isFuture ? 'text-muted-foreground/30' : intensity >= 2 ? 'text-primary-foreground' : 'text-foreground/70'}`}>
+                <span className={`text-xs leading-none font-bold ${d.isFuture ? 'text-muted-foreground/30' : intensity >= 2 ? 'text-primary-foreground' : 'text-foreground/70'}`}>
                   {d.day}
                 </span>
                 {!d.isFuture && d.seconds > 0 && (
-                  <span className={`text-[9px] leading-none mt-0.5 ${intensity >= 2 ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                  <span className={`text-[9px] leading-none mt-0.5 font-medium ${intensity >= 2 ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
                     {(d.seconds / 3600).toFixed(1)}h
                   </span>
                 )}
@@ -325,23 +298,23 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 function MiniStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <Card className="p-4 card-glow border-border/50">
-      <div className="flex items-center gap-2 text-muted-foreground mb-1">
+      <div className="flex items-center gap-2 text-muted-foreground mb-2">
         {icon}
-        <span className="text-[10px] font-semibold uppercase tracking-wider">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-wider">{label}</span>
       </div>
-      <p className="text-lg font-bold tabular-nums">{value}</p>
+      <p className="text-2xl font-bold tabular-nums">{value}</p>
     </Card>
   );
 }
 
 function InsightCard({ icon, title, value }: { icon: React.ReactNode; title: string; value: string }) {
   return (
-    <Card className="p-4 border-border/50 card-glow">
+    <Card className="p-5 border-border/50 card-glow">
       <div className="flex items-center gap-2 mb-2">
         {icon}
-        <span className="text-xs font-semibold text-muted-foreground">{title}</span>
+        <span className="text-sm font-bold text-muted-foreground">{title}</span>
       </div>
-      <p className="text-sm font-bold">{value}</p>
+      <p className="text-base font-bold">{value}</p>
     </Card>
   );
 }

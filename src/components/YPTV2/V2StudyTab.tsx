@@ -51,17 +51,13 @@ export function V2StudyTab({ user, timer }: Props) {
   const [focusMode, setFocusMode] = useState(false);
   const [quoteIndex, setQuoteIndex] = useState(() => Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length));
 
-  // ESC handler for focus mode
   useEffect(() => {
     if (!focusMode) return;
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setFocusMode(false);
-    };
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setFocusMode(false); };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, [focusMode]);
 
-  // Rotate quotes every 30s in focus mode
   useEffect(() => {
     if (!focusMode) return;
     const interval = setInterval(() => {
@@ -97,7 +93,6 @@ export function V2StudyTab({ user, timer }: Props) {
         setWeekSeconds(weekSecs);
         setSessionCount(todaySessions.filter((s: any) => s.status === 'completed').length);
 
-        // Calculate streaks
         const dayMap: Record<string, number> = {};
         data.forEach((s: any) => {
           const d = new Date(s.started_at);
@@ -107,7 +102,6 @@ export function V2StudyTab({ user, timer }: Props) {
           dayMap[key] = (dayMap[key] || 0) + (s.duration_seconds || 0);
         });
 
-        // Current streak
         let s = 0;
         for (let i = 0; i < 365; i++) {
           const now = new Date();
@@ -122,7 +116,6 @@ export function V2StudyTab({ user, timer }: Props) {
         }
         setStreak(s);
 
-        // Longest streak
         const sortedDays = Object.entries(dayMap)
           .filter(([, v]) => v >= 900)
           .map(([k]) => k)
@@ -131,7 +124,7 @@ export function V2StudyTab({ user, timer }: Props) {
         for (let i = 1; i < sortedDays.length; i++) {
           const prev = new Date(sortedDays[i - 1] + 'T00:00:00');
           const curr = new Date(sortedDays[i] + 'T00:00:00');
-          const diffDays = (curr.getTime() - prev.getTime()) / (86400000);
+          const diffDays = (curr.getTime() - prev.getTime()) / 86400000;
           if (diffDays === 1) current++;
           else { longest = Math.max(longest, current); current = 1; }
         }
@@ -156,20 +149,17 @@ export function V2StudyTab({ user, timer }: Props) {
   if (focusMode && timer.isActive) {
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
-        {/* Gradient background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px] breathing-glow" />
           <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-primary/3 blur-[100px] breathing-glow" style={{ animationDelay: '3s' }} />
         </div>
 
         <div className="relative z-10 flex flex-col items-center gap-8 pop-in">
-          {/* Subject badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/50 bg-card/50 backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm font-medium text-muted-foreground">{timer.subject}</span>
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border/50 bg-card/50 backdrop-blur-sm">
+            <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
+            <span className="text-base font-medium text-muted-foreground">{timer.subject}</span>
           </div>
 
-          {/* Timer */}
           <div className="relative">
             <p className="text-7xl md:text-8xl lg:text-9xl font-mono font-bold tracking-tight tabular-nums text-foreground select-none">
               {formatTime(timer.elapsedSeconds)}
@@ -179,46 +169,41 @@ export function V2StudyTab({ user, timer }: Props) {
             )}
           </div>
 
-          {/* Quote with fade transition */}
           <p className="text-sm text-muted-foreground/60 italic font-medium transition-opacity duration-500 h-5">
             "{MOTIVATIONAL_QUOTES[quoteIndex]}"
           </p>
 
-          {/* Today's progress mini */}
-          <div className="w-64 space-y-1.5">
-            <div className="flex justify-between text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+          <div className="w-72 space-y-1.5">
+            <div className="flex justify-between text-xs text-muted-foreground/50 uppercase tracking-wider">
               <span>Today</span>
               <span>{formatHours(liveTodaySeconds)} / {DAILY_GOAL_HOURS}h</span>
             </div>
-            <Progress value={dailyProgress} className="h-1" />
+            <Progress value={dailyProgress} className="h-1.5" />
           </div>
 
-          {/* Controls */}
           <div className="flex items-center gap-3">
             {timer.isPaused ? (
-              <Button onClick={timer.resumeSession} size="lg" className="px-8 btn-lift">
-                <Play className="h-4 w-4 mr-2" /> Resume
+              <Button onClick={timer.resumeSession} size="lg" className="px-8 h-12 text-base btn-lift">
+                <Play className="h-5 w-5 mr-2" /> Resume
               </Button>
             ) : (
-              <Button onClick={timer.pauseSession} variant="secondary" size="lg" className="px-8 active:scale-95 transition-transform">
-                <Pause className="h-4 w-4 mr-2" /> Pause
+              <Button onClick={timer.pauseSession} variant="secondary" size="lg" className="px-8 h-12 text-base active:scale-95 transition-transform">
+                <Pause className="h-5 w-5 mr-2" /> Pause
               </Button>
             )}
-            <Button onClick={timer.endSession} variant="destructive" size="lg" className="px-8 active:scale-95 transition-transform">
-              <Square className="h-4 w-4 mr-2" /> Stop
+            <Button onClick={timer.endSession} variant="destructive" size="lg" className="px-8 h-12 text-base active:scale-95 transition-transform">
+              <Square className="h-5 w-5 mr-2" /> Stop
             </Button>
           </div>
 
-          {/* Exit focus */}
           <button
             onClick={() => setFocusMode(false)}
-            className="flex items-center gap-2 text-xs text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors mt-4"
+            className="flex items-center gap-2 text-sm text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors mt-4"
           >
-            <Minimize2 className="h-3.5 w-3.5" /> Press ESC to exit focus mode
+            <Minimize2 className="h-4 w-4" /> Press ESC to exit focus mode
           </button>
         </div>
 
-        {/* Inactivity Modal */}
         <AlertDialog open={timer.showInactivityModal}>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -250,39 +235,36 @@ export function V2StudyTab({ user, timer }: Props) {
         <div className="relative p-8 md:p-10 text-center">
           {timer.isActive ? (
             <div className="space-y-6">
-              {/* Subject badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-sm font-medium">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-base font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
                 {timer.subject}
               </div>
 
-              {/* Timer display */}
               <p className="text-6xl md:text-7xl font-mono font-bold tracking-tight tabular-nums select-none">
                 {formatTime(timer.elapsedSeconds)}
               </p>
 
-              {/* Controls */}
               <div className="flex justify-center gap-3">
                 {timer.isPaused ? (
-                  <Button onClick={timer.resumeSession} size="lg" className="px-6 btn-lift">
-                    <Play className="h-4 w-4 mr-2" /> Resume
+                  <Button onClick={timer.resumeSession} size="lg" className="px-7 h-12 text-base btn-lift">
+                    <Play className="h-5 w-5 mr-2" /> Resume
                   </Button>
                 ) : (
-                  <Button onClick={timer.pauseSession} variant="secondary" size="lg" className="px-6 active:scale-95 transition-transform">
-                    <Pause className="h-4 w-4 mr-2" /> Pause
+                  <Button onClick={timer.pauseSession} variant="secondary" size="lg" className="px-7 h-12 text-base active:scale-95 transition-transform">
+                    <Pause className="h-5 w-5 mr-2" /> Pause
                   </Button>
                 )}
-                <Button onClick={timer.endSession} variant="destructive" size="lg" className="px-6 active:scale-95 transition-transform">
-                  <Square className="h-4 w-4 mr-2" /> Stop
+                <Button onClick={timer.endSession} variant="destructive" size="lg" className="px-7 h-12 text-base active:scale-95 transition-transform">
+                  <Square className="h-5 w-5 mr-2" /> Stop
                 </Button>
                 <Button
                   onClick={() => setFocusMode(true)}
                   variant="outline"
                   size="lg"
-                  className="px-4 active:scale-95 transition-transform"
+                  className="px-4 h-12 active:scale-95 transition-transform"
                   title="Focus Mode"
                 >
-                  <Maximize2 className="h-4 w-4" />
+                  <Maximize2 className="h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -290,14 +272,14 @@ export function V2StudyTab({ user, timer }: Props) {
             <div className="space-y-5 py-2">
               <div className="space-y-2">
                 <h2 className="text-2xl font-bold font-display">Start Studying</h2>
-                <p className="text-sm text-muted-foreground">Choose a subject and begin your session</p>
+                <p className="text-base text-muted-foreground">Choose a subject and begin your session</p>
               </div>
               <Button
                 size="lg"
-                className="text-base px-10 h-12 btn-lift"
+                className="text-lg px-10 h-14 btn-lift"
                 onClick={() => setShowSubjectSelect(true)}
               >
-                <Play className="h-4 w-4 mr-2" /> Start Studying
+                <Play className="h-5 w-5 mr-2" /> Start Studying
               </Button>
             </div>
           )}
@@ -306,30 +288,30 @@ export function V2StudyTab({ user, timer }: Props) {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard icon={<Clock className="h-4 w-4" />} label="Today" value={formatHours(liveTodaySeconds)} />
-        <StatCard icon={<TrendingUp className="h-4 w-4" />} label="This Week" value={formatHours(liveWeekSeconds)} />
-        <StatCard icon={<Flame className="h-4 w-4" />} label="Streak" value={`${streak} 🔥`} subtitle={longestStreak > 0 ? `Best: ${longestStreak}d` : undefined} highlight={streak > 0} />
-        <StatCard icon={<Zap className="h-4 w-4" />} label="Sessions" value={`${sessionCount}`} />
+        <StatCard icon={<Clock className="h-5 w-5" />} label="Today" value={formatHours(liveTodaySeconds)} />
+        <StatCard icon={<TrendingUp className="h-5 w-5" />} label="This Week" value={formatHours(liveWeekSeconds)} />
+        <StatCard icon={<Flame className="h-5 w-5" />} label="Streak" value={`${streak} 🔥`} subtitle={longestStreak > 0 ? `Best: ${longestStreak}d` : undefined} highlight={streak > 0} />
+        <StatCard icon={<Zap className="h-5 w-5" />} label="Sessions" value={`${sessionCount}`} />
       </div>
 
       {/* Progress Section */}
-      <Card className="p-5 space-y-4 border-border/50">
-        <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Daily Goal</h3>
+      <Card className="p-6 space-y-5 border-border/50">
+        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Daily Goal</h3>
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm font-medium">
             <span className="text-muted-foreground">{formatHours(liveTodaySeconds)}</span>
             <span className="text-muted-foreground">{DAILY_GOAL_HOURS}h goal</span>
           </div>
-          <Progress value={dailyProgress} className="h-2" />
+          <Progress value={dailyProgress} className="h-2.5" />
         </div>
 
-        <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider pt-2">Weekly Goal</h3>
+        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider pt-2">Weekly Goal</h3>
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm font-medium">
             <span className="text-muted-foreground">{formatHours(liveWeekSeconds)}</span>
             <span className="text-muted-foreground">{WEEKLY_GOAL_HOURS}h goal</span>
           </div>
-          <Progress value={weeklyProgress} className="h-2" />
+          <Progress value={weeklyProgress} className="h-2.5" />
         </div>
       </Card>
 
@@ -337,14 +319,14 @@ export function V2StudyTab({ user, timer }: Props) {
       <Dialog open={showSubjectSelect} onOpenChange={setShowSubjectSelect}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>What are you studying?</DialogTitle>
+            <DialogTitle className="text-xl font-bold">What are you studying?</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-3 pt-2">
             {SUBJECTS.map((s) => (
               <Button
                 key={s}
                 variant="outline"
-                className="h-16 text-base font-medium card-glow active:scale-95 transition-transform"
+                className="h-16 text-base font-semibold card-glow active:scale-95 transition-transform"
                 onClick={() => handleStart(s)}
               >
                 {s}
@@ -377,12 +359,12 @@ export function V2StudyTab({ user, timer }: Props) {
 function StatCard({ icon, label, value, subtitle, highlight }: { icon: React.ReactNode; label: string; value: string; subtitle?: string; highlight?: boolean }) {
   return (
     <Card className={`p-4 card-glow border-border/50 ${highlight ? 'border-primary/20' : ''}`}>
-      <div className="flex items-center gap-2 text-muted-foreground mb-1.5">
+      <div className="flex items-center gap-2 text-muted-foreground mb-2">
         {icon}
-        <span className="text-xs font-medium uppercase tracking-wider">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-wider">{label}</span>
       </div>
-      <p className="text-xl font-bold tabular-nums">{value}</p>
-      {subtitle && <p className="text-[10px] text-muted-foreground mt-0.5">{subtitle}</p>}
+      <p className="text-2xl font-bold tabular-nums">{value}</p>
+      {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
     </Card>
   );
 }

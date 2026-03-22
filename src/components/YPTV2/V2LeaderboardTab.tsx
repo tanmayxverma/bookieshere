@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { formatHours, getISTTodayStartUTC, getISTDate } from '@/types/ypt';
 import { Trophy } from 'lucide-react';
@@ -26,7 +27,6 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
 
   const fetchLeaderboard = async () => {
     await (supabase as any).rpc('cleanup_stale_sessions');
-
     const todayStartUTC = getISTTodayStartUTC();
     const weekStartDate = getISTDate();
     weekStartDate.setDate(weekStartDate.getDate() - 6);
@@ -46,16 +46,9 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
 
     sessions.forEach((s: any) => {
       const uid = s.ypt_user_id;
-      const entry = {
-        userId: uid,
-        name: s.ypt_users?.name || 'Unknown',
-        jeeYear: s.ypt_users?.jee_focus_year || '',
-        totalSeconds: 0,
-      };
-
+      const entry = { userId: uid, name: s.ypt_users?.name || 'Unknown', jeeYear: s.ypt_users?.jee_focus_year || '', totalSeconds: 0 };
       if (!weekMap[uid]) weekMap[uid] = { ...entry };
       weekMap[uid].totalSeconds += s.duration_seconds || 0;
-
       if (new Date(s.started_at).toISOString() >= todayStartUTC) {
         if (!todayMap[uid]) todayMap[uid] = { ...entry };
         todayMap[uid].totalSeconds += s.duration_seconds || 0;
@@ -90,63 +83,65 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
     return (
       <div className="space-y-4">
         {top10.length === 0 ? (
-          <Card className="p-8 text-center text-muted-foreground border-border/50">
+          <Card className="p-10 text-center text-muted-foreground border-border/50 text-base">
             No sessions recorded. Be the first!
           </Card>
         ) : (
-          <div className="space-y-2">
-            {top10.map((u, i) => {
-              const isMe = u.userId === currentUserId;
-              return (
-                <div
-                  key={u.userId}
-                  className={`flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200 pop-in ${
-                    isMe
-                      ? 'bg-primary/8 border border-primary/20 shadow-sm'
-                      : 'bg-card border border-border/30 card-glow hover:shadow-sm hover:border-border/60'
-                  }`}
-                  style={{ animationDelay: `${i * 0.04}s` }}
-                >
-                  <div className="w-8 text-center shrink-0">
-                    {i === 0 ? <span className="text-lg">🥇</span>
-                      : i === 1 ? <span className="text-lg">🥈</span>
-                      : i === 2 ? <span className="text-lg">🥉</span>
-                      : <span className="text-sm font-bold text-muted-foreground">#{i + 1}</span>
-                    }
+          <ScrollArea className="max-h-[55vh]">
+            <div className="space-y-2 pr-2">
+              {top10.map((u, i) => {
+                const isMe = u.userId === currentUserId;
+                return (
+                  <div
+                    key={u.userId}
+                    className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-200 pop-in ${
+                      isMe
+                        ? 'bg-primary/8 border border-primary/20 shadow-sm'
+                        : 'bg-card border border-border/30 card-glow hover:shadow-sm hover:border-border/60'
+                    }`}
+                    style={{ animationDelay: `${i * 0.04}s` }}
+                  >
+                    <div className="w-9 text-center shrink-0">
+                      {i === 0 ? <span className="text-xl">🥇</span>
+                        : i === 1 ? <span className="text-xl">🥈</span>
+                        : i === 2 ? <span className="text-xl">🥉</span>
+                        : <span className="text-base font-bold text-muted-foreground">#{i + 1}</span>
+                      }
+                    </div>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+                      i < 3 ? 'bg-primary/10 text-primary' : 'bg-muted text-foreground/70'
+                    }`}>
+                      {u.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`font-semibold text-base truncate ${isMe ? 'text-primary' : ''}`}>
+                        {u.name} {isMe && <span className="text-xs text-muted-foreground">(you)</span>}
+                      </p>
+                      <p className="text-sm text-muted-foreground">{u.jeeYear}</p>
+                    </div>
+                    <span className="font-bold text-base tabular-nums">{formatHours(u.totalSeconds)}</span>
                   </div>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                    i < 3 ? 'bg-primary/10 text-primary' : 'bg-muted text-foreground/70'
-                  }`}>
-                    {u.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`font-medium text-sm truncate ${isMe ? 'text-primary' : ''}`}>
-                      {u.name} {isMe && <span className="text-[10px] text-muted-foreground">(you)</span>}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{u.jeeYear}</p>
-                  </div>
-                  <span className="font-semibold text-sm tabular-nums">{formatHours(u.totalSeconds)}</span>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </ScrollArea>
         )}
 
         {userEntry && userRank > 10 && (
-          <Card className="p-4 border-primary/20 bg-primary/5">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">Your Rank</p>
-            <div className="flex items-center gap-3">
-              <span className="w-8 text-center font-bold text-primary">#{userRank}</span>
+          <Card className="p-5 border-primary/20 bg-primary/5">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold mb-2">Your Rank</p>
+            <div className="flex items-center gap-4">
+              <span className="w-9 text-center font-bold text-primary text-lg">#{userRank}</span>
               <div className="flex-1">
-                <p className="font-medium text-sm">{userEntry.name}</p>
+                <p className="font-semibold text-base">{userEntry.name}</p>
               </div>
-              <span className="font-semibold text-sm tabular-nums">{formatHours(userEntry.totalSeconds)}</span>
+              <span className="font-bold text-base tabular-nums">{formatHours(userEntry.totalSeconds)}</span>
             </div>
           </Card>
         )}
 
         {userEntry && userRank > 0 && userRank <= 10 && (
-          <p className="text-center text-sm text-muted-foreground py-1">
+          <p className="text-center text-base text-muted-foreground py-1">
             You're ranked <strong className="text-foreground">#{userRank}</strong> 🎯
           </p>
         )}
@@ -156,16 +151,16 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
 
   return (
     <div className="space-y-4 pop-in">
-      <div className="flex items-center gap-2 mb-2">
-        <Trophy className="h-4 w-4 text-primary" />
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Leaderboard</h3>
-        <span className="text-[10px] text-muted-foreground ml-auto">Resets at 12:00 AM IST</span>
+      <div className="flex items-center gap-2.5 mb-2">
+        <Trophy className="h-5 w-5 text-primary" />
+        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Leaderboard</h3>
+        <span className="text-xs text-muted-foreground ml-auto font-medium">Resets at 12:00 AM IST</span>
       </div>
 
       <Tabs value={period} onValueChange={setPeriod}>
-        <TabsList className="w-full">
-          <TabsTrigger value="today" className="flex-1">Daily</TabsTrigger>
-          <TabsTrigger value="weekly" className="flex-1">Weekly</TabsTrigger>
+        <TabsList className="w-full h-11">
+          <TabsTrigger value="today" className="flex-1 text-sm font-semibold">Daily</TabsTrigger>
+          <TabsTrigger value="weekly" className="flex-1 text-sm font-semibold">Weekly</TabsTrigger>
         </TabsList>
         <TabsContent value="today" className="mt-4">
           {renderBoard(todayBoard)}
