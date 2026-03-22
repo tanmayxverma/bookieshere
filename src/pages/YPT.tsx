@@ -59,19 +59,19 @@ export default function YPT() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6 pop-in">
             <div>
-              <h1 className="text-xl font-bold tracking-tight font-display">Bookie YPT</h1>
-              <div className="flex items-center gap-2 mt-0.5">
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              <h1 className="text-2xl font-bold tracking-tight font-display">Bookie YPT</h1>
+              <div className="flex items-center gap-2.5 mt-1">
+                <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                  <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   {onlineCount} online
                 </p>
                 <span className="text-muted-foreground/30">·</span>
-                <span className="text-xs font-medium">{user.name}</span>
+                <span className="text-sm font-medium">{user.name}</span>
                 <YPTNameChange user={user} onChangeName={changeName} />
               </div>
             </div>
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1 p-1 rounded-xl bg-muted/50 border border-border/30">
+            <nav className="hidden md:flex items-center gap-1 p-1.5 rounded-xl bg-muted/50 border border-border/30">
               {TABS.map((t) => {
                 const Icon = t.icon;
                 const isActive = tab === t.id;
@@ -79,13 +79,13 @@ export default function YPT() {
                   <button
                     key={t.id}
                     onClick={() => switchTab(t.id)}
-                    className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-95 ${
+                    className={`relative flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 active:scale-95 ${
                       isActive
                         ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                     }`}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-[18px] w-[18px]" />
                     {t.label}
                   </button>
                 );
@@ -111,7 +111,7 @@ export default function YPT() {
           </main>
 
           {/* Mobile Bottom Nav */}
-          <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-xl border-t border-border/30 px-2 py-1.5 safe-area-bottom">
+          <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-xl border-t border-border/30 px-2 py-2 safe-area-bottom">
             <div className="flex items-center justify-around max-w-md mx-auto">
               {TABS.map((t) => {
                 const Icon = t.icon;
@@ -120,16 +120,16 @@ export default function YPT() {
                   <button
                     key={t.id}
                     onClick={() => switchTab(t.id)}
-                    className={`relative flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all duration-200 min-w-[52px] active:scale-95 ${
+                    className={`relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-200 min-w-[56px] active:scale-95 ${
                       isActive
                         ? 'text-primary'
                         : 'text-muted-foreground'
                     }`}
                   >
-                    <Icon className={`h-5 w-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
-                    <span className="text-[10px] font-medium">{t.label}</span>
+                    <Icon className={`h-6 w-6 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
+                    <span className="text-[11px] font-semibold">{t.label}</span>
                     {isActive && (
-                      <div className="absolute -bottom-0.5 w-6 h-0.5 rounded-full bg-primary transition-all duration-300" />
+                      <div className="absolute -bottom-0.5 w-7 h-0.5 rounded-full bg-primary transition-all duration-300" />
                     )}
                   </button>
                 );
