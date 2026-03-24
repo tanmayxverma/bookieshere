@@ -79,6 +79,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   const [sendingChat, setSendingChat] = useState(false);
   const [showChatCaution, setShowChatCaution] = useState(false);
   const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const fetchRooms = async () => {
