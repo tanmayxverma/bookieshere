@@ -79,6 +79,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   const [sendingChat, setSendingChat] = useState(false);
   const [showChatCaution, setShowChatCaution] = useState(false);
   const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const fetchRooms = async () => {
@@ -150,10 +151,11 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
         event: 'INSERT', schema: 'public', table: 'room_messages',
         filter: `room_id=eq.${activeRoomId}`
       }, (payload: any) => {
-        // Fetch user name for new message
         (async () => {
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
           setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
+          // Increment unread if not viewing chat
+          setUnreadCount(prev => prev + 1);
         })();
       })
       .on('postgres_changes', {
@@ -214,6 +216,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
       setShowChatCaution(true);
     } else {
       setRoomTab('chat');
+      setUnreadCount(0);
     }
   };
 
@@ -221,6 +224,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     setChatCautionAccepted(true);
     setShowChatCaution(false);
     setRoomTab('chat');
+    setUnreadCount(0);
   };
 
   const joinRoom = async (roomId: string) => {
@@ -328,9 +332,9 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
             className="flex-1 h-10 text-sm font-semibold active:scale-95 transition-transform"
           >
             <MessageCircle className="h-4 w-4 mr-2" /> Chat
-            {messages.length > 0 && (
+            {unreadCount > 0 && roomTab !== 'chat' && (
               <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-primary/20 text-[11px] font-bold">
-                {messages.length}
+                {unreadCount}
               </span>
             )}
           </Button>
