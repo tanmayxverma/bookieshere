@@ -151,10 +151,11 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
         event: 'INSERT', schema: 'public', table: 'room_messages',
         filter: `room_id=eq.${activeRoomId}`
       }, (payload: any) => {
-        // Fetch user name for new message
         (async () => {
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
           setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
+          // Increment unread if not viewing chat
+          setUnreadCount(prev => prev + 1);
         })();
       })
       .on('postgres_changes', {
