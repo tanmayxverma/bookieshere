@@ -224,6 +224,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     setChatCautionAccepted(true);
     setShowChatCaution(false);
     setRoomTab('chat');
+    setUnreadCount(0);
   };
 
   const joinRoom = async (roomId: string) => {
