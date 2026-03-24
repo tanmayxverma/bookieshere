@@ -332,9 +332,9 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
             className="flex-1 h-10 text-sm font-semibold active:scale-95 transition-transform"
           >
             <MessageCircle className="h-4 w-4 mr-2" /> Chat
-            {messages.length > 0 && (
+            {unreadCount > 0 && roomTab !== 'chat' && (
               <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-primary/20 text-[11px] font-bold">
-                {messages.length}
+                {unreadCount}
               </span>
             )}
           </Button>
