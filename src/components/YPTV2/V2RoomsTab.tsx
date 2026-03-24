@@ -216,6 +216,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
       setShowChatCaution(true);
     } else {
       setRoomTab('chat');
+      setUnreadCount(0);
     }
   };
 
