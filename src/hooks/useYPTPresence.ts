@@ -7,21 +7,31 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
   const [activeUsers, setActiveUsers] = useState<ActiveStudyUser[]>([]);
 
   useEffect(() => {
-    // Realtime Presence for live online count
+    const presenceKey = userId || 'anon-' + Math.random().toString(36).slice(2);
+    
     const presenceChannel = supabase.channel('ypt_online', {
-      config: { presence: { key: userId || 'anon-' + Math.random().toString(36).slice(2) } },
+      config: { presence: { key: presenceKey } },
     });
 
     presenceChannel
       .on('presence', { event: 'sync' }, () => {
         const state = presenceChannel.presenceState();
+        const count = Object.keys(state).length;
+        setOnlineCount(count);
+      })
+      .on('presence', { event: 'join' }, () => {
+        const state = presenceChannel.presenceState();
+        setOnlineCount(Object.keys(state).length);
+      })
+      .on('presence', { event: 'leave' }, () => {
+        const state = presenceChannel.presenceState();
         setOnlineCount(Object.keys(state).length);
       })
       .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED' && userId) {
+        if (status === 'SUBSCRIBED') {
           await presenceChannel.track({
-            user_id: userId,
-            name: userName || 'Unknown',
+            user_id: userId || presenceKey,
+            name: userName || 'Visitor',
             jee_year: jeeYear || '',
             online_at: new Date().toISOString(),
           });

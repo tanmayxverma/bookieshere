@@ -56,6 +56,45 @@ export type Database = {
         }
         Relationships: []
       }
+      room_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          room_id: string
+          ypt_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          room_id: string
+          ypt_user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          room_id?: string
+          ypt_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "ypt_rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_messages_ypt_user_id_fkey"
+            columns: ["ypt_user_id"]
+            isOneToOne: false
+            referencedRelation: "ypt_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       study_sessions: {
         Row: {
           created_at: string
@@ -406,6 +445,7 @@ export type Database = {
     }
     Functions: {
       cleanup_inactive_rooms: { Args: never; Returns: undefined }
+      cleanup_old_messages: { Args: never; Returns: undefined }
       cleanup_old_sessions: { Args: never; Returns: undefined }
       cleanup_stale_sessions: { Args: never; Returns: undefined }
       has_role: {
