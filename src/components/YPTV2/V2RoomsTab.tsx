@@ -343,8 +343,8 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
 
         {/* Members Tab */}
         {roomTab === 'members' && (
-          <ScrollArea className="max-h-[50vh]">
-            <div className="space-y-2 pr-2">
+          <ScrollArea className="h-[calc(100vh-400px)] min-h-[200px]">
+            <div className="space-y-2 pr-3">
               {roomMembers.length === 0 ? (
                 <Card className="p-8 text-center border-border/50 text-muted-foreground text-base">
                   No one else is here yet. Share this room!
