@@ -464,7 +464,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
         {/* Chat Tab */}
         {roomTab === 'chat' && (
           <div className="flex-1 min-h-0 flex flex-col">
-            <div className="flex-1 min-h-0 overflow-auto pr-1">
+            <div ref={chatContainerRef} className="flex-1 min-h-0 overflow-auto pr-1">
               <div className="space-y-2 p-2">
                 {messages.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground text-sm">
