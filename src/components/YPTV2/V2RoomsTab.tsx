@@ -4,9 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, Copy } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 
@@ -35,11 +34,10 @@ interface Room {
   memberCount: number;
 }
 
-interface RoomMember {
-  ypt_user_id: string;
+interface PresenceMember {
+  user_id: string;
   name: string;
   jee_focus_year: string;
-  joined_at: string;
 }
 
 interface ChatMessage {
@@ -51,7 +49,7 @@ interface ChatMessage {
   user_name?: string;
 }
 
-// Profanity filter - common slurs and bad words
+// Profanity filter
 const BLOCKED_WORDS = [
   'fuck','shit','ass','bitch','dick','bastard','damn','cunt','slut','whore',
   'nigger','nigga','fag','faggot','retard','chutiya','madarchod','bhenchod',
@@ -67,7 +65,7 @@ function containsProfanity(text: string): boolean {
 export function V2RoomsTab({ currentUser, timer }: Props) {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
-  const [roomMembers, setRoomMembers] = useState<RoomMember[]>([]);
+  const [presenceMembers, setPresenceMembers] = useState<PresenceMember[]>([]);
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState('');
   const [newDesc, setNewDesc] = useState('');
@@ -80,8 +78,11 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   const [showChatCaution, setShowChatCaution] = useState(false);
   const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [roomOnlineCounts, setRoomOnlineCounts] = useState<Record<string, number>>({});
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const roomPresenceRef = useRef<any>(null);
 
+  // Fetch rooms from DB (for listing)
   const fetchRooms = async () => {
     await (supabase as any).rpc('cleanup_inactive_rooms');
     const { data: roomsData } = await (supabase as any)
@@ -89,31 +90,110 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
       .order('is_permanent', { ascending: false })
       .order('created_at', { ascending: true });
     if (!roomsData) { setLoading(false); return; }
-    const { data: members } = await (supabase as any).from('ypt_room_members').select('room_id');
-    const countMap: Record<string, number> = {};
-    (members || []).forEach((m: any) => { countMap[m.room_id] = (countMap[m.room_id] || 0) + 1; });
-    setRooms(roomsData.map((r: any) => ({ ...r, memberCount: countMap[r.id] || 0 })));
+    setRooms(roomsData.map((r: any) => ({ ...r, memberCount: roomOnlineCounts[r.id] || 0 })));
     setLoading(false);
   };
 
-  const fetchRoomMembers = async (roomId: string) => {
-    const { data } = await (supabase as any)
-      .from('ypt_room_members')
-      .select('ypt_user_id, joined_at, ypt_users(name, jee_focus_year)')
-      .eq('room_id', roomId)
-      .limit(500);
-    if (data) {
-      setRoomMembers(data.map((m: any) => ({
-        ypt_user_id: m.ypt_user_id,
-        name: m.ypt_users?.name || 'Unknown',
-        jee_focus_year: m.ypt_users?.jee_focus_year || '',
-        joined_at: m.joined_at,
-      })));
+  // Subscribe to presence for ALL rooms to get live counts on the listing page
+  useEffect(() => {
+    const channel = supabase.channel('rooms_global_presence', {
+      config: { presence: { key: currentUser.id } },
+    });
+
+    const updateCounts = () => {
+      const state = channel.presenceState();
+      const counts: Record<string, number> = {};
+      Object.values(state).forEach((presences: any) => {
+        presences.forEach((p: any) => {
+          if (p.room_id) {
+            counts[p.room_id] = (counts[p.room_id] || 0) + 1;
+          }
+        });
+      });
+      setRoomOnlineCounts(counts);
+    };
+
+    channel
+      .on('presence', { event: 'sync' }, updateCounts)
+      .on('presence', { event: 'join' }, updateCounts)
+      .on('presence', { event: 'leave' }, updateCounts)
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [currentUser.id]);
+
+  // Update room list when online counts change
+  useEffect(() => {
+    setRooms(prev => prev.map(r => ({ ...r, memberCount: roomOnlineCounts[r.id] || 0 })));
+  }, [roomOnlineCounts]);
+
+  // Room-specific presence: track who's actually in the active room
+  useEffect(() => {
+    if (!activeRoomId) {
+      setPresenceMembers([]);
+      return;
     }
-  };
+
+    const channel = supabase.channel(`room_presence_${activeRoomId}`, {
+      config: { presence: { key: currentUser.id } },
+    });
+    roomPresenceRef.current = channel;
+
+    const syncMembers = () => {
+      const state = channel.presenceState();
+      const members: PresenceMember[] = [];
+      const seen = new Set<string>();
+      Object.values(state).forEach((presences: any) => {
+        presences.forEach((p: any) => {
+          if (!seen.has(p.user_id)) {
+            seen.add(p.user_id);
+            members.push({
+              user_id: p.user_id,
+              name: p.name,
+              jee_focus_year: p.jee_focus_year,
+            });
+          }
+        });
+      });
+      setPresenceMembers(members);
+    };
+
+    channel
+      .on('presence', { event: 'sync' }, syncMembers)
+      .on('presence', { event: 'join' }, syncMembers)
+      .on('presence', { event: 'leave' }, syncMembers)
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await channel.track({
+            user_id: currentUser.id,
+            name: currentUser.name,
+            jee_focus_year: currentUser.jee_focus_year,
+            room_id: activeRoomId,
+          });
+        }
+      });
+
+    // Also track on the global channel so room listing shows counts
+    const globalChannel = supabase.channel('rooms_global_presence');
+    // Re-track with room_id
+    setTimeout(async () => {
+      try {
+        const gc = supabase.channel('rooms_global_presence');
+        await gc.track({
+          user_id: currentUser.id,
+          name: currentUser.name,
+          room_id: activeRoomId,
+        });
+      } catch {}
+    }, 500);
+
+    return () => {
+      supabase.removeChannel(channel);
+      roomPresenceRef.current = null;
+    };
+  }, [activeRoomId, currentUser.id, currentUser.name, currentUser.jee_focus_year]);
 
   const fetchMessages = useCallback(async (roomId: string) => {
-    // Clean old messages first
     await (supabase as any).rpc('cleanup_old_messages');
     const { data } = await (supabase as any)
       .from('room_messages')
@@ -133,14 +213,10 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     fetchRooms();
     const channel = supabase
       .channel('ypt_rooms_realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'ypt_room_members' }, () => {
-        fetchRooms();
-        if (activeRoomId) fetchRoomMembers(activeRoomId);
-      })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ypt_rooms' }, () => { fetchRooms(); })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [activeRoomId]);
+  }, []);
 
   // Realtime chat subscription
   useEffect(() => {
@@ -155,7 +231,6 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
         (async () => {
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
           setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
-          // Increment unread if not viewing chat
           setUnreadCount(prev => prev + 1);
         })();
       })
@@ -229,20 +304,23 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   };
 
   const joinRoom = async (roomId: string) => {
+    // DB record for persistence
     await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
     await (supabase as any).from('ypt_room_members').insert({ room_id: roomId, ypt_user_id: currentUser.id });
     await (supabase as any).from('ypt_rooms').update({ last_activity_at: new Date().toISOString() }).eq('id', roomId);
     setActiveRoomId(roomId);
     setRoomTab('members');
     setChatCautionAccepted(false);
-    fetchRoomMembers(roomId);
-    fetchRooms();
   };
 
   const leaveRoom = async () => {
+    // Untrack from presence
+    if (roomPresenceRef.current) {
+      try { await roomPresenceRef.current.untrack(); } catch {}
+    }
     await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
     setActiveRoomId(null);
-    setRoomMembers([]);
+    setPresenceMembers([]);
     setMessages([]);
     setRoomTab('members');
     setChatCautionAccepted(false);
@@ -267,7 +345,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
 
   const deleteRoom = async (roomId: string) => {
     await (supabase as any).from('ypt_rooms').delete().eq('id', roomId);
-    if (activeRoomId === roomId) { setActiveRoomId(null); setRoomMembers([]); setMessages([]); }
+    if (activeRoomId === roomId) { setActiveRoomId(null); setPresenceMembers([]); setMessages([]); }
     fetchRooms();
   };
 
@@ -276,15 +354,15 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   // Room detail view
   if (activeRoomId && currentRoom) {
     return (
-      <div className="space-y-4 pop-in">
+      <div className="space-y-4 pop-in" style={{ maxHeight: 'calc(100vh - 180px)', display: 'flex', flexDirection: 'column' }}>
         <button
           onClick={leaveRoom}
-          className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors shrink-0"
         >
           <ArrowLeft className="h-5 w-5" /> Back to Rooms
         </button>
 
-        <Card className="p-5 border-border/50">
+        <Card className="p-5 border-border/50 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl">
@@ -302,8 +380,8 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold">
-                <Users className="h-4 w-4" />
-                {roomMembers.length}
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                {presenceMembers.length} online
               </div>
               <Button
                 variant="outline" size="sm"
@@ -316,15 +394,15 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
           </div>
         </Card>
 
-        {/* Tab switcher: Members / Chat */}
-        <div className="flex gap-2">
+        {/* Tab switcher */}
+        <div className="flex gap-2 shrink-0">
           <Button
             variant={roomTab === 'members' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setRoomTab('members')}
             className="flex-1 h-10 text-sm font-semibold active:scale-95 transition-transform"
           >
-            <Users className="h-4 w-4 mr-2" /> Members ({roomMembers.length})
+            <Users className="h-4 w-4 mr-2" /> Online ({presenceMembers.length})
           </Button>
           <Button
             variant={roomTab === 'chat' ? 'default' : 'outline'}
@@ -341,20 +419,20 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
           </Button>
         </div>
 
-        {/* Members Tab */}
+        {/* Members Tab - presence based, truly online */}
         {roomTab === 'members' && (
-          <ScrollArea className="h-[calc(100vh-400px)] min-h-[200px]">
-            <div className="space-y-2 pr-3">
-              {roomMembers.length === 0 ? (
+          <div className="flex-1 min-h-0 overflow-auto">
+            <div className="space-y-2 pr-1">
+              {presenceMembers.length === 0 ? (
                 <Card className="p-8 text-center border-border/50 text-muted-foreground text-base">
                   No one else is here yet. Share this room!
                 </Card>
               ) : (
-                roomMembers.map((m, i) => {
-                  const isMe = m.ypt_user_id === currentUser.id;
+                presenceMembers.map((m, i) => {
+                  const isMe = m.user_id === currentUser.id;
                   return (
                     <Card
-                      key={m.ypt_user_id}
+                      key={m.user_id}
                       className={`p-3.5 flex items-center gap-3 border-border/30 card-glow pop-in ${isMe ? 'border-primary/20 bg-primary/5' : ''}`}
                       style={{ animationDelay: `${i * 0.04}s` }}
                     >
@@ -375,13 +453,13 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
                 })
               )}
             </div>
-          </ScrollArea>
+          </div>
         )}
 
         {/* Chat Tab */}
         {roomTab === 'chat' && (
-          <div className="flex flex-col" style={{ height: 'calc(50vh)' }}>
-            <ScrollArea className="flex-1 pr-2">
+          <div className="flex-1 min-h-0 flex flex-col">
+            <div className="flex-1 min-h-0 overflow-auto pr-1">
               <div className="space-y-2 p-2">
                 {messages.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground text-sm">
@@ -417,10 +495,10 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
                 )}
                 <div ref={chatEndRef} />
               </div>
-            </ScrollArea>
+            </div>
 
             {/* Chat input */}
-            <div className="flex gap-2 pt-3 border-t border-border/30">
+            <div className="flex gap-2 pt-3 border-t border-border/30 shrink-0">
               <Input
                 placeholder="Type a message..."
                 value={chatInput}
