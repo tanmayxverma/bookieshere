@@ -244,9 +244,14 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     return () => { supabase.removeChannel(channel); };
   }, [activeRoomId, fetchMessages]);
 
-  // Auto-scroll chat
+  // Auto-scroll chat to bottom
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = chatContainerRef.current;
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollTop = el.scrollHeight;
+      });
+    }
   }, [messages]);
 
   // Auto-cleanup old messages every 5 min
