@@ -79,7 +79,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [roomOnlineCounts, setRoomOnlineCounts] = useState<Record<string, number>>({});
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const roomPresenceRef = useRef<any>(null);
 
   // Fetch rooms from DB (for listing)
@@ -244,9 +244,14 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     return () => { supabase.removeChannel(channel); };
   }, [activeRoomId, fetchMessages]);
 
-  // Auto-scroll chat
+  // Auto-scroll chat to bottom
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = chatContainerRef.current;
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollTop = el.scrollHeight;
+      });
+    }
   }, [messages]);
 
   // Auto-cleanup old messages every 5 min
@@ -459,7 +464,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
         {/* Chat Tab */}
         {roomTab === 'chat' && (
           <div className="flex-1 min-h-0 flex flex-col">
-            <div className="flex-1 min-h-0 overflow-auto pr-1">
+            <div ref={chatContainerRef} className="flex-1 min-h-0 overflow-auto pr-1">
               <div className="space-y-2 p-2">
                 {messages.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground text-sm">
@@ -493,7 +498,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
                     );
                   })
                 )}
-                <div ref={chatEndRef} />
+                
               </div>
             </div>
 
