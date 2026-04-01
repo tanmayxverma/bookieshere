@@ -100,7 +100,8 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     const { data } = await (supabase as any)
       .from('ypt_room_members')
       .select('ypt_user_id, joined_at, ypt_users(name, jee_focus_year)')
-      .eq('room_id', roomId);
+      .eq('room_id', roomId)
+      .limit(500);
     if (data) {
       setRoomMembers(data.map((m: any) => ({
         ypt_user_id: m.ypt_user_id,
