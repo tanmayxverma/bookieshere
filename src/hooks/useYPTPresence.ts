@@ -1,32 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { ActiveStudyUser } from '@/types/ypt';
 
 export function useYPTPresence(userId?: string, userName?: string, jeeYear?: string) {
   const [onlineCount, setOnlineCount] = useState(0);
   const [activeUsers, setActiveUsers] = useState<ActiveStudyUser[]>([]);
+  const channelRef = useRef<any>(null);
 
   useEffect(() => {
     const presenceKey = userId || 'anon-' + Math.random().toString(36).slice(2);
-    
+
     const presenceChannel = supabase.channel('ypt_online', {
       config: { presence: { key: presenceKey } },
     });
+    channelRef.current = presenceChannel;
+
+    const updateCount = () => {
+      const state = presenceChannel.presenceState();
+      setOnlineCount(Object.keys(state).length);
+    };
 
     presenceChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = presenceChannel.presenceState();
-        const count = Object.keys(state).length;
-        setOnlineCount(count);
-      })
-      .on('presence', { event: 'join' }, () => {
-        const state = presenceChannel.presenceState();
-        setOnlineCount(Object.keys(state).length);
-      })
-      .on('presence', { event: 'leave' }, () => {
-        const state = presenceChannel.presenceState();
-        setOnlineCount(Object.keys(state).length);
-      })
+      .on('presence', { event: 'sync' }, updateCount)
+      .on('presence', { event: 'join' }, updateCount)
+      .on('presence', { event: 'leave' }, updateCount)
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
           await presenceChannel.track({
@@ -38,7 +35,37 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
         }
       });
 
-    // Active study sessions (for rooms/other features)
+    // Handle visibility change — track/untrack based on tab visibility
+    // Not too strict: we keep them online if tab is in background (visibilitychange fires on minimize too)
+    // Only untrack if page is actually hidden AND after a grace period
+    let untrackTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const handleVisibility = async () => {
+      if (document.visibilityState === 'hidden') {
+        // Grace period of 30s — if they come back within 30s, stay online
+        untrackTimeout = setTimeout(async () => {
+          try { await presenceChannel.untrack(); } catch {}
+        }, 30000);
+      } else {
+        // Came back — cancel untrack and re-track
+        if (untrackTimeout) {
+          clearTimeout(untrackTimeout);
+          untrackTimeout = null;
+        }
+        try {
+          await presenceChannel.track({
+            user_id: userId || presenceKey,
+            name: userName || 'Visitor',
+            jee_year: jeeYear || '',
+            online_at: new Date().toISOString(),
+          });
+        } catch {}
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    // Active study sessions
     const fetchActive = async () => {
       const { data } = await (supabase as any)
         .from('study_sessions')
@@ -68,6 +95,8 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
       .subscribe();
 
     return () => {
+      if (untrackTimeout) clearTimeout(untrackTimeout);
+      document.removeEventListener('visibilitychange', handleVisibility);
       supabase.removeChannel(presenceChannel);
       supabase.removeChannel(sessionsChannel);
     };
