@@ -498,7 +498,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
                     );
                   })
                 )}
-                <div ref={chatEndRef} />
+                
               </div>
             </div>
 
