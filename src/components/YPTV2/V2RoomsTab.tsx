@@ -79,7 +79,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [roomOnlineCounts, setRoomOnlineCounts] = useState<Record<string, number>>({});
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const roomPresenceRef = useRef<any>(null);
 
   // Fetch rooms from DB (for listing)
