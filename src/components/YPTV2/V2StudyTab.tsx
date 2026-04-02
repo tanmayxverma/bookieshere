@@ -4,9 +4,10 @@ import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, A
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
 import { SUBJECTS, formatTime, formatHours, getISTTodayStartUTC } from '@/types/ypt';
 import { supabase } from '@/integrations/supabase/client';
-import { Play, Pause, Square, Clock, TrendingUp, Flame, Zap, Maximize2, Minimize2 } from 'lucide-react';
+import { Play, Pause, Square, Clock, TrendingUp, Flame, Zap, Maximize2, Minimize2, Pencil, Check } from 'lucide-react';
 import type { YPTUser } from '@/types/ypt';
 
 interface TimerControls {
@@ -28,8 +29,19 @@ interface Props {
   timer: TimerControls;
 }
 
-const DAILY_GOAL_HOURS = 6;
-const WEEKLY_GOAL_HOURS = 35;
+const GOALS_STORAGE_KEY = 'ypt_study_goals';
+
+function getGoals(): { daily: number; weekly: number } {
+  try {
+    const raw = localStorage.getItem(GOALS_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { daily: 6, weekly: 35 };
+}
+
+function saveGoals(goals: { daily: number; weekly: number }) {
+  localStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(goals));
+}
 
 const MOTIVATIONAL_QUOTES = [
   "Discipline > Motivation",
