@@ -367,9 +367,6 @@ export function V2StudyTab({ user, timer }: Props) {
             </div>
           </>
         )}
-          </div>
-          <Progress value={weeklyProgress} className="h-2.5" />
-        </div>
       </Card>
 
       {/* Subject Selection Dialog */}
