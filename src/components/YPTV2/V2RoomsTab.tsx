@@ -436,6 +436,33 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
           </div>
         </Card>
 
+        {/* Subject Switcher */}
+        <Card className="p-3 border-border/50 shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mr-1 shrink-0">Studying:</span>
+            <div className="flex gap-1.5 flex-wrap">
+              {ROOM_SUBJECTS.map(s => {
+                const Icon = s.icon;
+                const isActive = timer.subject === s.value;
+                return (
+                  <button
+                    key={s.value}
+                    onClick={() => switchSubject(s.value)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all active:scale-95 ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground shadow-sm'
+                        : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {s.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </Card>
+
         {/* Tab switcher */}
         <div className="flex gap-2 shrink-0">
           <Button
