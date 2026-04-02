@@ -324,20 +324,49 @@ export function V2StudyTab({ user, timer }: Props) {
 
       {/* Progress Section */}
       <Card className="p-6 space-y-5 border-border/50">
-        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Daily Goal</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm font-medium">
-            <span className="text-muted-foreground">{formatHours(liveTodaySeconds)}</span>
-            <span className="text-muted-foreground">{DAILY_GOAL_HOURS}h goal</span>
-          </div>
-          <Progress value={dailyProgress} className="h-2.5" />
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Study Goals</h3>
+          {editingGoals ? (
+            <button onClick={saveEditedGoals} className="p-1.5 rounded-lg hover:bg-primary/10 text-primary transition-colors">
+              <Check className="h-4 w-4" />
+            </button>
+          ) : (
+            <button onClick={() => { setEditDaily(String(goals.daily)); setEditWeekly(String(goals.weekly)); setEditingGoals(true); }} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+              <Pencil className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
 
-        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider pt-2">Weekly Goal</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm font-medium">
-            <span className="text-muted-foreground">{formatHours(liveWeekSeconds)}</span>
-            <span className="text-muted-foreground">{WEEKLY_GOAL_HOURS}h goal</span>
+        {editingGoals ? (
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-muted-foreground">Daily Goal (hours)</label>
+              <Input type="number" value={editDaily} onChange={e => setEditDaily(e.target.value)} min={0.5} max={24} step={0.5} className="h-10" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-muted-foreground">Weekly Goal (hours)</label>
+              <Input type="number" value={editWeekly} onChange={e => setEditWeekly(e.target.value)} min={1} max={168} step={1} className="h-10" />
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm font-medium">
+                <span className="text-muted-foreground">{formatHours(liveTodaySeconds)}</span>
+                <span className="text-muted-foreground">{DAILY_GOAL_HOURS}h daily goal</span>
+              </div>
+              <Progress value={dailyProgress} className="h-2.5" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm font-medium">
+                <span className="text-muted-foreground">{formatHours(liveWeekSeconds)}</span>
+                <span className="text-muted-foreground">{WEEKLY_GOAL_HOURS}h weekly goal</span>
+              </div>
+              <Progress value={weeklyProgress} className="h-2.5" />
+            </div>
+          </>
+        )}
           </div>
           <Progress value={weeklyProgress} className="h-2.5" />
         </div>
