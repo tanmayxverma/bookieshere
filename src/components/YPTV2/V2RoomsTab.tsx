@@ -325,13 +325,41 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     setActiveRoomId(roomId);
     setRoomTab('members');
     setChatCautionAccepted(false);
+
+    // Auto-start "Self Study" if no active timer session
+    if (!timer.isActive) {
+      try {
+        await timer.startSession('Self Study');
+      } catch {}
+    }
+  };
+
+  const switchSubject = async (newSubject: string) => {
+    if (timer.subject === newSubject) return;
+    // End current session, start new one with the new subject
+    if (timer.isActive) {
+      try { await timer.endSession(); } catch {}
+    }
+    try {
+      await timer.startSession(newSubject);
+      toast.success(`Switched to ${newSubject}`);
+    } catch {}
   };
 
   const leaveRoom = async () => {
-    // Untrack from presence
+    // Untrack from room presence
     if (roomPresenceRef.current) {
       try { await roomPresenceRef.current.untrack(); } catch {}
     }
+    // Also untrack from global presence for this room
+    try {
+      const gc = supabase.channel('rooms_global_presence');
+      await gc.track({
+        user_id: currentUser.id,
+        name: currentUser.name,
+        room_id: null, // clear room association
+      });
+    } catch {}
     await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
     setActiveRoomId(null);
     setPresenceMembers([]);
