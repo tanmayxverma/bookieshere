@@ -2,12 +2,12 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator } from 'lucide-react';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
+import type { RoomSession } from '@/hooks/useRoomSession';
 
 interface TimerControls {
   isActive: boolean;
@@ -29,6 +29,7 @@ const ROOM_SUBJECTS = [
 interface Props {
   currentUser: YPTUser;
   timer: TimerControls;
+  roomSession: RoomSession;
 }
 
 interface Room {
@@ -43,12 +44,6 @@ interface Room {
   memberCount: number;
 }
 
-interface PresenceMember {
-  user_id: string;
-  name: string;
-  jee_focus_year: string;
-}
-
 interface ChatMessage {
   id: string;
   room_id: string;
@@ -58,7 +53,6 @@ interface ChatMessage {
   user_name?: string;
 }
 
-// Profanity filter
 const BLOCKED_WORDS = [
   'fuck','shit','ass','bitch','dick','bastard','damn','cunt','slut','whore',
   'nigger','nigga','fag','faggot','retard','chutiya','madarchod','bhenchod',
@@ -71,10 +65,8 @@ function containsProfanity(text: string): boolean {
   return BLOCKED_WORDS.some(word => lower.includes(word.replace(/[^a-z0-9]/g, '')));
 }
 
-export function V2RoomsTab({ currentUser, timer }: Props) {
+export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
-  const [presenceMembers, setPresenceMembers] = useState<PresenceMember[]>([]);
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState('');
   const [newDesc, setNewDesc] = useState('');
@@ -87,11 +79,10 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   const [showChatCaution, setShowChatCaution] = useState(false);
   const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [roomOnlineCounts, setRoomOnlineCounts] = useState<Record<string, number>>({});
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const roomPresenceRef = useRef<any>(null);
 
-  // Fetch rooms from DB (for listing)
+  const { activeRoomId, presenceMembers, roomOnlineCounts, joinRoom, leaveRoom } = roomSession;
+
   const fetchRooms = async () => {
     await (supabase as any).rpc('cleanup_inactive_rooms');
     const { data: roomsData } = await (supabase as any)
@@ -103,104 +94,9 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     setLoading(false);
   };
 
-  // Subscribe to presence for ALL rooms to get live counts on the listing page
-  useEffect(() => {
-    const channel = supabase.channel('rooms_global_presence', {
-      config: { presence: { key: currentUser.id } },
-    });
-
-    const updateCounts = () => {
-      const state = channel.presenceState();
-      const counts: Record<string, number> = {};
-      Object.values(state).forEach((presences: any) => {
-        presences.forEach((p: any) => {
-          if (p.room_id) {
-            counts[p.room_id] = (counts[p.room_id] || 0) + 1;
-          }
-        });
-      });
-      setRoomOnlineCounts(counts);
-    };
-
-    channel
-      .on('presence', { event: 'sync' }, updateCounts)
-      .on('presence', { event: 'join' }, updateCounts)
-      .on('presence', { event: 'leave' }, updateCounts)
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, [currentUser.id]);
-
-  // Update room list when online counts change
   useEffect(() => {
     setRooms(prev => prev.map(r => ({ ...r, memberCount: roomOnlineCounts[r.id] || 0 })));
   }, [roomOnlineCounts]);
-
-  // Room-specific presence: track who's actually in the active room
-  useEffect(() => {
-    if (!activeRoomId) {
-      setPresenceMembers([]);
-      return;
-    }
-
-    const channel = supabase.channel(`room_presence_${activeRoomId}`, {
-      config: { presence: { key: currentUser.id } },
-    });
-    roomPresenceRef.current = channel;
-
-    const syncMembers = () => {
-      const state = channel.presenceState();
-      const members: PresenceMember[] = [];
-      const seen = new Set<string>();
-      Object.values(state).forEach((presences: any) => {
-        presences.forEach((p: any) => {
-          if (!seen.has(p.user_id)) {
-            seen.add(p.user_id);
-            members.push({
-              user_id: p.user_id,
-              name: p.name,
-              jee_focus_year: p.jee_focus_year,
-            });
-          }
-        });
-      });
-      setPresenceMembers(members);
-    };
-
-    channel
-      .on('presence', { event: 'sync' }, syncMembers)
-      .on('presence', { event: 'join' }, syncMembers)
-      .on('presence', { event: 'leave' }, syncMembers)
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          await channel.track({
-            user_id: currentUser.id,
-            name: currentUser.name,
-            jee_focus_year: currentUser.jee_focus_year,
-            room_id: activeRoomId,
-          });
-        }
-      });
-
-    // Also track on the global channel so room listing shows counts
-    const globalChannel = supabase.channel('rooms_global_presence');
-    // Re-track with room_id
-    setTimeout(async () => {
-      try {
-        const gc = supabase.channel('rooms_global_presence');
-        await gc.track({
-          user_id: currentUser.id,
-          name: currentUser.name,
-          room_id: activeRoomId,
-        });
-      } catch {}
-    }, 500);
-
-    return () => {
-      supabase.removeChannel(channel);
-      roomPresenceRef.current = null;
-    };
-  }, [activeRoomId, currentUser.id, currentUser.name, currentUser.jee_focus_year]);
 
   const fetchMessages = useCallback(async (roomId: string) => {
     await (supabase as any).rpc('cleanup_old_messages');
@@ -227,7 +123,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     return () => { supabase.removeChannel(channel); };
   }, []);
 
-  // Realtime chat subscription
+  // Realtime chat
   useEffect(() => {
     if (!activeRoomId) return;
     fetchMessages(activeRoomId);
@@ -246,24 +142,18 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
       .on('postgres_changes', {
         event: 'DELETE', schema: 'public', table: 'room_messages',
         filter: `room_id=eq.${activeRoomId}`
-      }, () => {
-        fetchMessages(activeRoomId);
-      })
+      }, () => { fetchMessages(activeRoomId); })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [activeRoomId, fetchMessages]);
 
-  // Auto-scroll chat to bottom
   useEffect(() => {
     const el = chatContainerRef.current;
     if (el) {
-      requestAnimationFrame(() => {
-        el.scrollTop = el.scrollHeight;
-      });
+      requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
     }
   }, [messages]);
 
-  // Auto-cleanup old messages every 5 min
   useEffect(() => {
     if (!activeRoomId) return;
     const interval = setInterval(() => {
@@ -276,27 +166,22 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
   const sendMessage = async () => {
     const text = chatInput.trim();
     if (!text || sendingChat) return;
-
     if (containsProfanity(text)) {
       toast.error('Message contains inappropriate language and was blocked.');
       setChatInput('');
       return;
     }
-
     if (text.length > 500) {
       toast.error('Message too long (max 500 characters)');
       return;
     }
-
     setSendingChat(true);
     const { error } = await (supabase as any).from('room_messages').insert({
       room_id: activeRoomId,
       ypt_user_id: currentUser.id,
       message: text,
     });
-    if (error) {
-      toast.error('Failed to send message');
-    }
+    if (error) toast.error('Failed to send message');
     setChatInput('');
     setSendingChat(false);
   };
@@ -317,26 +202,22 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     setUnreadCount(0);
   };
 
-  const joinRoom = async (roomId: string) => {
-    // DB record for persistence
-    await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
-    await (supabase as any).from('ypt_room_members').insert({ room_id: roomId, ypt_user_id: currentUser.id });
-    await (supabase as any).from('ypt_rooms').update({ last_activity_at: new Date().toISOString() }).eq('id', roomId);
-    setActiveRoomId(roomId);
+  const handleJoinRoom = async (room: Room) => {
+    await joinRoom(room.id, room.name, room.emoji);
     setRoomTab('members');
     setChatCautionAccepted(false);
+  };
 
-    // Auto-start "Self Study" if no active timer session
-    if (!timer.isActive) {
-      try {
-        await timer.startSession('Self Study');
-      } catch {}
-    }
+  const handleLeaveRoom = async () => {
+    await leaveRoom();
+    setMessages([]);
+    setRoomTab('members');
+    setChatCautionAccepted(false);
+    fetchRooms();
   };
 
   const switchSubject = async (newSubject: string) => {
     if (timer.subject === newSubject) return;
-    // End current session, start new one with the new subject
     if (timer.isActive) {
       try { await timer.endSession(); } catch {}
     }
@@ -344,29 +225,6 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
       await timer.startSession(newSubject);
       toast.success(`Switched to ${newSubject}`);
     } catch {}
-  };
-
-  const leaveRoom = async () => {
-    // Untrack from room presence
-    if (roomPresenceRef.current) {
-      try { await roomPresenceRef.current.untrack(); } catch {}
-    }
-    // Also untrack from global presence for this room
-    try {
-      const gc = supabase.channel('rooms_global_presence');
-      await gc.track({
-        user_id: currentUser.id,
-        name: currentUser.name,
-        room_id: null, // clear room association
-      });
-    } catch {}
-    await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
-    setActiveRoomId(null);
-    setPresenceMembers([]);
-    setMessages([]);
-    setRoomTab('members');
-    setChatCautionAccepted(false);
-    fetchRooms();
   };
 
   const createRoom = async () => {
@@ -387,7 +245,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
 
   const deleteRoom = async (roomId: string) => {
     await (supabase as any).from('ypt_rooms').delete().eq('id', roomId);
-    if (activeRoomId === roomId) { setActiveRoomId(null); setPresenceMembers([]); setMessages([]); }
+    if (activeRoomId === roomId) { await handleLeaveRoom(); }
     fetchRooms();
   };
 
@@ -398,7 +256,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     return (
       <div className="space-y-4 pop-in" style={{ maxHeight: 'calc(100vh - 180px)', display: 'flex', flexDirection: 'column' }}>
         <button
-          onClick={leaveRoom}
+          onClick={handleLeaveRoom}
           className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors shrink-0"
         >
           <ArrowLeft className="h-5 w-5" /> Back to Rooms
@@ -427,7 +285,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
               </div>
               <Button
                 variant="outline" size="sm"
-                onClick={leaveRoom}
+                onClick={handleLeaveRoom}
                 className="text-destructive border-destructive/20 hover:bg-destructive/10 active:scale-95 transition-transform"
               >
                 <LogOut className="h-4 w-4 mr-1" /> Leave
@@ -488,7 +346,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
           </Button>
         </div>
 
-        {/* Members Tab - presence based, truly online */}
+        {/* Members Tab */}
         {roomTab === 'members' && (
           <div className="flex-1 min-h-0 overflow-auto">
             <div className="space-y-2 pr-1">
@@ -562,11 +420,9 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
                     );
                   })
                 )}
-                
               </div>
             </div>
 
-            {/* Chat input */}
             <div className="flex gap-2 pt-3 border-t border-border/30 shrink-0">
               <Input
                 placeholder="Type a message..."
@@ -658,7 +514,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
 
       <div className="space-y-3">
         {permanentRooms.map((room, idx) => (
-          <RoomCard key={room.id} room={room} index={idx} currentUserId={currentUser.id} onJoin={() => joinRoom(room.id)} onDelete={undefined} />
+          <RoomCard key={room.id} room={room} index={idx} currentUserId={currentUser.id} onJoin={() => handleJoinRoom(room)} onDelete={undefined} />
         ))}
       </div>
 
@@ -667,7 +523,7 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
           <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Custom Rooms</h3>
           {customRooms.map((room, idx) => (
             <RoomCard key={room.id} room={room} index={idx + permanentRooms.length} currentUserId={currentUser.id}
-              onJoin={() => joinRoom(room.id)}
+              onJoin={() => handleJoinRoom(room)}
               onDelete={room.created_by === currentUser.id ? () => deleteRoom(room.id) : undefined}
             />
           ))}

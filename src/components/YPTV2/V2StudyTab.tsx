@@ -4,9 +4,10 @@ import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, A
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
 import { SUBJECTS, formatTime, formatHours, getISTTodayStartUTC } from '@/types/ypt';
 import { supabase } from '@/integrations/supabase/client';
-import { Play, Pause, Square, Clock, TrendingUp, Flame, Zap, Maximize2, Minimize2 } from 'lucide-react';
+import { Play, Pause, Square, Clock, TrendingUp, Flame, Zap, Maximize2, Minimize2, Pencil, Check } from 'lucide-react';
 import type { YPTUser } from '@/types/ypt';
 
 interface TimerControls {
@@ -28,8 +29,19 @@ interface Props {
   timer: TimerControls;
 }
 
-const DAILY_GOAL_HOURS = 6;
-const WEEKLY_GOAL_HOURS = 35;
+const GOALS_STORAGE_KEY = 'ypt_study_goals';
+
+function getGoals(): { daily: number; weekly: number } {
+  try {
+    const raw = localStorage.getItem(GOALS_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { daily: 6, weekly: 35 };
+}
+
+function saveGoals(goals: { daily: number; weekly: number }) {
+  localStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(goals));
+}
 
 const MOTIVATIONAL_QUOTES = [
   "Discipline > Motivation",
@@ -50,6 +62,22 @@ export function V2StudyTab({ user, timer }: Props) {
   const [longestStreak, setLongestStreak] = useState(0);
   const [focusMode, setFocusMode] = useState(false);
   const [quoteIndex, setQuoteIndex] = useState(() => Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length));
+  const [goals, setGoalsState] = useState(getGoals);
+  const [editingGoals, setEditingGoals] = useState(false);
+  const [editDaily, setEditDaily] = useState(String(goals.daily));
+  const [editWeekly, setEditWeekly] = useState(String(goals.weekly));
+
+  const DAILY_GOAL_HOURS = goals.daily;
+  const WEEKLY_GOAL_HOURS = goals.weekly;
+
+  const saveEditedGoals = () => {
+    const d = Math.max(0.5, Math.min(24, parseFloat(editDaily) || 6));
+    const w = Math.max(1, Math.min(168, parseFloat(editWeekly) || 35));
+    const newGoals = { daily: d, weekly: w };
+    saveGoals(newGoals);
+    setGoalsState(newGoals);
+    setEditingGoals(false);
+  };
 
   useEffect(() => {
     if (!focusMode) return;
@@ -296,23 +324,49 @@ export function V2StudyTab({ user, timer }: Props) {
 
       {/* Progress Section */}
       <Card className="p-6 space-y-5 border-border/50">
-        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Daily Goal</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm font-medium">
-            <span className="text-muted-foreground">{formatHours(liveTodaySeconds)}</span>
-            <span className="text-muted-foreground">{DAILY_GOAL_HOURS}h goal</span>
-          </div>
-          <Progress value={dailyProgress} className="h-2.5" />
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Study Goals</h3>
+          {editingGoals ? (
+            <button onClick={saveEditedGoals} className="p-1.5 rounded-lg hover:bg-primary/10 text-primary transition-colors">
+              <Check className="h-4 w-4" />
+            </button>
+          ) : (
+            <button onClick={() => { setEditDaily(String(goals.daily)); setEditWeekly(String(goals.weekly)); setEditingGoals(true); }} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+              <Pencil className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
 
-        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider pt-2">Weekly Goal</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm font-medium">
-            <span className="text-muted-foreground">{formatHours(liveWeekSeconds)}</span>
-            <span className="text-muted-foreground">{WEEKLY_GOAL_HOURS}h goal</span>
+        {editingGoals ? (
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-muted-foreground">Daily Goal (hours)</label>
+              <Input type="number" value={editDaily} onChange={e => setEditDaily(e.target.value)} min={0.5} max={24} step={0.5} className="h-10" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-muted-foreground">Weekly Goal (hours)</label>
+              <Input type="number" value={editWeekly} onChange={e => setEditWeekly(e.target.value)} min={1} max={168} step={1} className="h-10" />
+            </div>
           </div>
-          <Progress value={weeklyProgress} className="h-2.5" />
-        </div>
+        ) : (
+          <>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm font-medium">
+                <span className="text-muted-foreground">{formatHours(liveTodaySeconds)}</span>
+                <span className="text-muted-foreground">{DAILY_GOAL_HOURS}h daily goal</span>
+              </div>
+              <Progress value={dailyProgress} className="h-2.5" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm font-medium">
+                <span className="text-muted-foreground">{formatHours(liveWeekSeconds)}</span>
+                <span className="text-muted-foreground">{WEEKLY_GOAL_HOURS}h weekly goal</span>
+              </div>
+              <Progress value={weeklyProgress} className="h-2.5" />
+            </div>
+          </>
+        )}
       </Card>
 
       {/* Subject Selection Dialog */}
