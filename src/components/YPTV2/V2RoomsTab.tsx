@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator } from 'lucide-react';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 
@@ -14,8 +14,17 @@ interface TimerControls {
   isPaused: boolean;
   subject: string | null;
   startSession: (subject: string) => Promise<void>;
+  endSession: () => Promise<void>;
+  sessionId: string | null;
   [key: string]: any;
 }
+
+const ROOM_SUBJECTS = [
+  { label: 'Self Study', value: 'Self Study', icon: BookOpen, color: 'text-blue-400' },
+  { label: 'Physics', value: 'Physics', icon: Atom, color: 'text-orange-400' },
+  { label: 'Chemistry', value: 'Chemistry', icon: FlaskConical, color: 'text-green-400' },
+  { label: 'Mathematics', value: 'Mathematics', icon: Calculator, color: 'text-purple-400' },
+] as const;
 
 interface Props {
   currentUser: YPTUser;
@@ -316,13 +325,41 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
     setActiveRoomId(roomId);
     setRoomTab('members');
     setChatCautionAccepted(false);
+
+    // Auto-start "Self Study" if no active timer session
+    if (!timer.isActive) {
+      try {
+        await timer.startSession('Self Study');
+      } catch {}
+    }
+  };
+
+  const switchSubject = async (newSubject: string) => {
+    if (timer.subject === newSubject) return;
+    // End current session, start new one with the new subject
+    if (timer.isActive) {
+      try { await timer.endSession(); } catch {}
+    }
+    try {
+      await timer.startSession(newSubject);
+      toast.success(`Switched to ${newSubject}`);
+    } catch {}
   };
 
   const leaveRoom = async () => {
-    // Untrack from presence
+    // Untrack from room presence
     if (roomPresenceRef.current) {
       try { await roomPresenceRef.current.untrack(); } catch {}
     }
+    // Also untrack from global presence for this room
+    try {
+      const gc = supabase.channel('rooms_global_presence');
+      await gc.track({
+        user_id: currentUser.id,
+        name: currentUser.name,
+        room_id: null, // clear room association
+      });
+    } catch {}
     await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
     setActiveRoomId(null);
     setPresenceMembers([]);
@@ -395,6 +432,33 @@ export function V2RoomsTab({ currentUser, timer }: Props) {
               >
                 <LogOut className="h-4 w-4 mr-1" /> Leave
               </Button>
+            </div>
+          </div>
+        </Card>
+
+        {/* Subject Switcher */}
+        <Card className="p-3 border-border/50 shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mr-1 shrink-0">Studying:</span>
+            <div className="flex gap-1.5 flex-wrap">
+              {ROOM_SUBJECTS.map(s => {
+                const Icon = s.icon;
+                const isActive = timer.subject === s.value;
+                return (
+                  <button
+                    key={s.value}
+                    onClick={() => switchSubject(s.value)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all active:scale-95 ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground shadow-sm'
+                        : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {s.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </Card>
