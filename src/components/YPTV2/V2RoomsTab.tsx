@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator } from 'lucide-react';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 
@@ -14,8 +14,17 @@ interface TimerControls {
   isPaused: boolean;
   subject: string | null;
   startSession: (subject: string) => Promise<void>;
+  endSession: () => Promise<void>;
+  sessionId: string | null;
   [key: string]: any;
 }
+
+const ROOM_SUBJECTS = [
+  { label: 'Self Study', value: 'Self Study', icon: BookOpen, color: 'text-blue-400' },
+  { label: 'Physics', value: 'Physics', icon: Atom, color: 'text-orange-400' },
+  { label: 'Chemistry', value: 'Chemistry', icon: FlaskConical, color: 'text-green-400' },
+  { label: 'Mathematics', value: 'Mathematics', icon: Calculator, color: 'text-purple-400' },
+] as const;
 
 interface Props {
   currentUser: YPTUser;
