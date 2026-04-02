@@ -62,6 +62,22 @@ export function V2StudyTab({ user, timer }: Props) {
   const [longestStreak, setLongestStreak] = useState(0);
   const [focusMode, setFocusMode] = useState(false);
   const [quoteIndex, setQuoteIndex] = useState(() => Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length));
+  const [goals, setGoalsState] = useState(getGoals);
+  const [editingGoals, setEditingGoals] = useState(false);
+  const [editDaily, setEditDaily] = useState(String(goals.daily));
+  const [editWeekly, setEditWeekly] = useState(String(goals.weekly));
+
+  const DAILY_GOAL_HOURS = goals.daily;
+  const WEEKLY_GOAL_HOURS = goals.weekly;
+
+  const saveEditedGoals = () => {
+    const d = Math.max(0.5, Math.min(24, parseFloat(editDaily) || 6));
+    const w = Math.max(1, Math.min(168, parseFloat(editWeekly) || 35));
+    const newGoals = { daily: d, weekly: w };
+    saveGoals(newGoals);
+    setGoalsState(newGoals);
+    setEditingGoals(false);
+  };
 
   useEffect(() => {
     if (!focusMode) return;
