@@ -183,7 +183,7 @@ export function V2StudyTab({ user, timer }: Props) {
         </div>
 
         <div className="relative z-10 flex flex-col items-center gap-8 pop-in">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border/50 bg-card/50 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full liquid-glass-subtle">
             <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
             <span className="text-base font-medium text-muted-foreground">{timer.subject}</span>
           </div>
