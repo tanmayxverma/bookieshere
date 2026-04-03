@@ -301,7 +301,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
 function MiniStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <Card className="p-4 card-glow border-border/50">
+    <Card className="p-4 card-glow liquid-glass-subtle">
       <div className="flex items-center gap-2 text-muted-foreground mb-2">
         {icon}
         <span className="text-xs font-bold uppercase tracking-wider">{label}</span>
