@@ -209,11 +209,19 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   };
 
   const handleLeaveRoom = async () => {
+    const leftRoomId = activeRoomId;
     await leaveRoom();
     setMessages([]);
     setRoomTab('members');
     setChatCautionAccepted(false);
-    fetchRooms();
+    // Immediately decrement the count for the room we just left (optimistic)
+    if (leftRoomId) {
+      setRooms(prev => prev.map(r => 
+        r.id === leftRoomId ? { ...r, memberCount: Math.max(0, r.memberCount - 1) } : r
+      ));
+    }
+    // Then refresh after presence propagates
+    setTimeout(() => fetchRooms(), 1500);
   };
 
   const switchSubject = async (newSubject: string) => {
