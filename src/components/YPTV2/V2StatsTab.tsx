@@ -12,10 +12,10 @@ interface Props {
 }
 
 const SUBJECT_COLORS: Record<string, string> = {
-  'Physics': 'hsl(var(--primary))',
-  'Chemistry': 'hsl(160, 60%, 45%)',
+  'Physics': 'hsl(210, 80%, 55%)',
+  'Chemistry': 'hsl(160, 65%, 45%)',
   'Mathematics': 'hsl(35, 90%, 55%)',
-  'Self Study': 'hsl(280, 60%, 55%)',
+  'Self Study': 'hsl(190, 70%, 50%)',
 };
 
 export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
