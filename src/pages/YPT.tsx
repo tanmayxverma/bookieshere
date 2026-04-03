@@ -75,7 +75,7 @@ export default function YPT() {
               </div>
             </div>
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1 p-1.5 rounded-xl bg-muted/50 border border-border/30">
+            <nav className="hidden md:flex items-center gap-1 p-1.5 rounded-xl liquid-glass-subtle">
               {TABS.map((t) => {
                 const Icon = t.icon;
                 const isActive = tab === t.id;
@@ -100,7 +100,7 @@ export default function YPT() {
           {/* Floating Room Indicator - shows when in a room but NOT on rooms tab */}
           {roomSession.activeRoomId && tab !== 'rooms' && (
             <div className="mb-4 pop-in">
-              <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-primary/20 bg-primary/5 backdrop-blur-sm">
+              <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl liquid-glass">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-xl shrink-0">{roomSession.activeRoomEmoji || '📖'}</span>
                   <div className="min-w-0">
@@ -158,7 +158,7 @@ export default function YPT() {
           </main>
 
           {/* Mobile Bottom Nav */}
-          <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-xl border-t border-border/30 px-2 py-2 safe-area-bottom">
+          <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 liquid-glass-strong px-2 py-2 safe-area-bottom">
             <div className="flex items-center justify-around max-w-md mx-auto">
               {TABS.map((t) => {
                 const Icon = t.icon;
