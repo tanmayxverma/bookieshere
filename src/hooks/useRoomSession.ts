@@ -227,11 +227,18 @@ export function useRoomSession(
 
   const leaveRoom = useCallback(async () => {
     if (!currentUser) return;
-    // Untrack presence
+    
+    // 1. Stop the study timer FIRST (use ref for fresh value)
+    if (isTimerActiveRef.current) {
+      try { await endSessionRef.current(); } catch {}
+    }
+
+    // 2. Untrack from room presence (triggers leave event for other users)
     if (roomPresenceRef.current) {
       try { await roomPresenceRef.current.untrack(); } catch {}
     }
-    // Clear global room association
+    
+    // 3. Clear global room association
     if (globalChannelRef.current) {
       try {
         await globalChannelRef.current.track({
@@ -241,18 +248,16 @@ export function useRoomSession(
         });
       } catch {}
     }
-    await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
     
-    // Auto-stop recording
-    if (isTimerActive) {
-      try { await endSession(); } catch {}
-    }
+    // 4. Remove DB record
+    await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
 
+    // 5. Clear local state (this triggers the presence useEffect cleanup which removes the channel)
     setActiveRoomId(null);
     setActiveRoomName(null);
     setActiveRoomEmoji(null);
     setPresenceMembers([]);
-  }, [currentUser?.id, currentUser?.name, isTimerActive, endSession]);
+  }, [currentUser?.id, currentUser?.name]);
 
   return {
     activeRoomId,
