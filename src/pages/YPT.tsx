@@ -100,7 +100,7 @@ export default function YPT() {
           {/* Floating Room Indicator - shows when in a room but NOT on rooms tab */}
           {roomSession.activeRoomId && tab !== 'rooms' && (
             <div className="mb-4 pop-in">
-              <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-primary/20 bg-primary/5 backdrop-blur-sm">
+              <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl liquid-glass">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-xl shrink-0">{roomSession.activeRoomEmoji || '📖'}</span>
                   <div className="min-w-0">
