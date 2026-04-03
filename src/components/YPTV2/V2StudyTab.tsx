@@ -254,7 +254,7 @@ export function V2StudyTab({ user, timer }: Props) {
   return (
     <div className="space-y-6 pop-in">
       {/* Timer Card */}
-      <Card className="relative overflow-hidden border-border/50">
+      <Card className="relative overflow-hidden liquid-glass">
         {timer.isActive && !timer.isPaused && (
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[200px] rounded-full bg-primary/5 blur-[60px] breathing-glow" />
