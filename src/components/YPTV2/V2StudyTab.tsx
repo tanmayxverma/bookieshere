@@ -412,7 +412,7 @@ export function V2StudyTab({ user, timer }: Props) {
 
 function StatCard({ icon, label, value, subtitle, highlight }: { icon: React.ReactNode; label: string; value: string; subtitle?: string; highlight?: boolean }) {
   return (
-    <Card className={`p-4 card-glow border-border/50 ${highlight ? 'border-primary/20' : ''}`}>
+    <Card className={`p-4 card-glow liquid-glass-subtle ${highlight ? 'border-primary/20' : ''}`}>
       <div className="flex items-center gap-2 text-muted-foreground mb-2">
         {icon}
         <span className="text-xs font-bold uppercase tracking-wider">{label}</span>
