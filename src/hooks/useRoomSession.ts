@@ -155,7 +155,10 @@ export function useRoomSession(
         }
       });
 
+    // Don't remove channel on cleanup — leaveRoom handles untrack explicitly
+    // Only remove if activeRoomId changes (switching rooms) or unmount
     return () => {
+      // Channel removal triggers implicit untrack on server side
       supabase.removeChannel(channel);
       roomPresenceRef.current = null;
     };
