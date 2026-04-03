@@ -12,10 +12,10 @@ interface Props {
 }
 
 const SUBJECT_COLORS: Record<string, string> = {
-  'Physics': 'hsl(var(--primary))',
-  'Chemistry': 'hsl(160, 60%, 45%)',
+  'Physics': 'hsl(210, 80%, 55%)',
+  'Chemistry': 'hsl(160, 65%, 45%)',
   'Mathematics': 'hsl(35, 90%, 55%)',
-  'Self Study': 'hsl(280, 60%, 55%)',
+  'Self Study': 'hsl(190, 70%, 50%)',
 };
 
 export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
@@ -191,8 +191,8 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                   cy="50%"
                   innerRadius={50}
                   outerRadius={80}
-                  strokeWidth={2}
-                  stroke="hsl(var(--background))"
+                  strokeWidth={3}
+                  stroke="hsl(var(--card))"
                 >
                   {subjectData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
@@ -204,6 +204,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                     border: '1px solid hsl(var(--border))',
                     borderRadius: '10px',
                     fontSize: '13px',
+                    color: 'hsl(var(--foreground))',
                   }}
                   formatter={(val: number) => [`${val}h`, '']}
                 />
@@ -211,10 +212,13 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
             </ResponsiveContainer>
             <div className="flex flex-wrap gap-4">
               {subjectData.map((s) => (
-                <div key={s.name} className="flex items-center gap-2">
-                  <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: s.color }} />
-                  <span className="text-sm text-muted-foreground font-medium">{s.name}</span>
-                  <span className="text-sm font-bold">{s.hours}h</span>
+                <div key={s.name} className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-muted/40 border border-border/30">
+                  <div
+                    className="w-4 h-4 rounded-md shrink-0 ring-1 ring-border/20"
+                    style={{ backgroundColor: s.color }}
+                  />
+                  <span className="text-sm text-foreground font-medium">{s.name}</span>
+                  <span className="text-sm font-bold text-foreground">{s.hours}h</span>
                 </div>
               ))}
             </div>
