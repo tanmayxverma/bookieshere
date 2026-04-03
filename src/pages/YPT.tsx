@@ -75,7 +75,7 @@ export default function YPT() {
               </div>
             </div>
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1 p-1.5 rounded-xl bg-muted/50 border border-border/30">
+            <nav className="hidden md:flex items-center gap-1 p-1.5 rounded-xl liquid-glass-subtle">
               {TABS.map((t) => {
                 const Icon = t.icon;
                 const isActive = tab === t.id;
