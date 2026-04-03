@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { YPTUser } from '@/types/ypt';
 
+// Use refs to avoid stale closures in callbacks
+
 const ROOM_STORAGE_KEY = 'ypt_active_room';
 
 interface RoomState {
