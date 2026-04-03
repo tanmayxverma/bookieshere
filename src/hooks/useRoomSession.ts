@@ -49,6 +49,12 @@ export function useRoomSession(
   const [roomOnlineCounts, setRoomOnlineCounts] = useState<Record<string, number>>({});
   const roomPresenceRef = useRef<any>(null);
   const globalChannelRef = useRef<any>(null);
+  const isTimerActiveRef = useRef(isTimerActive);
+  const endSessionRef = useRef(endSession);
+
+  // Keep refs fresh
+  useEffect(() => { isTimerActiveRef.current = isTimerActive; }, [isTimerActive]);
+  useEffect(() => { endSessionRef.current = endSession; }, [endSession]);
 
   // Save/clear room state in localStorage
   useEffect(() => {
