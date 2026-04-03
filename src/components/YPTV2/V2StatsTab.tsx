@@ -313,7 +313,7 @@ function MiniStat({ icon, label, value }: { icon: React.ReactNode; label: string
 
 function InsightCard({ icon, title, value }: { icon: React.ReactNode; title: string; value: string }) {
   return (
-    <Card className="p-5 border-border/50 card-glow">
+    <Card className="p-5 liquid-glass-subtle card-glow">
       <div className="flex items-center gap-2 mb-2">
         {icon}
         <span className="text-sm font-bold text-muted-foreground">{title}</span>
