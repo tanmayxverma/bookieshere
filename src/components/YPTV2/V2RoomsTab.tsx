@@ -79,7 +79,10 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [showChatCaution, setShowChatCaution] = useState(false);
   const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [selectedMsgId, setSelectedMsgId] = useState<string | null>(null);
+  const [replyTo, setReplyTo] = useState<ChatMessage | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { activeRoomId, presenceMembers, roomOnlineCounts, joinRoom, leaveRoom } = roomSession;
 
