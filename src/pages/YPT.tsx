@@ -59,7 +59,7 @@ export default function YPT() {
       />
 
       {isOnboarded && user && (
-        <div className="container mx-auto px-4 py-6 pb-24 md:pb-6">
+        <div className="container mx-auto px-4 py-6 pb-28 md:pb-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6 pop-in">
             <div>
@@ -140,8 +140,8 @@ export default function YPT() {
             </div>
           )}
 
-          {/* Content */}
-          <main className="max-w-3xl mx-auto">
+          {/* Content — each tab gets minimum full viewport height so bottom nav never overlaps */}
+          <main className="max-w-3xl mx-auto min-h-[calc(100vh-200px)] md:min-h-[calc(100vh-160px)]">
             <div
               className={`transition-all duration-250 ease-out ${
                 animating
