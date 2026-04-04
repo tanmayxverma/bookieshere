@@ -179,14 +179,36 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       return;
     }
     setSendingChat(true);
-    const { error } = await (supabase as any).from('room_messages').insert({
+    const msgPayload: any = {
       room_id: activeRoomId,
       ypt_user_id: currentUser.id,
-      message: text,
-    });
+      message: replyTo ? `[reply:${replyTo.user_name}] ${text}` : text,
+    };
+    const { error } = await (supabase as any).from('room_messages').insert(msgPayload);
     if (error) toast.error('Failed to send message');
     setChatInput('');
+    setReplyTo(null);
     setSendingChat(false);
+  };
+
+  const copyMessage = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success('Message copied');
+    setSelectedMsgId(null);
+  };
+
+  const deleteMessage = async (msgId: string) => {
+    await (supabase as any).from('room_messages').delete().eq('id', msgId).eq('ypt_user_id', currentUser.id);
+    setMessages(prev => prev.filter(m => m.id !== msgId));
+    setSelectedMsgId(null);
+    toast.success('Message deleted');
+  };
+
+  const handleMsgLongPress = (msgId: string) => {
+    longPressTimer.current = setTimeout(() => setSelectedMsgId(msgId), 400);
+  };
+  const cancelLongPress = () => {
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
   };
 
   const handleChatTabClick = () => {
