@@ -287,7 +287,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   // Room detail view
   if (activeRoomId && currentRoom) {
     return (
-      <div className="space-y-4 pop-in" style={{ maxHeight: 'calc(100vh - 180px)', display: 'flex', flexDirection: 'column' }}>
+      <div className="space-y-4 pop-in flex flex-col" style={{ minHeight: 'calc(100vh - 200px)', maxHeight: 'calc(100vh - 140px)' }}>
         <button
           onClick={handleLeaveRoom}
           className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors shrink-0"
