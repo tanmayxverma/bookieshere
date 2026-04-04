@@ -430,25 +430,79 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 ) : (
                   messages.map((msg, i) => {
                     const isMe = msg.ypt_user_id === currentUser.id;
+                    const isSelected = selectedMsgId === msg.id;
+                    const isReply = msg.message.startsWith('[reply:');
+                    let replyAuthor = '';
+                    let displayMsg = msg.message;
+                    if (isReply) {
+                      const match = msg.message.match(/^\[reply:(.+?)\]\s?(.*)/s);
+                      if (match) { replyAuthor = match[1]; displayMsg = match[2]; }
+                    }
                     return (
                       <div
                         key={msg.id}
-                        className={`flex ${isMe ? 'justify-end' : 'justify-start'} pop-in`}
+                        className={`relative flex ${isMe ? 'justify-end' : 'justify-start'} pop-in group`}
                         style={{ animationDelay: `${Math.min(i * 0.02, 0.3)}s` }}
+                        onContextMenu={e => { e.preventDefault(); setSelectedMsgId(isSelected ? null : msg.id); }}
+                        onTouchStart={() => handleMsgLongPress(msg.id)}
+                        onTouchEnd={cancelLongPress}
+                        onTouchMove={cancelLongPress}
                       >
-                        <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 ${
+                        <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 transition-all ${
                           isMe
                             ? 'bg-primary text-primary-foreground rounded-br-md'
                             : 'bg-muted rounded-bl-md'
-                        }`}>
+                        } ${isSelected ? 'ring-2 ring-primary/40 scale-[1.02]' : ''}`}>
                           {!isMe && (
                             <p className="text-[11px] font-semibold text-primary mb-0.5">{msg.user_name}</p>
                           )}
-                          <p className="text-sm leading-relaxed break-words">{msg.message}</p>
+                          {isReply && replyAuthor && (
+                            <div className={`text-[11px] px-2 py-1 rounded mb-1.5 border-l-2 ${
+                              isMe ? 'bg-primary-foreground/10 border-primary-foreground/30' : 'bg-background/50 border-primary/40'
+                            }`}>
+                              <span className="font-semibold">↩ {replyAuthor}</span>
+                            </div>
+                          )}
+                          <p className="text-sm leading-relaxed break-words">{displayMsg}</p>
                           <p className={`text-[10px] mt-1 ${isMe ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>
                             {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                           </p>
                         </div>
+
+                        {/* Message actions popover */}
+                        {isSelected && (
+                          <div className={`absolute z-30 ${isMe ? 'right-0' : 'left-0'} -top-10 flex items-center gap-1 px-2 py-1.5 rounded-xl liquid-glass-strong shadow-lg pop-in`}>
+                            <button
+                              onClick={() => copyMessage(displayMsg)}
+                              className="p-1.5 rounded-lg hover:bg-muted/80 text-foreground/70 hover:text-foreground transition-colors"
+                              title="Copy"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              onClick={() => { setReplyTo(msg); setSelectedMsgId(null); }}
+                              className="p-1.5 rounded-lg hover:bg-muted/80 text-foreground/70 hover:text-foreground transition-colors"
+                              title="Reply"
+                            >
+                              <Reply className="h-3.5 w-3.5" />
+                            </button>
+                            {isMe && (
+                              <button
+                                onClick={() => deleteMessage(msg.id)}
+                                className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors"
+                                title="Delete"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            )}
+                            <button
+                              onClick={() => setSelectedMsgId(null)}
+                              className="p-1.5 rounded-lg hover:bg-muted/80 text-foreground/40 hover:text-foreground transition-colors"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     );
                   })
@@ -456,9 +510,23 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
               </div>
             </div>
 
+            {/* Reply bar */}
+            {replyTo && (
+              <div className="flex items-center gap-2 px-3 py-2 border-t border-border/30 bg-muted/30 shrink-0">
+                <Reply className="h-4 w-4 text-primary shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-primary truncate">Replying to {replyTo.user_name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{replyTo.message.replace(/^\[reply:.+?\]\s?/, '')}</p>
+                </div>
+                <button onClick={() => setReplyTo(null)} className="p-1 rounded hover:bg-muted shrink-0">
+                  <X className="h-3.5 w-3.5 text-muted-foreground" />
+                </button>
+              </div>
+            )}
+
             <div className="flex gap-2 pt-3 border-t border-border/30 shrink-0">
               <Input
-                placeholder="Type a message..."
+                placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message..."}
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
