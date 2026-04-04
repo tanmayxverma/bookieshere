@@ -140,8 +140,8 @@ export default function YPT() {
             </div>
           )}
 
-          {/* Content */}
-          <main className="max-w-3xl mx-auto">
+          {/* Content — each tab gets minimum full viewport height so bottom nav never overlaps */}
+          <main className="max-w-3xl mx-auto min-h-[calc(100vh-200px)] md:min-h-[calc(100vh-160px)]">
             <div
               className={`transition-all duration-250 ease-out ${
                 animating
