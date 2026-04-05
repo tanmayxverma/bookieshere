@@ -585,13 +585,21 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                             >
                               <Reply className="h-3.5 w-3.5" />
                             </button>
-                            {isMe && (
+                            {isMe ? (
                               <button
                                 onClick={() => deleteMessage(msg.id)}
                                 className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors"
                                 title="Delete"
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => blockUser(msg.ypt_user_id, msg.user_name || 'User')}
+                                className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors"
+                                title="Block user"
+                              >
+                                <Ban className="h-3.5 w-3.5" />
                               </button>
                             )}
                             <button
