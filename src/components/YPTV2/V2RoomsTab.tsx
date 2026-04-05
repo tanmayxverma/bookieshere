@@ -449,13 +449,22 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                     return (
                       <div
                         key={msg.id}
-                        className={`relative flex ${isMe ? 'justify-end' : 'justify-start'} pop-in group`}
+                        className={`relative flex items-end gap-1 ${isMe ? 'justify-end' : 'justify-start'} pop-in group`}
                         style={{ animationDelay: `${Math.min(i * 0.02, 0.3)}s` }}
                         onContextMenu={e => { e.preventDefault(); setSelectedMsgId(isSelected ? null : msg.id); }}
                         onTouchStart={() => handleMsgLongPress(msg.id)}
                         onTouchEnd={cancelLongPress}
                         onTouchMove={cancelLongPress}
                       >
+                        {isMe && (
+                          <button
+                            onClick={() => deleteMessage(msg.id)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive mb-1 shrink-0"
+                            title="Delete"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        )}
                         <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 transition-all ${
                           isMe
                             ? 'bg-primary text-primary-foreground rounded-br-md'
