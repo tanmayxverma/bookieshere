@@ -55,12 +55,21 @@ interface ChatMessage {
 
 const BLOCKED_WORDS = [
   'fuck','shit','ass','bitch','dick','bastard','damn','cunt','slut','whore',
-  'nigger','nigga','fag','faggot','retard','chutiya','madarchod','bhenchod',
-  'bhosdike','gandu','lodu','randi','harami','sala','saala','kamina','kameena',
-  'bc','mc','lund','gaand','chut','bsdk','mkc','bkl',
+  'nigger','nigga','fag','faggot','retard',
+  // Hindi/Hinglish
+  'chutiya','chutiye','chutia','madarchod','madarchodd','maderchod','bhenchod','bhencho','bhenchoo',
+  'bhosdike','bhosdiwale','bhosdiwala','gandu','gand','gaandu','lodu','laudu','laudey',
+  'randi','randwa','harami','haramkhor','sala','saala','saale','kamina','kameena','kameene',
+  'bc','mc','lund','gaand','chut','bsdk','mkc','bkl','lode','bhosda','bhosdika',
+  'jhatu','jhaatu','tatto','tatton','kutte','kutta','kuttiya','suar','suwar',
+  'teri maa','tera baap','maa ki','baap ka','maa ka','maaki','baapka','maaka',
+  'ghatiya','nalayak','gadha','gadhe','ullu','bevkoof','bewkoof','pagal','pagla',
+  'tharki','chakka','hijra','halkat','haraamzada','haraamzaade','haramzada','haramzade',
+  'chodu','chodna','chod','chodumal','choduu',
+  // English vulgar
   'porn','sex','nude','boob','penis','vagina','anal','dildo','orgasm',
   'hentai','xxx','xnxx','pornhub','onlyfans','tits','cock',
-  'rape','molest','tera baap','teri maa','maderchod','laudu','jhatu','tatto',
+  'rape','molest',
 ];
 
 function containsLink(text: string): boolean {
@@ -74,6 +83,19 @@ function containsProfanity(text: string): boolean {
     const clean = word.replace(/[^a-z0-9]/g, '');
     return noSpace.includes(clean) || lower.split(/\s+/).some(w => w === clean);
   });
+}
+
+function getBlockedUsers(): string[] {
+  try { return JSON.parse(localStorage.getItem('ypt_blocked_users') || '[]'); } catch { return []; }
+}
+function setBlockedUsers(ids: string[]) {
+  localStorage.setItem('ypt_blocked_users', JSON.stringify(ids));
+}
+function isChatMuted(): boolean {
+  return localStorage.getItem('ypt_chat_muted') === 'true';
+}
+function setChatMuted(v: boolean) {
+  localStorage.setItem('ypt_chat_muted', v ? 'true' : 'false');
 }
 
 export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
