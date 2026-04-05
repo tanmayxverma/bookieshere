@@ -75,7 +75,6 @@ function containsProfanity(text: string): boolean {
     return noSpace.includes(clean) || lower.split(/\s+/).some(w => w === clean);
   });
 }
-}
 
 export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [rooms, setRooms] = useState<Room[]>([]);
