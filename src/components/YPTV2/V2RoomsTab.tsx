@@ -148,6 +148,14 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
         filter: `room_id=eq.${activeRoomId}`
       }, (payload: any) => {
         (async () => {
+          const msgText = payload.new.message || '';
+          if (containsProfanity(msgText) || containsLink(msgText)) {
+            await (supabase as any).from('room_messages').delete().eq('id', payload.new.id);
+            if (payload.new.ypt_user_id === currentUser.id) {
+              toast.error('⚠️ Your message was auto-removed for violating chat guidelines. Repeated violations may lead to restrictions.', { duration: 5000 });
+            }
+            return;
+          }
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
           setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
           setUnreadCount(prev => prev + 1);
