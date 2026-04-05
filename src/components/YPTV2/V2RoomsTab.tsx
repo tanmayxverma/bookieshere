@@ -178,6 +178,10 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       setChatInput('');
       return;
     }
+    if (containsLink(text)) {
+      toast.error('Links are not allowed in chat.');
+      return;
+    }
     if (text.length > 500) {
       toast.error('Message too long (max 500 characters)');
       return;
