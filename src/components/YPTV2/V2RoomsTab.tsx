@@ -60,6 +60,10 @@ const BLOCKED_WORDS = [
   'bc','mc','lund','gaand','chut','bsdk','mkc','bkl',
 ];
 
+function containsLink(text: string): boolean {
+  return /https?:\/\/|www\.|\.com|\.in|\.org|\.net|\.io|\.co|\.me|t\.me|bit\.ly/i.test(text);
+}
+
 function containsProfanity(text: string): boolean {
   const lower = text.toLowerCase().replace(/[^a-z0-9]/g, '');
   return BLOCKED_WORDS.some(word => lower.includes(word.replace(/[^a-z0-9]/g, '')));
