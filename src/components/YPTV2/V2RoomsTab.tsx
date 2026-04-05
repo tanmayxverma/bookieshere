@@ -114,8 +114,32 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedMsgId, setSelectedMsgId] = useState<string | null>(null);
   const [replyTo, setReplyTo] = useState<ChatMessage | null>(null);
+  const [muted, setMuted] = useState(() => isChatMuted());
+  const [blockedUsers, setBlockedUsersState] = useState<string[]>(() => getBlockedUsers());
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    setChatMuted(next);
+    toast.success(next ? 'Chat muted — no notifications' : 'Chat unmuted');
+  };
+
+  const blockUser = (userId: string, userName: string) => {
+    const updated = [...blockedUsers, userId];
+    setBlockedUsersState(updated);
+    setBlockedUsers(updated);
+    setSelectedMsgId(null);
+    toast.success(`${userName} blocked. Their messages are hidden.`);
+  };
+
+  const unblockUser = (userId: string) => {
+    const updated = blockedUsers.filter(id => id !== userId);
+    setBlockedUsersState(updated);
+    setBlockedUsers(updated);
+    toast.success('User unblocked');
+  };
 
   const { activeRoomId, presenceMembers, roomOnlineCounts, joinRoom, leaveRoom } = roomSession;
 
