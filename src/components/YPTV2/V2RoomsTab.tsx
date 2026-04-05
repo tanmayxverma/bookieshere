@@ -58,6 +58,9 @@ const BLOCKED_WORDS = [
   'nigger','nigga','fag','faggot','retard','chutiya','madarchod','bhenchod',
   'bhosdike','gandu','lodu','randi','harami','sala','saala','kamina','kameena',
   'bc','mc','lund','gaand','chut','bsdk','mkc','bkl',
+  'porn','sex','nude','boob','penis','vagina','anal','dildo','orgasm',
+  'hentai','xxx','xnxx','pornhub','onlyfans','tits','cock',
+  'rape','molest','tera baap','teri maa','maderchod','laudu','jhatu','tatto',
 ];
 
 function containsLink(text: string): boolean {
@@ -65,8 +68,12 @@ function containsLink(text: string): boolean {
 }
 
 function containsProfanity(text: string): boolean {
-  const lower = text.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return BLOCKED_WORDS.some(word => lower.includes(word.replace(/[^a-z0-9]/g, '')));
+  const lower = text.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+  const noSpace = lower.replace(/\s/g, '');
+  return BLOCKED_WORDS.some(word => {
+    const clean = word.replace(/[^a-z0-9]/g, '');
+    return noSpace.includes(clean) || lower.split(/\s+/).some(w => w === clean);
+  });
 }
 
 export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
@@ -141,6 +148,14 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
         filter: `room_id=eq.${activeRoomId}`
       }, (payload: any) => {
         (async () => {
+          const msgText = payload.new.message || '';
+          if (containsProfanity(msgText) || containsLink(msgText)) {
+            await (supabase as any).from('room_messages').delete().eq('id', payload.new.id);
+            if (payload.new.ypt_user_id === currentUser.id) {
+              toast.error('⚠️ Your message was auto-removed for violating chat guidelines. Repeated violations may lead to restrictions.', { duration: 5000 });
+            }
+            return;
+          }
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
           setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
           setUnreadCount(prev => prev + 1);
