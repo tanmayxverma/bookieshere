@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, MoreVertical, X } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, MoreVertical, X, BellOff, Bell, Ban, ShieldBan } from 'lucide-react';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 import type { RoomSession } from '@/hooks/useRoomSession';
@@ -55,12 +55,21 @@ interface ChatMessage {
 
 const BLOCKED_WORDS = [
   'fuck','shit','ass','bitch','dick','bastard','damn','cunt','slut','whore',
-  'nigger','nigga','fag','faggot','retard','chutiya','madarchod','bhenchod',
-  'bhosdike','gandu','lodu','randi','harami','sala','saala','kamina','kameena',
-  'bc','mc','lund','gaand','chut','bsdk','mkc','bkl',
+  'nigger','nigga','fag','faggot','retard',
+  // Hindi/Hinglish
+  'chutiya','chutiye','chutia','madarchod','madarchodd','maderchod','bhenchod','bhencho','bhenchoo',
+  'bhosdike','bhosdiwale','bhosdiwala','gandu','gand','gaandu','lodu','laudu','laudey',
+  'randi','randwa','harami','haramkhor','sala','saala','saale','kamina','kameena','kameene',
+  'bc','mc','lund','gaand','chut','bsdk','mkc','bkl','lode','bhosda','bhosdika',
+  'jhatu','jhaatu','tatto','tatton','kutte','kutta','kuttiya','suar','suwar',
+  'teri maa','tera baap','maa ki','baap ka','maa ka','maaki','baapka','maaka',
+  'ghatiya','nalayak','gadha','gadhe','ullu','bevkoof','bewkoof','pagal','pagla',
+  'tharki','chakka','hijra','halkat','haraamzada','haraamzaade','haramzada','haramzade',
+  'chodu','chodna','chod','chodumal','choduu',
+  // English vulgar
   'porn','sex','nude','boob','penis','vagina','anal','dildo','orgasm',
   'hentai','xxx','xnxx','pornhub','onlyfans','tits','cock',
-  'rape','molest','tera baap','teri maa','maderchod','laudu','jhatu','tatto',
+  'rape','molest',
 ];
 
 function containsLink(text: string): boolean {
@@ -74,6 +83,19 @@ function containsProfanity(text: string): boolean {
     const clean = word.replace(/[^a-z0-9]/g, '');
     return noSpace.includes(clean) || lower.split(/\s+/).some(w => w === clean);
   });
+}
+
+function getBlockedUsers(): string[] {
+  try { return JSON.parse(localStorage.getItem('ypt_blocked_users') || '[]'); } catch { return []; }
+}
+function setBlockedUsers(ids: string[]) {
+  localStorage.setItem('ypt_blocked_users', JSON.stringify(ids));
+}
+function isChatMuted(): boolean {
+  return localStorage.getItem('ypt_chat_muted') === 'true';
+}
+function setChatMuted(v: boolean) {
+  localStorage.setItem('ypt_chat_muted', v ? 'true' : 'false');
 }
 
 export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
@@ -92,8 +114,32 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedMsgId, setSelectedMsgId] = useState<string | null>(null);
   const [replyTo, setReplyTo] = useState<ChatMessage | null>(null);
+  const [muted, setMuted] = useState(() => isChatMuted());
+  const [blockedUsers, setBlockedUsersState] = useState<string[]>(() => getBlockedUsers());
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    setChatMuted(next);
+    toast.success(next ? 'Chat muted — no notifications' : 'Chat unmuted');
+  };
+
+  const blockUser = (userId: string, userName: string) => {
+    const updated = [...blockedUsers, userId];
+    setBlockedUsersState(updated);
+    setBlockedUsers(updated);
+    setSelectedMsgId(null);
+    toast.success(`${userName} blocked. Their messages are hidden.`);
+  };
+
+  const unblockUser = (userId: string) => {
+    const updated = blockedUsers.filter(id => id !== userId);
+    setBlockedUsersState(updated);
+    setBlockedUsers(updated);
+    toast.success('User unblocked');
+  };
 
   const { activeRoomId, presenceMembers, roomOnlineCounts, joinRoom, leaveRoom } = roomSession;
 
@@ -158,7 +204,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
           }
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
           setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
-          setUnreadCount(prev => prev + 1);
+          if (!isChatMuted()) setUnreadCount(prev => prev + 1);
         })();
       })
       .on('postgres_changes', {
@@ -442,16 +488,37 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
         {/* Chat Tab */}
         {roomTab === 'chat' && (
           <div className="flex-1 min-h-0 flex flex-col">
+            {/* Chat toolbar */}
+            <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/20 shrink-0">
+              <p className="text-xs text-muted-foreground">Messages auto-delete after 1 hour</p>
+              <div className="flex items-center gap-1">
+                {blockedUsers.length > 0 && (
+                  <button
+                    onClick={() => { setBlockedUsersState([]); setBlockedUsers([]); toast.success('All users unblocked'); }}
+                    className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
+                  >
+                    <ShieldBan className="h-3.5 w-3.5" /> {blockedUsers.length} blocked
+                  </button>
+                )}
+                <button
+                  onClick={toggleMute}
+                  className={`p-1.5 rounded-lg transition-colors ${muted ? 'text-destructive bg-destructive/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'}`}
+                  title={muted ? 'Unmute chat' : 'Mute chat'}
+                >
+                  {muted ? <BellOff className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
             <div ref={chatContainerRef} className="flex-1 min-h-0 overflow-auto pr-1">
               <div className="space-y-2 p-2">
-                {messages.length === 0 ? (
+                {messages.filter(m => !blockedUsers.includes(m.ypt_user_id)).length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground text-sm">
                     <MessageCircle className="h-8 w-8 mx-auto mb-2 opacity-40" />
                     No messages yet. Start the conversation!
-                    <p className="text-xs mt-1 opacity-60">Messages auto-delete after 1 hour</p>
                   </div>
                 ) : (
-                  messages.map((msg, i) => {
+                  messages.filter(m => !blockedUsers.includes(m.ypt_user_id)).map((msg, i) => {
                     const isMe = msg.ypt_user_id === currentUser.id;
                     const isSelected = selectedMsgId === msg.id;
                     const isReply = msg.message.startsWith('[reply:');
@@ -518,13 +585,21 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                             >
                               <Reply className="h-3.5 w-3.5" />
                             </button>
-                            {isMe && (
+                            {isMe ? (
                               <button
                                 onClick={() => deleteMessage(msg.id)}
                                 className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors"
                                 title="Delete"
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => blockUser(msg.ypt_user_id, msg.user_name || 'User')}
+                                className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors"
+                                title="Block user"
+                              >
+                                <Ban className="h-3.5 w-3.5" />
                               </button>
                             )}
                             <button
