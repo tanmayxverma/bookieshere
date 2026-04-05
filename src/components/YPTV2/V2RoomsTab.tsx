@@ -58,6 +58,9 @@ const BLOCKED_WORDS = [
   'nigger','nigga','fag','faggot','retard','chutiya','madarchod','bhenchod',
   'bhosdike','gandu','lodu','randi','harami','sala','saala','kamina','kameena',
   'bc','mc','lund','gaand','chut','bsdk','mkc','bkl',
+  'porn','sex','nude','boob','penis','vagina','anal','dildo','orgasm',
+  'hentai','xxx','xnxx','pornhub','onlyfans','tits','cock',
+  'rape','molest','tera baap','teri maa','maderchod','laudu','jhatu','tatto',
 ];
 
 function containsLink(text: string): boolean {
@@ -65,8 +68,13 @@ function containsLink(text: string): boolean {
 }
 
 function containsProfanity(text: string): boolean {
-  const lower = text.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return BLOCKED_WORDS.some(word => lower.includes(word.replace(/[^a-z0-9]/g, '')));
+  const lower = text.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+  const noSpace = lower.replace(/\s/g, '');
+  return BLOCKED_WORDS.some(word => {
+    const clean = word.replace(/[^a-z0-9]/g, '');
+    return noSpace.includes(clean) || lower.split(/\s+/).some(w => w === clean);
+  });
+}
 }
 
 export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
