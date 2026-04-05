@@ -87,7 +87,7 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
             No sessions recorded. Be the first!
           </Card>
         ) : (
-          <ScrollArea className="max-h-[55vh]">
+          <ScrollArea className="h-[55vh]">
             <div className="space-y-2 pr-2">
               {top10.map((u, i) => {
                 const isMe = u.userId === currentUserId;
