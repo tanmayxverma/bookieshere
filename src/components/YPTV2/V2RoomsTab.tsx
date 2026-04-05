@@ -488,16 +488,37 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
         {/* Chat Tab */}
         {roomTab === 'chat' && (
           <div className="flex-1 min-h-0 flex flex-col">
+            {/* Chat toolbar */}
+            <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/20 shrink-0">
+              <p className="text-xs text-muted-foreground">Messages auto-delete after 1 hour</p>
+              <div className="flex items-center gap-1">
+                {blockedUsers.length > 0 && (
+                  <button
+                    onClick={() => { setBlockedUsersState([]); setBlockedUsers([]); toast.success('All users unblocked'); }}
+                    className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
+                  >
+                    <ShieldBan className="h-3.5 w-3.5" /> {blockedUsers.length} blocked
+                  </button>
+                )}
+                <button
+                  onClick={toggleMute}
+                  className={`p-1.5 rounded-lg transition-colors ${muted ? 'text-destructive bg-destructive/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'}`}
+                  title={muted ? 'Unmute chat' : 'Mute chat'}
+                >
+                  {muted ? <BellOff className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
             <div ref={chatContainerRef} className="flex-1 min-h-0 overflow-auto pr-1">
               <div className="space-y-2 p-2">
-                {messages.length === 0 ? (
+                {messages.filter(m => !blockedUsers.includes(m.ypt_user_id)).length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground text-sm">
                     <MessageCircle className="h-8 w-8 mx-auto mb-2 opacity-40" />
                     No messages yet. Start the conversation!
-                    <p className="text-xs mt-1 opacity-60">Messages auto-delete after 1 hour</p>
                   </div>
                 ) : (
-                  messages.map((msg, i) => {
+                  messages.filter(m => !blockedUsers.includes(m.ypt_user_id)).map((msg, i) => {
                     const isMe = msg.ypt_user_id === currentUser.id;
                     const isSelected = selectedMsgId === msg.id;
                     const isReply = msg.message.startsWith('[reply:');
