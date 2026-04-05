@@ -204,7 +204,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
           }
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
           setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
-          setUnreadCount(prev => prev + 1);
+          if (!isChatMuted()) setUnreadCount(prev => prev + 1);
         })();
       })
       .on('postgres_changes', {
