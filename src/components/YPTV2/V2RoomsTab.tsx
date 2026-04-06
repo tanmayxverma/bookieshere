@@ -549,7 +549,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 ref={chatContainerRef}
                 className="flex-1 min-h-0 overflow-y-auto overscroll-contain ypt-scroll"
               >
-                <div className="flex flex-col justify-end min-h-full p-3 space-y-1.5">
+                <div className="flex flex-col justify-end min-h-full px-3 pt-3 pb-4 space-y-1.5">
                   {filteredMessages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                       <MessageCircle className="h-10 w-10 mb-3 opacity-30" />
