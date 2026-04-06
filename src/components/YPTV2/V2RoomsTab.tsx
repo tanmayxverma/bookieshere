@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, MoreVertical, X, BellOff, Bell, Ban, ShieldBan } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Share2, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 import type { RoomSession } from '@/hooks/useRoomSession';
@@ -56,7 +56,6 @@ interface ChatMessage {
 const BLOCKED_WORDS = [
   'fuck','shit','ass','bitch','dick','bastard','damn','cunt','slut','whore',
   'nigger','nigga','fag','faggot','retard',
-  // Hindi/Hinglish
   'chutiya','chutiye','chutia','madarchod','madarchodd','maderchod','bhenchod','bhencho','bhenchoo',
   'bhosdike','bhosdiwale','bhosdiwala','gandu','gand','gaandu','lodu','laudu','laudey',
   'randi','randwa','harami','haramkhor','sala','saala','saale','kamina','kameena','kameene',
@@ -66,7 +65,6 @@ const BLOCKED_WORDS = [
   'ghatiya','nalayak','gadha','gadhe','ullu','bevkoof','bewkoof','pagal','pagla',
   'tharki','chakka','hijra','halkat','haraamzada','haraamzaade','haramzada','haramzade',
   'chodu','chodna','chod','chodumal','choduu',
-  // English vulgar
   'porn','sex','nude','boob','penis','vagina','anal','dildo','orgasm',
   'hentai','xxx','xnxx','pornhub','onlyfans','tits','cock',
   'rape','molest',
@@ -105,7 +103,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [newDesc, setNewDesc] = useState('');
   const [newMax, setNewMax] = useState('');
   const [loading, setLoading] = useState(true);
-  const [roomTab, setRoomTab] = useState<'members' | 'chat'>('members');
+  const [roomView, setRoomView] = useState<'members' | 'chat'>('members');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [sendingChat, setSendingChat] = useState(false);
@@ -115,30 +113,25 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [selectedMsgId, setSelectedMsgId] = useState<string | null>(null);
   const [replyTo, setReplyTo] = useState<ChatMessage | null>(null);
   const [muted, setMuted] = useState(() => isChatMuted());
-  const [blockedUsers, setBlockedUsersState] = useState<string[]>(() => getBlockedUsers());
+  const [blockedUsersArr, setBlockedUsersState] = useState<string[]>(() => getBlockedUsers());
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const toggleMute = () => {
     const next = !muted;
     setMuted(next);
     setChatMuted(next);
-    toast.success(next ? 'Chat muted — no notifications' : 'Chat unmuted');
+    toast.success(next ? 'Chat muted' : 'Chat unmuted');
   };
 
   const blockUser = (userId: string, userName: string) => {
-    const updated = [...blockedUsers, userId];
+    const updated = [...blockedUsersArr, userId];
     setBlockedUsersState(updated);
     setBlockedUsers(updated);
     setSelectedMsgId(null);
-    toast.success(`${userName} blocked. Their messages are hidden.`);
-  };
-
-  const unblockUser = (userId: string) => {
-    const updated = blockedUsers.filter(id => id !== userId);
-    setBlockedUsersState(updated);
-    setBlockedUsers(updated);
-    toast.success('User unblocked');
+    toast.success(`${userName} blocked`);
   };
 
   const { activeRoomId, presenceMembers, roomOnlineCounts, joinRoom, leaveRoom } = roomSession;
@@ -183,6 +176,22 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     return () => { supabase.removeChannel(channel); };
   }, []);
 
+  // Auto-join room from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const joinId = params.get('joinRoom');
+    if (joinId && !activeRoomId && rooms.length > 0) {
+      const room = rooms.find(r => r.id === joinId);
+      if (room) {
+        handleJoinRoom(room);
+        // Clean URL
+        const url = new URL(window.location.href);
+        url.searchParams.delete('joinRoom');
+        window.history.replaceState({}, '', url.pathname + url.search);
+      }
+    }
+  }, [rooms, activeRoomId]);
+
   // Realtime chat
   useEffect(() => {
     if (!activeRoomId) return;
@@ -198,13 +207,13 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
           if (containsProfanity(msgText) || containsLink(msgText)) {
             await (supabase as any).from('room_messages').delete().eq('id', payload.new.id);
             if (payload.new.ypt_user_id === currentUser.id) {
-              toast.error('⚠️ Your message was auto-removed for violating chat guidelines. Repeated violations may lead to restrictions.', { duration: 5000 });
+              toast.error('⚠️ Message removed for violating guidelines.', { duration: 4000 });
             }
             return;
           }
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
           setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
-          if (!isChatMuted()) setUnreadCount(prev => prev + 1);
+          if (roomView !== 'chat' && !isChatMuted()) setUnreadCount(prev => prev + 1);
         })();
       })
       .on('postgres_changes', {
@@ -213,15 +222,21 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       }, () => { fetchMessages(activeRoomId); })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [activeRoomId, fetchMessages]);
+  }, [activeRoomId, fetchMessages, roomView]);
 
+  // Scroll to bottom when messages change (only if near bottom)
   useEffect(() => {
     const el = chatContainerRef.current;
-    if (el) {
-      requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
+    if (!el) return;
+    const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+    if (isNearBottom || messages.length <= 5) {
+      requestAnimationFrame(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      });
     }
   }, [messages]);
 
+  // Auto-cleanup interval
   useEffect(() => {
     if (!activeRoomId) return;
     const interval = setInterval(() => {
@@ -235,16 +250,16 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     const text = chatInput.trim();
     if (!text || sendingChat) return;
     if (containsProfanity(text)) {
-      toast.error('Message contains inappropriate language and was blocked.');
+      toast.error('Inappropriate language blocked.');
       setChatInput('');
       return;
     }
     if (containsLink(text)) {
-      toast.error('Links are not allowed in chat.');
+      toast.error('Links are not allowed.');
       return;
     }
     if (text.length > 500) {
-      toast.error('Message too long (max 500 characters)');
+      toast.error('Message too long (max 500 chars)');
       return;
     }
     setSendingChat(true);
@@ -254,15 +269,17 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       message: replyTo ? `[reply:${replyTo.user_name}] ${text}` : text,
     };
     const { error } = await (supabase as any).from('room_messages').insert(msgPayload);
-    if (error) toast.error('Failed to send message');
+    if (error) toast.error('Failed to send');
     setChatInput('');
     setReplyTo(null);
     setSendingChat(false);
+    // Keep focus on input
+    inputRef.current?.focus();
   };
 
   const copyMessage = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success('Message copied');
+    toast.success('Copied');
     setSelectedMsgId(null);
   };
 
@@ -270,7 +287,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     await (supabase as any).from('room_messages').delete().eq('id', msgId).eq('ypt_user_id', currentUser.id);
     setMessages(prev => prev.filter(m => m.id !== msgId));
     setSelectedMsgId(null);
-    toast.success('Message deleted');
+    toast.success('Deleted');
   };
 
   const handleMsgLongPress = (msgId: string) => {
@@ -284,7 +301,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     if (!chatCautionAccepted) {
       setShowChatCaution(true);
     } else {
-      setRoomTab('chat');
+      setRoomView('chat');
       setUnreadCount(0);
     }
   };
@@ -292,13 +309,13 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const acceptCaution = () => {
     setChatCautionAccepted(true);
     setShowChatCaution(false);
-    setRoomTab('chat');
+    setRoomView('chat');
     setUnreadCount(0);
   };
 
   const handleJoinRoom = async (room: Room) => {
     await joinRoom(room.id, room.name, room.emoji);
-    setRoomTab('members');
+    setRoomView('members');
     setChatCautionAccepted(false);
   };
 
@@ -306,15 +323,13 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     const leftRoomId = activeRoomId;
     await leaveRoom();
     setMessages([]);
-    setRoomTab('members');
+    setRoomView('members');
     setChatCautionAccepted(false);
-    // Immediately decrement the count for the room we just left (optimistic)
     if (leftRoomId) {
-      setRooms(prev => prev.map(r => 
+      setRooms(prev => prev.map(r =>
         r.id === leftRoomId ? { ...r, memberCount: Math.max(0, r.memberCount - 1) } : r
       ));
     }
-    // Then refresh after presence propagates
     setTimeout(() => fetchRooms(), 1500);
   };
 
@@ -333,7 +348,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     const name = newName.trim();
     if (!name || name.length > 40) return;
     if (containsProfanity(name) || containsProfanity(newDesc)) {
-      toast.error('Room name or description contains inappropriate language.');
+      toast.error('Inappropriate language in room name/description.');
       return;
     }
     await (supabase as any).from('ypt_rooms').insert({
@@ -351,306 +366,314 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     fetchRooms();
   };
 
+  const shareRoom = (roomId: string, roomName: string) => {
+    const url = `${window.location.origin}/ypt?joinRoom=${roomId}`;
+    navigator.clipboard.writeText(url);
+    toast.success(`Link copied for "${roomName}"`);
+  };
+
   const currentRoom = rooms.find(r => r.id === activeRoomId);
 
-  // Room detail view
+  // ═══════ ROOM DETAIL VIEW ═══════
   if (activeRoomId && currentRoom) {
-    return (
-      <div className="space-y-4 pop-in flex flex-col" style={{ minHeight: 'calc(100vh - 200px)', maxHeight: 'calc(100vh - 140px)' }}>
-        <button
-          onClick={handleLeaveRoom}
-          className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors shrink-0"
-        >
-          <ArrowLeft className="h-5 w-5" /> Back to Rooms
-        </button>
+    const filteredMessages = messages.filter(m => !blockedUsersArr.includes(m.ypt_user_id));
 
-        <Card className="p-5 border-border/50 shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl">
-                {currentRoom.emoji}
-              </div>
-              <div>
-                <h2 className="text-lg font-bold flex items-center gap-2">
-                  {currentRoom.name}
-                  {currentRoom.is_permanent && <Crown className="h-4 w-4 text-primary" />}
-                </h2>
-                {currentRoom.description && (
-                  <p className="text-sm text-muted-foreground">{currentRoom.description}</p>
-                )}
+    return (
+      <div className="flex flex-col pop-in" style={{ height: 'calc(100vh - 200px)' }}>
+        {/* Compact Header */}
+        <div className="shrink-0 pb-3 space-y-3">
+          {/* Top bar */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleLeaveRoom}
+              className="flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">{currentRoom.emoji}</span>
+                <h2 className="text-lg font-bold truncate">{currentRoom.name}</h2>
+                {currentRoom.is_permanent && <Crown className="h-4 w-4 text-primary shrink-0" />}
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                {presenceMembers.length} online
-              </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                {presenceMembers.length}
+              </span>
+              {!currentRoom.is_permanent && (
+                <button
+                  onClick={() => shareRoom(currentRoom.id, currentRoom.name)}
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
+                  title="Copy room link"
+                >
+                  <Share2 className="h-4 w-4" />
+                </button>
+              )}
               <Button
-                variant="outline" size="sm"
+                variant="ghost" size="sm"
                 onClick={handleLeaveRoom}
-                className="text-destructive border-destructive/20 hover:bg-destructive/10 active:scale-95 transition-transform"
+                className="h-8 px-2.5 text-destructive hover:bg-destructive/10"
               >
-                <LogOut className="h-4 w-4 mr-1" /> Leave
+                <LogOut className="h-4 w-4" />
               </Button>
             </div>
           </div>
-        </Card>
 
-        {/* Subject Switcher */}
-        <Card className="p-3 border-border/50 shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mr-1 shrink-0">Studying:</span>
-            <div className="flex gap-1.5 flex-wrap">
-              {ROOM_SUBJECTS.map(s => {
-                const Icon = s.icon;
-                const isActive = timer.subject === s.value;
-                return (
-                  <button
-                    key={s.value}
-                    onClick={() => switchSubject(s.value)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all active:scale-95 ${
-                      isActive
-                        ? 'bg-primary text-primary-foreground shadow-sm'
-                        : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground'
-                    }`}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    {s.label}
-                  </button>
-                );
-              })}
-            </div>
+          {/* Subject Switcher - compact */}
+          <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
+            {ROOM_SUBJECTS.map(s => {
+              const Icon = s.icon;
+              const isActive = timer.subject === s.value;
+              return (
+                <button
+                  key={s.value}
+                  onClick={() => switchSubject(s.value)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
+                    isActive
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {s.label}
+                </button>
+              );
+            })}
           </div>
-        </Card>
 
-        {/* Tab switcher */}
-        <div className="flex gap-2 shrink-0">
-          <Button
-            variant={roomTab === 'members' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setRoomTab('members')}
-            className="flex-1 h-10 text-sm font-semibold active:scale-95 transition-transform"
-          >
-            <Users className="h-4 w-4 mr-2" /> Online ({presenceMembers.length})
-          </Button>
-          <Button
-            variant={roomTab === 'chat' ? 'default' : 'outline'}
-            size="sm"
-            onClick={handleChatTabClick}
-            className="flex-1 h-10 text-sm font-semibold active:scale-95 transition-transform"
-          >
-            <MessageCircle className="h-4 w-4 mr-2" /> Chat
-            {unreadCount > 0 && roomTab !== 'chat' && (
-              <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-primary/20 text-[11px] font-bold">
-                {unreadCount}
-              </span>
-            )}
-          </Button>
+          {/* Tab switcher */}
+          <div className="flex rounded-xl bg-muted/40 p-1 gap-1">
+            <button
+              onClick={() => setRoomView('members')}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-semibold transition-all ${
+                roomView === 'members'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Users className="h-4 w-4" />
+              Online ({presenceMembers.length})
+            </button>
+            <button
+              onClick={handleChatTabClick}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-semibold transition-all ${
+                roomView === 'chat'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <MessageCircle className="h-4 w-4" />
+              Chat
+              {unreadCount > 0 && roomView !== 'chat' && (
+                <span className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold min-w-[18px] text-center">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Members Tab */}
-        {roomTab === 'members' && (
-          <div className="flex-1 min-h-0 overflow-auto">
-            <div className="space-y-2 pr-1">
-              {presenceMembers.length === 0 ? (
-                <Card className="p-8 text-center border-border/50 text-muted-foreground text-base">
-                  No one else is here yet. Share this room!
-                </Card>
-              ) : (
-                presenceMembers.map((m, i) => {
-                  const isMe = m.user_id === currentUser.id;
-                  return (
-                    <Card
-                      key={m.user_id}
-                      className={`p-3.5 flex items-center gap-3 border-border/30 card-glow pop-in ${isMe ? 'border-primary/20 bg-primary/5' : ''}`}
-                      style={{ animationDelay: `${i * 0.04}s` }}
-                    >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-                        isMe ? 'bg-primary/15 text-primary' : 'bg-muted text-foreground/70'
-                      }`}>
-                        {m.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-base font-semibold truncate ${isMe ? 'text-primary' : ''}`}>
-                          {m.name} {isMe && <span className="text-xs text-muted-foreground">(you)</span>}
-                        </p>
-                        <p className="text-sm text-muted-foreground">{m.jee_focus_year}</p>
-                      </div>
-                      <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shrink-0" />
-                    </Card>
-                  );
-                })
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Chat Tab */}
-        {roomTab === 'chat' && (
-          <div className="flex-1 min-h-0 flex flex-col">
-            {/* Chat toolbar */}
-            <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/20 shrink-0">
-              <p className="text-xs text-muted-foreground">Messages auto-delete after 1 hour</p>
-              <div className="flex items-center gap-1">
-                {blockedUsers.length > 0 && (
-                  <button
-                    onClick={() => { setBlockedUsersState([]); setBlockedUsers([]); toast.success('All users unblocked'); }}
-                    className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
-                  >
-                    <ShieldBan className="h-3.5 w-3.5" /> {blockedUsers.length} blocked
-                  </button>
-                )}
-                <button
-                  onClick={toggleMute}
-                  className={`p-1.5 rounded-lg transition-colors ${muted ? 'text-destructive bg-destructive/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'}`}
-                  title={muted ? 'Unmute chat' : 'Mute chat'}
-                >
-                  {muted ? <BellOff className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-
-            <div ref={chatContainerRef} className="flex-1 min-h-0 overflow-auto pr-1">
-              <div className="space-y-2 p-2">
-                {messages.filter(m => !blockedUsers.includes(m.ypt_user_id)).length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground text-sm">
-                    <MessageCircle className="h-8 w-8 mx-auto mb-2 opacity-40" />
-                    No messages yet. Start the conversation!
+        {/* ═══ MAIN CONTENT AREA — fills remaining space ═══ */}
+        <div className="flex-1 min-h-0 flex flex-col">
+          {/* Members view */}
+          {roomView === 'members' && (
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-1 ypt-scroll">
+              <div className="space-y-2">
+                {presenceMembers.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+                    <Users className="h-10 w-10 mb-3 opacity-30" />
+                    <p className="text-base font-medium">No one else here yet</p>
+                    <p className="text-sm mt-1">Share this room to study together!</p>
                   </div>
                 ) : (
-                  messages.filter(m => !blockedUsers.includes(m.ypt_user_id)).map((msg, i) => {
-                    const isMe = msg.ypt_user_id === currentUser.id;
-                    const isSelected = selectedMsgId === msg.id;
-                    const isReply = msg.message.startsWith('[reply:');
-                    let replyAuthor = '';
-                    let displayMsg = msg.message;
-                    if (isReply) {
-                      const match = msg.message.match(/^\[reply:(.+?)\]\s?(.*)/s);
-                      if (match) { replyAuthor = match[1]; displayMsg = match[2]; }
-                    }
+                  presenceMembers.map((m, i) => {
+                    const isMe = m.user_id === currentUser.id;
                     return (
                       <div
-                        key={msg.id}
-                        className={`relative flex items-end gap-1 ${isMe ? 'justify-end' : 'justify-start'} pop-in group`}
-                        style={{ animationDelay: `${Math.min(i * 0.02, 0.3)}s` }}
-                        onContextMenu={e => { e.preventDefault(); setSelectedMsgId(isSelected ? null : msg.id); }}
-                        onTouchStart={() => handleMsgLongPress(msg.id)}
-                        onTouchEnd={cancelLongPress}
-                        onTouchMove={cancelLongPress}
-                      >
-                        {isMe && (
-                          <button
-                            onClick={() => deleteMessage(msg.id)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive mb-1 shrink-0"
-                            title="Delete"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                        <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 transition-all ${
+                        key={m.user_id}
+                        className={`flex items-center gap-3 p-3.5 rounded-xl transition-all pop-in ${
                           isMe
-                            ? 'bg-primary text-primary-foreground rounded-br-md'
-                            : 'bg-muted rounded-bl-md'
-                        } ${isSelected ? 'ring-2 ring-primary/40 scale-[1.02]' : ''}`}>
-                          {!isMe && (
-                            <p className="text-[11px] font-semibold text-primary mb-0.5">{msg.user_name}</p>
-                          )}
-                          {isReply && replyAuthor && (
-                            <div className={`text-[11px] px-2 py-1 rounded mb-1.5 border-l-2 ${
-                              isMe ? 'bg-primary-foreground/10 border-primary-foreground/30' : 'bg-background/50 border-primary/40'
-                            }`}>
-                              <span className="font-semibold">↩ {replyAuthor}</span>
-                            </div>
-                          )}
-                          <p className="text-sm leading-relaxed break-words">{displayMsg}</p>
-                          <p className={`text-[10px] mt-1 ${isMe ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>
-                            {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                          </p>
+                            ? 'bg-primary/5 border border-primary/15'
+                            : 'bg-muted/30 border border-border/20'
+                        }`}
+                        style={{ animationDelay: `${i * 0.04}s` }}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+                          isMe ? 'bg-primary/15 text-primary' : 'bg-muted text-foreground/70'
+                        }`}>
+                          {m.name.charAt(0).toUpperCase()}
                         </div>
-
-                        {/* Message actions popover */}
-                        {isSelected && (
-                          <div className={`absolute z-30 ${isMe ? 'right-0' : 'left-0'} -top-10 flex items-center gap-1 px-2 py-1.5 rounded-xl liquid-glass-strong shadow-lg pop-in`}>
-                            <button
-                              onClick={() => copyMessage(displayMsg)}
-                              className="p-1.5 rounded-lg hover:bg-muted/80 text-foreground/70 hover:text-foreground transition-colors"
-                              title="Copy"
-                            >
-                              <Copy className="h-3.5 w-3.5" />
-                            </button>
-                            <button
-                              onClick={() => { setReplyTo(msg); setSelectedMsgId(null); }}
-                              className="p-1.5 rounded-lg hover:bg-muted/80 text-foreground/70 hover:text-foreground transition-colors"
-                              title="Reply"
-                            >
-                              <Reply className="h-3.5 w-3.5" />
-                            </button>
-                            {isMe ? (
-                              <button
-                                onClick={() => deleteMessage(msg.id)}
-                                className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors"
-                                title="Delete"
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => blockUser(msg.ypt_user_id, msg.user_name || 'User')}
-                                className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors"
-                                title="Block user"
-                              >
-                                <Ban className="h-3.5 w-3.5" />
-                              </button>
-                            )}
-                            <button
-                              onClick={() => setSelectedMsgId(null)}
-                              className="p-1.5 rounded-lg hover:bg-muted/80 text-foreground/40 hover:text-foreground transition-colors"
-                            >
-                              <X className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-[15px] font-semibold truncate ${isMe ? 'text-primary' : ''}`}>
+                            {m.name} {isMe && <span className="text-xs text-muted-foreground font-normal">(you)</span>}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{m.jee_focus_year}</p>
+                        </div>
+                        <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shrink-0" />
                       </div>
                     );
                   })
                 )}
               </div>
             </div>
+          )}
 
-            {/* Reply bar */}
-            {replyTo && (
-              <div className="flex items-center gap-2 px-3 py-2 border-t border-border/30 bg-muted/30 shrink-0">
-                <Reply className="h-4 w-4 text-primary shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-primary truncate">Replying to {replyTo.user_name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{replyTo.message.replace(/^\[reply:.+?\]\s?/, '')}</p>
+          {/* Chat view — full remaining space */}
+          {roomView === 'chat' && (
+            <div className="flex-1 min-h-0 flex flex-col">
+              {/* Chat toolbar */}
+              <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/20 shrink-0">
+                <p className="text-[11px] text-muted-foreground">Auto-delete after 1hr</p>
+                <div className="flex items-center gap-1">
+                  {blockedUsersArr.length > 0 && (
+                    <button
+                      onClick={() => { setBlockedUsersState([]); setBlockedUsers([]); toast.success('All unblocked'); }}
+                      className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
+                    >
+                      <ShieldBan className="h-3 w-3" /> {blockedUsersArr.length}
+                    </button>
+                  )}
+                  <button
+                    onClick={toggleMute}
+                    className={`p-1.5 rounded-lg transition-colors ${muted ? 'text-destructive bg-destructive/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'}`}
+                  >
+                    {muted ? <BellOff className="h-3.5 w-3.5" /> : <Bell className="h-3.5 w-3.5" />}
+                  </button>
                 </div>
-                <button onClick={() => setReplyTo(null)} className="p-1 rounded hover:bg-muted shrink-0">
-                  <X className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
               </div>
-            )}
 
-            <div className="flex gap-2 pt-3 border-t border-border/30 shrink-0">
-              <Input
-                placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message..."}
-                value={chatInput}
-                onChange={e => setChatInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-                maxLength={500}
-                className="flex-1 h-11 text-sm"
-                disabled={sendingChat}
-              />
-              <Button
-                onClick={sendMessage}
-                disabled={!chatInput.trim() || sendingChat}
-                className="h-11 px-4 active:scale-95 transition-transform"
+              {/* Messages — scrollable, flex-grow, starts from bottom */}
+              <div
+                ref={chatContainerRef}
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain ypt-scroll"
               >
-                <Send className="h-4 w-4" />
-              </Button>
+                <div className="flex flex-col justify-end min-h-full p-3 space-y-1.5">
+                  {filteredMessages.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+                      <MessageCircle className="h-10 w-10 mb-3 opacity-30" />
+                      <p className="text-base font-medium">No messages yet</p>
+                      <p className="text-sm mt-1">Start the conversation!</p>
+                    </div>
+                  ) : (
+                    filteredMessages.map((msg) => {
+                      const isMe = msg.ypt_user_id === currentUser.id;
+                      const isSelected = selectedMsgId === msg.id;
+                      const isReply = msg.message.startsWith('[reply:');
+                      let replyAuthor = '';
+                      let displayMsg = msg.message;
+                      if (isReply) {
+                        const match = msg.message.match(/^\[reply:(.+?)\]\s?(.*)/s);
+                        if (match) { replyAuthor = match[1]; displayMsg = match[2]; }
+                      }
+
+                      return (
+                        <div
+                          key={msg.id}
+                          className={`relative flex items-end gap-1 ${isMe ? 'justify-end' : 'justify-start'} group`}
+                          onContextMenu={e => { e.preventDefault(); setSelectedMsgId(isSelected ? null : msg.id); }}
+                          onTouchStart={() => handleMsgLongPress(msg.id)}
+                          onTouchEnd={cancelLongPress}
+                          onTouchMove={cancelLongPress}
+                        >
+                          {isMe && (
+                            <button
+                              onClick={() => deleteMessage(msg.id)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive mb-1 shrink-0"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </button>
+                          )}
+                          <div className={`max-w-[78%] rounded-2xl px-3.5 py-2 transition-all ${
+                            isMe
+                              ? 'bg-primary text-primary-foreground rounded-br-md'
+                              : 'bg-muted/60 rounded-bl-md'
+                          } ${isSelected ? 'ring-2 ring-primary/40 scale-[1.02]' : ''}`}>
+                            {!isMe && (
+                              <p className="text-[11px] font-bold text-primary mb-0.5">{msg.user_name}</p>
+                            )}
+                            {isReply && replyAuthor && (
+                              <div className={`text-[11px] px-2 py-1 rounded mb-1 border-l-2 ${
+                                isMe ? 'bg-primary-foreground/10 border-primary-foreground/30' : 'bg-background/50 border-primary/40'
+                              }`}>
+                                <span className="font-semibold">↩ {replyAuthor}</span>
+                              </div>
+                            )}
+                            <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{displayMsg}</p>
+                            <p className={`text-[10px] mt-0.5 ${isMe ? 'text-primary-foreground/50' : 'text-muted-foreground/70'}`}>
+                              {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                          </div>
+
+                          {/* Message actions popover */}
+                          {isSelected && (
+                            <div className={`absolute z-30 ${isMe ? 'right-0' : 'left-0'} -top-10 flex items-center gap-0.5 px-1.5 py-1 rounded-xl bg-background/95 border border-border/40 shadow-lg backdrop-blur-xl pop-in`}>
+                              <button onClick={() => copyMessage(displayMsg)} className="p-1.5 rounded-lg hover:bg-muted text-foreground/70 hover:text-foreground transition-colors">
+                                <Copy className="h-3.5 w-3.5" />
+                              </button>
+                              <button onClick={() => { setReplyTo(msg); setSelectedMsgId(null); }} className="p-1.5 rounded-lg hover:bg-muted text-foreground/70 hover:text-foreground transition-colors">
+                                <Reply className="h-3.5 w-3.5" />
+                              </button>
+                              {isMe ? (
+                                <button onClick={() => deleteMessage(msg.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors">
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                              ) : (
+                                <button onClick={() => blockUser(msg.ypt_user_id, msg.user_name || 'User')} className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors">
+                                  <Ban className="h-3.5 w-3.5" />
+                                </button>
+                              )}
+                              <button onClick={() => setSelectedMsgId(null)} className="p-1.5 rounded-lg hover:bg-muted text-foreground/40 hover:text-foreground transition-colors">
+                                <X className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                  <div ref={chatEndRef} />
+                </div>
+              </div>
+
+              {/* Reply bar */}
+              {replyTo && (
+                <div className="flex items-center gap-2 px-3 py-2 border-t border-border/20 bg-muted/20 shrink-0">
+                  <Reply className="h-4 w-4 text-primary shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-primary truncate">Replying to {replyTo.user_name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{replyTo.message.replace(/^\[reply:.+?\]\s?/, '')}</p>
+                  </div>
+                  <button onClick={() => setReplyTo(null)} className="p-1 rounded hover:bg-muted shrink-0">
+                    <X className="h-3.5 w-3.5 text-muted-foreground" />
+                  </button>
+                </div>
+              )}
+
+              {/* Input bar */}
+              <div className="flex gap-2 p-3 border-t border-border/20 shrink-0 bg-background/80 backdrop-blur-sm">
+                <Input
+                  ref={inputRef}
+                  placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message..."}
+                  value={chatInput}
+                  onChange={e => setChatInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+                  maxLength={500}
+                  className="flex-1 h-11 text-sm bg-muted/30 border-border/30"
+                  disabled={sendingChat}
+                />
+                <Button
+                  onClick={sendMessage}
+                  disabled={!chatInput.trim() || sendingChat}
+                  className="h-11 w-11 p-0 active:scale-95 transition-transform"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Chat Caution Dialog */}
         <Dialog open={showChatCaution} onOpenChange={setShowChatCaution}>
@@ -665,19 +688,16 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-3 pt-2 text-sm">
-              <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-foreground">
+              <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
                 <p className="font-semibold mb-2">⚠️ Rules</p>
-                <ul className="space-y-1.5 text-muted-foreground">
-                  <li>• No abusive, vulgar, or offensive language</li>
-                  <li>• No spam or irrelevant messages</li>
+                <ul className="space-y-1.5 text-muted-foreground text-[13px]">
+                  <li>• No abusive or offensive language</li>
+                  <li>• No spam, links, or irrelevant messages</li>
                   <li>• Be respectful to fellow students</li>
                   <li>• Messages auto-delete after 1 hour</li>
-                  <li>• Inappropriate messages are auto-blocked</li>
+                  <li>• Violations are auto-blocked</li>
                 </ul>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Violating these rules may result in your messages being removed automatically.
-              </p>
               <Button onClick={acceptCaution} className="w-full h-11 text-sm font-semibold active:scale-95 transition-transform">
                 I Understand, Open Chat
               </Button>
@@ -688,14 +708,12 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     );
   }
 
-  // Rooms list view
+  // ═══════ ROOMS LIST VIEW ═══════
   if (loading) {
     return (
       <div className="space-y-4 pop-in">
         {[1, 2, 3].map(i => (
-          <Card key={i} className="p-6 border-border/50 animate-pulse">
-            <div className="h-14 bg-muted rounded-xl" />
-          </Card>
+          <div key={i} className="h-20 bg-muted/30 rounded-2xl animate-pulse" />
         ))}
       </div>
     );
@@ -708,21 +726,22 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     <div className="space-y-5 pop-in">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Study Rooms</h3>
-          <p className="text-sm text-muted-foreground mt-1">Join a room to study with others</p>
+          <h3 className="text-base font-bold">Study Rooms</h3>
+          <p className="text-sm text-muted-foreground mt-0.5">Join a room to study together</p>
         </div>
         <Button
           variant="outline"
           className="active:scale-95 transition-transform h-10"
           onClick={() => setShowCreate(true)}
         >
-          <Plus className="h-4 w-4 mr-2" /> Create Room
+          <Plus className="h-4 w-4 mr-2" /> Create
         </Button>
       </div>
 
       <div className="space-y-3">
         {permanentRooms.map((room, idx) => (
-          <RoomCard key={room.id} room={room} index={idx} currentUserId={currentUser.id} onJoin={() => handleJoinRoom(room)} onDelete={undefined} />
+          <RoomCard key={room.id} room={room} index={idx} currentUserId={currentUser.id}
+            onJoin={() => handleJoinRoom(room)} onDelete={undefined} onShare={undefined} />
         ))}
       </div>
 
@@ -733,6 +752,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             <RoomCard key={room.id} room={room} index={idx + permanentRooms.length} currentUserId={currentUser.id}
               onJoin={() => handleJoinRoom(room)}
               onDelete={room.created_by === currentUser.id ? () => deleteRoom(room.id) : undefined}
+              onShare={() => shareRoom(room.id, room.name)}
             />
           ))}
         </div>
@@ -741,13 +761,13 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Create a Study Room</DialogTitle>
+            <DialogTitle className="text-xl font-bold">Create Study Room</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <Input placeholder="Room name" value={newName} onChange={e => setNewName(e.target.value)} maxLength={40} className="h-12 text-base" />
             <Input placeholder="Description (optional)" value={newDesc} onChange={e => setNewDesc(e.target.value)} maxLength={100} className="h-12 text-base" />
             <Input placeholder="Max participants (optional)" type="number" value={newMax} onChange={e => setNewMax(e.target.value)} min={2} max={50} className="h-12 text-base" />
-            <p className="text-xs text-muted-foreground">Custom rooms auto-delete after 1 hour of inactivity.</p>
+            <p className="text-xs text-muted-foreground">Custom rooms auto-delete after 1hr of inactivity.</p>
             <Button onClick={createRoom} disabled={!newName.trim()} className="w-full h-12 text-base active:scale-95 transition-transform">
               Create Room
             </Button>
@@ -758,44 +778,48 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   );
 }
 
-function RoomCard({ room, index, currentUserId, onJoin, onDelete }: {
-  room: Room; index: number; currentUserId: string; onJoin: () => void; onDelete?: () => void;
+function RoomCard({ room, index, currentUserId, onJoin, onDelete, onShare }: {
+  room: Room; index: number; currentUserId: string; onJoin: () => void; onDelete?: () => void; onShare?: () => void;
 }) {
   const isFull = room.max_participants ? room.memberCount >= room.max_participants : false;
 
   return (
-    <Card
-      className="group border-border/30 overflow-hidden hover:border-border/60 hover:shadow-md transition-all duration-300 card-glow pop-in"
-      style={{ animationDelay: `${index * 0.08}s` }}
+    <div
+      className="group rounded-2xl border border-border/30 bg-card/50 hover:border-border/60 hover:shadow-md transition-all duration-300 overflow-hidden pop-in"
+      style={{ animationDelay: `${index * 0.06}s` }}
     >
-      <div className="p-5 flex items-center gap-4">
-        <div className="w-14 h-14 rounded-2xl bg-primary/8 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300">
+      <div className="p-4 sm:p-5 flex items-center gap-4">
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/8 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300">
           {room.emoji}
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-bold text-base flex items-center gap-2">
+          <h4 className="font-bold text-[15px] flex items-center gap-2">
             {room.name}
-            {room.is_permanent && <Crown className="h-4 w-4 text-primary" />}
+            {room.is_permanent && <Crown className="h-4 w-4 text-primary shrink-0" />}
           </h4>
           <p className="text-sm text-muted-foreground truncate">
             {room.description || 'Open study room'}
           </p>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {room.memberCount > 0 && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-500 text-sm font-medium">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
               {room.memberCount}
             </span>
           )}
-          {room.max_participants && (
-            <span className="text-xs text-muted-foreground font-medium">
-              {room.memberCount}/{room.max_participants}
-            </span>
+          {onShare && (
+            <button
+              onClick={e => { e.stopPropagation(); onShare(); }}
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
+              title="Copy invite link"
+            >
+              <Link2 className="h-4 w-4" />
+            </button>
           )}
           <Button
             variant={room.is_permanent ? 'default' : 'outline'}
-            className="h-10 px-5 text-sm font-semibold active:scale-95 transition-transform"
+            className="h-9 px-4 text-sm font-semibold active:scale-95 transition-transform"
             onClick={onJoin}
             disabled={isFull}
           >
@@ -811,6 +835,6 @@ function RoomCard({ room, index, currentUserId, onJoin, onDelete }: {
           )}
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
