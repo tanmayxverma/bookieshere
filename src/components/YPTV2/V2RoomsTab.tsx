@@ -379,7 +379,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     const filteredMessages = messages.filter(m => !blockedUsersArr.includes(m.ypt_user_id));
 
     return (
-      <div className="flex flex-col pop-in" style={{ height: 'calc(100vh - 200px)' }}>
+      <div className="flex flex-col pop-in" style={{ height: 'calc(100vh - 140px)', minHeight: '520px' }}>
         {/* Compact Header */}
         <div className="shrink-0 pb-3 space-y-3">
           {/* Top bar */}
