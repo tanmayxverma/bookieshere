@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Share2, Link2 } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan } from 'lucide-react';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 import type { RoomSession } from '@/hooks/useRoomSession';
@@ -175,22 +175,6 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, []);
-
-  // Auto-join room from URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const joinId = params.get('joinRoom');
-    if (joinId && !activeRoomId && rooms.length > 0) {
-      const room = rooms.find(r => r.id === joinId);
-      if (room) {
-        handleJoinRoom(room);
-        // Clean URL
-        const url = new URL(window.location.href);
-        url.searchParams.delete('joinRoom');
-        window.history.replaceState({}, '', url.pathname + url.search);
-      }
-    }
-  }, [rooms, activeRoomId]);
 
   // Realtime chat
   useEffect(() => {
@@ -366,12 +350,6 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     fetchRooms();
   };
 
-  const shareRoom = (roomId: string, roomName: string) => {
-    const url = `${window.location.origin}/ypt?joinRoom=${roomId}`;
-    navigator.clipboard.writeText(url);
-    toast.success(`Link copied for "${roomName}"`);
-  };
-
   const currentRoom = rooms.find(r => r.id === activeRoomId);
 
   // ═══════ ROOM DETAIL VIEW ═══════
@@ -379,7 +357,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     const filteredMessages = messages.filter(m => !blockedUsersArr.includes(m.ypt_user_id));
 
     return (
-      <div className="flex flex-col pop-in" style={{ height: 'calc(100vh - 140px)', minHeight: '520px' }}>
+      <div className="flex flex-col pop-in" style={{ height: 'calc(100vh - 56px)', minHeight: '780px' }}>
         {/* Compact Header */}
         <div className="shrink-0 pb-3 space-y-3">
           {/* Top bar */}
@@ -402,15 +380,6 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                 {presenceMembers.length}
               </span>
-              {!currentRoom.is_permanent && (
-                <button
-                  onClick={() => shareRoom(currentRoom.id, currentRoom.name)}
-                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
-                  title="Copy room link"
-                >
-                  <Share2 className="h-4 w-4" />
-                </button>
-              )}
               <Button
                 variant="ghost" size="sm"
                 onClick={handleLeaveRoom}
@@ -485,7 +454,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                   <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                     <Users className="h-10 w-10 mb-3 opacity-30" />
                     <p className="text-base font-medium">No one else here yet</p>
-                    <p className="text-sm mt-1">Share this room to study together!</p>
+                    <p className="text-sm mt-1">Others can join this room from the rooms list.</p>
                   </div>
                 ) : (
                   presenceMembers.map((m, i) => {
@@ -549,7 +518,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 ref={chatContainerRef}
                 className="flex-1 min-h-0 overflow-y-auto overscroll-contain ypt-scroll"
               >
-                <div className="flex flex-col justify-end min-h-full px-3 pt-3 pb-4 space-y-1.5">
+                <div className="flex flex-col justify-end min-h-full px-3 pt-4 pb-8 space-y-2">
                   {filteredMessages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                       <MessageCircle className="h-10 w-10 mb-3 opacity-30" />
@@ -741,7 +710,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       <div className="space-y-3">
         {permanentRooms.map((room, idx) => (
           <RoomCard key={room.id} room={room} index={idx} currentUserId={currentUser.id}
-            onJoin={() => handleJoinRoom(room)} onDelete={undefined} onShare={undefined} />
+            onJoin={() => handleJoinRoom(room)} onDelete={undefined} />
         ))}
       </div>
 
@@ -752,7 +721,6 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             <RoomCard key={room.id} room={room} index={idx + permanentRooms.length} currentUserId={currentUser.id}
               onJoin={() => handleJoinRoom(room)}
               onDelete={room.created_by === currentUser.id ? () => deleteRoom(room.id) : undefined}
-              onShare={() => shareRoom(room.id, room.name)}
             />
           ))}
         </div>
@@ -778,8 +746,8 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   );
 }
 
-function RoomCard({ room, index, currentUserId, onJoin, onDelete, onShare }: {
-  room: Room; index: number; currentUserId: string; onJoin: () => void; onDelete?: () => void; onShare?: () => void;
+function RoomCard({ room, index, currentUserId, onJoin, onDelete }: {
+  room: Room; index: number; currentUserId: string; onJoin: () => void; onDelete?: () => void;
 }) {
   const isFull = room.max_participants ? room.memberCount >= room.max_participants : false;
 
@@ -807,15 +775,6 @@ function RoomCard({ room, index, currentUserId, onJoin, onDelete, onShare }: {
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
               {room.memberCount}
             </span>
-          )}
-          {onShare && (
-            <button
-              onClick={e => { e.stopPropagation(); onShare(); }}
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
-              title="Copy invite link"
-            >
-              <Link2 className="h-4 w-4" />
-            </button>
           )}
           <Button
             variant={room.is_permanent ? 'default' : 'outline'}
