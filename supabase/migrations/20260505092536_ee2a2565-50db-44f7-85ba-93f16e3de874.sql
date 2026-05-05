@@ -1,0 +1,2 @@
+ALTER TABLE public.materials DROP CONSTRAINT IF EXISTS materials_badge_check;
+ALTER TABLE public.materials ADD CONSTRAINT materials_badge_check CHECK (badge IS NULL OR badge IN ('premium','air','core','new','updated'));
