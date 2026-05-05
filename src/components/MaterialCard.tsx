@@ -29,6 +29,8 @@ export function MaterialCard({ material }: MaterialCardProps) {
     premium: "bg-amber-500 text-white",
     air: "bg-blue-600 text-white",
     core: "bg-orange-600 text-white",
+    new: "bg-emerald-600 text-white",
+    updated: "bg-sky-600 text-white",
   };
 
   const handleDownload = () => {
