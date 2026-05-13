@@ -1,9 +1,9 @@
-import { 
-  CheckCircle2, XCircle, MinusCircle, Trophy, BarChart3, RotateCcw, ChevronDown, ChevronUp
+import {
+  CheckCircle2, XCircle, MinusCircle, BarChart3, RotateCcw,
+  ChevronDown, ChevronUp, Sparkles, Award, Target,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -68,72 +68,83 @@ export function PracticeTestResults({ testState, onNewTest }: PracticeTestResult
   const negativeMarksLost = testState.incorrectCount * 1;
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <Card className="mb-8 overflow-hidden animate-fade-in">
-          <div className="bg-gradient-to-r from-primary to-violet-500 p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="font-display text-2xl font-bold mb-1">Test Completed!</h1>
-                <p className="text-white/80">
-                  {testState.testType === "jee_main" ? "JEE Main" : "JEE Advanced"} Type Practice
-                </p>
+    <div className="relative min-h-screen bg-background py-12 overflow-hidden">
+      {/* Ambient glows */}
+      <div aria-hidden className="pointer-events-none absolute -top-32 left-1/4 w-[500px] h-[500px] rounded-full bg-primary/10 blur-[140px]" />
+      <div aria-hidden className="pointer-events-none absolute top-1/2 -right-40 w-[400px] h-[400px] rounded-full bg-accent/10 blur-[120px]" />
+
+      <div className="container mx-auto px-4 max-w-5xl relative">
+        {/* Editorial Hero Score Card */}
+        <div className="relative mb-8 animate-fade-in">
+          <div className="absolute -inset-1 bg-gradient-to-br from-primary/15 via-transparent to-accent/15 rounded-[2rem] blur-2xl opacity-70" aria-hidden />
+          <div className="relative rounded-3xl border border-border/40 bg-card/50 backdrop-blur-xl overflow-hidden shadow-[0_30px_80px_-30px_hsl(var(--primary)/0.3)]">
+            {/* Top stripe */}
+            <div className="h-1 bg-gradient-to-r from-primary via-accent to-primary" />
+
+            <div className="p-7 md:p-9">
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-2/60 backdrop-blur border border-border/40 text-[10px] font-semibold tracking-[0.18em] uppercase text-muted-foreground">
+                      <Award className="h-3 w-3 text-primary" /> Result
+                    </span>
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">
+                      {testState.testType === "jee_main" ? "JEE Main Type" : "JEE Advanced Type"} · Practice
+                    </span>
+                  </div>
+                  <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight leading-[0.95]">
+                    <span className="italic">Test </span>
+                    <span className="text-muted-foreground/60">complete.</span>
+                  </h1>
+                  <p className="text-sm text-muted-foreground mt-2">Here's how you did, broken down question by question.</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 mb-1">Final Score</p>
+                  <div className="flex items-baseline gap-2 justify-end">
+                    <span className={`font-display text-6xl md:text-7xl font-bold tabular-nums leading-none ${getScoreColor()}`}>
+                      {testState.score}
+                    </span>
+                    <span className="text-2xl text-muted-foreground/60 font-mono">/{totalMarks}</span>
+                  </div>
+                  <p className={`text-sm font-mono mt-1 ${getScoreColor()}`}>{percentage}%</p>
+                </div>
               </div>
-              <Trophy className="h-12 w-12 text-yellow-300" />
+
+              {/* Score progress */}
+              <div className="mb-8">
+                <Progress value={Math.max(0, percentage)} className="h-2 rounded-full" />
+              </div>
+
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <StatTile icon={<CheckCircle2 className="h-4 w-4" />} label="Correct" value={testState.correctCount} tone="success" />
+                <StatTile icon={<XCircle className="h-4 w-4" />} label="Incorrect" value={testState.incorrectCount} tone="danger" />
+                <StatTile icon={<MinusCircle className="h-4 w-4" />} label="Unattempted" value={testState.unattemptedCount} tone="neutral" />
+                <StatTile icon={<Target className="h-4 w-4" />} label="Negative" value={`−${negativeMarksLost}`} tone="danger" />
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3 mt-8 pt-6 border-t border-border/30">
+                <p className="text-xs text-muted-foreground">
+                  <Sparkles className="inline h-3 w-3 text-accent mr-1" />
+                  Review each solution below to lock in the concepts.
+                </p>
+                <Button onClick={onNewTest} className="gap-2 rounded-xl bg-foreground text-background hover:bg-foreground/90">
+                  <RotateCcw className="h-4 w-4" /> Take Another Test
+                </Button>
+              </div>
             </div>
           </div>
-          <CardContent className="p-6">
-            <div className="grid md:grid-cols-5 gap-6">
-              <div className="text-center">
-                <div className={`text-4xl font-bold ${getScoreColor()}`}>{testState.score}</div>
-                <div className="text-sm text-muted-foreground">out of {totalMarks}</div>
-                <Progress value={Math.max(0, percentage)} className="mt-2 h-2" />
-                <div className="text-xs text-muted-foreground mt-1">{percentage}%</div>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span className="text-2xl font-bold text-green-500">{testState.correctCount}</span>
-                </div>
-                <div className="text-sm text-muted-foreground">Correct</div>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <XCircle className="h-5 w-5 text-destructive" />
-                  <span className="text-2xl font-bold text-destructive">{testState.incorrectCount}</span>
-                </div>
-                <div className="text-sm text-muted-foreground">Incorrect</div>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <MinusCircle className="h-5 w-5 text-muted-foreground" />
-                  <span className="text-2xl font-bold text-muted-foreground">{testState.unattemptedCount}</span>
-                </div>
-                <div className="text-sm text-muted-foreground">Unattempted</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-destructive">-{negativeMarksLost}</div>
-                <div className="text-sm text-muted-foreground">Neg. Marks</div>
-              </div>
-            </div>
+        </div>
 
-            <div className="flex justify-center mt-6">
-              <Button onClick={onNewTest} className="gap-2">
-                <RotateCcw className="h-4 w-4" />
-                Take Another Test
-              </Button>
+        <div className="relative animate-fade-in rounded-3xl border border-border/40 bg-card/40 backdrop-blur-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-border/30 bg-surface-2/40 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-primary" />
+              <h2 className="font-display text-lg font-semibold tracking-tight">Detailed Solutions</h2>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="animate-fade-in">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              Detailed Solutions
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.18em]">{testState.questions.length} questions</span>
+          </div>
+          <div className="p-4 md:p-6">
             <ScrollArea className="h-[600px] pr-4">
               <div className="space-y-4">
                 {testState.questions.map((q, index) => {
@@ -143,27 +154,27 @@ export function PracticeTestResults({ testState, onNewTest }: PracticeTestResult
 
                   return (
                     <Collapsible key={q.id} open={isExpanded} onOpenChange={() => toggleQuestion(q.id)}>
-                      <Card className={`border-l-4 ${
-                        result === "correct" ? "border-l-green-500" :
-                        result === "incorrect" ? "border-l-destructive" :
-                        "border-l-muted-foreground"
+                      <div className={`rounded-2xl border bg-surface-2/30 backdrop-blur transition-colors overflow-hidden ${
+                        result === "correct" ? "border-emerald-500/30" :
+                        result === "incorrect" ? "border-destructive/30" :
+                        "border-border/40"
                       }`}>
                         <CollapsibleTrigger asChild>
-                          <div className="p-4 cursor-pointer hover:bg-muted/50 transition-colors">
+                          <div className="p-4 cursor-pointer hover:bg-card/50 transition-colors">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
-                                <span className="font-bold text-lg">Q{index + 1}</span>
-                                <Badge variant="secondary" className="capitalize">{q.subject}</Badge>
-                                {result === "correct" && <Badge className="bg-green-500 text-white"><CheckCircle2 className="h-3 w-3 mr-1" />Correct</Badge>}
-                                {result === "incorrect" && <Badge variant="destructive"><XCircle className="h-3 w-3 mr-1" />Incorrect</Badge>}
-                                {result === "unattempted" && <Badge variant="outline"><MinusCircle className="h-3 w-3 mr-1" />Unattempted</Badge>}
+                                <span className="font-mono text-xs text-muted-foreground tracking-wider">Q{String(index + 1).padStart(2, "0")}</span>
+                                <Badge variant="secondary" className="capitalize text-[10px] tracking-wider">{q.subject}</Badge>
+                                {result === "correct" && <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20"><CheckCircle2 className="h-3 w-3 mr-1" />Correct</Badge>}
+                                {result === "incorrect" && <Badge className="bg-destructive/15 text-destructive border border-destructive/30 hover:bg-destructive/20"><XCircle className="h-3 w-3 mr-1" />Incorrect</Badge>}
+                                {result === "unattempted" && <Badge variant="outline" className="border-border/40"><MinusCircle className="h-3 w-3 mr-1" />Skipped</Badge>}
                               </div>
                               {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
                             </div>
                           </div>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
-                          <div className="px-4 pb-4 space-y-4 border-t pt-4">
+                          <div className="px-4 pb-4 space-y-4 border-t border-border/30 pt-4">
                             <div className="prose prose-sm dark:prose-invert max-w-none">
                               <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
                                 {q.question_text}
@@ -178,16 +189,16 @@ export function PracticeTestResults({ testState, onNewTest }: PracticeTestResult
                                   const isUserAnswer = Array.isArray(userAnswer)
                                     ? userAnswer.includes(opt.label) : userAnswer === opt.label;
                                   return (
-                                    <div key={opt.label} className={`p-3 rounded-lg border-2 ${
-                                      isCorrectOption ? "border-green-500 bg-green-50 dark:bg-green-950/20" :
-                                      isUserAnswer ? "border-destructive bg-destructive/10" : "border-border"
+                                    <div key={opt.label} className={`p-3 rounded-xl border ${
+                                      isCorrectOption ? "border-emerald-500/40 bg-emerald-500/10" :
+                                      isUserAnswer ? "border-destructive/40 bg-destructive/10" : "border-border/40 bg-surface-2/30"
                                     }`}>
                                       <span className="font-medium mr-2">({opt.label})</span>
                                       <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}
                                         components={{ p: ({ children }) => <span>{children}</span> }}>
                                         {opt.text}
                                       </ReactMarkdown>
-                                      {isCorrectOption && <span className="ml-2 text-green-600 text-sm">(Correct)</span>}
+                                      {isCorrectOption && <span className="ml-2 text-emerald-600 dark:text-emerald-400 text-sm">(Correct)</span>}
                                       {isUserAnswer && !isCorrectOption && <span className="ml-2 text-destructive text-sm">(Your Answer)</span>}
                                     </div>
                                   );
@@ -197,14 +208,14 @@ export function PracticeTestResults({ testState, onNewTest }: PracticeTestResult
 
                             {(q.question_type === "numerical" || q.question_type === "integer") && (
                               <div className="space-y-2">
-                                <div className="p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border-2 border-green-500">
+                                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/40">
                                   <span className="font-medium">Correct Answer: </span>
                                   <span className="font-mono">{String(q.correct_answer)}</span>
                                 </div>
                                 {userAnswer && (
-                                  <div className={`p-3 rounded-lg ${
-                                    result === "correct" ? "bg-green-50 dark:bg-green-950/20 border-2 border-green-500" :
-                                    "bg-destructive/10 border-2 border-destructive"
+                                  <div className={`p-3 rounded-xl border ${
+                                    result === "correct" ? "bg-emerald-500/10 border-emerald-500/40" :
+                                    "bg-destructive/10 border-destructive/40"
                                   }`}>
                                     <span className="font-medium">Your Answer: </span>
                                     <span className="font-mono">{String(userAnswer)}</span>
@@ -213,15 +224,14 @@ export function PracticeTestResults({ testState, onNewTest }: PracticeTestResult
                               </div>
                             )}
 
-                            {/* Marking impact */}
-                            <div className="text-xs text-muted-foreground">
-                              {result === "correct" && <span className="text-green-600">+4 marks</span>}
-                              {result === "incorrect" && <span className="text-destructive">−1 mark (negative marking)</span>}
-                              {result === "unattempted" && <span>0 marks (not attempted)</span>}
+                            <div className="text-[11px] font-mono uppercase tracking-[0.15em]">
+                              {result === "correct" && <span className="text-emerald-600 dark:text-emerald-400">+ {q.marks_positive} marks</span>}
+                              {result === "incorrect" && <span className="text-destructive">− {q.marks_negative} mark · negative</span>}
+                              {result === "unattempted" && <span className="text-muted-foreground">0 marks · skipped</span>}
                             </div>
 
-                            <div className="bg-muted/50 rounded-lg p-4">
-                              <h4 className="font-semibold mb-2">Solution</h4>
+                            <div className="rounded-xl border border-border/40 bg-card/40 backdrop-blur p-4">
+                              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2 font-semibold">Solution</p>
                               {q.solution ? (
                                 <div className="prose prose-sm dark:prose-invert max-w-none">
                                   <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
@@ -234,15 +244,31 @@ export function PracticeTestResults({ testState, onNewTest }: PracticeTestResult
                             </div>
                           </div>
                         </CollapsibleContent>
-                      </Card>
+                      </div>
                     </Collapsible>
                   );
                 })}
               </div>
             </ScrollArea>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function StatTile({ icon, label, value, tone }: { icon: React.ReactNode; label: string; value: number | string; tone: "success" | "danger" | "neutral" }) {
+  const toneStyles =
+    tone === "success" ? "text-emerald-600 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/5" :
+    tone === "danger"  ? "text-destructive border-destructive/20 bg-destructive/5" :
+                         "text-muted-foreground border-border/40 bg-surface-2/40";
+  return (
+    <div className={`rounded-2xl border backdrop-blur p-4 ${toneStyles}`}>
+      <div className="flex items-center gap-2 mb-1">
+        {icon}
+        <span className="text-[10px] uppercase tracking-[0.15em] font-semibold opacity-80">{label}</span>
+      </div>
+      <p className="text-3xl font-display font-bold tabular-nums">{value}</p>
     </div>
   );
 }

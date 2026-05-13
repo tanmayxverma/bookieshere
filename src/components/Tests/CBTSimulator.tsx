@@ -71,10 +71,10 @@ export function CBTSimulator({ testState, onSubmit }: CBTSimulatorProps) {
 
   const getStatusColor = (questionId: string) => {
     const status = testState.getQuestionStatus(questionId);
-    if (status.isMarked && status.isAnswered) return "bg-violet-500";
-    if (status.isMarked) return "bg-violet-500/50";
-    if (status.isAnswered) return "bg-green-500";
-    return "bg-muted";
+    if (status.isMarked && status.isAnswered) return "bg-amber-500";
+    if (status.isMarked) return "bg-amber-500/50";
+    if (status.isAnswered) return "bg-emerald-500";
+    return "bg-surface-2 border border-border/40";
   };
 
   if (isSubmitting) {
@@ -120,7 +120,7 @@ export function CBTSimulator({ testState, onSubmit }: CBTSimulatorProps) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Top Bar */}
-      <div className="sticky top-0 z-50 bg-background border-b border-border px-4 py-3">
+      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40 px-4 py-3 shadow-[0_8px_30px_-18px_hsl(var(--primary)/0.25)]">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <h1 className="font-display font-bold text-lg">
@@ -139,7 +139,7 @@ export function CBTSimulator({ testState, onSubmit }: CBTSimulatorProps) {
             </div>
             <Button
               onClick={() => setShowSubmitDialog(true)}
-              className="gap-2 bg-gradient-to-r from-primary to-violet-500 hover:shadow-lg transition-all"
+              className="gap-2 rounded-xl bg-foreground text-background hover:bg-foreground/90 shadow-[0_8px_30px_-10px_hsl(var(--primary)/0.5)] transition-all"
             >
               <Send className="h-4 w-4" />
               Submit Test
@@ -263,7 +263,7 @@ export function CBTSimulator({ testState, onSubmit }: CBTSimulatorProps) {
                   <Button
                     variant="outline"
                     onClick={testState.toggleMarkForReview}
-                    className={`transition-all ${isMarked ? "border-violet-500 text-violet-600 bg-violet-50 dark:bg-violet-950/20" : ""}`}
+                    className={`transition-all rounded-xl ${isMarked ? "border-amber-500/50 text-amber-600 dark:text-amber-400 bg-amber-500/10" : ""}`}
                   >
                     <Flag className={`h-4 w-4 mr-2 ${isMarked ? "fill-current" : ""}`} />
                     {isMarked ? "Marked" : "Mark for Review"}
@@ -299,16 +299,16 @@ export function CBTSimulator({ testState, onSubmit }: CBTSimulatorProps) {
         <div className="w-80 border-l border-border bg-muted/30 p-4 hidden lg:block">
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="flex items-center gap-2 p-2 rounded bg-green-500/10">
-                <div className="w-3 h-3 rounded-full bg-green-500" />
+              <div className="flex items-center gap-2 p-2 rounded bg-emerald-500/10">
+                <div className="w-3 h-3 rounded-full bg-emerald-500" />
                 <span>Answered: {stats.answered}</span>
               </div>
               <div className="flex items-center gap-2 p-2 rounded bg-muted">
                 <div className="w-3 h-3 rounded-full bg-muted-foreground/50" />
                 <span>Not Answered: {stats.notAnswered}</span>
               </div>
-              <div className="flex items-center gap-2 p-2 rounded bg-violet-500/10">
-                <div className="w-3 h-3 rounded-full bg-violet-500" />
+              <div className="flex items-center gap-2 p-2 rounded bg-amber-500/10">
+                <div className="w-3 h-3 rounded-full bg-amber-500" />
                 <span>Marked: {stats.marked}</span>
               </div>
               <div className="flex items-center gap-2 p-2 rounded bg-muted">
@@ -362,9 +362,9 @@ export function CBTSimulator({ testState, onSubmit }: CBTSimulatorProps) {
             <AlertDialogDescription className="space-y-3">
               <p>Are you sure you want to submit your test?</p>
               <div className="bg-muted rounded-lg p-3 space-y-1 text-sm">
-                <div className="flex justify-between"><span>Answered:</span><span className="font-medium text-green-600">{stats.answered}</span></div>
+                <div className="flex justify-between"><span>Answered:</span><span className="font-medium text-emerald-600 dark:text-emerald-400">{stats.answered}</span></div>
                 <div className="flex justify-between"><span>Not Answered:</span><span className="font-medium text-muted-foreground">{stats.notAnswered}</span></div>
-                <div className="flex justify-between"><span>Marked for Review:</span><span className="font-medium text-violet-600">{stats.marked}</span></div>
+                <div className="flex justify-between"><span>Marked for Review:</span><span className="font-medium text-amber-600 dark:text-amber-400">{stats.marked}</span></div>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
