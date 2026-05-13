@@ -1,10 +1,9 @@
 import {
-  CheckCircle2, XCircle, MinusCircle, Trophy, BarChart3, RotateCcw,
+  CheckCircle2, XCircle, MinusCircle, BarChart3, RotateCcw,
   ChevronDown, ChevronUp, Sparkles, Award, Target,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
