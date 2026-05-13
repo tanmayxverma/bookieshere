@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -33,38 +33,47 @@ export function Navbar() {
     <nav
       className={`sticky top-0 z-50 transition-all duration-500 navbar-glass ${
         scrolled
-          ? "border-b border-primary/15 bg-background/70 shadow-[0_1px_15px_-4px_hsl(var(--primary)/0.12)] h-14"
-          : "border-b border-primary/10 bg-background/50 shadow-[0_1px_8px_-3px_hsl(var(--primary)/0.08)] h-16"
+          ? "border-b border-border/40 bg-background/75 backdrop-saturate-150 shadow-[0_8px_30px_-18px_hsl(var(--primary)/0.25)] h-14"
+          : "border-b border-border/20 bg-background/55 h-16"
       }`}
     >
-      <div className="container mx-auto px-4 h-full">
+      <div className="container mx-auto px-4 h-full relative">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
         <div className="flex h-full items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <img src={logo} alt="BOOKIE Logo" className={`rounded-lg object-cover shadow-md transition-all duration-500 ${scrolled ? "h-8 w-8" : "h-9 w-9"}`} />
-            <span className="font-display text-xl font-bold tracking-tight text-foreground">BOOKIE</span>
+          <Link to="/" className="group flex items-center gap-2.5">
+            <span className="relative">
+              <span className="absolute inset-0 rounded-xl bg-primary/30 blur-md opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
+              <img src={logo} alt="BOOKIE Logo" className={`relative rounded-xl object-cover ring-1 ring-border/40 shadow-[0_4px_12px_-4px_hsl(var(--primary)/0.3)] transition-all duration-500 ${scrolled ? "h-8 w-8" : "h-9 w-9"}`} />
+            </span>
+            <span className="flex items-baseline gap-1.5">
+              <span className="font-display text-xl font-bold tracking-tight text-foreground">BOOKIE</span>
+              <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-surface-2/60 border border-border/40 text-[9px] font-semibold tracking-[0.12em] uppercase text-muted-foreground">
+                <Sparkles className="h-2.5 w-2.5 text-primary" /> JEE
+              </span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-2">
+          <div className="hidden md:flex md:items-center md:gap-1 rounded-2xl bg-surface-2/40 backdrop-blur border border-border/30 px-1.5 py-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                className={`relative px-3.5 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                   isActive(link.path)
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                    ? "text-foreground bg-card/80 shadow-[0_2px_8px_-3px_hsl(var(--primary)/0.25)] ring-1 ring-border/40"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {link.label}
+                <span className="relative z-10">{link.label}</span>
                 {isActive(link.path) && (
-                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
+                  <span className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
                 )}
               </Link>
             ))}
-            <div className="ml-3 pl-3 border-l border-border/30">
-              <ThemeToggle />
-            </div>
+          </div>
+          <div className="hidden md:block ml-3">
+            <ThemeToggle />
           </div>
 
           {/* Mobile Controls */}
