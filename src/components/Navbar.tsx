@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -33,46 +33,57 @@ export function Navbar() {
     <nav
       className={`sticky top-0 z-50 transition-all duration-500 navbar-glass ${
         scrolled
-          ? "border-b border-border/40 bg-background/75 backdrop-saturate-150 shadow-[0_8px_30px_-18px_hsl(var(--primary)/0.25)] h-14"
-          : "border-b border-border/20 bg-background/55 h-16"
+          ? "h-14 bg-background/80 backdrop-blur-xl backdrop-saturate-150 border-b border-border/40 shadow-[0_1px_0_0_hsl(var(--border)/0.4),0_8px_30px_-20px_hsl(var(--primary)/0.3)]"
+          : "h-16 bg-background/40 backdrop-blur-md border-b border-transparent"
       }`}
     >
-      <div className="container mx-auto px-4 h-full relative">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
+      <div className="container mx-auto px-4 h-full">
         <div className="flex h-full items-center justify-between">
-          <Link to="/" className="group flex items-center gap-2.5">
+          {/* Brand */}
+          <Link to="/" className="group flex items-center gap-2.5 shrink-0">
             <span className="relative">
-              <span className="absolute inset-0 rounded-xl bg-primary/30 blur-md opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
-              <img src={logo} alt="BOOKIE Logo" className={`relative rounded-xl object-cover ring-1 ring-border/40 shadow-[0_4px_12px_-4px_hsl(var(--primary)/0.3)] transition-all duration-500 ${scrolled ? "h-8 w-8" : "h-9 w-9"}`} />
+              <span className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-primary/40 to-accent/30 blur-md opacity-0 group-hover:opacity-80 transition-opacity duration-500" />
+              <img
+                src={logo}
+                alt="BOOKIE Logo"
+                className={`relative rounded-xl object-cover ring-1 ring-border/50 transition-all duration-500 ${
+                  scrolled ? "h-8 w-8" : "h-9 w-9"
+                }`}
+              />
             </span>
-            <span className="flex items-baseline gap-1.5">
-              <span className="font-display text-xl font-bold tracking-tight text-foreground">BOOKIE</span>
-              <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-surface-2/60 border border-border/40 text-[9px] font-semibold tracking-[0.12em] uppercase text-muted-foreground">
-                <Sparkles className="h-2.5 w-2.5 text-primary" /> JEE
-              </span>
+            <span className="font-display text-xl font-bold tracking-tight text-foreground">
+              BOOKIE
+              <span className="text-primary">.</span>
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-1 rounded-2xl bg-surface-2/40 backdrop-blur border border-border/30 px-1.5 py-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`relative px-3.5 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 ${
-                  isActive(link.path)
-                    ? "text-foreground bg-card/80 shadow-[0_2px_8px_-3px_hsl(var(--primary)/0.25)] ring-1 ring-border/40"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <span className="relative z-10">{link.label}</span>
-                {isActive(link.path) && (
-                  <span className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
-                )}
-              </Link>
-            ))}
+          {/* Desktop Navigation — minimal underline style */}
+          <div className="hidden md:flex items-center gap-7 absolute left-1/2 -translate-x-1/2">
+            {navLinks.map((link) => {
+              const active = isActive(link.path);
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`group relative py-1.5 text-sm font-medium tracking-tight transition-colors duration-200 ${
+                    active
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {link.label}
+                  <span
+                    className={`absolute left-0 right-0 -bottom-0.5 mx-auto h-px bg-gradient-to-r from-transparent via-primary to-transparent transition-all duration-300 ${
+                      active ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-2/3 group-hover:opacity-60"
+                    }`}
+                  />
+                </Link>
+              );
+            })}
           </div>
-          <div className="hidden md:block ml-3">
+
+          {/* Right side */}
+          <div className="hidden md:flex items-center gap-2 shrink-0">
             <ThemeToggle />
           </div>
 
