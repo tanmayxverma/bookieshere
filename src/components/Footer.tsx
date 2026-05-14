@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Send, BookOpen, ArrowUpRight, Sparkles } from "lucide-react";
+import { Send, BookOpen, ArrowUpRight, Sparkles, Coffee, Heart } from "lucide-react";
 import logo from "@/assets/logo.jfif";
 import { Button } from "@/components/ui/button";
 
@@ -80,6 +80,26 @@ export function Footer() {
               <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
                 A curated, distraction-free library of premium JEE resources — built for aspirants who mean it.
               </p>
+
+              {/* Buy Me a Chai — micro card */}
+              <Link
+                to="/donate"
+                className="group relative mt-4 flex items-center gap-3 max-w-sm overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-3 pr-4 transition-all hover:border-primary/40 hover:bg-card/70 hover:shadow-[0_15px_40px_-15px_hsl(var(--primary)/0.45)]"
+              >
+                <div aria-hidden className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/15 blur-2xl opacity-60 group-hover:opacity-100 transition-opacity" />
+                <div className="relative shrink-0 h-11 w-11 rounded-xl border border-primary/30 bg-gradient-to-br from-primary/20 to-amber-500/10 flex items-center justify-center">
+                  <Coffee className="h-5 w-5 text-primary group-hover:rotate-[-8deg] transition-transform duration-500" />
+                </div>
+                <div className="relative min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] uppercase tracking-[0.18em] font-bold text-primary">Support</span>
+                    <Heart className="h-2.5 w-2.5 text-primary fill-primary" />
+                  </div>
+                  <div className="text-sm font-semibold text-foreground leading-tight">Buy me a Chai</div>
+                  <div className="text-[11px] text-muted-foreground truncate">Keep BOOKIE running ☕</div>
+                </div>
+                <ArrowUpRight className="relative h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </Link>
             </div>
 
             {/* Explore */}
@@ -100,6 +120,7 @@ export function Footer() {
                 <li><Link to="/copyright-terms" className="text-foreground/80 hover:text-foreground transition-colors">Copyright & Terms</Link></li>
                 <li><Link to="/dmca" className="text-foreground/80 hover:text-foreground transition-colors">DMCA Policy</Link></li>
                 <li><Link to="/privacy-policy" className="text-foreground/80 hover:text-foreground transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/donate" className="text-foreground/80 hover:text-foreground transition-colors">Support / Donate</Link></li>
                 <li>
                   <a href="https://t.me/tellurdemandsbot" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-foreground/80 hover:text-foreground transition-colors">
                     Contact <ArrowUpRight className="h-3 w-3" />
