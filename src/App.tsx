@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import CopyrightTerms from "./pages/CopyrightTerms";
 import DMCA from "./pages/DMCA";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Donate from "./pages/Donate";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/copyright-terms" element={<CopyrightTerms />} />
           <Route path="/dmca" element={<DMCA />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/donate" element={<Donate />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
