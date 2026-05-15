@@ -35,12 +35,12 @@ const Support = () => {
               </span>
 
               {/* Animated chat-bubble medallion */}
-              <div className="relative inline-flex mb-7">
+              <div className="relative mx-auto mb-7 h-20 w-20">
                 <div aria-hidden className="absolute inset-0 rounded-3xl bg-primary/30 blur-2xl opacity-70" />
-                <div className="relative h-20 w-20 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/20 via-card/40 to-accent/10 backdrop-blur flex items-center justify-center shadow-[inset_0_1px_0_hsl(var(--background)/0.4)]">
-                  <Headphones className="h-9 w-9 text-primary" />
-                  <span aria-hidden className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-4 ring-background shadow-[0_0_12px_hsl(var(--primary))] animate-pulse" />
+                <div className="relative h-full w-full rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/20 via-card/40 to-accent/10 backdrop-blur flex items-center justify-center shadow-[inset_0_1px_0_hsl(var(--background)/0.4)]">
+                  <Headphones className="h-8 w-8 text-primary" />
                 </div>
+                <span aria-hidden className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-[3px] ring-background shadow-[0_0_12px_hsl(var(--primary))] animate-pulse" />
               </div>
 
               <h1 className="font-display text-4xl md:text-6xl font-black tracking-tight text-foreground leading-[0.95] mb-5">
