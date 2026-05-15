@@ -149,7 +149,7 @@ export default function YPT() {
                   : 'opacity-100 translate-y-0 scale-100'
               }`}
             >
-              {tab === 'study' && <V2StudyTab user={user} timer={timer} />}
+              {tab === 'study' && <V2StudyTab user={user} timer={timer} onNavigate={(t) => switchTab(t)} />}
               {tab === 'stats' && <V2StatsTab userId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
               {tab === 'rooms' && <V2RoomsTab currentUser={user} timer={timer} roomSession={roomSession} />}
               {tab === 'tasks' && <V2TasksTab userId={user.id} timer={timer} />}
