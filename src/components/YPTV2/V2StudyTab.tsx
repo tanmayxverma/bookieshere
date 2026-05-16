@@ -355,10 +355,14 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
       </div>
 
       {/* HERO TIMER */}
-      <Card className="relative overflow-hidden liquid-glass">
+      <Card className="relative overflow-hidden liquid-glass shine-card">
+        {/* Always-on ambient aurora gradient */}
+        <div className="absolute inset-0 aurora-bg opacity-70 pointer-events-none" />
+        <div className="absolute -top-16 -right-10 w-60 h-60 rounded-full bg-primary/15 blur-3xl blob-a pointer-events-none" />
+        <div className="absolute -bottom-20 -left-10 w-72 h-72 rounded-full bg-[hsl(195_85%_55%_/_0.14)] blur-3xl blob-b pointer-events-none" />
         {timer.isActive && !timer.isPaused && (
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[220px] rounded-full bg-foreground/5 blur-[80px] breathing-glow" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[260px] rounded-full bg-primary/10 blur-[90px] breathing-glow" />
           </div>
         )}
         <div className="relative p-7 md:p-9 text-center">

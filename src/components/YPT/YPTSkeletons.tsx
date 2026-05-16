@@ -1,23 +1,35 @@
-import { Timer } from 'lucide-react';
+import { Timer, Sparkles } from 'lucide-react';
 
 export function YPTLoadingSkeleton() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] animate-fade-in">
-      <div className="relative">
-        <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-          <Timer className="h-7 w-7 text-primary animate-pulse" />
+    <div className="relative flex flex-col items-center justify-center min-h-[70vh] animate-fade-in overflow-hidden">
+      {/* Ambient aurora */}
+      <div className="absolute inset-0 aurora-bg opacity-60 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-primary/10 blur-[100px] blob-a pointer-events-none" />
+      <div className="absolute top-1/3 right-1/3 w-[260px] h-[260px] rounded-full bg-[hsl(195_85%_55%_/_0.10)] blur-[90px] blob-b pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col items-center">
+        <div className="relative w-24 h-24">
+          {/* Spinning conic ring */}
+          <div className="absolute inset-0 rounded-full loader-ring" />
+          <div className="absolute inset-[3px] rounded-full bg-background/95 backdrop-blur-md flex items-center justify-center">
+            <Timer className="h-9 w-9 text-primary" />
+          </div>
+          <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-primary/70 animate-pulse" />
         </div>
-        <div className="absolute -inset-2 rounded-3xl bg-primary/5 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]" />
-      </div>
-      <p className="mt-6 text-sm font-medium text-muted-foreground">Loading YPT...</p>
-      <div className="mt-3 flex gap-1.5">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="w-2 h-2 rounded-full bg-primary/40"
-            style={{ animation: `pulse 1.4s ease-in-out ${i * 0.2}s infinite` }}
-          />
-        ))}
+        <p className="mt-7 text-lg font-display font-bold tracking-tight">
+          Loading <span className="text-gradient-glow">YPT</span>
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground tracking-wider uppercase">Preparing your study space</p>
+        <div className="mt-5 flex gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="w-1.5 h-1.5 rounded-full bg-primary/60"
+              style={{ animation: `pulse 1.2s ease-in-out ${i * 0.18}s infinite` }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

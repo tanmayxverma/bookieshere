@@ -91,16 +91,23 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
             <div className="space-y-2 pr-2">
               {top10.map((u, i) => {
                 const isMe = u.userId === currentUserId;
+                const isTop3 = i < 3;
                 return (
                   <div
                     key={u.userId}
-                    className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-200 pop-in ${
+                    className={`relative flex items-center gap-4 p-4 rounded-xl transition-all duration-200 pop-in overflow-hidden ${
                       isMe
-                        ? 'bg-primary/8 border border-primary/20 shadow-sm'
-                        : 'bg-card border border-border/30 card-glow hover:shadow-sm hover:border-border/60'
+                        ? 'bg-primary/8 border border-primary/30 shadow-sm shine-card'
+                        : isTop3
+                          ? 'bg-card border border-primary/15 card-glow hover:shadow-md'
+                          : 'bg-card border border-border/30 card-glow hover:shadow-sm hover:border-border/60'
                     }`}
                     style={{ animationDelay: `${i * 0.04}s` }}
                   >
+                    {isTop3 && (
+                      <div className="absolute inset-0 aurora-bg opacity-40 pointer-events-none" />
+                    )}
+                    <div className="relative flex items-center gap-4 w-full">
                     <div className="w-9 text-center shrink-0">
                       {i === 0 ? <span className="text-xl">🥇</span>
                         : i === 1 ? <span className="text-xl">🥈</span>
@@ -120,6 +127,7 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
                       <p className="text-sm text-muted-foreground">{u.jeeYear}</p>
                     </div>
                     <span className="font-bold text-base tabular-nums">{formatHours(u.totalSeconds)}</span>
+                    </div>
                   </div>
                 );
               })}
