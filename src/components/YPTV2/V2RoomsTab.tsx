@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 import type { RoomSession } from '@/hooks/useRoomSession';
@@ -118,6 +119,19 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
+    { label: 'Smileys', emojis: ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥳','🤩','🥺','😢','😭','😤','😡','🤬','🤯','😱','😨','😰','😥','😓'] },
+    { label: 'Study', emojis: ['📚','📖','✏️','📝','📒','📓','📕','📗','📘','📙','📔','🖊️','🖋️','📐','📏','🧮','💡','🔬','🧪','🧠','⏰','⏱️','⌛','🎯','🔥','💯','✅','❌','📊','📈','📉','🏆','🥇','🥈','🥉','🎓','💪','🚀'] },
+    { label: 'Hands', emojis: ['👍','👎','👌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','👇','☝️','✋','🤚','🖐️','🖖','👋','🤝','🙏','👏','🙌','🫶','💪','🫡'] },
+    { label: 'Hearts', emojis: ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','💌'] },
+  ];
+  const [emojiOpen, setEmojiOpen] = useState(false);
+
+  const insertEmoji = (emoji: string) => {
+    setChatInput(prev => prev + emoji);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
 
   const toggleMute = () => {
     const next = !muted;
@@ -735,7 +749,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             <Input placeholder="Room name" value={newName} onChange={e => setNewName(e.target.value)} maxLength={40} className="h-12 text-base" />
             <Input placeholder="Description (optional)" value={newDesc} onChange={e => setNewDesc(e.target.value)} maxLength={100} className="h-12 text-base" />
             <Input placeholder="Max participants (optional)" type="number" value={newMax} onChange={e => setNewMax(e.target.value)} min={2} max={50} className="h-12 text-base" />
-            <p className="text-xs text-muted-foreground">Custom rooms auto-delete after 1hr of inactivity.</p>
+            <p className="text-xs text-muted-foreground">Custom rooms auto-delete after 1hr of inactivity. Chats live for 24 hours.</p>
             <Button onClick={createRoom} disabled={!newName.trim()} className="w-full h-12 text-base active:scale-95 transition-transform">
               Create Room
             </Button>
