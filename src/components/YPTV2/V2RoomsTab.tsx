@@ -508,7 +508,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             <div className="flex-1 min-h-0 flex flex-col">
               {/* Chat toolbar */}
               <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/20 shrink-0">
-                <p className="text-[11px] text-muted-foreground">Auto-delete after 1hr</p>
+                <p className="text-[11px] text-muted-foreground">Messages auto-delete after 24 hours</p>
                 <div className="flex items-center gap-1">
                   {blockedUsersArr.length > 0 && (
                     <button
@@ -636,6 +636,44 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
 
               {/* Input bar */}
               <div className="flex gap-2 p-3 border-t border-border/20 shrink-0 bg-background/80 backdrop-blur-sm">
+                <Popover open={emojiOpen} onOpenChange={setEmojiOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="h-11 w-11 p-0 shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted/60 active:scale-95"
+                      aria-label="Insert emoji"
+                    >
+                      <Smile className="h-5 w-5" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    align="start"
+                    side="top"
+                    className="w-[300px] p-0 border-border/40 shadow-xl"
+                  >
+                    <div className="max-h-[260px] overflow-y-auto ypt-scroll p-2">
+                      {EMOJI_GROUPS.map(group => (
+                        <div key={group.label} className="mb-2 last:mb-0">
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-1 mb-1">
+                            {group.label}
+                          </p>
+                          <div className="grid grid-cols-8 gap-0.5">
+                            {group.emojis.map(e => (
+                              <button
+                                key={e}
+                                onClick={() => insertEmoji(e)}
+                                className="aspect-square flex items-center justify-center text-lg rounded-md hover:bg-muted active:scale-90 transition-all"
+                              >
+                                {e}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
                 <Input
                   ref={inputRef}
                   placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message..."}
@@ -649,7 +687,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 <Button
                   onClick={sendMessage}
                   disabled={!chatInput.trim() || sendingChat}
-                  className="h-11 w-11 p-0 active:scale-95 transition-transform"
+                  className="h-11 w-11 p-0 shrink-0 active:scale-95 transition-transform shine-card relative overflow-hidden"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
@@ -677,7 +715,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                   <li>• No abusive or offensive language</li>
                   <li>• No spam, links, or irrelevant messages</li>
                   <li>• Be respectful to fellow students</li>
-                  <li>• Messages auto-delete after 1 hour</li>
+                  <li>• Messages auto-delete after 24 hours</li>
                   <li>• Violations are auto-blocked</li>
                 </ul>
               </div>
