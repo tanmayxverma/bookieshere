@@ -735,6 +735,26 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                     </div>
                   </PopoverContent>
                 </Popover>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg,image/webp,image/gif"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleImageUpload(f);
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingImage}
+                  className="h-11 w-11 p-0 shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted/60 active:scale-95"
+                  aria-label="Send image"
+                >
+                  {uploadingImage ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImagePlus className="h-5 w-5" />}
+                </Button>
                 <Input
                   ref={inputRef}
                   placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message..."}
