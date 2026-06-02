@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText, HeadphonesIcon, Atom, FlaskConical, Sigma, Copy, ExternalLink, BookOpen } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { JEECountdown } from "@/components/JEECountdown";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -110,6 +111,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* ───── JEE ADVANCED 2027 COUNTDOWN ───── */}
+        <JEECountdown />
 
         {/* ───── EXPLORE SUBJECTS ───── */}
         <section className="max-w-7xl mx-auto px-6 py-24 border-t border-border/40">
