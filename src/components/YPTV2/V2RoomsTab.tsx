@@ -806,6 +806,18 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Image lightbox */}
+        <Dialog open={!!lightboxUrl} onOpenChange={(o) => !o && setLightboxUrl(null)}>
+          <DialogContent className="max-w-3xl p-2 bg-background/95 backdrop-blur-xl border-border/40">
+            <DialogHeader className="sr-only">
+              <DialogTitle>Image</DialogTitle>
+            </DialogHeader>
+            {lightboxUrl && (
+              <img src={lightboxUrl} alt="full" className="w-full h-auto max-h-[80vh] object-contain rounded-lg" />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }
