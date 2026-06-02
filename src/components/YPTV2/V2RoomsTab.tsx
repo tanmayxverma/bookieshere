@@ -242,7 +242,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       }, (payload: any) => {
         (async () => {
           const msgText = payload.new.message || '';
-          if (containsProfanity(msgText) || containsLink(msgText)) {
+          // Strip our internal [image:URL] tag before profanity/link scanning
+          const scanText = msgText.replace(/\[image:[^\]]+\]/g, '').replace(/^\[reply:[^\]]+\]\s?/, '');
+          if (containsProfanity(scanText) || (scanText.trim() && containsLink(scanText))) {
             await (supabase as any).from('room_messages').delete().eq('id', payload.new.id);
             if (payload.new.ypt_user_id === currentUser.id) {
               toast.error('⚠️ Message removed for violating guidelines.', { duration: 4000 });
