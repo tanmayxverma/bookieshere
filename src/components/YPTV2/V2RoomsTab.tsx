@@ -653,7 +653,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                           {/* Message actions popover */}
                           {isSelected && (
                             <div className={`absolute z-30 ${isMe ? 'right-0' : 'left-0'} -top-10 flex items-center gap-0.5 px-1.5 py-1 rounded-xl bg-background/95 border border-border/40 shadow-lg backdrop-blur-xl pop-in`}>
-                              <button onClick={() => copyMessage(displayMsg)} className="p-1.5 rounded-lg hover:bg-muted text-foreground/70 hover:text-foreground transition-colors">
+                              <button onClick={() => copyMessage(imageUrl || textPart || displayMsg)} className="p-1.5 rounded-lg hover:bg-muted text-foreground/70 hover:text-foreground transition-colors">
                                 <Copy className="h-3.5 w-3.5" />
                               </button>
                               <button onClick={() => { setReplyTo(msg); setSelectedMsgId(null); }} className="p-1.5 rounded-lg hover:bg-muted text-foreground/70 hover:text-foreground transition-colors">
