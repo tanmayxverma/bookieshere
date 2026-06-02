@@ -139,6 +139,20 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
   return (
     <div className="space-y-6 pop-in">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden rounded-2xl border border-primary/15 p-5 liquid-glass-subtle">
+        <div className="absolute inset-0 aurora-bg opacity-40 pointer-events-none" />
+        <div className="relative">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Your Study Analytics</p>
+          <h2 className="text-2xl md:text-3xl font-bold mt-1 font-display">
+            {formatHours(todaySeconds)} <span className="text-muted-foreground text-base font-semibold">today</span>
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1.5">
+            {streak > 0 ? `${streak}-day streak active 🔥 · ` : ''}{formatHours(weekSeconds)} this week · {formatHours(monthSeconds)} this month
+          </p>
+        </div>
+      </div>
+
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <MiniStat icon={<Clock className="h-5 w-5" />} label="Today" value={formatHours(todaySeconds)} />
@@ -148,7 +162,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
       </div>
 
       {/* Weekly Study Graph */}
-      <Card className="p-5 border-border/50">
+      <Card className="p-5 border-border/50 relative overflow-hidden shine-card">
         <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
           <BarChart3 className="h-4 w-4" /> Weekly Overview
         </h3>
