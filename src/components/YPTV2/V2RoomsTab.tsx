@@ -592,6 +592,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                         const match = msg.message.match(/^\[reply:(.+?)\]\s?(.*)/s);
                         if (match) { replyAuthor = match[1]; displayMsg = match[2]; }
                       }
+                      const imgMatch = displayMsg.match(/^\[image:([^\]]+)\]\s*(.*)$/s);
+                      const imageUrl = imgMatch ? imgMatch[1] : null;
+                      const textPart = imgMatch ? imgMatch[2] : displayMsg;
 
                       return (
                         <div
@@ -625,7 +628,23 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                                 <span className="font-semibold">↩ {replyAuthor}</span>
                               </div>
                             )}
-                            <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{displayMsg}</p>
+                            {imageUrl && (
+                              <button
+                                type="button"
+                                onClick={() => setLightboxUrl(imageUrl)}
+                                className="block rounded-xl overflow-hidden mb-1 max-w-[260px] hover:opacity-90 transition-opacity"
+                              >
+                                <img
+                                  src={imageUrl}
+                                  alt="shared"
+                                  loading="lazy"
+                                  className="w-full h-auto max-h-[300px] object-cover"
+                                />
+                              </button>
+                            )}
+                            {textPart && (
+                              <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{textPart}</p>
+                            )}
                             <p className={`text-[10px] mt-0.5 ${isMe ? 'text-primary-foreground/50' : 'text-muted-foreground/70'}`}>
                               {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                             </p>
