@@ -162,7 +162,9 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
       <div className="flex items-center gap-2.5 mb-2">
         <Trophy className="h-5 w-5 text-primary" />
         <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Leaderboard</h3>
-        <span className="text-xs text-muted-foreground ml-auto font-medium">Resets at 12:00 AM IST</span>
+        <span className="text-xs text-muted-foreground ml-auto font-medium">
+          {period === 'today' ? 'Resets daily at 12:00 AM IST' : 'Rolling last 7 days · IST'}
+        </span>
       </div>
 
       <Tabs value={period} onValueChange={setPeriod}>

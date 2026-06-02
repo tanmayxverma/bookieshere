@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
@@ -119,6 +119,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
     { label: 'Smileys', emojis: ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥳','🤩','🥺','😢','😭','😤','😡','🤬','🤯','😱','😨','😰','😥','😓'] },
@@ -131,6 +134,43 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const insertEmoji = (emoji: string) => {
     setChatInput(prev => prev + emoji);
     setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    if (!activeRoomId || !file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Only image files are allowed');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be under 5 MB');
+      return;
+    }
+    setUploadingImage(true);
+    try {
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+      const path = `${activeRoomId}/${currentUser.id}-${Date.now()}.${ext}`;
+      const { error: upErr } = await (supabase as any).storage
+        .from('room-images')
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (upErr) throw upErr;
+      const { data: pub } = (supabase as any).storage.from('room-images').getPublicUrl(path);
+      const url = pub?.publicUrl;
+      if (!url) throw new Error('Could not resolve public URL');
+      const msgPayload: any = {
+        room_id: activeRoomId,
+        ypt_user_id: currentUser.id,
+        message: replyTo ? `[reply:${replyTo.user_name}] [image:${url}]` : `[image:${url}]`,
+      };
+      const { error } = await (supabase as any).from('room_messages').insert(msgPayload);
+      if (error) throw error;
+      setReplyTo(null);
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to send image');
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   const toggleMute = () => {
@@ -202,7 +242,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       }, (payload: any) => {
         (async () => {
           const msgText = payload.new.message || '';
-          if (containsProfanity(msgText) || containsLink(msgText)) {
+          // Strip our internal [image:URL] tag before profanity/link scanning
+          const scanText = msgText.replace(/\[image:[^\]]+\]/g, '').replace(/^\[reply:[^\]]+\]\s?/, '');
+          if (containsProfanity(scanText) || (scanText.trim() && containsLink(scanText))) {
             await (supabase as any).from('room_messages').delete().eq('id', payload.new.id);
             if (payload.new.ypt_user_id === currentUser.id) {
               toast.error('⚠️ Message removed for violating guidelines.', { duration: 4000 });
@@ -550,6 +592,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                         const match = msg.message.match(/^\[reply:(.+?)\]\s?(.*)/s);
                         if (match) { replyAuthor = match[1]; displayMsg = match[2]; }
                       }
+                      const imgMatch = displayMsg.match(/^\[image:([^\]]+)\]\s*(.*)$/s);
+                      const imageUrl = imgMatch ? imgMatch[1] : null;
+                      const textPart = imgMatch ? imgMatch[2] : displayMsg;
 
                       return (
                         <div
@@ -583,7 +628,23 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                                 <span className="font-semibold">↩ {replyAuthor}</span>
                               </div>
                             )}
-                            <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{displayMsg}</p>
+                            {imageUrl && (
+                              <button
+                                type="button"
+                                onClick={() => setLightboxUrl(imageUrl)}
+                                className="block rounded-xl overflow-hidden mb-1 max-w-[260px] hover:opacity-90 transition-opacity"
+                              >
+                                <img
+                                  src={imageUrl}
+                                  alt="shared"
+                                  loading="lazy"
+                                  className="w-full h-auto max-h-[300px] object-cover"
+                                />
+                              </button>
+                            )}
+                            {textPart && (
+                              <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{textPart}</p>
+                            )}
                             <p className={`text-[10px] mt-0.5 ${isMe ? 'text-primary-foreground/50' : 'text-muted-foreground/70'}`}>
                               {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                             </p>
@@ -592,7 +653,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                           {/* Message actions popover */}
                           {isSelected && (
                             <div className={`absolute z-30 ${isMe ? 'right-0' : 'left-0'} -top-10 flex items-center gap-0.5 px-1.5 py-1 rounded-xl bg-background/95 border border-border/40 shadow-lg backdrop-blur-xl pop-in`}>
-                              <button onClick={() => copyMessage(displayMsg)} className="p-1.5 rounded-lg hover:bg-muted text-foreground/70 hover:text-foreground transition-colors">
+                              <button onClick={() => copyMessage(imageUrl || textPart || displayMsg)} className="p-1.5 rounded-lg hover:bg-muted text-foreground/70 hover:text-foreground transition-colors">
                                 <Copy className="h-3.5 w-3.5" />
                               </button>
                               <button onClick={() => { setReplyTo(msg); setSelectedMsgId(null); }} className="p-1.5 rounded-lg hover:bg-muted text-foreground/70 hover:text-foreground transition-colors">
@@ -674,6 +735,26 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                     </div>
                   </PopoverContent>
                 </Popover>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg,image/webp,image/gif"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleImageUpload(f);
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingImage}
+                  className="h-11 w-11 p-0 shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted/60 active:scale-95"
+                  aria-label="Send image"
+                >
+                  {uploadingImage ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImagePlus className="h-5 w-5" />}
+                </Button>
                 <Input
                   ref={inputRef}
                   placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message..."}
@@ -715,6 +796,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                   <li>• No abusive or offensive language</li>
                   <li>• No spam, links, or irrelevant messages</li>
                   <li>• Be respectful to fellow students</li>
+                  <li>• Images should be study-related only (max 5 MB)</li>
                   <li>• Messages auto-delete after 24 hours</li>
                   <li>• Violations are auto-blocked</li>
                 </ul>
@@ -723,6 +805,18 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 I Understand, Open Chat
               </Button>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Image lightbox */}
+        <Dialog open={!!lightboxUrl} onOpenChange={(o) => !o && setLightboxUrl(null)}>
+          <DialogContent className="max-w-3xl p-2 bg-background/95 backdrop-blur-xl border-border/40">
+            <DialogHeader className="sr-only">
+              <DialogTitle>Image</DialogTitle>
+            </DialogHeader>
+            {lightboxUrl && (
+              <img src={lightboxUrl} alt="full" className="w-full h-auto max-h-[80vh] object-contain rounded-lg" />
+            )}
           </DialogContent>
         </Dialog>
       </div>
