@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
@@ -119,6 +119,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
     { label: 'Smileys', emojis: ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥳','🤩','🥺','😢','😭','😤','😡','🤬','🤯','😱','😨','😰','😥','😓'] },
@@ -131,6 +134,43 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const insertEmoji = (emoji: string) => {
     setChatInput(prev => prev + emoji);
     setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    if (!activeRoomId || !file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Only image files are allowed');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be under 5 MB');
+      return;
+    }
+    setUploadingImage(true);
+    try {
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+      const path = `${activeRoomId}/${currentUser.id}-${Date.now()}.${ext}`;
+      const { error: upErr } = await (supabase as any).storage
+        .from('room-images')
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (upErr) throw upErr;
+      const { data: pub } = (supabase as any).storage.from('room-images').getPublicUrl(path);
+      const url = pub?.publicUrl;
+      if (!url) throw new Error('Could not resolve public URL');
+      const msgPayload: any = {
+        room_id: activeRoomId,
+        ypt_user_id: currentUser.id,
+        message: replyTo ? `[reply:${replyTo.user_name}] [image:${url}]` : `[image:${url}]`,
+      };
+      const { error } = await (supabase as any).from('room_messages').insert(msgPayload);
+      if (error) throw error;
+      setReplyTo(null);
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to send image');
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   const toggleMute = () => {
