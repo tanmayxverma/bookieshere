@@ -796,6 +796,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                   <li>• No abusive or offensive language</li>
                   <li>• No spam, links, or irrelevant messages</li>
                   <li>• Be respectful to fellow students</li>
+                  <li>• Images should be study-related only (max 5 MB)</li>
                   <li>• Messages auto-delete after 24 hours</li>
                   <li>• Violations are auto-blocked</li>
                 </ul>
