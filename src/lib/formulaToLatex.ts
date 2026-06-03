@@ -39,7 +39,6 @@ const SYM: Record<string, string> = {
   "ℏ": "\\hbar ", "ℵ": "\\aleph ", "∈": "\\in ", "∉": "\\notin ",
   "⊂": "\\subset ", "⊆": "\\subseteq ", "∪": "\\cup ", "∩": "\\cap ",
   "∅": "\\emptyset ", "∀": "\\forall ", "∃": "\\exists ",
-  "·": "\\cdot ",
 };
 
 function escapeLatex(ch: string): string {
