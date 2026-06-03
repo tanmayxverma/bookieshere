@@ -13,6 +13,16 @@ const ALLOWED_DOMAINS = [
   'dropbox.com',
   'onedrive.live.com',
   '1drv.ms',
+  // Study portal domains
+  'pwthor.live',
+  'pw4free.in',
+  'testuk.org',
+  'sstudy.site',
+  'squidstudy.eu.org',
+  'prep4free.com',
+  'lovable.app',
+  'thescholarverse.site',
+  'netlify.app',
 ];
 
 /**
