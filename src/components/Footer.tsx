@@ -109,6 +109,7 @@ export function Footer() {
                 <li><Link to="/materials" className="text-foreground/80 hover:text-foreground transition-colors">Materials</Link></li>
                 <li><Link to="/tests" className="text-foreground/80 hover:text-foreground transition-colors">Tests</Link></li>
                 <li><Link to="/ypt" className="text-foreground/80 hover:text-foreground transition-colors">Study Tracker</Link></li>
+                <li><Link to="/portals" className="text-foreground/80 hover:text-foreground transition-colors">Portals</Link></li>
                 <li><Link to="/support" className="text-foreground/80 hover:text-foreground transition-colors">Support</Link></li>
               </ul>
             </div>
