@@ -1,0 +1,5012 @@
+[
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Force",
+"formula": "[M L T⁻²]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Energy",
+"formula": "[M L² T⁻²]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Power",
+"formula": "[M L² T⁻³]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Pressure",
+"formula": "[M L⁻¹ T⁻²]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Momentum",
+"formula": "[M L T⁻¹]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Impulse",
+"formula": "[M L T⁻¹]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Torque",
+"formula": "[M L² T⁻²]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Angular Momentum",
+"formula": "[M L² T⁻¹]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Surface Tension",
+"formula": "[M T⁻²]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Viscosity",
+"formula": "[M L⁻¹ T⁻¹]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Electric Field",
+"formula": "[M L T⁻³ A⁻¹]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Magnetic Field",
+"formula": "[M T⁻² A⁻¹]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Dimensional Formula of Planck's Constant",
+"formula": "[M L² T⁻¹]"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Percentage Error",
+"formula": "ΔA/A × 100"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Error in Product (A×B)",
+"formula": "ΔZ/Z = ΔA/A + ΔB/B"
+},
+{
+"subject": "Physics",
+"chapter": "Units & Dimensions",
+"name": "Error in Power (Aⁿ)",
+"formula": "ΔZ/Z = n × ΔA/A"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "First Equation of Motion",
+"formula": "v = u + at"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Second Equation of Motion",
+"formula": "s = ut + ½at²"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Third Equation of Motion",
+"formula": "v² = u² + 2as"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Displacement in nth second",
+"formula": "Sₙ = u + a(2n−1)/2"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Average Velocity",
+"formula": "v_avg = (u + v)/2"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Relative Velocity",
+"formula": "v_AB = v_A − v_B"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Range (Projectile)",
+"formula": "R = u² sin2θ / g"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Maximum Height (Projectile)",
+"formula": "H = u² sin²θ / 2g"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Time of Flight (Projectile)",
+"formula": "T = 2u sinθ / g"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Equation of Trajectory",
+"formula": "y = x tanθ − gx² / 2u² cos²θ"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Max Range Angle",
+"formula": "θ = 45°"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Horizontal Range on Inclined Plane",
+"formula": "R = 2u² sin(α−β) cosα / g cos²β"
+},
+{
+"subject": "Physics",
+"chapter": "Kinematics",
+"name": "Velocity of Projectile at time t",
+"formula": "vₓ = u cosθ, vᵧ = u sinθ − gt"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Newton's Second Law",
+"formula": "F = ma"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Impulse",
+"formula": "J = F × t = Δp"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Momentum",
+"formula": "p = mv"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Friction Force (static)",
+"formula": "f ≤ μₛN"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Friction Force (kinetic)",
+"formula": "f = μₖN"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Acceleration on Incline (with friction)",
+"formula": "a = g(sinθ − μ cosθ)"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Normal Force on Incline",
+"formula": "N = mg cosθ"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Tension in Atwood Machine",
+"formula": "T = 2m₁m₂g / (m₁ + m₂)"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Acceleration in Atwood Machine",
+"formula": "a = (m₁ − m₂)g / (m₁ + m₂)"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Pseudo Force",
+"formula": "F_pseudo = −ma₀ (in non-inertial frame)"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Banking Angle (no friction)",
+"formula": "tan θ = v² / rg"
+},
+{
+"subject": "Physics",
+"chapter": "Laws of Motion",
+"name": "Banking Angle (with friction)",
+"formula": "tan(θ + φ) = v² / rg"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Work Done",
+"formula": "W = F · d = Fd cosθ"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Kinetic Energy",
+"formula": "KE = ½mv²"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Work-Energy Theorem",
+"formula": "W_net = ΔKE"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Potential Energy (gravity)",
+"formula": "PE = mgh"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Spring PE",
+"formula": "PE = ½kx²"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Power",
+"formula": "P = W/t = F·v"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Conservation of Energy",
+"formula": "KE + PE = constant"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Elastic Collision (1D) v₁'",
+"formula": "v₁' = (m₁−m₂)v₁ / (m₁+m₂) + 2m₂v₂ / (m₁+m₂)"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Elastic Collision (1D) v₂'",
+"formula": "v₂' = 2m₁v₁ / (m₁+m₂) + (m₂−m₁)v₂ / (m₁+m₂)"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Coefficient of Restitution",
+"formula": "e = (v₂' − v₁') / (v₁ − v₂)"
+},
+{
+"subject": "Physics",
+"chapter": "Work, Energy & Power",
+"name": "Loss in KE (inelastic)",
+"formula": "ΔKE = ½ × m₁m₂/(m₁+m₂) × (v₁−v₂)² × (1−e²)"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Torque",
+"formula": "τ = r × F = rF sinθ"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Angular Momentum",
+"formula": "L = Iω = mvr"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Moment of Inertia (point mass)",
+"formula": "I = mr²"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "MI of Solid Disc (about center)",
+"formula": "I = ½MR²"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "MI of Ring (about center)",
+"formula": "I = MR²"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "MI of Solid Sphere",
+"formula": "I = 2/5 MR²"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "MI of Hollow Sphere",
+"formula": "I = 2/3 MR²"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "MI of Rod (about center)",
+"formula": "I = ML²/12"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "MI of Rod (about end)",
+"formula": "I = ML²/3"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Parallel Axis Theorem",
+"formula": "I = I_cm + Md²"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Perpendicular Axis Theorem",
+"formula": "I_z = I_x + I_y"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Rotational KE",
+"formula": "KE = ½Iω²"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Rolling without slipping",
+"formula": "v = Rω"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "KE of rolling body",
+"formula": "KE = ½mv²(1 + k²/R²)"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Angular equations of motion",
+"formula": "ω = ω₀ + αt; θ = ω₀t + ½αt²; ω² = ω₀² + 2αθ"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Newton's 2nd Law (rotation)",
+"formula": "τ = Iα"
+},
+{
+"subject": "Physics",
+"chapter": "Rotational Motion",
+"name": "Conservation of Angular Momentum",
+"formula": "Iω = constant (when τ_ext = 0)"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Newton's Law of Gravitation",
+"formula": "F = Gm₁m₂ / r²"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Gravitational Field",
+"formula": "g = GM / r²"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "g at height h",
+"formula": "g_h = g(1 − 2h/R) [h << R]"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "g at depth d",
+"formula": "g_d = g(1 − d/R)"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Escape Velocity",
+"formula": "v_e = √(2gR) = √(2GM/R)"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Orbital Velocity",
+"formula": "v_o = √(GM/r) = √(gR²/r)"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Time Period of Satellite",
+"formula": "T = 2π√(r³/GM)"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Kepler's Third Law",
+"formula": "T² ∝ r³; T₁²/T₂² = r₁³/r₂³"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Gravitational PE",
+"formula": "U = −GMm/r"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Total Energy of Satellite",
+"formula": "E = −GMm / 2r"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Binding Energy",
+"formula": "BE = GMm / 2r"
+},
+{
+"subject": "Physics",
+"chapter": "Gravitation",
+"name": "Geostationary Orbit Height",
+"formula": "r = (GM T²/4π²)^(1/3)"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Stress",
+"formula": "σ = F/A"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Strain",
+"formula": "ε = ΔL/L"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Young's Modulus",
+"formula": "Y = Stress/Strain = FL / AΔL"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Bulk Modulus",
+"formula": "B = −V ΔP / ΔV"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Modulus of Rigidity",
+"formula": "η = Shear Stress / Shear Strain"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Pressure at depth",
+"formula": "P = P₀ + ρgh"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Pascal's Law",
+"formula": "F₁/A₁ = F₂/A₂"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Archimedes Principle",
+"formula": "Buoyant Force = ρ_fluid × V_submerged × g"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Continuity Equation",
+"formula": "A₁v₁ = A₂v₂"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Bernoulli's Equation",
+"formula": "P + ½ρv² + ρgh = constant"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Torricelli's Theorem",
+"formula": "v = √(2gh)"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Surface Tension Pressure (bubble)",
+"formula": "ΔP = 4T/r"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Surface Tension (drop)",
+"formula": "ΔP = 2T/r"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Capillary Rise",
+"formula": "h = 2T cosθ / ρrg"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Stoke's Law",
+"formula": "F = 6πηrv"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Terminal Velocity",
+"formula": "v_t = 2r²(ρ−σ)g / 9η"
+},
+{
+"subject": "Physics",
+"chapter": "Properties of Matter",
+"name": "Elastic PE per unit volume",
+"formula": "u = ½ × stress × strain"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Ideal Gas Law",
+"formula": "PV = nRT"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Boyle's Law",
+"formula": "P₁V₁ = P₂V₂ (T constant)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Charles' Law",
+"formula": "V₁/T₁ = V₂/T₂ (P constant)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Combined Gas Law",
+"formula": "P₁V₁/T₁ = P₂V₂/T₂"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "RMS Speed",
+"formula": "v_rms = √(3RT/M) = √(3kT/m)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Average Speed",
+"formula": "v_avg = √(8RT/πM)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Most Probable Speed",
+"formula": "v_mp = √(2RT/M)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Kinetic Energy per molecule",
+"formula": "KE = (3/2)kT"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Degrees of Freedom Energy",
+"formula": "E = (f/2)nRT"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Linear Expansion",
+"formula": "ΔL = LαΔT"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Area Expansion",
+"formula": "ΔA = AβΔT; β = 2α"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Volume Expansion",
+"formula": "ΔV = VγΔT; γ = 3α"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Heat Capacity",
+"formula": "Q = mcΔT"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Latent Heat",
+"formula": "Q = mL"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "First Law",
+"formula": "ΔU = Q − W"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Work done by gas",
+"formula": "W = PΔV (isobaric)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Isothermal Work",
+"formula": "W = nRT ln(V₂/V₁)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Adiabatic Relation",
+"formula": "PVᵞ = constant; TV^(γ−1) = constant"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Adiabatic Work",
+"formula": "W = (P₁V₁ − P₂V₂) / (γ−1)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Efficiency of Carnot Engine",
+"formula": "η = 1 − T₂/T₁"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "COP of Refrigerator",
+"formula": "COP = T₂ / (T₁ − T₂)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Cp − Cv",
+"formula": "Cp − Cv = R"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "γ (ratio)",
+"formula": "γ = Cp/Cv"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Entropy Change",
+"formula": "ΔS = Q_rev / T"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Stefan's Law",
+"formula": "E = σT⁴"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Wien's Displacement Law",
+"formula": "λ_max × T = b (b = 2.898 × 10⁻³ m·K)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Newton's Law of Cooling",
+"formula": "dT/dt = −k(T − T₀)"
+},
+{
+"subject": "Physics",
+"chapter": "Thermal Physics & Thermodynamics",
+"name": "Thermal Conduction",
+"formula": "Q/t = KA(T₁−T₂)/L"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Displacement",
+"formula": "x = A sin(ωt + φ)"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Angular Frequency",
+"formula": "ω = 2π/T = 2πf"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Velocity in SHM",
+"formula": "v = ω√(A² − x²)"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Acceleration in SHM",
+"formula": "a = −ω²x"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Time Period (spring)",
+"formula": "T = 2π√(m/k)"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Time Period (simple pendulum)",
+"formula": "T = 2π√(L/g)"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "KE in SHM",
+"formula": "KE = ½mω²(A²−x²)"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "PE in SHM",
+"formula": "PE = ½mω²x²"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Total Energy in SHM",
+"formula": "E = ½mω²A²"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Springs in Series",
+"formula": "1/k_eff = 1/k₁ + 1/k₂"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Springs in Parallel",
+"formula": "k_eff = k₁ + k₂"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Damped Oscillation",
+"formula": "x = Ae^(−bt/2m) cos(ω't + φ)"
+},
+{
+"subject": "Physics",
+"chapter": "Oscillations (SHM)",
+"name": "Resonance Condition",
+"formula": "f_driving = f_natural"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Wave Equation",
+"formula": "y = A sin(kx − ωt)"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Wave Speed",
+"formula": "v = fλ = ω/k"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Speed of Sound in medium",
+"formula": "v = √(B/ρ)"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Speed of Sound in gas",
+"formula": "v = √(γP/ρ) = √(γRT/M)"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Standing Wave (string)",
+"formula": "y = 2A sin(kx) cos(ωt)"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Fundamental Frequency (string)",
+"formula": "f₁ = v/2L = (1/2L)√(T/μ)"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "nth Harmonic (string)",
+"formula": "fₙ = nv/2L"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Organ Pipe (open, fundamental)",
+"formula": "f = v/2L"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Organ Pipe (closed, fundamental)",
+"formula": "f = v/4L"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Doppler Effect",
+"formula": "f' = f(v ± v_o) / (v ∓ v_s)"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Beats Frequency",
+"formula": "f_beat =|f₁ − f₂|"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Intensity",
+"formula": "I = P / 4πr²"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Sound Level",
+"formula": "β = 10 log(I/I₀) dB"
+},
+{
+"subject": "Physics",
+"chapter": "Waves & Sound",
+"name": "Overtones (closed pipe)",
+"formula": "odd harmonics only: f = (2n−1)v/4L"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Coulomb's Law",
+"formula": "F = kq₁q₂ / r² ; k = 1/4πε₀"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Electric Field (point charge)",
+"formula": "E = kq / r²"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Electric Field (uniform)",
+"formula": "E = V/d"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Electric Potential",
+"formula": "V = kq / r"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Potential Energy",
+"formula": "U = kq₁q₂ / r"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Work Done",
+"formula": "W = q(V₁ − V₂)"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Gauss's Law",
+"formula": "∮E·dA = Q_enc / ε₀"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Field (infinite sheet)",
+"formula": "E = σ / 2ε₀"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Field (between plates)",
+"formula": "E = σ / ε₀"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Field inside conductor",
+"formula": "E = 0"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Capacitance",
+"formula": "C = Q/V"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Parallel Plate Capacitor",
+"formula": "C = ε₀A / d"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "With Dielectric",
+"formula": "C = Kε₀A / d"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Capacitors in Series",
+"formula": "1/C = 1/C₁ + 1/C₂"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Capacitors in Parallel",
+"formula": "C = C₁ + C₂"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Energy stored in Capacitor",
+"formula": "U = ½CV² = Q²/2C = QV/2"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Electric Dipole Moment",
+"formula": "p = q × 2a"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Field on axial line of dipole",
+"formula": "E = 2kp / r³"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Field on equatorial line",
+"formula": "E = kp / r³"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "Torque on Dipole",
+"formula": "τ = pE sinθ"
+},
+{
+"subject": "Physics",
+"chapter": "Electrostatics",
+"name": "PE of Dipole",
+"formula": "U = −pE cosθ"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Ohm's Law",
+"formula": "V = IR"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Resistance",
+"formula": "R = ρL/A"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Resistivity temp dependence",
+"formula": "ρ = ρ₀(1 + αΔT)"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Resistors in Series",
+"formula": "R = R₁ + R₂ + R₃"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Resistors in Parallel",
+"formula": "1/R = 1/R₁ + 1/R₂"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Power",
+"formula": "P = VI = I²R = V²/R"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "KVL",
+"formula": "ΣV = 0 around loop"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "KCL",
+"formula": "ΣI_in = ΣI_out at node"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "EMF and Terminal Voltage",
+"formula": "V = E − Ir"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Wheatstone Bridge",
+"formula": "P/Q = R/S"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Meter Bridge",
+"formula": "R/S = l/(100−l)"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Potentiometer (EMF comparison)",
+"formula": "E₁/E₂ = l₁/l₂"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Drift Velocity",
+"formula": "v_d = I / neA"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Current Density",
+"formula": "J = nev_d = σE"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Charge",
+"formula": "Q = It"
+},
+{
+"subject": "Physics",
+"chapter": "Current Electricity",
+"name": "Joule's Heating",
+"formula": "H = I²Rt"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Biot-Savart Law",
+"formula": "dB = μ₀I dl sinθ / 4πr²"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Field at centre of circular loop",
+"formula": "B = μ₀I / 2R"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Field due to long straight wire",
+"formula": "B = μ₀I / 2πr"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Field inside solenoid",
+"formula": "B = μ₀nI"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Field inside toroid",
+"formula": "B = μ₀nI"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Ampere's Law",
+"formula": "∮B·dl = μ₀I_enc"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Force on moving charge",
+"formula": "F = qv × B = qvB sinθ"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Force on current wire",
+"formula": "F = IL × B = BIL sinθ"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Force between parallel wires",
+"formula": "F/L = μ₀I₁I₂ / 2πd"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Torque on current loop",
+"formula": "τ = nBIA sinθ"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Magnetic Moment",
+"formula": "M = nIA"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Cyclotron Radius",
+"formula": "r = mv / qB"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Cyclotron Frequency",
+"formula": "f = qB / 2πm"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Galvanometer → Ammeter",
+"formula": "S = Ig × G / (I − Ig)"
+},
+{
+"subject": "Physics",
+"chapter": "Magnetic Effects of Current",
+"name": "Galvanometer → Voltmeter",
+"formula": "R = V/Ig − G"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Magnetic Flux",
+"formula": "Φ = BA cosθ"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Faraday's Law",
+"formula": "E = −dΦ/dt"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Lenz's Law",
+"formula": "Induced EMF opposes change in flux"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Motional EMF",
+"formula": "E = BLv"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Self Inductance",
+"formula": "E = −L dI/dt"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Inductance of solenoid",
+"formula": "L = μ₀n²Al"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Mutual Inductance",
+"formula": "E₂ = −M dI₁/dt"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Energy in inductor",
+"formula": "U = ½LI²"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Growth of current (LR)",
+"formula": "I = I₀(1 − e^(−t/τ)); τ = L/R"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Decay of current (LR)",
+"formula": "I = I₀ e^(−t/τ)"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Inductors in Series",
+"formula": "L = L₁ + L₂"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Induction",
+"name": "Inductors in Parallel",
+"formula": "1/L = 1/L₁ + 1/L₂"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "RMS Voltage",
+"formula": "V_rms = V₀ / √2"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "RMS Current",
+"formula": "I_rms = I₀ / √2"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Inductive Reactance",
+"formula": "X_L = ωL"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Capacitive Reactance",
+"formula": "X_C = 1/ωC"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Impedance (RLC)",
+"formula": "Z = √(R² + (X_L − X_C)²)"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Phase Angle",
+"formula": "tan φ = (X_L − X_C) / R"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Resonance Condition",
+"formula": "X_L = X_C; ω₀ = 1/√(LC)"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Resonant Frequency",
+"formula": "f₀ = 1 / 2π√(LC)"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Power in AC",
+"formula": "P = V_rms I_rms cos φ"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Power Factor",
+"formula": "cos φ = R/Z"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Quality Factor",
+"formula": "Q = ω₀L/R = 1/ω₀CR"
+},
+{
+"subject": "Physics",
+"chapter": "Alternating Current",
+"name": "Transformer ratio",
+"formula": "V₂/V₁ = N₂/N₁ = I₁/I₂"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Waves",
+"name": "Speed of Light",
+"formula": "c = 1/√(μ₀ε₀) = 3×10⁸ m/s"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Waves",
+"name": "Relation E and B",
+"formula": "E = cB"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Waves",
+"name": "Intensity of EM wave",
+"formula": "I = ½ε₀E₀²c"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Waves",
+"name": "Radiation Pressure (absorbed)",
+"formula": "P = I/c"
+},
+{
+"subject": "Physics",
+"chapter": "Electromagnetic Waves",
+"name": "Radiation Pressure (reflected)",
+"formula": "P = 2I/c"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Mirror Formula",
+"formula": "1/v + 1/u = 1/f"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Magnification (mirror)",
+"formula": "m = −v/u"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Focal Length of Mirror",
+"formula": "f = R/2"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Snell's Law",
+"formula": "n₁ sinθ₁ = n₂ sinθ₂"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Critical Angle",
+"formula": "sin C = 1/n (n₂ < n₁)"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Refraction at spherical surface",
+"formula": "n₂/v − n₁/u = (n₂−n₁)/R"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Lens Formula",
+"formula": "1/v − 1/u = 1/f"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Magnification (lens)",
+"formula": "m = v/u"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Lens Maker's Formula",
+"formula": "1/f = (n−1)(1/R₁ − 1/R₂)"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Power of Lens",
+"formula": "P = 1/f (in metres), unit: Dioptre"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Lenses in contact",
+"formula": "P = P₁ + P₂"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Prism: Angle of Deviation",
+"formula": "δ = (i₁ + i₂) − A"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Prism: Minimum Deviation",
+"formula": "n = sin((A+δm)/2) / sin(A/2)"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Prism: Thin prism deviation",
+"formula": "δ = (n−1)A"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Young's Double Slit (fringe width)",
+"formula": "β = λD/d"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Condition for bright fringe",
+"formula": "y = nλD/d"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Condition for dark fringe",
+"formula": "y = (2n−1)λD/2d"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Resultant Amplitude",
+"formula": "A = √(A₁² + A₂² + 2A₁A₂ cosδ)"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Condition for constructive",
+"formula": "δ = 2nπ; path diff = nλ"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Condition for destructive",
+"formula": "δ = (2n−1)π; path diff = (2n−1)λ/2"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Diffraction (single slit minima)",
+"formula": "a sinθ = nλ"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Resolving Power (telescope)",
+"formula": "θ_min = 1.22λ/D"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Brewster's Law",
+"formula": "tan θ_p = n"
+},
+{
+"subject": "Physics",
+"chapter": "Optics (Ray & Wave)",
+"name": "Malus's Law",
+"formula": "I = I₀ cos²θ"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Photoelectric Effect",
+"formula": "KE_max = hf − φ"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Einstein's Equation",
+"formula": "E = mc²"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "de Broglie Wavelength",
+"formula": "λ = h/mv = h/p"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Bohr's Radius (nth orbit)",
+"formula": "rₙ = n²a₀/Z ; a₀ = 0.529 Å"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Bohr's Velocity",
+"formula": "vₙ = Ze² / 2ε₀nh"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Energy of nth orbit",
+"formula": "Eₙ = −13.6Z²/n² eV"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Hydrogen Spectral Series",
+"formula": "1/λ = RZ²(1/n₁² − 1/n₂²)"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Lyman Series",
+"formula": "n₁ = 1"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Balmer Series",
+"formula": "n₁ = 2"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Paschen Series",
+"formula": "n₁ = 3"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Radioactive Decay Law",
+"formula": "N = N₀ e^(−λt)"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Half Life",
+"formula": "t½ = 0.693/λ"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Activity",
+"formula": "A = λN"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Mean Life",
+"formula": "τ = 1/λ = t½/0.693"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Mass Defect",
+"formula": "Δm = Z·m_p + (A−Z)·m_n − m_nucleus"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Binding Energy",
+"formula": "BE = Δm × 931.5 MeV"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Q value of reaction",
+"formula": "Q = (m_reactants − m_products) × c²"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Threshold Frequency",
+"formula": "φ = hν₀"
+},
+{
+"subject": "Physics",
+"chapter": "Modern Physics",
+"name": "Stopping Potential",
+"formula": "eV₀ = hν − φ"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "Diode Current",
+"formula": "I = I₀(e^(eV/kT) − 1)"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "Transistor Current",
+"formula": "I_E = I_B + I_C"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "β (current gain)",
+"formula": "β = I_C / I_B"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "α (current gain)",
+"formula": "α = I_C / I_E"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "Relation α and β",
+"formula": "β = α / (1−α)"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "Voltage Gain",
+"formula": "A_v = β × R_C / R_in"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "Logic Gates",
+"formula": "AND: A·B; OR: A+B; NOT: A̅"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "NAND",
+"formula": "(A·B)̅"
+},
+{
+"subject": "Physics",
+"chapter": "Semiconductors",
+"name": "NOR",
+"formula": "(A+B)̅"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Number of moles",
+"formula": "n = mass / molar mass"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Number of particles",
+"formula": "N = n × Nₐ (Nₐ = 6.022×10²³)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Molar Volume (STP)",
+"formula": "22.4 L/mol (old STP); 22.7 L/mol (new STP)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Molarity",
+"formula": "M = moles of solute / volume of solution (L)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Molality",
+"formula": "m = moles of solute / mass of solvent (kg)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Mole Fraction",
+"formula": "χ_A = n_A / (n_A + n_B)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Parts per million",
+"formula": "ppm = (mass of solute / mass of solution) × 10⁶"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Normality",
+"formula": "N = equivalents / volume (L)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Equivalent Weight",
+"formula": "Eq. wt = molar mass / n-factor"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Dilution",
+"formula": "M₁V₁ = M₂V₂"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "% by mass",
+"formula": "w/w% = (mass of solute / mass of solution) × 100"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "Limiting Reagent",
+"formula": "Reagent giving least product"
+},
+{
+"subject": "Chemistry",
+"chapter": "Mole Concept & Stoichiometry",
+"name": "% Yield",
+"formula": "% yield = (actual yield / theoretical yield) × 100"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Energy of photon",
+"formula": "E = hν = hc/λ"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "de Broglie wavelength",
+"formula": "λ = h/mv"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Heisenberg Uncertainty",
+"formula": "Δx · Δp ≥ h/4π"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Bohr Energy",
+"formula": "Eₙ = −13.6/n² eV (H atom)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Bohr Radius",
+"formula": "rₙ = 0.529 n² Å"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Wave number",
+"formula": "ν̃ = 1/λ = R(1/n₁² − 1/n₂²)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Rydberg constant",
+"formula": "R = 1.097 × 10⁷ m⁻¹"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Orbital angular momentum",
+"formula": "L = √(l(l+1)) × h/2π"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Spin quantum number",
+"formula": "s = +½ or −½"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Max electrons in shell",
+"formula": "2n²"
+},
+{
+"subject": "Chemistry",
+"chapter": "Atomic Structure",
+"name": "Max electrons in subshell",
+"formula": "2(2l+1)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Bonding",
+"name": "Formal Charge",
+"formula": "FC = V − N − B/2 (V=valence e⁻, N=non-bonding, B=bonding)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Bonding",
+"name": "Bond Order",
+"formula": "BO = (Bonding e⁻ − Antibonding e⁻) / 2"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Bonding",
+"name": "Dipole Moment",
+"formula": "μ = q × d"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Bonding",
+"name": "Lattice Energy (Born-Lande)",
+"formula": "U ∝ Z⁺Z⁻/r₀"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Bonding",
+"name": "% Ionic Character",
+"formula": "% = (observed μ / calculated μ) × 100"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Bonding",
+"name": "VSEPR Geometry",
+"formula": "BP + LP pairs determine shape"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Bonding",
+"name": "Hybridization",
+"formula": "sp, sp², sp³, sp³d, sp³d², sp³d³"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Bonding",
+"name": "Steric number",
+"formula": "SN = σ bonds + lone pairs"
+},
+{
+"subject": "Chemistry",
+"chapter": "States of Matter (Gases)",
+"name": "Ideal Gas",
+"formula": "PV = nRT"
+},
+{
+"subject": "Chemistry",
+"chapter": "States of Matter (Gases)",
+"name": "Van der Waals",
+"formula": "(P + an²/V²)(V − nb) = nRT"
+},
+{
+"subject": "Chemistry",
+"chapter": "States of Matter (Gases)",
+"name": "Graham's Law",
+"formula": "r₁/r₂ = √(M₂/M₁)"
+},
+{
+"subject": "Chemistry",
+"chapter": "States of Matter (Gases)",
+"name": "KE per mole",
+"formula": "KE = 3/2 RT"
+},
+{
+"subject": "Chemistry",
+"chapter": "States of Matter (Gases)",
+"name": "Compressibility Factor",
+"formula": "Z = PV/nRT"
+},
+{
+"subject": "Chemistry",
+"chapter": "States of Matter (Gases)",
+"name": "Critical Constants",
+"formula": "T_c = 8a/27Rb; P_c = a/27b²; V_c = 3b"
+},
+{
+"subject": "Chemistry",
+"chapter": "States of Matter (Gases)",
+"name": "Boyle Temperature",
+"formula": "T_B = a/Rb"
+},
+{
+"subject": "Chemistry",
+"chapter": "States of Matter (Gases)",
+"name": "Mean Free Path",
+"formula": "λ = kT / √2 πd²P"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "First Law",
+"formula": "ΔU = q + w"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Work (reversible)",
+"formula": "w = −nRT ln(V₂/V₁)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Enthalpy",
+"formula": "H = U + PV"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "ΔH at constant P",
+"formula": "ΔH = q_p"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "ΔH and ΔU",
+"formula": "ΔH = ΔU + Δn_g RT"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Hess's Law",
+"formula": "ΔH_rxn = ΣΔH_f(products) − ΣΔH_f(reactants)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Kirchhoff's Law",
+"formula": "ΔH(T₂) = ΔH(T₁) + ΔCp(T₂−T₁)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Entropy Change",
+"formula": "ΔS = q_rev/T"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Gibbs Energy",
+"formula": "G = H − TS"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Spontaneity",
+"formula": "ΔG = ΔH − TΔS < 0 (spontaneous)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Standard Gibbs Energy",
+"formula": "ΔG° = −RT ln K"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "ΔG and EMF",
+"formula": "ΔG° = −nFE°"
+},
+{
+"subject": "Chemistry",
+"chapter": "Thermodynamics (Chemical)",
+"name": "Bond Enthalpy",
+"formula": "ΔH_rxn = ΣBE(reactants) − ΣBE(products)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Equilibrium Constant (Kc)",
+"formula": "Kc = [products]^p / [reactants]^r"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Kp and Kc",
+"formula": "Kp = Kc(RT)^Δn"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Reaction Quotient",
+"formula": "Q < K (forward); Q > K (reverse)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Degree of Dissociation (α)",
+"formula": "For A ⇌ B + C: Kc = α²c / (1−α)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Le Chatelier's Principle",
+"formula": "Equilibrium shifts to oppose change"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Van't Hoff",
+"formula": "d(ln K)/dT = ΔH°/RT²"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "pH",
+"formula": "pH = −log[H⁺]"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "pOH",
+"formula": "pOH = −log[OH⁻]"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "pH + pOH",
+"formula": "= 14 (at 25°C)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Ka for weak acid",
+"formula": "Ka = [H⁺][A⁻] / [HA]"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "[H⁺] of weak acid",
+"formula": "[H⁺] = √(Ka × C)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Kw",
+"formula": "Kw = [H⁺][OH⁻] = 10⁻¹⁴ at 25°C"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Henderson-Hasselbalch",
+"formula": "pH = pKa + log([A⁻]/[HA])"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Degree of hydrolysis (salt)",
+"formula": "h = √(Kw / Ka × C)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Solubility Product",
+"formula": "Ksp = [Mᵐ⁺]^m [Xⁿ⁻]^n"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Equilibrium",
+"name": "Common Ion Effect",
+"formula": "Reduces solubility"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Faraday's First Law",
+"formula": "m = ZIt = (M/nF) × It"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Faraday's Second Law",
+"formula": "m₁/m₂ = E₁/E₂ (E = equivalent weight)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Cell EMF",
+"formula": "E_cell = E_cathode − E_anode"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Nernst Equation",
+"formula": "E = E° − (RT/nF) ln Q"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Nernst (25°C)",
+"formula": "E = E° − (0.0591/n) log Q"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "ΔG and EMF",
+"formula": "ΔG = −nFE"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Equilibrium Constant",
+"formula": "E° = (0.0591/n) log K"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Conductance",
+"formula": "G = 1/R = κ × A/L"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Molar Conductivity",
+"formula": "Λm = κ × 1000/M"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Kohlrausch's Law",
+"formula": "Λm° = λ°(+) + λ°(−)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Electrochemistry",
+"name": "Degree of dissociation",
+"formula": "α = Λm / Λm°"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Rate of reaction",
+"formula": "r = −d[A]/dt = +d[B]/dt"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Rate Law",
+"formula": "r = k[A]^m[B]^n"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Zero Order (integrated)",
+"formula": "[A] = [A]₀ − kt"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "First Order (integrated)",
+"formula": "[A] = [A]₀ e^(−kt) ; ln[A] = ln[A]₀ − kt"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "First Order t½",
+"formula": "t½ = 0.693/k"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Second Order (integrated)",
+"formula": "1/[A] = 1/[A]₀ + kt"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Second Order t½",
+"formula": "t½ = 1 / k[A]₀"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Arrhenius Equation",
+"formula": "k = Ae^(−Ea/RT)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Arrhenius (log form)",
+"formula": "log(k₂/k₁) = Ea/2.303R × (1/T₁ − 1/T₂)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Activation Energy",
+"formula": "From slope of ln k vs 1/T: Ea = −slope × R"
+},
+{
+"subject": "Chemistry",
+"chapter": "Chemical Kinetics",
+"name": "Units of k (nth order)",
+"formula": "[conc]^(1−n) [time]⁻¹"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Raoult's Law",
+"formula": "P_A = χ_A × P°_A"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Total Pressure (ideal)",
+"formula": "P = χ_A P°_A + χ_B P°_B"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Vapour Pressure Lowering",
+"formula": "ΔP/P°_A = χ_B"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Boiling Point Elevation",
+"formula": "ΔTb = Kb × m"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Freezing Point Depression",
+"formula": "ΔTf = Kf × m"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Osmotic Pressure",
+"formula": "π = MRT (M = molarity)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Van't Hoff Factor",
+"formula": "i = 1 + α(n−1) for association: i = 1 − α(1 − 1/n)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Colligative with dissociation",
+"formula": "ΔTf = i × Kf × m"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Abnormal Molar Mass",
+"formula": "M' = M/i"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solutions & Colligative Properties",
+"name": "Henry's Law",
+"formula": "p = K_H × χ"
+},
+{
+"subject": "Chemistry",
+"chapter": "Surface Chemistry",
+"name": "Freundlich Adsorption",
+"formula": "x/m = k P^(1/n)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Surface Chemistry",
+"name": "Langmuir Adsorption",
+"formula": "x/m = aP / (1 + bP)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Surface Chemistry",
+"name": "Tyndall Effect",
+"formula": "Scattering of light by colloidal particles"
+},
+{
+"subject": "Chemistry",
+"chapter": "Surface Chemistry",
+"name": "Gold Number",
+"formula": "Minimum mg of protective colloid to prevent coagulation of 10 mL red gold sol"
+},
+{
+"subject": "Chemistry",
+"chapter": "Surface Chemistry",
+"name": "Coagulation",
+"formula": "Hardy-Schulze: higher charge of ion → more coagulation"
+},
+{
+"subject": "Chemistry",
+"chapter": "Coordination Compounds",
+"name": "IUPAC Naming Order",
+"formula": "Ligands alphabetically, then metal"
+},
+{
+"subject": "Chemistry",
+"chapter": "Coordination Compounds",
+"name": "Oxidation State",
+"formula": "charge on central metal ion"
+},
+{
+"subject": "Chemistry",
+"chapter": "Coordination Compounds",
+"name": "EAN Rule",
+"formula": "EAN = Z − oxidation state + 2 × coordination number"
+},
+{
+"subject": "Chemistry",
+"chapter": "Coordination Compounds",
+"name": "Crystal Field Splitting (Octahedral)",
+"formula": "Δ_o = energy gap between t₂g and eg"
+},
+{
+"subject": "Chemistry",
+"chapter": "Coordination Compounds",
+"name": "CFSE (high spin octahedral)",
+"formula": "For d⁴: CFSE = −0.6Δ_o"
+},
+{
+"subject": "Chemistry",
+"chapter": "Coordination Compounds",
+"name": "Effective Atomic Number",
+"formula": "EAN = (Z − x) + 2L (L = no. of ligands)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Coordination Compounds",
+"name": "Magnetic Moment",
+"formula": "μ = √(n(n+2)) BM (n = unpaired electrons)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Coordination Compounds",
+"name": "Werner's Theory",
+"formula": "Primary valency = ionisable; secondary = coordination"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "Density of unit cell",
+"formula": "d = Z × M / (Nₐ × a³)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "Simple Cubic packing",
+"formula": "Z = 1; r = a/2"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "BCC packing",
+"formula": "Z = 2; r = a√3/4"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "FCC packing",
+"formula": "Z = 4; r = a/√8 = a/(2√2)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "Packing Efficiency (SC)",
+"formula": "52.4%"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "Packing Efficiency (BCC)",
+"formula": "68%"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "Packing Efficiency (FCC/CCP)",
+"formula": "74%"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "Schottky Defect",
+"formula": "Cation-anion pair missing; density decreases"
+},
+{
+"subject": "Chemistry",
+"chapter": "Solid State",
+"name": "Frenkel Defect",
+"formula": "Cation displaced to interstitial; density same"
+},
+{
+"subject": "Chemistry",
+"chapter": "Nuclear & Radioactivity (Chemistry)",
+"name": "Alpha decay",
+"formula": "₂₄He emitted; Z−2, A−4"
+},
+{
+"subject": "Chemistry",
+"chapter": "Nuclear & Radioactivity (Chemistry)",
+"name": "Beta decay",
+"formula": "electron emitted; Z+1, A same"
+},
+{
+"subject": "Chemistry",
+"chapter": "Nuclear & Radioactivity (Chemistry)",
+"name": "Gamma decay",
+"formula": "No change in Z or A"
+},
+{
+"subject": "Chemistry",
+"chapter": "Nuclear & Radioactivity (Chemistry)",
+"name": "Radioactive decay",
+"formula": "N = N₀(1/2)^(t/t½)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Nuclear & Radioactivity (Chemistry)",
+"name": "Rate of decay",
+"formula": "−dN/dt = λN"
+},
+{
+"subject": "Chemistry",
+"chapter": "Nuclear & Radioactivity (Chemistry)",
+"name": "Binding energy per nucleon",
+"formula": "BE/A (higher = more stable)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Degree of unsaturation",
+"formula": "DBE = (2C + 2 + N − H − X) / 2"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Inductive effect order",
+"formula": "−F > −Cl > −Br > −I (withdrawing)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "+I effect order",
+"formula": "−C(CH₃)₃ > −CH(CH₃)₂ > −CH₂CH₃ > −CH₃"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Acidic strength (carboxylic)",
+"formula": "Increases with −I substituents"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Basic strength (amines)",
+"formula": "Aliphatic > NH₃ > Aromatic (in solution)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Markovnikov's Rule",
+"formula": "H adds to C with more H"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Anti-Markovnikov",
+"formula": "With peroxide (radical mechanism)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Zaitsev's Rule",
+"formula": "More substituted alkene preferred"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Saytzeff's Rule",
+"formula": "Same as Zaitsev"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "SN1 vs SN2",
+"formula": "SN1: 3°, polar protic; SN2: 1°, polar aprotic"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "E1 vs E2",
+"formula": "E1: 3°, weak base; E2: strong base"
+},
+{
+"subject": "Chemistry",
+"chapter": "Organic Chemistry — General",
+"name": "Optical activity",
+"formula": "Chiral (no plane of symmetry)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Aldol Condensation",
+"formula": "Aldehyde/ketone + base → β-hydroxy carbonyl → α,β-unsaturated"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Cannizzaro Reaction",
+"formula": "Non-enolisable aldehyde + conc. NaOH → acid + alcohol"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Williamson Synthesis",
+"formula": "R−X + R'O⁻Na⁺ → R−O−R' + NaX"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Kolbe's Reaction",
+"formula": "C₆H₅ONa + CO₂ + pressure → salicylic acid"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Reimer-Tiemann",
+"formula": "Phenol + CHCl₃ + NaOH → salicylaldehyde"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Sandmeyer Reaction",
+"formula": "ArN₂⁺ + CuCl/CuBr → ArCl/ArBr"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Balz-Schiemann",
+"formula": "ArN₂⁺BF₄⁻ → ArF"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Hofmann Bromamide",
+"formula": "RCONH₂ + Br₂ + NaOH → RNH₂ (amine, −1 C)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Clemmensen Reduction",
+"formula": "C=O → CH₂ (Zn/Hg + HCl)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Wolff-Kishner",
+"formula": "C=O → CH₂ (NH₂NH₂ + KOH)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Rosenmund Reduction",
+"formula": "RCOCl + H₂/Pd-BaSO₄ → RCHO"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Stephen Reduction",
+"formula": "RCN + SnCl₂/HCl → RCHO"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Etard Reaction",
+"formula": "ArCH₃ + CrO₂Cl₂ → ArCHO"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Gattermann Koch",
+"formula": "Benzene + CO + HCl/AlCl₃ → benzaldehyde"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Fehling's Test",
+"formula": "Aldehyde reduces Cu²⁺ → Cu₂O (red ppt)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Tollens' Test",
+"formula": "Aldehyde + AgNO₃/NH₃ → silver mirror"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Lucas Test",
+"formula": "3°: immediate; 2°: delayed; 1°: no reaction with ZnCl₂/HCl"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Iodoform Test",
+"formula": "CH₃COR or CH₃CHOH + I₂/NaOH → CHI₃"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Hell-Volhard-Zelinsky",
+"formula": "RCH₂COOH + Br₂/P → RCHBrCOOH"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Perkin Reaction",
+"formula": "ArCHO + (RCH₂CO)₂O + salt → α,β-unsaturated acid"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Benzoin Condensation",
+"formula": "2 ArCHO + CN⁻ → ArCH(OH)COAr"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Pinacol-Pinacolone",
+"formula": "1,2-diol + H⁺ → ketone rearrangement"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Diels-Alder",
+"formula": "Diene + dienophile → cyclohexene (cycloaddition)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Fries Rearrangement",
+"formula": "Phenyl ester + AlCl₃ → hydroxy ketone"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Claisen Condensation",
+"formula": "2 Ester molecules + base → β-ketoester"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Gabriel Synthesis",
+"formula": "Phthalimide + RX → primary amine"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Coupling Reaction",
+"formula": "ArN₂⁺ + phenol/amine → azo dye"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Esterification",
+"formula": "RCOOH + R'OH ⇌ RCOOR' + H₂O"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Saponification",
+"formula": "Ester + NaOH → RCOONa + R'OH"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Decarboxylation",
+"formula": "RCOONa + NaOH (CaO) → RH + Na₂CO₃"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Wurtz Reaction",
+"formula": "2RX + 2Na → R−R + 2NaX"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Fittig Reaction",
+"formula": "ArX + RX + 2Na → Ar−R + 2NaX"
+},
+{
+"subject": "Chemistry",
+"chapter": "Named Reactions (Organic)",
+"name": "Frankland Reaction",
+"formula": "2RX + Zn → R−R + ZnX₂"
+},
+{
+"subject": "Chemistry",
+"chapter": "Polymers",
+"name": "Degree of Polymerisation",
+"formula": "DP = Molecular weight of polymer / Molecular weight of monomer"
+},
+{
+"subject": "Chemistry",
+"chapter": "Polymers",
+"name": "Nylon-6,6",
+"formula": "Hexamethylene diamine + Adipic acid"
+},
+{
+"subject": "Chemistry",
+"chapter": "Polymers",
+"name": "Nylon-6",
+"formula": "Caprolactam (ring opening)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Polymers",
+"name": "Bakelite",
+"formula": "Phenol + Formaldehyde"
+},
+{
+"subject": "Chemistry",
+"chapter": "Polymers",
+"name": "Buna-S",
+"formula": "Butadiene + Styrene"
+},
+{
+"subject": "Chemistry",
+"chapter": "Polymers",
+"name": "Buna-N",
+"formula": "Butadiene + Acrylonitrile"
+},
+{
+"subject": "Chemistry",
+"chapter": "Biomolecules",
+"name": "General formula of monosaccharide",
+"formula": "(CH₂O)ₙ"
+},
+{
+"subject": "Chemistry",
+"chapter": "Biomolecules",
+"name": "Glucose ring",
+"formula": "Open chain ⇌ Haworth (pyranose)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Biomolecules",
+"name": "Peptide bond",
+"formula": "−CO−NH−"
+},
+{
+"subject": "Chemistry",
+"chapter": "Biomolecules",
+"name": "Zwitterion",
+"formula": "H₃N⁺−CHR−COO⁻"
+},
+{
+"subject": "Chemistry",
+"chapter": "Biomolecules",
+"name": "Isoelectric point",
+"formula": "pH at which amino acid has no net charge"
+},
+{
+"subject": "Chemistry",
+"chapter": "Biomolecules",
+"name": "DNA base pairs",
+"formula": "A−T (2H bonds); G−C (3H bonds)"
+},
+{
+"subject": "Chemistry",
+"chapter": "Biomolecules",
+"name": "Saponification value",
+"formula": "mg KOH to saponify 1g fat"
+},
+{
+"subject": "Chemistry",
+"chapter": "Biomolecules",
+"name": "Iodine value",
+"formula": "g I₂ absorbed per 100g fat (measures unsaturation)"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Bond angle: NH₃ vs NF₃",
+"formula": "NH₃: 107°; NF₃: 102.5°"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Acidic strength of oxyacids of Cl",
+"formula": "HClO < HClO₂ < HClO₃ < HClO₄"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Acidic strength of hydrides (Group 16)",
+"formula": "H₂S < H₂Se < H₂Te (non-aq); H₂O > rest in aq"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Thermal stability of hydrides",
+"formula": "Decreases down the group"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Oxidising power of halogens",
+"formula": "F₂ > Cl₂ > Br₂ > I₂"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Disproportionation of Cl₂",
+"formula": "Cl₂ + 2NaOH → NaCl + NaOCl + H₂O"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Structure of XeF₂",
+"formula": "Linear (3 LP on Xe)"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Structure of XeF₄",
+"formula": "Square planar (2 LP)"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Structure of XeF₆",
+"formula": "Distorted octahedral"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Bleaching powder",
+"formula": "Ca(OCl)Cl"
+},
+{
+"subject": "Chemistry",
+"chapter": "p-Block Elements",
+"name": "Plaster of Paris",
+"formula": "CaSO₄·½H₂O"
+},
+{
+"subject": "Chemistry",
+"chapter": "d & f Block / Transition Metals",
+"name": "General config",
+"formula": "(n−1)d¹⁻¹⁰ ns⁰⁻²"
+},
+{
+"subject": "Chemistry",
+"chapter": "d & f Block / Transition Metals",
+"name": "Magnetic moment",
+"formula": "μ = √(n(n+2)) BM"
+},
+{
+"subject": "Chemistry",
+"chapter": "d & f Block / Transition Metals",
+"name": "Highest oxidation state",
+"formula": "Mn (up to +7), Cr (up to +6)"
+},
+{
+"subject": "Chemistry",
+"chapter": "d & f Block / Transition Metals",
+"name": "KMnO₄ in acidic",
+"formula": "MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O"
+},
+{
+"subject": "Chemistry",
+"chapter": "d & f Block / Transition Metals",
+"name": "KMnO₄ in neutral/alkaline",
+"formula": "MnO₄⁻ + 2H₂O + 3e⁻ → MnO₂ + 4OH⁻"
+},
+{
+"subject": "Chemistry",
+"chapter": "d & f Block / Transition Metals",
+"name": "K₂Cr₂O₇ in acid",
+"formula": "Cr₂O₇²⁻ + 14H⁺ + 6e⁻ → 2Cr³⁺ + 7H₂O"
+},
+{
+"subject": "Chemistry",
+"chapter": "d & f Block / Transition Metals",
+"name": "Lanthanoid Contraction",
+"formula": "Steady decrease in atomic/ionic radius across lanthanoids"
+},
+{
+"subject": "Chemistry",
+"chapter": "d & f Block / Transition Metals",
+"name": "Actinoids",
+"formula": "5f series; generally radioactive"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Pythagorean Identity",
+"formula": "sin²θ + cos²θ = 1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Pythagorean (tan)",
+"formula": "1 + tan²θ = sec²θ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Pythagorean (cot)",
+"formula": "1 + cot²θ = cosec²θ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "sin(A+B)",
+"formula": "sinA cosB + cosA sinB"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "sin(A−B)",
+"formula": "sinA cosB − cosA sinB"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "cos(A+B)",
+"formula": "cosA cosB − sinA sinB"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "cos(A−B)",
+"formula": "cosA cosB + sinA sinB"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "tan(A+B)",
+"formula": "(tanA + tanB) / (1 − tanA tanB)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "tan(A−B)",
+"formula": "(tanA − tanB) / (1 + tanA tanB)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "sin 2A",
+"formula": "2 sinA cosA"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "cos 2A",
+"formula": "cos²A − sin²A = 1−2sin²A = 2cos²A−1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "tan 2A",
+"formula": "2tanA / (1 − tan²A)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "sin 3A",
+"formula": "3sinA − 4sin³A"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "cos 3A",
+"formula": "4cos³A − 3cosA"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "tan 3A",
+"formula": "(3tanA − tan³A) / (1 − 3tan²A)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Product to Sum: sinA sinB",
+"formula": "½[cos(A−B) − cos(A+B)]"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Product to Sum: cosA cosB",
+"formula": "½[cos(A−B) + cos(A+B)]"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Product to Sum: sinA cosB",
+"formula": "½[sin(A+B) + sin(A−B)]"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Sum to Product: sinC+sinD",
+"formula": "2 sin((C+D)/2) cos((C−D)/2)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Sum to Product: sinC−sinD",
+"formula": "2 cos((C+D)/2) sin((C−D)/2)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Sum to Product: cosC+cosD",
+"formula": "2 cos((C+D)/2) cos((C−D)/2)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Sum to Product: cosC−cosD",
+"formula": "−2 sin((C+D)/2) sin((C−D)/2)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "t-substitution (sinA)",
+"formula": "2t/(1+t²); t = tan(A/2)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "t-substitution (cosA)",
+"formula": "(1−t²)/(1+t²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "t-substitution (tanA)",
+"formula": "2t/(1−t²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Sine Rule",
+"formula": "a/sinA = b/sinB = c/sinC = 2R"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Cosine Rule",
+"formula": "a² = b² + c² − 2bc cosA"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Area of Triangle",
+"formula": "Δ = ½ ab sinC"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Heron's Formula",
+"formula": "Δ = √(s(s−a)(s−b)(s−c)); s = (a+b+c)/2"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Inradius",
+"formula": "r = Δ/s"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Circumradius",
+"formula": "R = abc / 4Δ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "tan(A/2)",
+"formula": "√((s−b)(s−c)/s(s−a))"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Range of sinx, cosx",
+"formula": "[−1, 1]"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Period of sinx, cosx",
+"formula": "2π"
+},
+{
+"subject": "Mathematics",
+"chapter": "Trigonometry",
+"name": "Period of tanx",
+"formula": "π"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "Domain of sin⁻¹",
+"formula": "[−1, 1]; Range: [−π/2, π/2]"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "Domain of cos⁻¹",
+"formula": "[−1, 1]; Range: [0, π]"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "Domain of tan⁻¹",
+"formula": "R; Range: (−π/2, π/2)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "sin⁻¹(−x)",
+"formula": "−sin⁻¹x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "cos⁻¹(−x)",
+"formula": "π − cos⁻¹x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "tan⁻¹(−x)",
+"formula": "−tan⁻¹x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "sin⁻¹x + cos⁻¹x",
+"formula": "π/2"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "tan⁻¹x + cot⁻¹x",
+"formula": "π/2"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "tan⁻¹x + tan⁻¹y",
+"formula": "tan⁻¹((x+y)/(1−xy)); xy < 1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "tan⁻¹x − tan⁻¹y",
+"formula": "tan⁻¹((x−y)/(1+xy))"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "2tan⁻¹x",
+"formula": "tan⁻¹(2x/(1−x²)) = sin⁻¹(2x/(1+x²)) = cos⁻¹((1−x²)/(1+x²))"
+},
+{
+"subject": "Mathematics",
+"chapter": "Inverse Trigonometry",
+"name": "sin⁻¹(sinθ)",
+"formula": "θ if θ ∈ [−π/2, π/2]"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Quadratic Formula",
+"formula": "x = (−b ± √(b²−4ac)) / 2a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Discriminant",
+"formula": "D = b² − 4ac"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Sum of Roots",
+"formula": "α + β = −b/a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Product of Roots",
+"formula": "αβ = c/a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Nature: D > 0",
+"formula": "Real and distinct"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Nature: D = 0",
+"formula": "Real and equal"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Nature: D < 0",
+"formula": "Complex conjugate"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Equation from roots",
+"formula": "x² − (α+β)x + αβ = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "α² + β²",
+"formula": "(α+β)² − 2αβ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "α³ + β³",
+"formula": "(α+β)³ − 3αβ(α+β)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Algebra — Quadratic Equations",
+"name": "Range (quadratic)",
+"formula": "For ax²+bx+c: min/max at x = −b/2a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "nth term of AP",
+"formula": "aₙ = a + (n−1)d"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "Sum of AP",
+"formula": "Sₙ = n/2[2a + (n−1)d] = n/2(a + l)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "nth term of GP",
+"formula": "aₙ = arⁿ⁻¹"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "Sum of GP (r ≠ 1)",
+"formula": "Sₙ = a(rⁿ−1)/(r−1)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "Sum of infinite GP",
+"formula": "S∞ = a/(1−r);|r|< 1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "AM",
+"formula": "AM = (a+b)/2"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "GM",
+"formula": "GM = √(ab)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "HM",
+"formula": "HM = 2ab/(a+b)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "AM ≥ GM ≥ HM",
+"formula": "Always true for positive numbers"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "Sum of first n natural numbers",
+"formula": "n(n+1)/2"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "Sum of squares",
+"formula": "n(n+1)(2n+1)/6"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "Sum of cubes",
+"formula": "[n(n+1)/2]²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "AGP nth term",
+"formula": "aₙ = [a + (n−1)d]rⁿ⁻¹"
+},
+{
+"subject": "Mathematics",
+"chapter": "Sequences & Series",
+"name": "Telescoping",
+"formula": "Partial fractions, cancel adjacent terms"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "Binomial Expansion",
+"formula": "(a+b)ⁿ = Σ C(n,r) aⁿ⁻ʳ bʳ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "General Term",
+"formula": "T_{r+1} = C(n,r) aⁿ⁻ʳ bʳ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "Middle Term (n even)",
+"formula": "T_{n/2+1}"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "Middle Terms (n odd)",
+"formula": "T_{(n+1)/2} and T_{(n+3)/2}"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "nCr",
+"formula": "n! / (r!(n−r)!)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "Sum of coefficients",
+"formula": "Put a=b=1: 2ⁿ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "Numerically greatest term",
+"formula": "Find r = (n+1)|x|/(1+|x|)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "(1+x)ⁿ expansion (",
+"formula": "x|<1)|1 + nx + n(n−1)x²/2! + ..."
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "C₀+C₁+...+Cₙ",
+"formula": "2ⁿ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Binomial Theorem",
+"name": "C₀−C₁+C₂−...",
+"formula": "0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "Definition",
+"formula": "z = a + ib; i = √(−1)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "Modulus",
+"formula": "|z|= √(a² + b²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "Argument",
+"formula": "arg(z) = tan⁻¹(b/a)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "Conjugate",
+"formula": "z̄ = a − ib"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "z × z̄",
+"formula": "|z|²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "Polar Form",
+"formula": "z = r(cosθ + i sinθ) = re^(iθ)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "Euler's Formula",
+"formula": "e^(iθ) = cosθ + i sinθ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "De Moivre's Theorem",
+"formula": "(cosθ + i sinθ)ⁿ = cos(nθ) + i sin(nθ)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "nth Roots of Unity",
+"formula": "z = e^(2πik/n); k = 0,1,...,n−1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "Triangle Inequality",
+"formula": "|z₁+z₂|≤|z₁|+|z₂|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "Rotation Formula",
+"formula": "z' = z × e^(iθ)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Complex Numbers",
+"name": "arg(z₁/z₂)",
+"formula": "arg(z₁) − arg(z₂)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "Permutation",
+"formula": "P(n,r) = n!/(n−r)!"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "Combination",
+"formula": "C(n,r) = n!/(r!(n−r)!)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "Circular Permutation",
+"formula": "(n−1)!"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "With repetition (combination)",
+"formula": "C(n+r−1, r)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "Derangements",
+"formula": "D(n) = n! Σ (−1)^k/k! for k=0 to n"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "Identical objects",
+"formula": "n! / (p! q! r! ...)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "Selections (at least one)",
+"formula": "2ⁿ − 1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "Distribution into groups",
+"formula": "(m+n)! / (m! n!)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "C(n,r) = C(n,n−r)",
+"formula": "Symmetry"
+},
+{
+"subject": "Mathematics",
+"chapter": "Permutations & Combinations",
+"name": "Pascal's Identity",
+"formula": "C(n,r) = C(n−1,r−1) + C(n−1,r)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Classical Probability",
+"formula": "P(A) = n(A)/n(S)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Complement",
+"formula": "P(A') = 1 − P(A)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Addition Rule",
+"formula": "P(A∪B) = P(A)+P(B)−P(A∩B)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Mutually Exclusive",
+"formula": "P(A∪B) = P(A) + P(B)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Conditional",
+"formula": "P(A|B) = P(A∩B) / P(B)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Multiplication Rule",
+"formula": "P(A∩B) = P(A)P(B|A)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Independence",
+"formula": "P(A∩B) = P(A)P(B)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Bayes' Theorem",
+"formula": "P(Aᵢ|B) = P(Aᵢ)P(B|Aᵢ) / ΣP(Aⱼ)P(B|Aⱼ)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Total Probability",
+"formula": "P(B) = ΣP(Aᵢ)P(B|Aᵢ)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Binomial Distribution",
+"formula": "P(X=r) = C(n,r) pʳ (1−p)ⁿ⁻ʳ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Mean (Binomial)",
+"formula": "μ = np"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Variance (Binomial)",
+"formula": "σ² = np(1−p)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Probability",
+"name": "Expected Value",
+"formula": "E(X) = Σx·P(x)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Matrix Addition",
+"formula": "(A+B)ᵢⱼ = Aᵢⱼ + Bᵢⱼ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Matrix Multiplication",
+"formula": "(AB)ᵢⱼ = ΣAᵢₖBₖⱼ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Transpose",
+"formula": "(Aᵀ)ᵢⱼ = Aⱼᵢ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Symmetric Matrix",
+"formula": "A = Aᵀ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Skew-Symmetric",
+"formula": "A = −Aᵀ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Inverse",
+"formula": "AA⁻¹ = I"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "A⁻¹",
+"formula": "adj(A) / det(A)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Adjoint",
+"formula": "Transpose of cofactor matrix"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "2×2 Determinant",
+"formula": "|a b; c d|= ad − bc"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Properties",
+"formula": "Row/col swap changes sign"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Expansion (3×3)",
+"formula": "Along any row/column"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "det(AB)",
+"formula": "det(A)·det(B)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "det(kA) for n×n",
+"formula": "kⁿ det(A)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "det(Aᵀ)",
+"formula": "det(A)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Cramer's Rule",
+"formula": "x = Dₓ/D; y = Dᵧ/D"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Rank of Matrix",
+"formula": "Max order of non-zero minor"
+},
+{
+"subject": "Mathematics",
+"chapter": "Matrices & Determinants",
+"name": "Singular Matrix",
+"formula": "det(A) = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Distance Formula",
+"formula": "d = √((x₂−x₁)² + (y₂−y₁)²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Section Formula (internal)",
+"formula": "((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n))"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Midpoint",
+"formula": "((x₁+x₂)/2, (y₁+y₂)/2)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Centroid",
+"formula": "((x₁+x₂+x₃)/3, (y₁+y₂+y₃)/3)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Slope",
+"formula": "m = (y₂−y₁)/(x₂−x₁) = tanθ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Slope-intercept form",
+"formula": "y = mx + c"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Two-point form",
+"formula": "(y−y₁)/(y₂−y₁) = (x−x₁)/(x₂−x₁)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Intercept form",
+"formula": "x/a + y/b = 1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Normal form",
+"formula": "x cosα + y sinα = p"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "General form",
+"formula": "ax + by + c = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Distance from point to line",
+"formula": "|ax₀+by₀+c|/ √(a²+b²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Parallel lines",
+"formula": "m₁ = m₂"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Perpendicular lines",
+"formula": "m₁m₂ = −1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Angle between lines",
+"formula": "tanθ =|(m₁−m₂)/(1+m₁m₂)|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Family of lines",
+"formula": "L₁ + λL₂ = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Reflection of point",
+"formula": "Derived using foot of perpendicular"
+},
+{
+"subject": "Mathematics",
+"chapter": "Straight Lines",
+"name": "Area of Triangle",
+"formula": "½|x₁(y₂−y₃) + x₂(y₃−y₁) + x₃(y₁−y₂)|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Standard form",
+"formula": "x² + y² = r²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "General form",
+"formula": "x² + y² + 2gx + 2fy + c = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Centre",
+"formula": "(−g, −f)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Radius",
+"formula": "√(g² + f² − c)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Centre-Radius form",
+"formula": "(x−h)² + (y−k)² = r²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Diameter form",
+"formula": "(x−x₁)(x−x₂) + (y−y₁)(y−y₂) = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Tangent (slope form)",
+"formula": "y = mx ± r√(1+m²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Tangent at point (x₁,y₁)",
+"formula": "xx₁ + yy₁ = r²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Length of tangent",
+"formula": "√(x₁²+y₁²+2gx₁+2fy₁+c)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Pair of tangents",
+"formula": "SS₁ = T²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Radical Axis",
+"formula": "S₁ − S₂ = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Chord of contact",
+"formula": "T = 0 i.e. xx₁+yy₁+g(x+x₁)+f(y+y₁)+c = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Power of point",
+"formula": "S₁ = x₁²+y₁²+2gx₁+2fy₁+c"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Common chord",
+"formula": "S₁ − S₂ = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Circles",
+"name": "Orthogonal circles",
+"formula": "2g₁g₂ + 2f₁f₂ = c₁ + c₂"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Standard form",
+"formula": "y² = 4ax"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Focus",
+"formula": "(a, 0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Directrix",
+"formula": "x = −a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Vertex",
+"formula": "(0, 0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Latus Rectum",
+"formula": "4a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Focal distance",
+"formula": "x + a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Parametric",
+"formula": "(at², 2at)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Tangent (slope m)",
+"formula": "y = mx + a/m"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Normal (slope m)",
+"formula": "y = mx − 2am − am³"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Tangent at (at²,2at)",
+"formula": "ty = x + at²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Chord of contact",
+"formula": "yy₁ = 2a(x + x₁)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Standard form",
+"formula": "x²/a² + y²/b² = 1; a > b"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "b²",
+"formula": "a²(1 − e²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Eccentricity",
+"formula": "e = c/a; c² = a² − b²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Foci",
+"formula": "(±ae, 0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Directrices",
+"formula": "x = ±a/e"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Latus Rectum",
+"formula": "2b²/a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Parametric",
+"formula": "(a cosθ, b sinθ)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Tangent (slope m)",
+"formula": "y = mx ± √(a²m² + b²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Sum of focal distances",
+"formula": "2a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Standard form",
+"formula": "x²/a² − y²/b² = 1"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "b²",
+"formula": "a²(e²−1)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Eccentricity",
+"formula": "e = c/a; e > 1; c² = a² + b²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Foci",
+"formula": "(±ae, 0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Asymptotes",
+"formula": "y = ±(b/a)x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Latus Rectum",
+"formula": "2b²/a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Difference of focal distances",
+"formula": "2a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Rectangular Hyperbola",
+"formula": "xy = c²; asymptotes are axes"
+},
+{
+"subject": "Mathematics",
+"chapter": "Conic Sections",
+"name": "Parametric (Rect. Hyp.)",
+"formula": "(ct, c/t)"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Distance Formula",
+"formula": "d = √((x₂−x₁)²+(y₂−y₁)²+(z₂−z₁)²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Section Formula",
+"formula": "((mx₂+nx₁)/(m+n), ..., ...)"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Direction Cosines",
+"formula": "l²+m²+n² = 1"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Direction Ratios to DC",
+"formula": "l = a/√(a²+b²+c²) etc."
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Angle between lines",
+"formula": "cosθ = l₁l₂+m₁m₂+n₁n₂"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Line (symmetric form)",
+"formula": "(x−x₁)/l = (y−y₁)/m = (z−z₁)/n"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Line (vector form)",
+"formula": "r = a + λb"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Equation of plane",
+"formula": "ax + by + cz + d = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Plane (intercept form)",
+"formula": "x/a + y/b + z/c = 1"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Plane (normal form)",
+"formula": "lx + my + nz = p"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Plane (vector form)",
+"formula": "r · n̂ = d"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Distance from point to plane",
+"formula": "|ax₁+by₁+cz₁+d|/ √(a²+b²+c²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Angle between planes",
+"formula": "cosθ =|a₁a₂+b₁b₂+c₁c₂|/ (√... × √...)"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Line ⊥ to plane",
+"formula": "Direction ratios = normal to plane"
+},
+{
+"subject": "Mathematics",
+"chapter": "3D Geometry",
+"name": "Skew lines distance",
+"formula": "|(a₂−a₁)·(b₁×b₂)|/|b₁×b₂|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Magnitude",
+"formula": "|a|= √(a₁²+a₂²+a₃²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Dot Product",
+"formula": "a·b =|a||b|cosθ = a₁b₁+a₂b₂+a₃b₃"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Cross Product magnitude",
+"formula": "|a×b|=|a||b|sinθ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Cross Product (component)",
+"formula": "a×b =|i j k; a₁ a₂ a₃; b₁ b₂ b₃|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Unit Vector",
+"formula": "â = a/|a|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Angle between vectors",
+"formula": "cosθ = a·b / (|a||b|)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Perpendicularity",
+"formula": "a·b = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Parallelism",
+"formula": "a×b = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Projection of a on b",
+"formula": "a·b̂ = a·b/|b|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Scalar Triple Product",
+"formula": "[a b c] = a·(b×c)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Volume of parallelepiped",
+"formula": "|[a b c]|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Coplanar vectors",
+"formula": "[a b c] = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Vector Triple Product",
+"formula": "a×(b×c) = (a·c)b − (a·b)c"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Area of triangle",
+"formula": "½|a×b|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Vectors",
+"name": "Area of parallelogram",
+"formula": "|a×b|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim sinx/x",
+"formula": "1 (x→0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim tanx/x",
+"formula": "1 (x→0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim (1−cosx)/x²",
+"formula": "1/2 (x→0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim (eˣ−1)/x",
+"formula": "1 (x→0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim (aˣ−1)/x",
+"formula": "ln a (x→0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim ln(1+x)/x",
+"formula": "1 (x→0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim (1+1/n)ⁿ",
+"formula": "e (n→∞)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim (1+x)^(1/x)",
+"formula": "e (x→0)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "lim xⁿ−aⁿ / x−a",
+"formula": "naⁿ⁻¹"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "L'Hôpital's Rule",
+"formula": "If 0/0 or ∞/∞: lim f/g = lim f'/g'"
+},
+{
+"subject": "Mathematics",
+"chapter": "Limits",
+"name": "Squeeze Theorem",
+"formula": "If g≤f≤h and lim g=lim h=L, then lim f=L"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Power Rule",
+"formula": "d/dx(xⁿ) = nxⁿ⁻¹"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(eˣ)",
+"formula": "eˣ"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(aˣ)",
+"formula": "aˣ ln a"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(ln x)",
+"formula": "1/x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(sin x)",
+"formula": "cos x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(cos x)",
+"formula": "−sin x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(tan x)",
+"formula": "sec²x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(cot x)",
+"formula": "−cosec²x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(sec x)",
+"formula": "sec x tan x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(cosec x)",
+"formula": "−cosec x cot x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(sin⁻¹x)",
+"formula": "1/√(1−x²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(cos⁻¹x)",
+"formula": "−1/√(1−x²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "d/dx(tan⁻¹x)",
+"formula": "1/(1+x²)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Product Rule",
+"formula": "(uv)' = u'v + uv'"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Quotient Rule",
+"formula": "(u/v)' = (u'v − uv') / v²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Chain Rule",
+"formula": "dy/dx = dy/du × du/dx"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Parametric",
+"formula": "dy/dx = (dy/dt)/(dx/dt)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Second Derivative (parametric)",
+"formula": "d²y/dx² = d/dx(dy/dx)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Implicit Differentiation",
+"formula": "Differentiate both sides, isolate dy/dx"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Logarithmic diff.",
+"formula": "Take log both sides for y = f(x)^g(x)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "Rolle's Theorem",
+"formula": "f(a)=f(b) → ∃c∈(a,b): f'(c)=0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differentiation",
+"name": "LMVT",
+"formula": "f'(c) = (f(b)−f(a))/(b−a)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Increasing Function",
+"formula": "f'(x) > 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Decreasing Function",
+"formula": "f'(x) < 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Maxima (first derivative test)",
+"formula": "f'(x) changes + to −"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Minima (first derivative test)",
+"formula": "f'(x) changes − to +"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Second Derivative Test",
+"formula": "f''(c) < 0: max; f''(c) > 0: min"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Tangent slope",
+"formula": "m = f'(x₀)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Normal slope",
+"formula": "m = −1/f'(x₀)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Tangent equation",
+"formula": "y − y₀ = f'(x₀)(x − x₀)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Angle of intersection of curves",
+"formula": "tanθ =|(m₁−m₂)/(1+m₁m₂)|"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Approximation",
+"formula": "f(x+Δx) ≈ f(x) + f'(x)Δx"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Rate of change",
+"formula": "dy/dt = (dy/dx)(dx/dt)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Point of Inflection",
+"formula": "f''(x) = 0 and changes sign"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Concave up",
+"formula": "f''(x) > 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Applications of Derivatives",
+"name": "Concave down",
+"formula": "f''(x) < 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "Power Rule",
+"formula": "∫xⁿ dx = xⁿ⁺¹/(n+1) + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫eˣ dx",
+"formula": "eˣ + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫aˣ dx",
+"formula": "aˣ/ln a + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫1/x dx",
+"formula": "ln|x|+ C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫sin x dx",
+"formula": "−cos x + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫cos x dx",
+"formula": "sin x + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫tan x dx",
+"formula": "ln|sec x|+ C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫cot x dx",
+"formula": "ln|sin x|+ C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫sec x dx",
+"formula": "ln|sec x + tan x|+ C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫cosec x dx",
+"formula": "ln|cosec x − cot x|+ C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫sec²x dx",
+"formula": "tan x + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫cosec²x dx",
+"formula": "−cot x + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫sec x tan x dx",
+"formula": "sec x + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫1/√(1−x²) dx",
+"formula": "sin⁻¹x + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫1/(1+x²) dx",
+"formula": "tan⁻¹x + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫1/√(x²−a²) dx",
+"formula": "ln|x + √(x²−a²)|+ C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫1/(x²−a²) dx",
+"formula": "1/2a ln|(x−a)/(x+a)|+ C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫1/(a²−x²) dx",
+"formula": "1/2a ln|(a+x)/(a−x)|+ C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫1/√(a²−x²) dx",
+"formula": "sin⁻¹(x/a) + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫1/(a²+x²) dx",
+"formula": "1/a tan⁻¹(x/a) + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "Integration by Parts",
+"formula": "∫u dv = uv − ∫v du (ILATE rule)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "ILATE Order",
+"formula": "Inverse trig, Logarithm, Algebraic, Trig, Exponential"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫eˣ[f(x)+f'(x)]dx",
+"formula": "eˣf(x) + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "Definite Integral property",
+"formula": "∫ₐᵇ f(x)dx = ∫ₐᵇ f(a+b−x)dx"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "King's Property",
+"formula": "∫₀ᵃ f(x)dx = ∫₀ᵃ f(a−x)dx"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "Even function",
+"formula": "∫₋ₐᵃ f(x)dx = 2∫₀ᵃ f(x)dx"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "Odd function",
+"formula": "∫₋ₐᵃ f(x)dx = 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "∫₀²ᵃ f(x)dx",
+"formula": "2∫₀ᵃ f(x)dx if f(2a−x)=f(x); 0 if f(2a−x)=−f(x)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Integration",
+"name": "Leibniz Rule",
+"formula": "d/dx∫ₐ^(g(x)) f(t)dt = f(g(x))·g'(x)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Order",
+"formula": "Highest derivative"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Degree",
+"formula": "Power of highest derivative"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Variable Separable",
+"formula": "f(x)dx = g(y)dy → integrate both sides"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Homogeneous DE",
+"formula": "y = vx substitution"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Linear DE",
+"formula": "dy/dx + Py = Q; IF = e^(∫P dx)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Solution of Linear DE",
+"formula": "y × IF = ∫Q × IF dx + C"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Exact DE",
+"formula": "Mdx + Ndy = 0; ∂M/∂y = ∂N/∂x"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Bernoulli's DE",
+"formula": "dy/dx + Py = Qyⁿ (substitute v = y^(1−n))"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "General Solution",
+"formula": "Contains arbitrary constants"
+},
+{
+"subject": "Mathematics",
+"chapter": "Differential Equations",
+"name": "Particular Solution",
+"formula": "Constants determined by given conditions"
+},
+{
+"subject": "Mathematics",
+"chapter": "Area Under Curves",
+"name": "Area under curve",
+"formula": "A = ∫ₐᵇ f(x) dx"
+},
+{
+"subject": "Mathematics",
+"chapter": "Area Under Curves",
+"name": "Area between two curves",
+"formula": "A = ∫ₐᵇ [f(x) − g(x)] dx"
+},
+{
+"subject": "Mathematics",
+"chapter": "Area Under Curves",
+"name": "Area using y-axis",
+"formula": "A = ∫_c^d x dy"
+},
+{
+"subject": "Mathematics",
+"chapter": "Area Under Curves",
+"name": "Area of ellipse",
+"formula": "π ab"
+},
+{
+"subject": "Mathematics",
+"chapter": "Area Under Curves",
+"name": "Area of circle",
+"formula": "π r²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Area Under Curves",
+"name": "Area of parabola (y²=4ax, x=h)",
+"formula": "(4/3) × h × √(4ah) / 2 = 2/3 × base × height"
+},
+{
+"subject": "Mathematics",
+"chapter": "Mathematical Reasoning & Sets",
+"name": "n(A∪B)",
+"formula": "n(A) + n(B) − n(A∩B)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Mathematical Reasoning & Sets",
+"name": "n(A∪B∪C)",
+"formula": "n(A)+n(B)+n(C)−n(A∩B)−n(B∩C)−n(A∩C)+n(A∩B∩C)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Mathematical Reasoning & Sets",
+"name": "Power Set",
+"formula": "2ⁿ subsets"
+},
+{
+"subject": "Mathematics",
+"chapter": "Mathematical Reasoning & Sets",
+"name": "De Morgan's Law",
+"formula": "(A∪B)' = A'∩B'; (A∩B)' = A'∪B'"
+},
+{
+"subject": "Mathematics",
+"chapter": "Mathematical Reasoning & Sets",
+"name": "Complement",
+"formula": "A' = U − A"
+},
+{
+"subject": "Mathematics",
+"chapter": "Mathematical Reasoning & Sets",
+"name": "Cartesian Product",
+"formula": "A×B has mn elements if|A|=m,|B|=n"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Domain of √f(x)",
+"formula": "f(x) ≥ 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Domain of log f(x)",
+"formula": "f(x) > 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Domain of 1/f(x)",
+"formula": "f(x) ≠ 0"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Composition",
+"formula": "(fog)(x) = f(g(x))"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Invertible function",
+"formula": "one-one and onto"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Even function",
+"formula": "f(−x) = f(x)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Odd function",
+"formula": "f(−x) = −f(x)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Periodic",
+"formula": "f(x+T) = f(x)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Number of functions",
+"formula": "nᵐ (from m-element to n-element set)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Number of bijections",
+"formula": "n! (from n to n)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Relations & Functions",
+"name": "Number of relations",
+"formula": "2^(m×n)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Statistics",
+"name": "Mean",
+"formula": "x̄ = Σxᵢ/n"
+},
+{
+"subject": "Mathematics",
+"chapter": "Statistics",
+"name": "Median",
+"formula": "Middle value (sorted); or L + ((n/2 − F)/f)×h"
+},
+{
+"subject": "Mathematics",
+"chapter": "Statistics",
+"name": "Mode",
+"formula": "Most frequent value"
+},
+{
+"subject": "Mathematics",
+"chapter": "Statistics",
+"name": "Variance",
+"formula": "σ² = Σ(xᵢ − x̄)²/n"
+},
+{
+"subject": "Mathematics",
+"chapter": "Statistics",
+"name": "Standard Deviation",
+"formula": "σ = √(Σ(xᵢ − x̄)²/n)"
+},
+{
+"subject": "Mathematics",
+"chapter": "Statistics",
+"name": "Short-cut variance",
+"formula": "σ² = Σxᵢ²/n − (x̄)²"
+},
+{
+"subject": "Mathematics",
+"chapter": "Statistics",
+"name": "Coefficient of Variation",
+"formula": "CV = (σ/x̄) × 100"
+},
+{
+"subject": "Mathematics",
+"chapter": "Statistics",
+"name": "Combined Mean",
+"formula": "(n₁x̄₁ + n₂x̄₂)/(n₁+n₂)"
+}
+]
