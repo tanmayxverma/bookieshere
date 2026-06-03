@@ -10,6 +10,7 @@ import Materials from "./pages/Materials";
 import Tests from "./pages/Tests";
 import YPT from "./pages/YPT";
 import Portals from "./pages/Portals";
+import Formulas from "./pages/Formulas";
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
@@ -33,6 +34,7 @@ const AppInner = () => {
         <Route path="/tests" element={<Tests />} />
         <Route path="/ypt" element={<YPT />} />
         <Route path="/portals" element={<Portals />} />
+        <Route path="/formulas" element={<Formulas />} />
         <Route path="/support" element={<Support />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/admin" element={<Admin />} />
