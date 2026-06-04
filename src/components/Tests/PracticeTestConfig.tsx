@@ -3,7 +3,7 @@ import {
   Target, Clock, BookOpen, GraduationCap, Download, Play,
   ChevronRight, ChevronLeft, CheckCircle2, Loader2, Layers,
   AlertTriangle, Sparkles, Atom, FlaskConical, Sigma,
-  ArrowUpRight, Zap, ShieldCheck,
+  Zap, ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
