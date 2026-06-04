@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Home, Library, ClipboardList, Timer, LifeBuoy, Coffee, AppWindow, Sigma } from "lucide-react";
+import { Menu, X, Home, Library, ClipboardList, Timer, LifeBuoy, Coffee, AppWindow } from "lucide-react";
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -11,7 +11,6 @@ const navLinks = [
   { path: "/tests", label: "Tests", icon: ClipboardList },
   { path: "/ypt", label: "YPT", icon: Timer },
   { path: "/portals", label: "Portals", icon: AppWindow },
-  { path: "/formulas", label: "Formulas", icon: Sigma },
   { path: "/support", label: "Support", icon: LifeBuoy },
 ];
 

@@ -14,6 +14,7 @@ import {
   CalendarDays, Sparkles, ChevronRight,
 } from 'lucide-react';
 import type { YPTUser } from '@/types/ypt';
+import { FormulaFlashcards } from '@/components/FormulaFlashcards';
 
 interface TimerControls {
   isActive: boolean;
