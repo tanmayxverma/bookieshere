@@ -5,6 +5,7 @@ import unacademyLogo from "@/assets/portals/unacademy.png.asset.json";
 import apniKakshaLogo from "@/assets/portals/apni-kaksha.png.asset.json";
 import competishunLogo from "@/assets/portals/competishun.png.asset.json";
 import allenLogo from "@/assets/portals/allen.jpg.asset.json";
+import careerwillLogo from "@/assets/portals/careerwill.png.asset.json";
 
 export interface PortalLink {
   label: string;
@@ -75,8 +76,8 @@ export const PORTALS: Portal[] = [
     id: "careerwill",
     name: "Careerwill (Jindal)",
     tagline: "Jindal sir lectures",
-    logo: vibrantLogo.url, // fallback — no logo provided
-    accent: "from-orange-500/20 to-yellow-500/20",
+    logo: careerwillLogo.url,
+    accent: "from-cyan-500/20 to-red-500/20",
     links: [
       { label: "Jindal Prep4Free", url: "https://jindal.prep4free.com/" },
     ],
@@ -114,6 +115,3 @@ export const PORTALS: Portal[] = [
     ],
   },
 ];
-
-// Remove careerwill duplicate logo fallback note: keep simple letter monogram instead
-PORTALS.find((p) => p.id === "careerwill")!.logo = "";

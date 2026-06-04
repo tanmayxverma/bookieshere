@@ -14,6 +14,7 @@ import {
   CalendarDays, Sparkles, ChevronRight,
 } from 'lucide-react';
 import type { YPTUser } from '@/types/ypt';
+import { FormulaFlashcards } from '@/components/FormulaFlashcards';
 
 interface TimerControls {
   isActive: boolean;
@@ -654,6 +655,9 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
               </div>
             </Card>
           )}
+
+          {/* Formula flashcards — lightweight revision tool */}
+          <FormulaFlashcards />
         </div>
       </div>
 
