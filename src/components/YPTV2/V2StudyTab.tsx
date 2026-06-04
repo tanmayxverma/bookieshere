@@ -655,6 +655,9 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
               </div>
             </Card>
           )}
+
+          {/* Formula flashcards — lightweight revision tool */}
+          <FormulaFlashcards />
         </div>
       </div>
 
