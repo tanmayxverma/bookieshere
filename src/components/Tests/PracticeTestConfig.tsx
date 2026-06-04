@@ -488,54 +488,6 @@ export function PracticeTestConfig({ testState, onStartTest }: PracticeTestConfi
             </GlassPanel>
           )}
 
-          {/* PYQ Redirect — Premium Editorial */}
-          <a
-            href="https://novatra.in/exams/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-10 group relative block overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-card/70 via-card/40 to-surface-2/30 backdrop-blur-xl shadow-[0_30px_80px_-40px_hsl(var(--primary)/0.4)] transition-all duration-500 hover:border-primary/40 hover:shadow-[0_40px_100px_-30px_hsl(var(--primary)/0.55)]"
-          >
-            {/* ambient glows */}
-            <div aria-hidden className="pointer-events-none absolute -right-20 -top-24 w-72 h-72 rounded-full bg-primary/15 blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-700" />
-            <div aria-hidden className="pointer-events-none absolute -left-24 -bottom-24 w-72 h-72 rounded-full bg-accent/10 blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-700" />
-            <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-
-            <div className="relative grid md:grid-cols-[auto_1fr_auto] items-center gap-6 p-6 md:p-7">
-              {/* Icon medallion */}
-              <div className="relative shrink-0">
-                <div className="absolute inset-0 rounded-2xl bg-primary/30 blur-xl opacity-60 group-hover:opacity-90 transition-opacity" />
-                <div className="relative h-14 w-14 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/20 to-accent/10 backdrop-blur flex items-center justify-center shadow-[inset_0_1px_0_hsl(var(--background)/0.4)]">
-                  <GraduationCap className="h-7 w-7 text-primary" />
-                  <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-primary shadow-[0_0_12px_hsl(var(--primary))] animate-pulse" />
-                </div>
-              </div>
-
-              {/* Copy */}
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/15 border border-primary/30 text-[10px] font-bold tracking-[0.16em] uppercase text-primary">
-                    <Sparkles className="h-2.5 w-2.5" /> Featured
-                  </span>
-                  <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 font-semibold">Partner Platform</span>
-                </div>
-                <h3 className="font-display text-lg md:text-xl font-bold text-foreground tracking-tight">
-                  Practice <span className="text-primary">Previous Year Questions</span>
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                  Attempt the full archive of official JEE Main & Advanced PYQs — curated, year-wise, on Novatra.
-                </p>
-              </div>
-
-              {/* CTA */}
-              <div className="flex md:flex-col items-center md:items-end gap-2 shrink-0">
-                <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-foreground text-background font-semibold text-sm shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.6)] group-hover:gap-3 transition-all">
-                  Open PYQ Practice
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-                </div>
-                <span className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground/60">novatra.in</span>
-              </div>
-            </div>
-          </a>
         </div>
       </div>
     </section>

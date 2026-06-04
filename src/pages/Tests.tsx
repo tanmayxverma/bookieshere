@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout";
 import { PracticeTestConfig } from "@/components/Tests/PracticeTestConfig";
 import { CBTSimulator } from "@/components/Tests/CBTSimulator";
 import { PracticeTestResults } from "@/components/Tests/PracticeTestResults";
+import { TestSeriesHub } from "@/components/Tests/TestSeriesHub";
 import { usePracticeTest } from "@/hooks/usePracticeTest";
 
 export type TestView = "config" | "exam" | "results";
@@ -64,7 +65,10 @@ const Tests = () => {
   return (
     <Layout>
       {currentView === "config" && (
-        <PracticeTestConfig testState={testState} onStartTest={handleStartTest} />
+        <>
+          <PracticeTestConfig testState={testState} onStartTest={handleStartTest} />
+          <TestSeriesHub />
+        </>
       )}
       {currentView === "results" && (
         <PracticeTestResults testState={testState} onNewTest={handleNewTest} />

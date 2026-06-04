@@ -23,6 +23,7 @@ const ALLOWED_DOMAINS = [
   'lovable.app',
   'thescholarverse.site',
   'netlify.app',
+  'novatra.in',
 ];
 
 /**
