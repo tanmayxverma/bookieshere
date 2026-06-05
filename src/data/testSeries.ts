@@ -44,19 +44,6 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     ],
   },
   {
-    id: "mathongo",
-    name: "MathonGo",
-    description: "Advanced grind, AYJR, crash & 2027 series.",
-    logo: mathangoLogo.url,
-    accent: "from-blue-500/20 to-cyan-500/20",
-    resources: [
-      { name: "Advanced", url: "https://drive.google.com/drive/folders/1dY3mWJW52l1XlU1WEOjaf7tOKNwjEfs8" },
-      { name: "AYJR", url: "https://drive.google.com/drive/folders/1PhewAWGvYNh8cpeCUrUIvt2CZSSZ0Izb" },
-      { name: "Advanced Crash Course Test Series", url: "https://t.me/bookiestorageBot?start=BQADAQADVxoAAiuQQUQt-_cGAyLjIxYE" },
-      { name: "Test Series 2027", url: "https://t.me/+WWabQZEjRsZlYjA9" },
-    ],
-  },
-  {
     id: "fiitjee",
     name: "FIITJEE",
     description: "AITS, Rank Booster, Rank Improvement & archives.",
