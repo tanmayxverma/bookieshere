@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -73,5 +74,23 @@ export function useAuth() {
     return { error };
   };
 
-  return { user, session, loading, isAdmin, signIn, signUp, signOut };
+  const signInWithGoogle = async () => {
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      return { error: result.error ?? null, redirected: !!result.redirected };
+    } catch (e: any) {
+      return { error: e, redirected: false };
+    }
+  };
+
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    return { error };
+  };
+
+  return { user, session, loading, isAdmin, signIn, signUp, signOut, signInWithGoogle, resetPassword };
 }
