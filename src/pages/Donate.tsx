@@ -2,7 +2,7 @@ import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Coffee, Heart, Sparkles, ArrowUpRight, BookOpen, Server, Users } from "lucide-react";
 
-const DONATE_URL = "https://buymeachai.ezee.li/tanmay";
+const DONATE_URL = "https://bookieupi.lovable.app/";
 
 const Donate = () => {
   return (
@@ -82,7 +82,7 @@ const Donate = () => {
 
                   <div className="mt-5 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70">
                     <Sparkles className="h-3 w-3 text-primary" />
-                    buymeachai.ezee.li/tanmay
+                    bookieupi.lovable.app
                   </div>
                 </div>
               </div>
