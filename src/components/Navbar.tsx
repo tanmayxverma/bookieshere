@@ -3,6 +3,7 @@ import { Menu, X, Home, Library, ClipboardList, Timer, LifeBuoy, Coffee, AppWind
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { UserMenu } from "@/components/Profile/UserMenu";
 import logo from "@/assets/logo.jfif";
 
 const navLinks = [
@@ -133,11 +134,13 @@ export function Navbar() {
               Chai
             </Link>
             <ThemeToggle />
+            <UserMenu />
           </div>
 
           {/* Mobile Controls */}
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle />
+            <UserMenu compact />
             <Button
               variant="ghost"
               size="icon"
