@@ -3,10 +3,13 @@ import { ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText, Headphones
 import { Layout } from "@/components/Layout";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { JEECountdown } from "@/components/JEECountdown";
+import { useProfile } from "@/hooks/useProfile";
 import { toast } from "sonner";
 
 const Index = () => {
   const scrollRef = useScrollReveal();
+  const { profile } = useProfile();
+  const firstName = profile?.display_name?.trim().split(/\s+/)[0] || "";
 
   const handleCopyCoupon = () => {
     navigator.clipboard.writeText("9906DZRL");
@@ -29,7 +32,7 @@ const Index = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
                 </span>
-                Built for serious aspirants
+                {firstName ? `Welcome back, ${firstName}` : "Built for serious aspirants"}
               </div>
 
               <h1 className="font-display text-6xl sm:text-7xl lg:text-9xl font-black text-foreground leading-[0.9] tracking-tighter">
