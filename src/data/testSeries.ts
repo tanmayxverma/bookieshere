@@ -1,6 +1,5 @@
 import pwLogo from "@/assets/test-series/pw-tests.jpg.asset.json";
 import novatraLogo from "@/assets/test-series/novatra.png.asset.json";
-import mathangoLogo from "@/assets/test-series/mathango.png.asset.json";
 import fiitjeeLogo from "@/assets/test-series/fiitjee.png.asset.json";
 import allenLogo from "@/assets/test-series/allen.jpg.asset.json";
 import narayanaLogo from "@/assets/test-series/narayana.png.asset.json";
