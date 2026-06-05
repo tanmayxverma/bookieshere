@@ -56,6 +56,45 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          account_type: string
+          avatar_url: string | null
+          created_at: string
+          device_id: string | null
+          display_name: string
+          id: string
+          onboarded_at: string | null
+          target_category: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          account_type?: string
+          avatar_url?: string | null
+          created_at?: string
+          device_id?: string | null
+          display_name?: string
+          id?: string
+          onboarded_at?: string | null
+          target_category?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          account_type?: string
+          avatar_url?: string | null
+          created_at?: string
+          device_id?: string | null
+          display_name?: string
+          id?: string
+          onboarded_at?: string | null
+          target_category?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       room_messages: {
         Row: {
           created_at: string
@@ -448,12 +487,59 @@ export type Database = {
       cleanup_old_messages: { Args: never; Returns: undefined }
       cleanup_old_sessions: { Args: never; Returns: undefined }
       cleanup_stale_sessions: { Args: never; Returns: undefined }
+      get_guest_profile: {
+        Args: { _device_id: string }
+        Returns: {
+          account_type: string
+          avatar_url: string | null
+          created_at: string
+          device_id: string | null
+          display_name: string
+          id: string
+          onboarded_at: string | null
+          target_category: string
+          updated_at: string
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      upsert_guest_profile: {
+        Args: {
+          _avatar_url?: string
+          _device_id: string
+          _display_name: string
+          _target_category: string
+        }
+        Returns: {
+          account_type: string
+          avatar_url: string | null
+          created_at: string
+          device_id: string | null
+          display_name: string
+          id: string
+          onboarded_at: string | null
+          target_category: string
+          updated_at: string
+          user_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {

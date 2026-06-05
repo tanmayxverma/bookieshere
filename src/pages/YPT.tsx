@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
+import { useEffect } from 'react';
 import { Layout } from '@/components/Layout';
 import { useYPTUser } from '@/hooks/useYPTUser';
+import { useProfile } from '@/hooks/useProfile';
 import { useStudyTimer } from '@/hooks/useStudyTimer';
 import { useYPTPresence } from '@/hooks/useYPTPresence';
 import { useRoomSession } from '@/hooks/useRoomSession';
@@ -24,6 +26,18 @@ type TabId = typeof TABS[number]['id'];
 
 export default function YPT() {
   const { user, isLoading, isOnboarded, createUser, changeName } = useYPTUser();
+  const { profile, isOnboarded: profileOnboarded } = useProfile();
+
+  // Auto-bridge: if the visitor already has a Bookie profile, hydrate the YPT user from it
+  // so we never ask for the same details twice.
+  useEffect(() => {
+    if (isLoading) return;
+    if (isOnboarded) return;
+    if (profile && profileOnboarded) {
+      createUser(profile.display_name, profile.target_category);
+    }
+  }, [isLoading, isOnboarded, profile, profileOnboarded, createUser]);
+
   const timer = useStudyTimer(user?.id);
   const { onlineCount, activeUsers } = useYPTPresence(user?.id, user?.name, user?.jee_focus_year);
   const roomSession = useRoomSession(user || null, timer.startSession, timer.endSession, timer.isActive);
@@ -51,8 +65,9 @@ export default function YPT() {
 
   return (
     <Layout>
+      {/* Only show YPT's own dialog if there is no Bookie profile to hydrate from. */}
       <YPTOnboarding
-        open={!isOnboarded}
+        open={!isOnboarded && !(profile && profileOnboarded)}
         onSubmit={async (name, year) => {
           await createUser(name, year);
         }}
