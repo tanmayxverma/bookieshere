@@ -1,0 +1,2 @@
+UPDATE public.materials SET name = regexp_replace(name, 'mathongo|mathango', 'M@th@ngo', 'gi') WHERE name ~* 'mathongo|mathango';
+UPDATE public.materials SET description = regexp_replace(description, 'mathongo|mathango', 'M@th@ngo', 'gi') WHERE description ~* 'mathongo|mathango';
