@@ -90,9 +90,13 @@ function useProfileInternal() {
   }, [deviceId, setProfile]);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, s) => {
       setSession(s);
       setUser(s?.user ?? null);
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+        setProfile(null);
+        setLoading(true);
+      }
       setTimeout(() => loadProfile(s), 0);
     });
     supabase.auth.getSession().then(({ data: { session: s } }) => {
