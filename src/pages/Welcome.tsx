@@ -36,12 +36,14 @@ export default function Welcome() {
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState("");
 
-  // If already onboarded, leave the welcome page.
+  // Only auto-redirect authenticated users away from /welcome.
+  // Guests stay so they can upgrade to a real account, and signed-out users see sign-in options.
   useEffect(() => {
     if (loading) return;
+    if (!isAuthenticated) return;
     if (profile && isOnboarded) navigate("/", { replace: true });
     else if (profile && !isOnboarded) navigate("/onboarding", { replace: true });
-  }, [loading, profile, isOnboarded, navigate]);
+  }, [loading, profile, isOnboarded, isAuthenticated, navigate]);
 
   const handleGuest = () => navigate("/onboarding");
 
