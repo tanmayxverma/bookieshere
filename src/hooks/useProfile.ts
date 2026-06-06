@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, createContext, useContext, useMemo, type ReactNode, createElement } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
 
 const DEVICE_ID_KEY = 'ypt_device_id';
+const PROFILE_CACHE_KEY = 'bookie_profile_cache_v1';
 
 export const TARGET_CATEGORIES = [
   'JEE 2027',
@@ -38,12 +39,34 @@ function getOrCreateDeviceId(): string {
   return id;
 }
 
-export function useProfile() {
+function readCache(): Profile | null {
+  try {
+    const raw = localStorage.getItem(PROFILE_CACHE_KEY);
+    return raw ? (JSON.parse(raw) as Profile) : null;
+  } catch { return null; }
+}
+function writeCache(p: Profile | null) {
+  try {
+    if (p) localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(p));
+    else localStorage.removeItem(PROFILE_CACHE_KEY);
+  } catch { /* ignore */ }
+}
+
+type ProfileContextValue = ReturnType<typeof useProfileInternal>;
+const ProfileContext = createContext<ProfileContextValue | null>(null);
+
+function useProfileInternal() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const cached = readCache();
+  const [profile, setProfileState] = useState<Profile | null>(cached);
+  const [loading, setLoading] = useState(!cached);
   const deviceId = getOrCreateDeviceId();
+
+  const setProfile = useCallback((p: Profile | null) => {
+    setProfileState(p);
+    writeCache(p);
+  }, []);
 
   const loadProfile = useCallback(async (sess: Session | null) => {
     try {
@@ -60,17 +83,16 @@ export function useProfile() {
         setProfile((row as Profile) ?? null);
       }
     } catch {
-      setProfile(null);
+      /* keep cached profile on transient errors */
     } finally {
       setLoading(false);
     }
-  }, [deviceId]);
+  }, [deviceId, setProfile]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
       setUser(s?.user ?? null);
-      setLoading(true);
       setTimeout(() => loadProfile(s), 0);
     });
     supabase.auth.getSession().then(({ data: { session: s } }) => {
@@ -115,7 +137,7 @@ export function useProfile() {
       if (!error && data) setProfile(data as Profile);
       return { data: data as Profile | null, error };
     }
-  }, [session, deviceId]);
+  }, [session, deviceId, setProfile]);
 
   const updateAvatar = useCallback(async (avatar_url: string | null) => {
     if (!profile) return { error: new Error('no profile') } as any;
@@ -135,12 +157,12 @@ export function useProfile() {
         avatar_url,
       });
     }
-  }, [profile, session, saveProfile]);
+  }, [profile, session, saveProfile, setProfile]);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     setProfile(null);
-  }, []);
+  }, [setProfile]);
 
   return {
     user,
@@ -155,4 +177,16 @@ export function useProfile() {
     signOut,
     refetch,
   };
+}
+
+export function ProfileProvider({ children }: { children: ReactNode }) {
+  const value = useProfileInternal();
+  const memo = useMemo(() => value, [value]);
+  return createElement(ProfileContext.Provider, { value: memo }, children);
+}
+
+export function useProfile() {
+  const ctx = useContext(ProfileContext);
+  if (!ctx) throw new Error('useProfile must be used within <ProfileProvider>');
+  return ctx;
 }

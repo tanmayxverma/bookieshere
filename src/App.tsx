@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-ro
 import { useEffect } from "react";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { BookieLoader, useInitialLoad } from "./components/BookieLoader";
-import { useProfile } from "./hooks/useProfile";
+import { useProfile, ProfileProvider } from "./hooks/useProfile";
 import Index from "./pages/Index";
 import Materials from "./pages/Materials";
 import Tests from "./pages/Tests";
@@ -83,7 +83,9 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <AppInner />
+      <ProfileProvider>
+        <AppInner />
+      </ProfileProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
