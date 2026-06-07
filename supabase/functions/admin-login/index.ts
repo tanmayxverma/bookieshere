@@ -12,25 +12,6 @@ function randomToken() {
   return Array.from(b).map(x => x.toString(16).padStart(2, '0')).join('');
 }
 
-async function ensureCredentialsRow() {
-  const { data: existing } = await supabase.from('admin_credentials').select('id').eq('id', 1).maybeSingle();
-  if (existing) return;
-  const p1 = Deno.env.get('ADMIN_PASSWORD_1');
-  const p2 = Deno.env.get('ADMIN_PASSWORD_2');
-  if (!p1 || !p2) throw new Error('admin passwords not configured');
-  // hash via pgcrypto
-  const { data: hashes } = await supabase.rpc('exec_admin_hash' as any, {} as any).maybeSingle?.() ?? { data: null } as any;
-  // fallback: use raw SQL via service role
-  const { error } = await supabase.from('admin_credentials').insert({
-    id: 1,
-    password_hash_1: p1, // store plain temporarily; replaced below
-    password_hash_2: p2,
-  });
-  if (error) throw error;
-  // Now hash them via SQL UPDATE using pgcrypto's crypt()
-  // Use a direct PG call through PostgREST RPC pattern (we'll create helper if needed)
-}
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   try {
