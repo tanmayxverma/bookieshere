@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">Third-Party Links</h2>
               <p>
-                This website contains links to external platforms (such as Telegram). We are not responsible for the privacy practices or content of these third-party sites. Users are encouraged to review the privacy policies of any external platforms they visit.
+                This website may contain links to external platforms (such as study material hosts). We are not responsible for the privacy practices or content of these third-party sites. Users are encouraged to review the privacy policies of any external platforms they visit.
               </p>
             </section>
 
@@ -47,17 +47,14 @@ const PrivacyPolicy = () => {
               <p>
                 For any privacy-related concerns, please contact us via:
               </p>
-              <div className="mt-4 p-4 bg-muted rounded-lg">
+              <div className="mt-4 p-4 bg-muted rounded-lg space-y-2">
                 <p>
-                  Telegram:{" "}
-                  <a 
-                    href="https://t.me/tellurdemandsbot" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    @tellurdemandsbot
-                  </a>
+                  Chat Support:{" "}
+                  <a href="/support" className="text-primary hover:underline">Open a support ticket</a>
+                </p>
+                <p>
+                  Email:{" "}
+                  <a href="mailto:capcutwaladiddy@gmail.com" className="text-primary hover:underline">capcutwaladiddy@gmail.com</a>
                 </p>
               </div>
             </section>
