@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
-import { Send, BookOpen, ArrowUpRight, Sparkles, Coffee, Heart } from "lucide-react";
+import { useState } from "react";
+import { MessageSquare, BookOpen, ArrowUpRight, Sparkles, Coffee, Heart, LifeBuoy } from "lucide-react";
 import logo from "@/assets/logo.jfif";
 import { Button } from "@/components/ui/button";
+import { AdminLoginModal } from "@/components/Admin/AdminLoginModal";
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const [adminOpen, setAdminOpen] = useState(false);
   return (
     <footer className="relative overflow-hidden border-t border-border/40 bg-surface-1">
       {/* Ambient glows — editorial glass premium */}
@@ -40,11 +43,11 @@ export function Footer() {
                   size="lg"
                   className="group h-14 gap-3 rounded-2xl bg-foreground text-background hover:bg-foreground/90 shadow-lg shadow-foreground/10 text-base font-semibold"
                 >
-                  <a href="https://t.me/bookieshere" target="_blank" rel="noopener noreferrer">
-                    <Send className="h-5 w-5" />
-                    Join Telegram Channel
+                  <Link to="/support">
+                    <LifeBuoy className="h-5 w-5" />
+                    Open Support Chat
                     <ArrowUpRight className="h-4 w-4 ml-auto transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </a>
+                  </Link>
                 </Button>
                 <Button
                   asChild
@@ -123,9 +126,9 @@ export function Footer() {
                 <li><Link to="/privacy-policy" className="text-foreground/80 hover:text-foreground transition-colors">Privacy Policy</Link></li>
                 <li><Link to="/donate" className="text-foreground/80 hover:text-foreground transition-colors">Support / Donate</Link></li>
                 <li>
-                  <a href="https://t.me/tellurdemandsbot" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-foreground/80 hover:text-foreground transition-colors">
-                    Contact <ArrowUpRight className="h-3 w-3" />
-                  </a>
+                  <Link to="/support" className="inline-flex items-center gap-1 text-foreground/80 hover:text-foreground transition-colors">
+                    Contact via Chat <ArrowUpRight className="h-3 w-3" />
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -136,9 +139,20 @@ export function Footer() {
             <p className="text-xs text-muted-foreground/70">
               © {year} BOOKIE. All rights reserved.
             </p>
-            <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground/60">
-              Crafted for aspirants · Made with discipline
-            </p>
+            <div className="flex items-center gap-3">
+              <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground/60">
+                Crafted for aspirants · Made with discipline
+              </p>
+              {/* Hidden admin entry */}
+              <button
+                onClick={() => setAdminOpen(true)}
+                aria-label="Admin"
+                title="·"
+                className="text-muted-foreground/20 hover:text-muted-foreground transition-colors text-[10px] tracking-widest px-1"
+              >
+                ·
+              </button>
+            </div>
           </div>
         </div>
 
@@ -149,6 +163,7 @@ export function Footer() {
           </div>
         </div>
       </div>
+      <AdminLoginModal open={adminOpen} onOpenChange={setAdminOpen} />
     </footer>
   );
 }

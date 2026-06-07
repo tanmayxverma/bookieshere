@@ -31,18 +31,15 @@ const DMCA = () => {
               <li>Your contact information</li>
             </ol>
 
-            <div className="mt-8 p-4 bg-muted rounded-lg">
-              <p className="font-semibold mb-2">Send notices to:</p>
+            <div className="mt-8 p-4 bg-muted rounded-lg space-y-2">
+              <p className="font-semibold">Send notices via:</p>
               <p>
-                Telegram:{" "}
-                <a 
-                  href="https://t.me/tellurdemandsbot" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  @tellurdemandsbot
-                </a>
+                Chat Support:{" "}
+                <a href="/support" className="text-primary hover:underline">Open a support ticket</a>
+              </p>
+              <p>
+                Email:{" "}
+                <a href="mailto:capcutwaladiddy@gmail.com" className="text-primary hover:underline">capcutwaladiddy@gmail.com</a>
               </p>
             </div>
 

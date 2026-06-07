@@ -14,6 +14,116 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_credentials: {
+        Row: {
+          id: number
+          password_hash_1: string
+          password_hash_2: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          password_hash_1: string
+          password_hash_2: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          password_hash_1?: string
+          password_hash_2?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      admin_login_attempts: {
+        Row: {
+          attempted_at: string
+          device_id: string | null
+          id: string
+          ip_hash: string | null
+          success: boolean
+        }
+        Insert: {
+          attempted_at?: string
+          device_id?: string | null
+          id?: string
+          ip_hash?: string | null
+          success?: boolean
+        }
+        Update: {
+          attempted_at?: string
+          device_id?: string | null
+          id?: string
+          ip_hash?: string | null
+          success?: boolean
+        }
+        Relationships: []
+      }
+      admin_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          metadata: Json
+          session_id: string | null
+          target_id: string | null
+          target_table: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          session_id?: string | null
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          session_id?: string | null
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_logs_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "admin_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_sessions: {
+        Row: {
+          created_at: string
+          device_id: string | null
+          expires_at: string
+          id: string
+          last_seen_at: string
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          device_id?: string | null
+          expires_at: string
+          id?: string
+          last_seen_at?: string
+          token: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string | null
+          expires_at?: string
+          id?: string
+          last_seen_at?: string
+          token?: string
+        }
+        Relationships: []
+      }
       materials: {
         Row: {
           badge: string | null
@@ -52,6 +162,87 @@ export type Database = {
           popularity?: number
           resource_type?: Database["public"]["Enums"]["resource_type"]
           subject?: Database["public"]["Enums"]["subject_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notification_reads: {
+        Row: {
+          id: string
+          notification_id: string
+          profile_id: string
+          read_at: string
+        }
+        Insert: {
+          id?: string
+          notification_id: string
+          profile_id: string
+          read_at?: string
+        }
+        Update: {
+          id?: string
+          notification_id?: string
+          profile_id?: string
+          read_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_reads_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_reads_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          is_pinned: boolean
+          priority: string
+          publish_at: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_pinned?: boolean
+          priority?: string
+          publish_at?: string
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_pinned?: boolean
+          priority?: string
+          publish_at?: string
+          title?: string
+          type?: string
           updated_at?: string
         }
         Relationships: []
@@ -303,6 +494,107 @@ export type Database = {
         }
         Relationships: []
       }
+      ticket_messages: {
+        Row: {
+          author_profile_id: string | null
+          author_role: string
+          body: string
+          created_at: string
+          id: string
+          read_by_admin_at: string | null
+          read_by_user_at: string | null
+          ticket_id: string
+        }
+        Insert: {
+          author_profile_id?: string | null
+          author_role: string
+          body: string
+          created_at?: string
+          id?: string
+          read_by_admin_at?: string | null
+          read_by_user_at?: string | null
+          ticket_id: string
+        }
+        Update: {
+          author_profile_id?: string | null
+          author_role?: string
+          body?: string
+          created_at?: string
+          id?: string
+          read_by_admin_at?: string | null
+          read_by_user_at?: string | null
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_messages_author_profile_id_fkey"
+            columns: ["author_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ticket_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tickets: {
+        Row: {
+          assigned_admin: string | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          last_message_at: string
+          priority: string
+          profile_id: string
+          rejection_reason: string | null
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_admin?: string | null
+          category: string
+          created_at?: string
+          description: string
+          id?: string
+          last_message_at?: string
+          priority?: string
+          profile_id: string
+          rejection_reason?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_admin?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          last_message_at?: string
+          priority?: string
+          profile_id?: string
+          rejection_reason?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -506,6 +798,138 @@ export type Database = {
           to: "profiles"
           isOneToOne: false
           isSetofReturn: true
+        }
+      }
+      guest_create_ticket: {
+        Args: {
+          _category: string
+          _description: string
+          _device_id: string
+          _priority: string
+          _subject: string
+        }
+        Returns: {
+          assigned_admin: string | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          last_message_at: string
+          priority: string
+          profile_id: string
+          rejection_reason: string | null
+          status: string
+          subject: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tickets"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      guest_get_ticket: {
+        Args: { _device_id: string; _ticket_id: string }
+        Returns: {
+          assigned_admin: string | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          last_message_at: string
+          priority: string
+          profile_id: string
+          rejection_reason: string | null
+          status: string
+          subject: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "tickets"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      guest_list_messages: {
+        Args: { _device_id: string; _ticket_id: string }
+        Returns: {
+          author_profile_id: string | null
+          author_role: string
+          body: string
+          created_at: string
+          id: string
+          read_by_admin_at: string | null
+          read_by_user_at: string | null
+          ticket_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "ticket_messages"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      guest_list_notification_reads: {
+        Args: { _device_id: string }
+        Returns: {
+          id: string
+          notification_id: string
+          profile_id: string
+          read_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "notification_reads"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      guest_list_tickets: {
+        Args: { _device_id: string }
+        Returns: {
+          assigned_admin: string | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          last_message_at: string
+          priority: string
+          profile_id: string
+          rejection_reason: string | null
+          status: string
+          subject: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "tickets"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      guest_mark_notification_read: {
+        Args: { _device_id: string; _notification_id: string }
+        Returns: undefined
+      }
+      guest_send_message: {
+        Args: { _body: string; _device_id: string; _ticket_id: string }
+        Returns: {
+          author_profile_id: string | null
+          author_role: string
+          body: string
+          created_at: string
+          id: string
+          read_by_admin_at: string | null
+          read_by_user_at: string | null
+          ticket_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "ticket_messages"
+          isOneToOne: true
+          isSetofReturn: false
         }
       }
       has_role: {

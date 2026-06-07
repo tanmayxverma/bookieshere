@@ -1,221 +1,255 @@
-import { Link } from "react-router-dom";
-import {
-  MessageCircle, ExternalLink, Send, AlertCircle, FileWarning,
-  Link2Off, HelpCircle, Headphones, BookOpen, ClipboardList,
-  ArrowRight, ArrowUpRight, Sparkles, Clock, ShieldCheck, Zap,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Layout } from "@/components/Layout";
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { Layout } from '@/components/Layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { useTickets, useTicket, type Ticket } from '@/hooks/useTickets';
+import { useProfile } from '@/hooks/useProfile';
+import { Plus, Send, MessageSquare, Loader2, ArrowLeft, Sparkles } from 'lucide-react';
+import { z } from 'zod';
+import { formatDistanceToNow } from 'date-fns';
 
-const supportUses = [
-  { icon: Link2Off, title: "Report Broken Links", description: "If a resource link isn't working or redirects incorrectly, let us know." },
-  { icon: FileWarning, title: "File Opening Issues", description: "Having trouble opening or viewing a resource? We can help." },
-  { icon: AlertCircle, title: "Access Problems", description: "If accessing a resource isn't working as expected, report it." },
-  { icon: HelpCircle, title: "Technical Assistance", description: "Any other technical issues with the platform or materials." },
+const CATEGORIES: { value: Ticket['category']; label: string }[] = [
+  { value: 'bug', label: 'Report a bug' },
+  { value: 'help', label: 'Request help' },
+  { value: 'feature', label: 'Feature request' },
+  { value: 'feedback', label: 'Feedback' },
+  { value: 'content_report', label: 'Content report' },
+  { value: 'technical', label: 'Technical issue' },
 ];
 
-const Support = () => {
-  const telegramBotLink = "https://t.me/tellurdemandsbot";
+const STATUS_COLOR: Record<Ticket['status'], string> = {
+  open: 'bg-amber-500/15 text-amber-600 border-amber-500/30',
+  under_review: 'bg-blue-500/15 text-blue-600 border-blue-500/30',
+  accepted: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30',
+  rejected: 'bg-destructive/15 text-destructive border-destructive/30',
+  in_progress: 'bg-primary/15 text-primary border-primary/30',
+  resolved: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30',
+  closed: 'bg-muted text-muted-foreground border-border',
+  reopened: 'bg-amber-500/15 text-amber-600 border-amber-500/30',
+};
+
+const ticketSchema = z.object({
+  subject: z.string().trim().min(3, 'At least 3 characters').max(120),
+  category: z.enum(['bug','help','feature','feedback','content_report','technical']),
+  description: z.string().trim().min(10, 'Tell us a bit more').max(2000),
+  priority: z.enum(['low','normal','high','urgent']),
+});
+
+export default function SupportPage() {
+  const { profile } = useProfile();
+  const { tickets, loading, createTicket } = useTickets();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+
+  useEffect(() => {
+    if (!selectedId && tickets[0]) setSelectedId(tickets[0].id);
+  }, [tickets, selectedId]);
 
   return (
     <Layout>
-      <section className="relative overflow-hidden">
-        {/* Ambient glows — editorial glass premium */}
-        <div aria-hidden className="pointer-events-none absolute -top-40 -left-32 h-[500px] w-[500px] rounded-full bg-primary/15 blur-[140px]" />
-        <div aria-hidden className="pointer-events-none absolute top-40 right-0 h-[420px] w-[420px] rounded-full bg-accent/10 blur-[140px]" />
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/0.08),transparent_60%)]" />
-
-        <div className="container mx-auto px-4 py-16 md:py-24 relative">
-          <div className="max-w-3xl mx-auto">
-            {/* HERO */}
-            <div className="text-center mb-14 animate-fade-in">
-              <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface-2/60 px-3.5 py-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground backdrop-blur mb-6">
-                <Sparkles className="h-3 w-3 text-primary" />
-                Help Desk
-              </span>
-
-              {/* Animated chat-bubble medallion */}
-              <div className="relative mx-auto mb-7 h-20 w-20">
-                <div aria-hidden className="absolute inset-0 rounded-3xl bg-primary/30 blur-2xl opacity-70" />
-                <div className="relative h-full w-full rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/20 via-card/40 to-accent/10 backdrop-blur flex items-center justify-center shadow-[inset_0_1px_0_hsl(var(--background)/0.4)]">
-                  <Headphones className="h-8 w-8 text-primary" />
-                </div>
-                <span aria-hidden className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-[3px] ring-background shadow-[0_0_12px_hsl(var(--primary))] animate-pulse" />
-              </div>
-
-              <h1 className="font-display text-4xl md:text-6xl font-black tracking-tight text-foreground leading-[0.95] mb-5">
-                We're{" "}
-                <span className="relative inline-block">
-                  <span className="italic font-medium text-muted-foreground">listening</span>
-                  <span aria-hidden className="absolute -bottom-1 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-primary to-transparent rounded-full" />
-                </span>
-                .
-              </h1>
-              <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                Hit a snag with a resource, the test engine, or anything else? Drop a line — a real human reads every message.
-              </p>
-
-              {/* Status chips */}
-              <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
-                <Chip icon={Zap} text="Avg. reply < 24h" />
-                <Chip icon={ShieldCheck} text="Private & secure" />
-                <Chip icon={Clock} text="Mon–Sun" />
-              </div>
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="flex items-end justify-between gap-4 mb-6">
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              <Sparkles className="h-3 w-3 text-primary" /> Support Center
             </div>
-
-            {/* PRIMARY CTA — Liquid glass hero card */}
-            <div className="group relative animate-fade-in">
-              <div aria-hidden className="absolute -inset-2 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/10 rounded-[2rem] blur-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-card/60 backdrop-blur-xl shadow-[0_40px_100px_-30px_hsl(var(--primary)/0.4)]">
-                <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-                <div aria-hidden className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-primary/15 blur-3xl opacity-70 group-hover:opacity-100 transition-opacity" />
-
-                <div className="relative grid md:grid-cols-[1fr_auto] items-center gap-8 p-7 md:p-10">
-                  {/* Floating chat bubbles */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/15 border border-primary/30 text-[10px] font-bold tracking-[0.16em] uppercase text-primary">
-                        <MessageCircle className="h-2.5 w-2.5" /> Chat Support
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-emerald-500 font-semibold">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        Online
-                      </span>
-                    </div>
-                    <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-                      Talk to us on <span className="text-primary">Telegram</span>
-                    </h2>
-                    <p className="text-sm text-muted-foreground mt-2 max-w-md leading-relaxed">
-                      Fast, threaded, and on the app you already use. Open a chat — we'll take it from there.
-                    </p>
-
-                    {/* Chat preview */}
-                    <div className="mt-6 space-y-2 max-w-md">
-                      <ChatBubble side="them" text="Hi! Link to module isn't loading?" />
-                      <ChatBubble side="us" text="On it — sending you a fresh mirror in 2 mins." />
-                    </div>
-                  </div>
-
-                  {/* CTA stack */}
-                  <div className="flex flex-col items-stretch md:items-end gap-2 shrink-0">
-                    <a
-                      href={telegramBotLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/cta inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-foreground text-background font-semibold text-base shadow-[0_15px_40px_-10px_hsl(var(--primary)/0.6)] hover:shadow-[0_20px_50px_-10px_hsl(var(--primary)/0.8)] transition-all hover:scale-[1.02] whitespace-nowrap"
-                    >
-                      <Send className="h-4.5 w-4.5" />
-                      Open Chat
-                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover/cta:rotate-45" />
-                    </a>
-                    <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 text-center md:text-right">t.me/tellurdemandsbot</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* WHAT WE HELP WITH */}
-            <div className="mt-14 animate-fade-in">
-              <div className="flex items-baseline justify-between mb-6">
-                <h2 className="font-display text-xl md:text-2xl font-bold text-foreground tracking-tight flex items-center gap-3">
-                  <span className="inline-block w-1 h-6 rounded-full bg-gradient-to-b from-primary to-accent" />
-                  What we help with
-                </h2>
-                <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">04 areas</span>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-3">
-                {supportUses.map((item, idx) => (
-                  <div
-                    key={item.title}
-                    className="group relative overflow-hidden rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl p-5 transition-all hover:border-primary/30 hover:bg-card/60 hover:-translate-y-0.5"
-                  >
-                    <div aria-hidden className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="relative flex gap-4">
-                      <div className="shrink-0 h-11 w-11 rounded-xl border border-border/40 bg-surface-2/50 flex items-center justify-center group-hover:border-primary/40 transition-colors">
-                        <item.icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground/60 font-semibold">{String(idx + 1).padStart(2, "0")}</span>
-                          <h3 className="font-semibold text-sm text-foreground">{item.title}</h3>
-                        </div>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* QUICK LINKS */}
-            <div className="mt-14 animate-fade-in">
-              <h2 className="font-display text-xl md:text-2xl font-bold text-foreground tracking-tight flex items-center gap-3 mb-6">
-                <span className="inline-block w-1 h-6 rounded-full bg-gradient-to-b from-primary to-accent" />
-                Maybe you were looking for…
-              </h2>
-              <div className="grid sm:grid-cols-2 gap-3">
-                <QuickLink to="/materials" icon={BookOpen} title="Materials Library" desc="Curated JEE resources" />
-                <QuickLink to="/tests" icon={ClipboardList} title="Practice Tests" desc="JEE-pattern mock tests" />
-              </div>
-            </div>
-
-            {/* Footer note */}
-            <p className="mt-14 text-center text-xs text-muted-foreground/70 italic">
-              Real human, real reply. We don't outsource conversations.
-            </p>
+            <h1 className="font-display text-3xl md:text-4xl font-black tracking-tight">Help & Support</h1>
+            <p className="text-sm text-muted-foreground mt-1">Open a ticket and chat with the team — no Telegram needed.</p>
           </div>
+          <NewTicketDialog open={creating} onOpenChange={setCreating} onCreate={async (input) => {
+            const t = await createTicket(input);
+            setSelectedId(t.id);
+            setCreating(false);
+          }} disabled={!profile} />
         </div>
-      </section>
+
+        <div className="grid md:grid-cols-[320px_1fr] gap-4 min-h-[60vh]">
+          {/* Sidebar */}
+          <aside className="rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl p-2 max-h-[70vh] overflow-y-auto">
+            {loading ? (
+              <div className="p-6 text-sm text-muted-foreground">Loading…</div>
+            ) : tickets.length === 0 ? (
+              <div className="p-8 text-center text-sm text-muted-foreground">
+                <MessageSquare className="mx-auto h-8 w-8 mb-3 opacity-50" />
+                No tickets yet. Create one to get started.
+              </div>
+            ) : tickets.map(t => {
+              const active = t.id === selectedId;
+              return (
+                <button key={t.id} onClick={() => setSelectedId(t.id)}
+                  className={`w-full text-left p-3 rounded-xl mb-1 transition-colors ${active ? 'bg-primary/10 border border-primary/30' : 'hover:bg-surface-2/50 border border-transparent'}`}>
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <div className="text-sm font-semibold line-clamp-1">{t.subject}</div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Badge variant="outline" className={`text-[10px] uppercase tracking-wider ${STATUS_COLOR[t.status]}`}>{t.status.replace('_',' ')}</Badge>
+                    <span className="text-[10px] text-muted-foreground ml-auto">{formatDistanceToNow(new Date(t.last_message_at), { addSuffix: true })}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </aside>
+
+          {/* Detail */}
+          <section className="rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl overflow-hidden">
+            {selectedId ? <TicketView id={selectedId} onClose={() => setSelectedId(null)} /> :
+              <div className="h-full flex items-center justify-center p-10 text-center text-sm text-muted-foreground">
+                Select a ticket or create a new one.
+              </div>
+            }
+          </section>
+        </div>
+      </div>
     </Layout>
-  );
-};
-
-/* ---------- Local helpers ---------- */
-
-function Chip({ icon: Icon, text }: { icon: React.ElementType; text: string }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/40 bg-surface-2/50 backdrop-blur px-2.5 py-1 text-[11px] text-muted-foreground">
-      <Icon className="h-3 w-3 text-primary" />
-      {text}
-    </span>
   );
 }
 
-function ChatBubble({ side, text }: { side: "them" | "us"; text: string }) {
-  const isUs = side === "us";
+function TicketView({ id, onClose }: { id: string; onClose: () => void }) {
+  const { ticket, messages, loading, sendMessage } = useTicket(id);
+  const [draft, setDraft] = useState('');
+  const [sending, setSending] = useState(false);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollerRef.current) scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight;
+  }, [messages.length]);
+
+  if (loading || !ticket) return <div className="p-10 text-sm text-muted-foreground">Loading ticket…</div>;
+
+  const canSend = !['closed','rejected'].includes(ticket.status);
+
   return (
-    <div className={`flex ${isUs ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[85%] px-3.5 py-2 rounded-2xl text-xs leading-relaxed ${
-          isUs
-            ? "bg-primary/15 border border-primary/30 text-foreground rounded-br-sm"
-            : "bg-surface-2/70 border border-border/40 text-muted-foreground rounded-bl-sm"
-        }`}
-      >
-        {text}
+    <div className="flex flex-col h-[70vh]">
+      <header className="px-5 py-4 border-b border-border/40 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <button className="md:hidden" onClick={onClose}><ArrowLeft className="h-4 w-4" /></button>
+            <Badge variant="outline" className={`text-[10px] uppercase ${STATUS_COLOR[ticket.status]}`}>{ticket.status.replace('_',' ')}</Badge>
+            <Badge variant="outline" className="text-[10px] uppercase">{ticket.category.replace('_',' ')}</Badge>
+            <Badge variant="outline" className="text-[10px] uppercase">{ticket.priority}</Badge>
+          </div>
+          <h2 className="font-display text-lg font-bold line-clamp-1">{ticket.subject}</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">Opened {formatDistanceToNow(new Date(ticket.created_at), { addSuffix: true })}</p>
+        </div>
+      </header>
+      <div ref={scrollerRef} className="flex-1 overflow-y-auto p-5 space-y-3">
+        {/* Original description as first message */}
+        <Bubble side="user" body={ticket.description} time={ticket.created_at} system label="Your request" />
+        {ticket.status === 'open' && <div className="text-center text-xs text-muted-foreground italic">Awaiting admin review…</div>}
+        {ticket.status === 'rejected' && ticket.rejection_reason && (
+          <div className="text-center text-xs text-destructive border border-destructive/30 bg-destructive/5 rounded-xl p-3">Rejected: {ticket.rejection_reason}</div>
+        )}
+        {messages.map(m => (
+          <Bubble key={m.id} side={m.author_role === 'admin' ? 'admin' : 'user'} body={m.body} time={m.created_at} />
+        ))}
+      </div>
+      <form className="p-3 border-t border-border/40 flex gap-2" onSubmit={async (e) => {
+        e.preventDefault();
+        const v = draft.trim();
+        if (!v || sending || !canSend) return;
+        setSending(true);
+        try { await sendMessage(v); setDraft(''); } finally { setSending(false); }
+      }}>
+        <Input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={canSend ? 'Type a reply…' : 'This ticket is closed'} disabled={!canSend} maxLength={2000} />
+        <Button type="submit" disabled={!canSend || sending || !draft.trim()} className="gap-1.5">
+          {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          Send
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+function Bubble({ side, body, time, system, label }: { side: 'user'|'admin'; body: string; time: string; system?: boolean; label?: string }) {
+  const isUser = side === 'user';
+  return (
+    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+      <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed border ${
+        isUser ? 'bg-primary/10 border-primary/25 rounded-br-sm' : 'bg-surface-2/60 border-border/40 rounded-bl-sm'
+      }`}>
+        {label && <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{label}</div>}
+        <div className="whitespace-pre-wrap text-foreground">{body}</div>
+        <div className="text-[10px] text-muted-foreground mt-1">{formatDistanceToNow(new Date(time), { addSuffix: true })}{!isUser && ' · Bookie team'}</div>
       </div>
     </div>
   );
 }
 
-function QuickLink({ to, icon: Icon, title, desc }: { to: string; icon: React.ElementType; title: string; desc: string }) {
+function NewTicketDialog({ open, onOpenChange, onCreate, disabled }: { open: boolean; onOpenChange: (v: boolean) => void; onCreate: (i: any) => Promise<void>; disabled?: boolean }) {
+  const { toast } = useToast();
+  const [form, setForm] = useState({ subject: '', category: 'help' as Ticket['category'], description: '', priority: 'normal' as Ticket['priority'] });
+  const [busy, setBusy] = useState(false);
+
+  const submit = async () => {
+    const parsed = ticketSchema.safeParse(form);
+    if (!parsed.success) {
+      toast({ variant: 'destructive', title: 'Check your input', description: parsed.error.errors[0]?.message });
+      return;
+    }
+    setBusy(true);
+    try {
+      await onCreate(parsed.data);
+      setForm({ subject: '', category: 'help', description: '', priority: 'normal' });
+      toast({ title: 'Ticket created', description: 'A team member will reply shortly.' });
+    } catch (e: any) {
+      toast({ variant: 'destructive', title: 'Could not create ticket', description: e.message });
+    } finally { setBusy(false); }
+  };
+
   return (
-    <Link
-      to={to}
-      className="group relative overflow-hidden flex items-center gap-4 rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl p-5 transition-all hover:border-primary/40 hover:bg-card/60 hover:shadow-[0_15px_40px_-15px_hsl(var(--primary)/0.4)]"
-    >
-      <div aria-hidden className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="relative h-11 w-11 rounded-xl border border-primary/30 bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center">
-        <Icon className="h-5 w-5 text-primary" />
-      </div>
-      <div className="relative flex-1 min-w-0">
-        <h3 className="font-semibold text-sm text-foreground">{title}</h3>
-        <p className="text-xs text-muted-foreground">{desc}</p>
-      </div>
-      <ArrowRight className="relative h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-    </Link>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>
+        <Button disabled={disabled} className="gap-2"><Plus className="h-4 w-4" /> New ticket</Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Create support ticket</DialogTitle>
+          <DialogDescription>Tell us what's going on. We typically reply within a day.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <Label>Subject</Label>
+            <Input maxLength={120} value={form.subject} onChange={(e) => setForm(f => ({ ...f, subject: e.target.value }))} placeholder="Short summary" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label>Category</Label>
+              <Select value={form.category} onValueChange={(v) => setForm(f => ({ ...f, category: v as any }))}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>{CATEGORIES.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Priority</Label>
+              <Select value={form.priority} onValueChange={(v) => setForm(f => ({ ...f, priority: v as any }))}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Description</Label>
+            <Textarea maxLength={2000} rows={5} value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} placeholder="What happened? Include steps to reproduce if relevant." />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button onClick={submit} disabled={busy} className="gap-1.5">
+            {busy && <Loader2 className="h-4 w-4 animate-spin" />} Submit
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-export default Support;
