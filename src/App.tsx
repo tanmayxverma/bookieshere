@@ -14,7 +14,11 @@ import YPT from "./pages/YPT";
 import Portals from "./pages/Portals";
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminNotifications from "./pages/admin/AdminNotifications";
+import AdminTickets from "./pages/admin/AdminTickets";
+import AdminUsers from "./pages/admin/AdminUsers";
+import NotificationsPage from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import CopyrightTerms from "./pages/CopyrightTerms";
 import DMCA from "./pages/DMCA";
@@ -38,6 +42,7 @@ function ProfileGate() {
     if (loading) return;
     const path = location.pathname;
     if (OPEN_PATHS.has(path)) return;
+    if (path.startsWith("/admin")) return;
     if (!profile) {
       navigate("/welcome", { replace: true });
     } else if (!isOnboarded) {
@@ -67,7 +72,11 @@ const AppInner = () => {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/admin" element={<AdminOverview />} />
+        <Route path="/admin/notifications" element={<AdminNotifications />} />
+        <Route path="/admin/tickets" element={<AdminTickets />} />
+        <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/copyright-terms" element={<CopyrightTerms />} />
         <Route path="/dmca" element={<DMCA />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
