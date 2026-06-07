@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserMenu } from "@/components/Profile/UserMenu";
+import { NotificationBell } from "@/components/Notifications/NotificationBell";
 import logo from "@/assets/logo.jfif";
 
 const navLinks = [
@@ -133,12 +134,14 @@ export function Navbar() {
               <Coffee className="h-3.5 w-3.5 text-primary group-hover:rotate-[-8deg] transition-transform duration-500" />
               Chai
             </Link>
+            <NotificationBell />
             <ThemeToggle />
             <UserMenu />
           </div>
 
           {/* Mobile Controls */}
           <div className="flex items-center gap-2 md:hidden">
+            <NotificationBell />
             <ThemeToggle />
             <UserMenu compact />
             <Button
