@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2 } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2, Sparkles, AtSign } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
@@ -122,6 +122,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+  const [aiThinking, setAiThinking] = useState(false);
+  const [mentionBanner, setMentionBanner] = useState<{ from: string; text: string } | null>(null);
+  const mentionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
     { label: 'Smileys', emojis: ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥳','🤩','🥺','😢','😭','😤','😡','🤬','🤯','😱','😨','😰','😥','😓'] },
@@ -289,6 +292,79 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const sendMessage = async () => {
     const text = chatInput.trim();
     if (!text || sendingChat) return;
+
+    // /ai command → route to Bookie AI
+    if (text.toLowerCase().startsWith('/ai')) {
+      const prompt = text.slice(3).trim();
+      if (!prompt) {
+        toast.error('Add a question after /ai');
+        return;
+      }
+      if (containsProfanity(prompt)) {
+        toast.error('Inappropriate content blocked.');
+        setChatInput('');
+        return;
+      }
+      setSendingChat(true);
+      // 1) Post the user question so everyone sees the ask
+      await (supabase as any).from('room_messages').insert({
+        room_id: activeRoomId,
+        ypt_user_id: currentUser.id,
+        message: `[ai-ask] ${prompt}`,
+      });
+      setChatInput('');
+      setSendingChat(false);
+      inputRef.current?.focus();
+
+      // 2) Ask Bookie AI (non-streaming — collect and post)
+      setAiThinking(true);
+      try {
+        const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bookie-chat`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            messages: [{ role: 'user', content: `${prompt}\n\n(Answer in ≤120 words, focused JEE mentor tone.)` }],
+          }),
+        });
+        let full = '';
+        if (resp.ok && resp.body) {
+          const reader = resp.body.getReader();
+          const decoder = new TextDecoder();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            for (const line of chunk.split('\n')) {
+              const t = line.trim();
+              if (!t.startsWith('data:')) continue;
+              const payload = t.slice(5).trim();
+              if (!payload || payload === '[DONE]') continue;
+              try {
+                const j = JSON.parse(payload);
+                const delta = j.choices?.[0]?.delta?.content || j.choices?.[0]?.message?.content || '';
+                if (delta) full += delta;
+              } catch { /* skip non-JSON */ }
+            }
+          }
+        }
+        const clean = (full || 'I couldn’t reach the AI right now. Try again in a moment.').slice(0, 1400);
+        await (supabase as any).from('room_messages').insert({
+          room_id: activeRoomId,
+          ypt_user_id: currentUser.id,
+          message: `[ai-reply] ${clean}`,
+        });
+      } catch (e: any) {
+        toast.error('Bookie AI is unavailable right now.');
+      } finally {
+        setAiThinking(false);
+      }
+      return;
+    }
+
     if (containsProfanity(text)) {
       toast.error('Inappropriate language blocked.');
       setChatInput('');
