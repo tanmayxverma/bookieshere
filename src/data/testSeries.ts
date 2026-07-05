@@ -24,6 +24,16 @@ export interface TestSeriesProvider {
 
 export const TEST_SERIES: TestSeriesProvider[] = [
   {
+    id: "all-live-hub",
+    name: "All Live Test Series Hub",
+    description: "Aggregated live test series across providers.",
+    logo: "",
+    accent: "from-primary/25 to-blue-500/20",
+    resources: [
+      { name: "Live Test Series Hub", url: "https://ophub-testseries-books-notes.pages.dev/", badge: "Featured" },
+    ],
+  },
+  {
     id: "pw",
     name: "PW Tests",
     description: "Physics Wallah test portal — full coverage mirrors.",
@@ -119,6 +129,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     resources: [
       { name: "Latest JEE Test Series", url: "https://drive.google.com/drive/folders/10KX-pWLXNmES1EMzR3uHIHhfojmZqVBP" },
       { name: "Test Series Ended May 2026", url: "https://drive.google.com/drive/folders/1R4oSsOdm6vs4pPOM4bLxteGp3lnNve_F" },
+      { name: "Other Test Series", url: "https://muthalongo.pages.dev/" },
     ],
   },
   {

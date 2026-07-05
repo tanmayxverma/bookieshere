@@ -1,20 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { z } from "zod";
-import { Sparkles, Mail, Lock, Loader2, ArrowRight, UserCircle2, Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Sparkles, Loader2, ArrowRight, UserCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import logo from "@/assets/logo.jfif";
-
-const emailSchema = z.object({
-  email: z.string().email("Enter a valid email"),
-  password: z.string().min(8, "At least 8 characters"),
-});
-
-type Mode = "choice" | "email" | "forgot";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5">
@@ -25,16 +15,9 @@ const GoogleIcon = () => (
 export default function Welcome() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
+  const { signInWithGoogle } = useAuth();
   const { profile, isOnboarded, loading, isAuthenticated } = useProfile();
-
-  const [mode, setMode] = useState<Mode>("choice");
-  const [authTab, setAuthTab] = useState<"signin" | "signup">("signin");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
-  const [err, setErr] = useState("");
 
   // Only auto-redirect authenticated users away from /welcome.
   // Guests stay so they can upgrade to a real account, and signed-out users see sign-in options.
@@ -49,44 +32,11 @@ export default function Welcome() {
 
   const handleGoogle = async () => {
     setBusy("google");
-    setErr("");
     const r = await signInWithGoogle();
     if (r.error) {
       setBusy(null);
       toast({ variant: "destructive", title: "Google sign-in failed", description: String(r.error?.message || r.error) });
     }
-    // if redirected, browser navigates away
-  };
-
-  const handleEmail = async () => {
-    setErr("");
-    const parsed = emailSchema.safeParse({ email, password });
-    if (!parsed.success) {
-      setErr(parsed.error.errors[0].message);
-      return;
-    }
-    setBusy(authTab);
-    const fn = authTab === "signin" ? signIn : signUp;
-    const { error } = await fn(email.trim(), password);
-    setBusy(null);
-    if (error) {
-      toast({ variant: "destructive", title: `${authTab === "signin" ? "Sign in" : "Sign up"} failed`, description: error.message });
-      return;
-    }
-    if (authTab === "signup") {
-      toast({ title: "Check your email", description: "Confirm your address to finish creating your account." });
-    } else {
-      toast({ title: "Welcome back!" });
-    }
-  };
-
-  const handleForgot = async () => {
-    if (!email) { setErr("Enter your email"); return; }
-    setBusy("forgot");
-    const { error } = await resetPassword(email.trim());
-    setBusy(null);
-    if (error) toast({ variant: "destructive", title: "Reset failed", description: error.message });
-    else { toast({ title: "Reset link sent", description: "Check your inbox." }); setMode("email"); }
   };
 
   return (
@@ -111,19 +61,14 @@ export default function Welcome() {
               <Sparkles className="h-3 w-3 text-primary" /> Welcome
             </span>
             <h1 className="mt-3 font-display text-2xl md:text-[28px] font-bold tracking-tight">
-              {mode === "choice" && "Step into Bookie"}
-              {mode === "email" && (authTab === "signin" ? "Sign in to Bookie" : "Create your account")}
-              {mode === "forgot" && "Reset your password"}
+              Step into Bookie
             </h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              {mode === "choice" && "Pick how you'd like to continue."}
-              {mode === "email" && "Use your email and password."}
-              {mode === "forgot" && "We'll email you a reset link."}
+              Pick how you'd like to continue.
             </p>
           </div>
 
-          {mode === "choice" && (
-            <div className="space-y-3">
+          <div className="space-y-3">
               <button
                 onClick={handleGoogle}
                 disabled={busy === "google"}
@@ -131,14 +76,6 @@ export default function Welcome() {
               >
                 {busy === "google" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
                 Continue with Google
-              </button>
-
-              <button
-                onClick={() => setMode("email")}
-                className="w-full inline-flex items-center justify-center gap-3 h-12 rounded-xl border border-border/60 bg-background hover:bg-surface-2 text-foreground font-semibold transition-all active:scale-[0.99]"
-              >
-                <Mail className="h-4 w-4" />
-                Continue with Email
               </button>
 
               <div className="relative my-1">
@@ -160,60 +97,7 @@ export default function Welcome() {
               <p className="text-[11px] text-muted-foreground/80 text-center pt-3 leading-relaxed">
                 By continuing you agree to Bookie's <Link to="/privacy-policy" className="underline hover:text-foreground">Privacy</Link> & <Link to="/copyright-terms" className="underline hover:text-foreground">Terms</Link>.
               </p>
-            </div>
-          )}
-
-          {mode === "email" && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 rounded-lg border border-border/50 p-1 bg-surface-2/40">
-                {(["signin", "signup"] as const).map((t) => (
-                  <button key={t}
-                    onClick={() => { setAuthTab(t); setErr(""); }}
-                    className={`h-9 rounded-md text-sm font-semibold transition-colors ${authTab === t ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
-                    {t === "signin" ? "Sign In" : "Sign Up"}
-                  </button>
-                ))}
-              </div>
-
-              <div className="space-y-2.5">
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" className="pl-10 h-11" />
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input type={showPw ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="pl-10 pr-10 h-11" />
-                  <button type="button" onClick={() => setShowPw((s) => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                    {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {err && <p className="text-xs text-destructive">{err}</p>}
-              </div>
-
-              <Button onClick={handleEmail} disabled={!!busy} className="w-full h-11">
-                {busy === authTab ? <Loader2 className="h-4 w-4 animate-spin" /> : (authTab === "signin" ? "Sign In" : "Create Account")}
-              </Button>
-
-              <div className="flex items-center justify-between text-xs">
-                <button onClick={() => setMode("choice")} className="text-muted-foreground hover:text-foreground">← Back</button>
-                <button onClick={() => setMode("forgot")} className="text-muted-foreground hover:text-foreground">Forgot password?</button>
-              </div>
-            </div>
-          )}
-
-          {mode === "forgot" && (
-            <div className="space-y-4">
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" className="pl-10 h-11" />
-              </div>
-              {err && <p className="text-xs text-destructive">{err}</p>}
-              <Button onClick={handleForgot} disabled={!!busy} className="w-full h-11">
-                {busy === "forgot" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send reset link"}
-              </Button>
-              <button onClick={() => setMode("email")} className="block mx-auto text-xs text-muted-foreground hover:text-foreground">← Back</button>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

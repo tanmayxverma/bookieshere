@@ -6,6 +6,8 @@ import apniKakshaLogo from "@/assets/portals/apni-kaksha.png.asset.json";
 import competishunLogo from "@/assets/portals/competishun.png.asset.json";
 import allenLogo from "@/assets/portals/allen.jpg.asset.json";
 import careerwillLogo from "@/assets/portals/careerwill.png.asset.json";
+import esaralLogo from "@/assets/portals/esaral.png.asset.json";
+import edunitiLogo from "@/assets/portals/eduniti.png.asset.json";
 
 export interface PortalLink {
   label: string;
@@ -100,6 +102,7 @@ export const PORTALS: Portal[] = [
     accent: "from-blue-500/20 to-orange-500/20",
     links: [
       { label: "ABJ Sir Physics (Telegram)", url: "https://t.me/ABJ_SIR_PHYSICS_JEE_LECTURE_ZB" },
+      { label: "Kompetishun Portal", url: "https://kompetishun.pages.dev/" },
     ],
   },
   {
@@ -112,6 +115,27 @@ export const PORTALS: Portal[] = [
       "To get lectures → click the link → Start the Telegram bot → Select 'Important Books and Lectures for 11th and 12th' → Select 'ALLEN Lectures for 11 and 12' → Pick your preferred subject and enjoy.",
     links: [
       { label: "ALLEN Study Materials Bot", url: "https://t.me/StudyMaterials223_bot" },
+      { label: "Allen Portal Mirror", url: "https://aliens-op.pages.dev/" },
+    ],
+  },
+  {
+    id: "esaral",
+    name: "eSaral",
+    tagline: "eSaral lecture portal",
+    logo: esaralLogo.url,
+    accent: "from-sky-500/25 to-fuchsia-500/20",
+    links: [
+      { label: "eSaral Lectures Portal", url: "https://op-saral.pages.dev/" },
+    ],
+  },
+  {
+    id: "eduniti",
+    name: "Eduniti",
+    tagline: "Advance courses (PhysicsNiti)",
+    logo: edunitiLogo.url,
+    accent: "from-zinc-800/40 to-zinc-950/50",
+    links: [
+      { label: "Eduniti Advance Courses", url: "https://physicsniti-op.pages.dev/" },
     ],
   },
 ];
