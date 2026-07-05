@@ -660,6 +660,15 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
               </div>
 
               {/* Messages — scrollable, flex-grow, starts from bottom */}
+              {mentionBanner && (
+                <div className="mx-3 mt-2 flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/10 border border-primary/25 text-xs pop-in">
+                  <AtSign className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <span className="flex-1 min-w-0 truncate"><span className="font-semibold text-primary">{mentionBanner.from}</span> mentioned you: <span className="text-muted-foreground">{mentionBanner.text}</span></span>
+                  <button onClick={() => setMentionBanner(null)} className="text-muted-foreground hover:text-foreground shrink-0">
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
               <div
                 ref={chatContainerRef}
                 className="flex-1 min-h-0 overflow-y-auto overscroll-contain ypt-scroll"
