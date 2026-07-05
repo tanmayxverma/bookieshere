@@ -10,7 +10,8 @@ import { YPTOnboarding } from '@/components/YPT/YPTOnboarding';
 import { YPTLoadingSkeleton } from '@/components/YPT/YPTSkeletons';
 import { YPTNameChange } from '@/components/YPT/YPTNameChange';
 import { V2StudyTab, V2StatsTab, V2TasksTab, V2RoomsTab, V2LeaderboardTab } from '@/components/YPTV2';
-import { Timer, BarChart3, Users, ListTodo, Trophy, LogOut, X } from 'lucide-react';
+import { YPTTracker } from '@/components/YPT/YPTTracker';
+import { Timer, BarChart3, Users, ListTodo, Trophy, LogOut, X, Target } from 'lucide-react';
 import { formatTime } from '@/types/ypt';
 import { Button } from '@/components/ui/button';
 
@@ -19,6 +20,7 @@ const TABS = [
   { id: 'stats', label: 'Stats', icon: BarChart3 },
   { id: 'rooms', label: 'Rooms', icon: Users },
   { id: 'tasks', label: 'Tasks', icon: ListTodo },
+  { id: 'tracker', label: 'Track', icon: Target },
   { id: 'leaderboard', label: 'Board', icon: Trophy },
 ] as const;
 
@@ -168,6 +170,7 @@ export default function YPT() {
               {tab === 'stats' && <V2StatsTab userId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
               {tab === 'rooms' && <V2RoomsTab currentUser={user} timer={timer} roomSession={roomSession} />}
               {tab === 'tasks' && <V2TasksTab userId={user.id} timer={timer} />}
+              {tab === 'tracker' && <YPTTracker />}
               {tab === 'leaderboard' && <V2LeaderboardTab currentUserId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
             </div>
           </main>
