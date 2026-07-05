@@ -675,6 +675,8 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                     filteredMessages.map((msg) => {
                       const isMe = msg.ypt_user_id === currentUser.id;
                       const isSelected = selectedMsgId === msg.id;
+                      const isAiAsk = msg.message.startsWith('[ai-ask]');
+                      const isAiReply = msg.message.startsWith('[ai-reply]');
                       const isReply = msg.message.startsWith('[reply:');
                       let replyAuthor = '';
                       let displayMsg = msg.message;
@@ -682,19 +684,62 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                         const match = msg.message.match(/^\[reply:(.+?)\]\s?(.*)/s);
                         if (match) { replyAuthor = match[1]; displayMsg = match[2]; }
                       }
+                      if (isAiAsk) displayMsg = msg.message.replace(/^\[ai-ask\]\s?/, '');
+                      if (isAiReply) displayMsg = msg.message.replace(/^\[ai-reply\]\s?/, '');
                       const imgMatch = displayMsg.match(/^\[image:([^\]]+)\]\s*(.*)$/s);
                       const imageUrl = imgMatch ? imgMatch[1] : null;
                       const textPart = imgMatch ? imgMatch[2] : displayMsg;
+                      const initial = (msg.user_name || '?').charAt(0).toUpperCase();
+
+                      if (isAiReply) {
+                        return (
+                          <div key={msg.id} className="flex items-start gap-2 pop-in">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 text-primary-foreground flex items-center justify-center shrink-0 shadow-sm">
+                              <Sparkles className="h-4 w-4" />
+                            </div>
+                            <div className="flex-1 max-w-[85%] rounded-2xl rounded-tl-md px-3.5 py-2.5 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                              <p className="text-[11px] font-bold text-primary mb-1 flex items-center gap-1">
+                                Bookie AI <span className="text-[9px] font-normal text-muted-foreground uppercase tracking-wider">Mentor</span>
+                              </p>
+                              <p className="text-[14px] leading-relaxed whitespace-pre-wrap break-words">{textPart}</p>
+                              <p className="text-[10px] mt-1 text-muted-foreground/70">
+                                {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      const renderTextWithMentions = (t: string) => {
+                        if (!t) return null;
+                        const parts = t.split(/(@[A-Za-z0-9_]+)/g);
+                        return parts.map((p, i) => {
+                          if (p.startsWith('@')) {
+                            const isMeMention = p.slice(1).toLowerCase() === currentUser.name.toLowerCase();
+                            return (
+                              <span key={i} className={`font-semibold ${isMeMention ? 'text-primary bg-primary/15 px-1 rounded' : 'text-primary/80'}`}>
+                                {p}
+                              </span>
+                            );
+                          }
+                          return <span key={i}>{p}</span>;
+                        });
+                      };
 
                       return (
                         <div
                           key={msg.id}
-                          className={`relative flex items-end gap-1 ${isMe ? 'justify-end' : 'justify-start'} group`}
+                          className={`relative flex items-end gap-1.5 ${isMe ? 'justify-end' : 'justify-start'} group`}
                           onContextMenu={e => { e.preventDefault(); setSelectedMsgId(isSelected ? null : msg.id); }}
                           onTouchStart={() => handleMsgLongPress(msg.id)}
                           onTouchEnd={cancelLongPress}
                           onTouchMove={cancelLongPress}
                         >
+                          {!isMe && (
+                            <div className="w-7 h-7 rounded-full bg-muted text-foreground/70 text-[11px] font-bold flex items-center justify-center shrink-0 mb-1">
+                              {initial}
+                            </div>
+                          )}
                           {isMe && (
                             <button
                               onClick={() => deleteMessage(msg.id)}
@@ -710,6 +755,11 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                           } ${isSelected ? 'ring-2 ring-primary/40 scale-[1.02]' : ''}`}>
                             {!isMe && (
                               <p className="text-[11px] font-bold text-primary mb-0.5">{msg.user_name}</p>
+                            )}
+                            {isAiAsk && (
+                              <p className="text-[10px] font-semibold uppercase tracking-wider mb-1 opacity-70 inline-flex items-center gap-1">
+                                <Sparkles className="h-3 w-3" /> Asking Bookie AI
+                              </p>
                             )}
                             {isReply && replyAuthor && (
                               <div className={`text-[11px] px-2 py-1 rounded mb-1 border-l-2 ${
@@ -733,7 +783,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                               </button>
                             )}
                             {textPart && (
-                              <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{textPart}</p>
+                              <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{renderTextWithMentions(textPart)}</p>
                             )}
                             <p className={`text-[10px] mt-0.5 ${isMe ? 'text-primary-foreground/50' : 'text-muted-foreground/70'}`}>
                               {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
