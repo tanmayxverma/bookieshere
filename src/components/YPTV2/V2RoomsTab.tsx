@@ -245,9 +245,13 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       }, (payload: any) => {
         (async () => {
           const msgText = payload.new.message || '';
-          // Strip our internal [image:URL] tag before profanity/link scanning
-          const scanText = msgText.replace(/\[image:[^\]]+\]/g, '').replace(/^\[reply:[^\]]+\]\s?/, '');
-          if (containsProfanity(scanText) || (scanText.trim() && containsLink(scanText))) {
+          const isAi = msgText.startsWith('[ai-ask]') || msgText.startsWith('[ai-reply]');
+          // Strip our internal tags before profanity/link scanning
+          const scanText = msgText
+            .replace(/\[image:[^\]]+\]/g, '')
+            .replace(/^\[reply:[^\]]+\]\s?/, '')
+            .replace(/^\[ai-(ask|reply)\]\s?/, '');
+          if (!isAi && (containsProfanity(scanText) || (scanText.trim() && containsLink(scanText)))) {
             await (supabase as any).from('room_messages').delete().eq('id', payload.new.id);
             if (payload.new.ypt_user_id === currentUser.id) {
               toast.error('⚠️ Message removed for violating guidelines.', { duration: 4000 });
@@ -255,7 +259,17 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             return;
           }
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
-          setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
+          const authorName = user?.name || 'Unknown';
+          setMessages(prev => [...prev, { ...payload.new, user_name: authorName }]);
+          // Mention detection: notify me if @myname appears (and it's not my own message)
+          if (payload.new.ypt_user_id !== currentUser.id && !isChatMuted()) {
+            const mentionRe = new RegExp(`@${currentUser.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+            if (mentionRe.test(scanText)) {
+              if (mentionTimerRef.current) clearTimeout(mentionTimerRef.current);
+              setMentionBanner({ from: authorName, text: scanText.slice(0, 90) });
+              mentionTimerRef.current = setTimeout(() => setMentionBanner(null), 5000);
+            }
+          }
           if (roomView !== 'chat' && !isChatMuted()) setUnreadCount(prev => prev + 1);
         })();
       })
