@@ -817,6 +817,16 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                       );
                     })
                   )}
+                  {aiThinking && (
+                    <div className="flex items-start gap-2 pop-in">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 text-primary-foreground flex items-center justify-center shrink-0">
+                        <Sparkles className="h-4 w-4 animate-pulse" />
+                      </div>
+                      <div className="rounded-2xl rounded-tl-md px-3.5 py-2.5 bg-primary/10 border border-primary/20 text-sm text-muted-foreground">
+                        Bookie AI is thinking…
+                      </div>
+                    </div>
+                  )}
                   <div ref={chatEndRef} />
                 </div>
               </div>
@@ -897,7 +907,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 </Button>
                 <Input
                   ref={inputRef}
-                  placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message..."}
+                  placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message or use /ai to ask Bookie AI..."}
                   value={chatInput}
                   onChange={e => setChatInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
