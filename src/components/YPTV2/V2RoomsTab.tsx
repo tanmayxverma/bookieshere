@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2 } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2, Sparkles, AtSign } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
@@ -122,6 +122,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+  const [aiThinking, setAiThinking] = useState(false);
+  const [mentionBanner, setMentionBanner] = useState<{ from: string; text: string } | null>(null);
+  const mentionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
     { label: 'Smileys', emojis: ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥳','🤩','🥺','😢','😭','😤','😡','🤬','🤯','😱','😨','😰','😥','😓'] },
@@ -242,9 +245,13 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       }, (payload: any) => {
         (async () => {
           const msgText = payload.new.message || '';
-          // Strip our internal [image:URL] tag before profanity/link scanning
-          const scanText = msgText.replace(/\[image:[^\]]+\]/g, '').replace(/^\[reply:[^\]]+\]\s?/, '');
-          if (containsProfanity(scanText) || (scanText.trim() && containsLink(scanText))) {
+          const isAi = msgText.startsWith('[ai-ask]') || msgText.startsWith('[ai-reply]');
+          // Strip our internal tags before profanity/link scanning
+          const scanText = msgText
+            .replace(/\[image:[^\]]+\]/g, '')
+            .replace(/^\[reply:[^\]]+\]\s?/, '')
+            .replace(/^\[ai-(ask|reply)\]\s?/, '');
+          if (!isAi && (containsProfanity(scanText) || (scanText.trim() && containsLink(scanText)))) {
             await (supabase as any).from('room_messages').delete().eq('id', payload.new.id);
             if (payload.new.ypt_user_id === currentUser.id) {
               toast.error('⚠️ Message removed for violating guidelines.', { duration: 4000 });
@@ -252,7 +259,17 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             return;
           }
           const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).single();
-          setMessages(prev => [...prev, { ...payload.new, user_name: user?.name || 'Unknown' }]);
+          const authorName = user?.name || 'Unknown';
+          setMessages(prev => [...prev, { ...payload.new, user_name: authorName }]);
+          // Mention detection: notify me if @myname appears (and it's not my own message)
+          if (payload.new.ypt_user_id !== currentUser.id && !isChatMuted()) {
+            const mentionRe = new RegExp(`@${currentUser.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+            if (mentionRe.test(scanText)) {
+              if (mentionTimerRef.current) clearTimeout(mentionTimerRef.current);
+              setMentionBanner({ from: authorName, text: scanText.slice(0, 90) });
+              mentionTimerRef.current = setTimeout(() => setMentionBanner(null), 5000);
+            }
+          }
           if (roomView !== 'chat' && !isChatMuted()) setUnreadCount(prev => prev + 1);
         })();
       })
@@ -289,6 +306,79 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const sendMessage = async () => {
     const text = chatInput.trim();
     if (!text || sendingChat) return;
+
+    // /ai command → route to Bookie AI
+    if (text.toLowerCase().startsWith('/ai')) {
+      const prompt = text.slice(3).trim();
+      if (!prompt) {
+        toast.error('Add a question after /ai');
+        return;
+      }
+      if (containsProfanity(prompt)) {
+        toast.error('Inappropriate content blocked.');
+        setChatInput('');
+        return;
+      }
+      setSendingChat(true);
+      // 1) Post the user question so everyone sees the ask
+      await (supabase as any).from('room_messages').insert({
+        room_id: activeRoomId,
+        ypt_user_id: currentUser.id,
+        message: `[ai-ask] ${prompt}`,
+      });
+      setChatInput('');
+      setSendingChat(false);
+      inputRef.current?.focus();
+
+      // 2) Ask Bookie AI (non-streaming — collect and post)
+      setAiThinking(true);
+      try {
+        const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bookie-chat`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            messages: [{ role: 'user', content: `${prompt}\n\n(Answer in ≤120 words, focused JEE mentor tone.)` }],
+          }),
+        });
+        let full = '';
+        if (resp.ok && resp.body) {
+          const reader = resp.body.getReader();
+          const decoder = new TextDecoder();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            for (const line of chunk.split('\n')) {
+              const t = line.trim();
+              if (!t.startsWith('data:')) continue;
+              const payload = t.slice(5).trim();
+              if (!payload || payload === '[DONE]') continue;
+              try {
+                const j = JSON.parse(payload);
+                const delta = j.choices?.[0]?.delta?.content || j.choices?.[0]?.message?.content || '';
+                if (delta) full += delta;
+              } catch { /* skip non-JSON */ }
+            }
+          }
+        }
+        const clean = (full || 'I couldn’t reach the AI right now. Try again in a moment.').slice(0, 1400);
+        await (supabase as any).from('room_messages').insert({
+          room_id: activeRoomId,
+          ypt_user_id: currentUser.id,
+          message: `[ai-reply] ${clean}`,
+        });
+      } catch (e: any) {
+        toast.error('Bookie AI is unavailable right now.');
+      } finally {
+        setAiThinking(false);
+      }
+      return;
+    }
+
     if (containsProfanity(text)) {
       toast.error('Inappropriate language blocked.');
       setChatInput('');
@@ -570,6 +660,15 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
               </div>
 
               {/* Messages — scrollable, flex-grow, starts from bottom */}
+              {mentionBanner && (
+                <div className="mx-3 mt-2 flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/10 border border-primary/25 text-xs pop-in">
+                  <AtSign className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <span className="flex-1 min-w-0 truncate"><span className="font-semibold text-primary">{mentionBanner.from}</span> mentioned you: <span className="text-muted-foreground">{mentionBanner.text}</span></span>
+                  <button onClick={() => setMentionBanner(null)} className="text-muted-foreground hover:text-foreground shrink-0">
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
               <div
                 ref={chatContainerRef}
                 className="flex-1 min-h-0 overflow-y-auto overscroll-contain ypt-scroll"
@@ -585,6 +684,8 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                     filteredMessages.map((msg) => {
                       const isMe = msg.ypt_user_id === currentUser.id;
                       const isSelected = selectedMsgId === msg.id;
+                      const isAiAsk = msg.message.startsWith('[ai-ask]');
+                      const isAiReply = msg.message.startsWith('[ai-reply]');
                       const isReply = msg.message.startsWith('[reply:');
                       let replyAuthor = '';
                       let displayMsg = msg.message;
@@ -592,19 +693,62 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                         const match = msg.message.match(/^\[reply:(.+?)\]\s?(.*)/s);
                         if (match) { replyAuthor = match[1]; displayMsg = match[2]; }
                       }
+                      if (isAiAsk) displayMsg = msg.message.replace(/^\[ai-ask\]\s?/, '');
+                      if (isAiReply) displayMsg = msg.message.replace(/^\[ai-reply\]\s?/, '');
                       const imgMatch = displayMsg.match(/^\[image:([^\]]+)\]\s*(.*)$/s);
                       const imageUrl = imgMatch ? imgMatch[1] : null;
                       const textPart = imgMatch ? imgMatch[2] : displayMsg;
+                      const initial = (msg.user_name || '?').charAt(0).toUpperCase();
+
+                      if (isAiReply) {
+                        return (
+                          <div key={msg.id} className="flex items-start gap-2 pop-in">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 text-primary-foreground flex items-center justify-center shrink-0 shadow-sm">
+                              <Sparkles className="h-4 w-4" />
+                            </div>
+                            <div className="flex-1 max-w-[85%] rounded-2xl rounded-tl-md px-3.5 py-2.5 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                              <p className="text-[11px] font-bold text-primary mb-1 flex items-center gap-1">
+                                Bookie AI <span className="text-[9px] font-normal text-muted-foreground uppercase tracking-wider">Mentor</span>
+                              </p>
+                              <p className="text-[14px] leading-relaxed whitespace-pre-wrap break-words">{textPart}</p>
+                              <p className="text-[10px] mt-1 text-muted-foreground/70">
+                                {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      const renderTextWithMentions = (t: string) => {
+                        if (!t) return null;
+                        const parts = t.split(/(@[A-Za-z0-9_]+)/g);
+                        return parts.map((p, i) => {
+                          if (p.startsWith('@')) {
+                            const isMeMention = p.slice(1).toLowerCase() === currentUser.name.toLowerCase();
+                            return (
+                              <span key={i} className={`font-semibold ${isMeMention ? 'text-primary bg-primary/15 px-1 rounded' : 'text-primary/80'}`}>
+                                {p}
+                              </span>
+                            );
+                          }
+                          return <span key={i}>{p}</span>;
+                        });
+                      };
 
                       return (
                         <div
                           key={msg.id}
-                          className={`relative flex items-end gap-1 ${isMe ? 'justify-end' : 'justify-start'} group`}
+                          className={`relative flex items-end gap-1.5 ${isMe ? 'justify-end' : 'justify-start'} group`}
                           onContextMenu={e => { e.preventDefault(); setSelectedMsgId(isSelected ? null : msg.id); }}
                           onTouchStart={() => handleMsgLongPress(msg.id)}
                           onTouchEnd={cancelLongPress}
                           onTouchMove={cancelLongPress}
                         >
+                          {!isMe && (
+                            <div className="w-7 h-7 rounded-full bg-muted text-foreground/70 text-[11px] font-bold flex items-center justify-center shrink-0 mb-1">
+                              {initial}
+                            </div>
+                          )}
                           {isMe && (
                             <button
                               onClick={() => deleteMessage(msg.id)}
@@ -620,6 +764,11 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                           } ${isSelected ? 'ring-2 ring-primary/40 scale-[1.02]' : ''}`}>
                             {!isMe && (
                               <p className="text-[11px] font-bold text-primary mb-0.5">{msg.user_name}</p>
+                            )}
+                            {isAiAsk && (
+                              <p className="text-[10px] font-semibold uppercase tracking-wider mb-1 opacity-70 inline-flex items-center gap-1">
+                                <Sparkles className="h-3 w-3" /> Asking Bookie AI
+                              </p>
                             )}
                             {isReply && replyAuthor && (
                               <div className={`text-[11px] px-2 py-1 rounded mb-1 border-l-2 ${
@@ -643,7 +792,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                               </button>
                             )}
                             {textPart && (
-                              <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{textPart}</p>
+                              <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">{renderTextWithMentions(textPart)}</p>
                             )}
                             <p className={`text-[10px] mt-0.5 ${isMe ? 'text-primary-foreground/50' : 'text-muted-foreground/70'}`}>
                               {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
@@ -676,6 +825,16 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                         </div>
                       );
                     })
+                  )}
+                  {aiThinking && (
+                    <div className="flex items-start gap-2 pop-in">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 text-primary-foreground flex items-center justify-center shrink-0">
+                        <Sparkles className="h-4 w-4 animate-pulse" />
+                      </div>
+                      <div className="rounded-2xl rounded-tl-md px-3.5 py-2.5 bg-primary/10 border border-primary/20 text-sm text-muted-foreground">
+                        Bookie AI is thinking…
+                      </div>
+                    </div>
                   )}
                   <div ref={chatEndRef} />
                 </div>
@@ -757,7 +916,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 </Button>
                 <Input
                   ref={inputRef}
-                  placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message..."}
+                  placeholder={replyTo ? `Reply to ${replyTo.user_name}...` : "Type a message or use /ai to ask Bookie AI..."}
                   value={chatInput}
                   onChange={e => setChatInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
