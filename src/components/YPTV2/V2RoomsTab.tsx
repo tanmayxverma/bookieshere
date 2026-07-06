@@ -109,7 +109,12 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [chatInput, setChatInput] = useState('');
   const [sendingChat, setSendingChat] = useState(false);
   const [showChatCaution, setShowChatCaution] = useState(false);
-  const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
+  const [chatCautionAccepted, setChatCautionAccepted] = useState<boolean>(() => {
+    try {
+      const ts = Number(localStorage.getItem('chat_disclaimer_seen_at') || '0');
+      return ts > 0 && Date.now() - ts < 24 * 60 * 60 * 1000;
+    } catch { return false; }
+  });
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedMsgId, setSelectedMsgId] = useState<string | null>(null);
   const [replyTo, setReplyTo] = useState<ChatMessage | null>(null);
@@ -438,6 +443,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
 
   const acceptCaution = () => {
     setChatCautionAccepted(true);
+    try { localStorage.setItem('chat_disclaimer_seen_at', String(Date.now())); } catch {}
     setShowChatCaution(false);
     setRoomView('chat');
     setUnreadCount(0);
@@ -446,7 +452,11 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const handleJoinRoom = async (room: Room) => {
     await joinRoom(room.id, room.name, room.emoji);
     setRoomView('members');
-    setChatCautionAccepted(false);
+    // Preserve 24h persistence: re-derive from localStorage
+    try {
+      const ts = Number(localStorage.getItem('chat_disclaimer_seen_at') || '0');
+      setChatCautionAccepted(ts > 0 && Date.now() - ts < 24 * 60 * 60 * 1000);
+    } catch { setChatCautionAccepted(false); }
   };
 
   const handleLeaveRoom = async () => {
