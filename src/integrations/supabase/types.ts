@@ -369,6 +369,41 @@ export type Database = {
           },
         ]
       }
+      syllabus_progress: {
+        Row: {
+          chapter_key: string
+          created_at: string
+          id: string
+          profile_id: string
+          stars: number
+          updated_at: string
+        }
+        Insert: {
+          chapter_key: string
+          created_at?: string
+          id?: string
+          profile_id: string
+          stars?: number
+          updated_at?: string
+        }
+        Update: {
+          chapter_key?: string
+          created_at?: string
+          id?: string
+          profile_id?: string
+          stars?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "syllabus_progress_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       test_questions: {
         Row: {
           chapter: string | null
@@ -886,6 +921,23 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      guest_list_syllabus_progress: {
+        Args: { _device_id: string }
+        Returns: {
+          chapter_key: string
+          created_at: string
+          id: string
+          profile_id: string
+          stars: number
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "syllabus_progress"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       guest_list_tickets: {
         Args: { _device_id: string }
         Returns: {
@@ -913,6 +965,10 @@ export type Database = {
         Args: { _device_id: string; _notification_id: string }
         Returns: undefined
       }
+      guest_reset_syllabus_progress: {
+        Args: { _device_id: string }
+        Returns: undefined
+      }
       guest_send_message: {
         Args: { _body: string; _device_id: string; _ticket_id: string }
         Returns: {
@@ -928,6 +984,23 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "ticket_messages"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      guest_upsert_syllabus_progress: {
+        Args: { _chapter_key: string; _device_id: string; _stars: number }
+        Returns: {
+          chapter_key: string
+          created_at: string
+          id: string
+          profile_id: string
+          stars: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "syllabus_progress"
           isOneToOne: true
           isSetofReturn: false
         }
