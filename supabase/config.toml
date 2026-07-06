@@ -8,3 +8,6 @@
  
  [functions.submit-test]
  verify_jwt = false
+
+[functions.end-study-session]
+verify_jwt = false

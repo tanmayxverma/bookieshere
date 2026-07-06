@@ -65,11 +65,12 @@ export function useNotifications() {
   const unreadCount = useMemo(() => items.filter(n => !readIds.has(n.id)).length, [items, readIds]);
 
   const markRead = useCallback(async (id: string) => {
-    if (!profile) return;
     setReadIds(prev => { const s = new Set(prev); s.add(id); return s; });
-    if (isAuthenticated) {
-      await supabase.from('notification_reads').upsert({ notification_id: id, profile_id: profile.id }, { onConflict: 'notification_id,profile_id' });
-    } else {
+    if (isAuthenticated && profile) {
+      await supabase
+        .from('notification_reads')
+        .upsert({ notification_id: id, profile_id: profile.id }, { onConflict: 'notification_id,profile_id' });
+    } else if (deviceId) {
       await (supabase as any).rpc('guest_mark_notification_read', { _device_id: deviceId, _notification_id: id });
     }
   }, [profile, isAuthenticated, deviceId]);

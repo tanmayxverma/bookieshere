@@ -9,6 +9,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 import type { RoomSession } from '@/hooks/useRoomSession';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 
 interface TimerControls {
   isActive: boolean;
@@ -109,7 +113,12 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [chatInput, setChatInput] = useState('');
   const [sendingChat, setSendingChat] = useState(false);
   const [showChatCaution, setShowChatCaution] = useState(false);
-  const [chatCautionAccepted, setChatCautionAccepted] = useState(false);
+  const [chatCautionAccepted, setChatCautionAccepted] = useState<boolean>(() => {
+    try {
+      const ts = Number(localStorage.getItem('chat_disclaimer_seen_at') || '0');
+      return ts > 0 && Date.now() - ts < 24 * 60 * 60 * 1000;
+    } catch { return false; }
+  });
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedMsgId, setSelectedMsgId] = useState<string | null>(null);
   const [replyTo, setReplyTo] = useState<ChatMessage | null>(null);
@@ -438,6 +447,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
 
   const acceptCaution = () => {
     setChatCautionAccepted(true);
+    try { localStorage.setItem('chat_disclaimer_seen_at', String(Date.now())); } catch {}
     setShowChatCaution(false);
     setRoomView('chat');
     setUnreadCount(0);
@@ -446,7 +456,11 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const handleJoinRoom = async (room: Room) => {
     await joinRoom(room.id, room.name, room.emoji);
     setRoomView('members');
-    setChatCautionAccepted(false);
+    // Preserve 24h persistence: re-derive from localStorage
+    try {
+      const ts = Number(localStorage.getItem('chat_disclaimer_seen_at') || '0');
+      setChatCautionAccepted(ts > 0 && Date.now() - ts < 24 * 60 * 60 * 1000);
+    } catch { setChatCautionAccepted(false); }
   };
 
   const handleLeaveRoom = async () => {
@@ -710,7 +724,14 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                               <p className="text-[11px] font-bold text-primary mb-1 flex items-center gap-1">
                                 Bookie AI <span className="text-[9px] font-normal text-muted-foreground uppercase tracking-wider">Mentor</span>
                               </p>
-                              <p className="text-[14px] leading-relaxed whitespace-pre-wrap break-words">{textPart}</p>
+                              <div className="text-[14px] leading-relaxed break-words prose prose-sm dark:prose-invert max-w-none [&>*]:my-1 [&_p]:my-1 [&_.katex]:text-[0.95em]">
+                                <ReactMarkdown
+                                  remarkPlugins={[remarkMath]}
+                                  rehypePlugins={[rehypeKatex]}
+                                >
+                                  {textPart}
+                                </ReactMarkdown>
+                              </div>
                               <p className="text-[10px] mt-1 text-muted-foreground/70">
                                 {new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                               </p>
