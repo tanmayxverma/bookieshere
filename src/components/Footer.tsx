@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { MessageSquare, BookOpen, ArrowUpRight, Sparkles, Coffee, Heart, LifeBuoy } from "lucide-react";
+import { MessageSquare, BookOpen, ArrowUpRight, Sparkles, Coffee, Heart, LifeBuoy, Send } from "lucide-react";
 import logo from "@/assets/logo.jfif";
 import { Button } from "@/components/ui/button";
 import { AdminLoginModal } from "@/components/Admin/AdminLoginModal";
@@ -43,11 +43,15 @@ export function Footer() {
                   size="lg"
                   className="group h-14 gap-3 rounded-2xl bg-foreground text-background hover:bg-foreground/90 shadow-lg shadow-foreground/10 text-base font-semibold"
                 >
-                  <Link to="/support">
-                    <LifeBuoy className="h-5 w-5" />
-                    Open Support Chat
+                  <a
+                    href="https://t.me/bookieshere"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Send className="h-5 w-5" />
+                    Join Telegram Channel
                     <ArrowUpRight className="h-4 w-4 ml-auto transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
+                  </a>
                 </Button>
                 <Button
                   asChild
