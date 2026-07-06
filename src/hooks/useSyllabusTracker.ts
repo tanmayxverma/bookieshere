@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ALL_CHAPTERS, MAX_STARS } from "@/data/jeeSyllabus";
 import { useProfile } from "@/hooks/useProfile";
+import { supabase } from "@/integrations/supabase/client";
 
 interface StoredData {
   updated_at: string;
@@ -34,16 +35,63 @@ function writeStore(profileKey: string, data: StoredData) {
 }
 
 export function useSyllabusTracker() {
-  const { profile, deviceId } = useProfile();
+  const { profile, deviceId, isAuthenticated } = useProfile();
   const profileKey = profile?.id || deviceId;
 
   const [stars, setStars] = useState<Record<string, number>>({});
 
+  // Load from DB when possible, fall back to localStorage. Also merge local → DB
+  // on first login so guest progress carries over to Gmail account.
   useEffect(() => {
     if (!profileKey) return;
-    const s = readStore(profileKey);
-    setStars(s.stars);
-  }, [profileKey]);
+    const local = readStore(profileKey);
+    setStars(local.stars);
+
+    let cancelled = false;
+    (async () => {
+      try {
+        let rows: any[] | null = null;
+        if (isAuthenticated && profile) {
+          const { data } = await supabase
+            .from('syllabus_progress' as any)
+            .select('chapter_key, stars')
+            .eq('profile_id', profile.id);
+          rows = data as any[] | null;
+        } else if (deviceId) {
+          const { data } = await (supabase as any).rpc('guest_list_syllabus_progress', { _device_id: deviceId });
+          rows = data;
+        }
+        if (cancelled) return;
+        const remote: Record<string, number> = {};
+        (rows || []).forEach((r: any) => { remote[r.chapter_key] = r.stars; });
+
+        // Merge: prefer higher star count between local & remote per chapter
+        const merged: Record<string, number> = { ...remote };
+        let needsUpload = false;
+        for (const [k, v] of Object.entries(local.stars)) {
+          if ((merged[k] || 0) < v) { merged[k] = v; needsUpload = true; }
+        }
+        setStars(merged);
+        writeStore(profileKey, { updated_at: new Date().toISOString(), stars: merged });
+
+        // Push any local-only progress up so it survives across devices
+        if (needsUpload) {
+          for (const [k, v] of Object.entries(local.stars)) {
+            if ((remote[k] || 0) < v) {
+              if (isAuthenticated && profile) {
+                await supabase
+                  .from('syllabus_progress' as any)
+                  .upsert({ profile_id: profile.id, chapter_key: k, stars: v }, { onConflict: 'profile_id,chapter_key' });
+              } else if (deviceId) {
+                await (supabase as any).rpc('guest_upsert_syllabus_progress', { _device_id: deviceId, _chapter_key: k, _stars: v });
+              }
+            }
+          }
+        }
+      } catch { /* offline / no profile — localStorage still works */ }
+    })();
+    return () => { cancelled = true; };
+  }, [profileKey, isAuthenticated, profile, deviceId]);
 
   const setStar = useCallback((chapterKey: string, value: number) => {
     if (!profileKey) return;
@@ -53,7 +101,25 @@ export function useSyllabusTracker() {
       writeStore(profileKey, { updated_at: new Date().toISOString(), stars: next });
       return next;
     });
-  }, [profileKey]);
+    // Best-effort DB sync (fire-and-forget)
+    (async () => {
+      try {
+        if (isAuthenticated && profile) {
+          if (value <= 0) {
+            await supabase.from('syllabus_progress' as any)
+              .delete().eq('profile_id', profile.id).eq('chapter_key', chapterKey);
+          } else {
+            await supabase.from('syllabus_progress' as any)
+              .upsert({ profile_id: profile.id, chapter_key: chapterKey, stars: value }, { onConflict: 'profile_id,chapter_key' });
+          }
+        } else if (deviceId) {
+          await (supabase as any).rpc('guest_upsert_syllabus_progress', {
+            _device_id: deviceId, _chapter_key: chapterKey, _stars: Math.max(0, value),
+          });
+        }
+      } catch {}
+    })();
+  }, [profileKey, isAuthenticated, profile, deviceId]);
 
   const cycleStar = useCallback((chapterKey: string) => {
     const current = stars[chapterKey] || 0;
@@ -64,7 +130,16 @@ export function useSyllabusTracker() {
     if (!profileKey) return;
     setStars({});
     writeStore(profileKey, { updated_at: new Date().toISOString(), stars: {} });
-  }, [profileKey]);
+    (async () => {
+      try {
+        if (isAuthenticated && profile) {
+          await supabase.from('syllabus_progress' as any).delete().eq('profile_id', profile.id);
+        } else if (deviceId) {
+          await (supabase as any).rpc('guest_reset_syllabus_progress', { _device_id: deviceId });
+        }
+      } catch {}
+    })();
+  }, [profileKey, isAuthenticated, profile, deviceId]);
 
   const overall = useMemo(() => {
     const total = ALL_CHAPTERS.length * MAX_STARS;
