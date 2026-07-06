@@ -117,25 +117,18 @@ export function useStudyTimer(yptUserId: string | undefined) {
     return () => { if (countdownRef.current) clearInterval(countdownRef.current); };
   }, [showInactivityModal, timerState, endSessionNow]);
 
-  // Auto-stop on tab close / beforeunload
+  // Reliable end on real tab/app close via sendBeacon → edge function.
+  // Note: visibilitychange alone is NOT treated as end — user can switch tabs.
   useEffect(() => {
-    const handleBeforeUnload = () => {
+    const fireEnd = () => {
       const state = getTimerState();
       if (!state) return;
-      const duration = Math.max(0, Math.floor(((state.pausedAt || Date.now()) - state.startedAt - state.totalPausedMs) / 1000));
-      // Use sendBeacon for reliable delivery on tab close
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/study_sessions?id=eq.${state.sessionId}`;
-      const body = JSON.stringify({
-        ended_at: new Date().toISOString(),
-        duration_seconds: duration,
-        status: 'completed',
-      });
-      navigator.sendBeacon(
-        url,
-        new Blob([body], { type: 'application/json' })
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/end-study-session`;
+      const body = new Blob(
+        [JSON.stringify({ sessionId: state.sessionId })],
+        { type: 'application/json' },
       );
-      // Note: sendBeacon with REST API needs auth headers which Blob doesn't support well.
-      // As a fallback, we clear localStorage so on next load the session is ended.
+      try { navigator.sendBeacon(url, body); } catch {}
       saveTimerState(null);
     };
 
@@ -146,11 +139,14 @@ export function useStudyTimer(yptUserId: string | undefined) {
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    // pagehide fires reliably on mobile Safari + tab close; beforeunload as fallback
+    window.addEventListener('pagehide', fireEnd);
+    window.addEventListener('beforeunload', fireEnd);
     window.addEventListener('offline', handleOffline);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('pagehide', fireEnd);
+      window.removeEventListener('beforeunload', fireEnd);
       window.removeEventListener('offline', handleOffline);
     };
   }, [endSessionNow]);
