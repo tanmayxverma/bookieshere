@@ -24,6 +24,8 @@ const ALLOWED_DOMAINS = [
   'thescholarverse.site',
   'netlify.app',
   'novatra.in',
+  'ophub-testseries-books-notes.pages.dev',
+  'pages.dev',
 ];
 
 /**
