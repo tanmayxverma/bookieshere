@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2, Sparkles, AtSign } from 'lucide-react';
+import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2, Sparkles, AtSign, Lock, LockOpen, Settings } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
@@ -47,6 +47,8 @@ interface Room {
   created_by: string | null;
   last_activity_at: string;
   memberCount: number;
+  is_locked?: boolean;
+  pin_hash?: string | null;
 }
 
 interface ChatMessage {
