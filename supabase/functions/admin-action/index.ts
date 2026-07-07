@@ -117,6 +117,29 @@ Deno.serve(async (req) => {
         return jr({ items: data ?? [] }, 200);
       }
 
+      case 'material.list': {
+        const { data } = await supabase.from('materials').select('*').order('created_at', { ascending: false }).limit(500);
+        return jr({ items: data ?? [] }, 200);
+      }
+      case 'material.create': {
+        const { data, error } = await supabase.from('materials').insert({ ...payload, popularity: payload.popularity ?? 0 }).select().single();
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'material.create', { id: data.id, name: data.name });
+        return jr({ item: data }, 200);
+      }
+      case 'material.update': {
+        const { id, ...patch } = payload;
+        const { data, error } = await supabase.from('materials').update(patch).eq('id', id).select().single();
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'material.update', { id });
+        return jr({ item: data }, 200);
+      }
+      case 'material.delete': {
+        await supabase.from('materials').delete().eq('id', payload.id);
+        await log(sessionId, 'material.delete', { id: payload.id });
+        return jr({ ok: true }, 200);
+      }
+
       default:
         return jr({ error: 'unknown op' }, 400);
     }
