@@ -1104,6 +1104,62 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Room settings — creator only */}
+        <Dialog open={showRoomSettings} onOpenChange={setShowRoomSettings}>
+          <DialogContent className="sm:max-w-sm">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Settings className="h-4 w-4 text-primary" /> Room settings
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Only you (the creator) can change these. Settings vanish with the room after 1 hr of inactivity.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 pt-2">
+              <label className="flex items-center justify-between text-sm cursor-pointer rounded-xl border border-border/30 bg-muted/20 p-3">
+                <span className="flex items-center gap-2 font-medium">
+                  {settingsLock ? <Lock className="h-4 w-4 text-primary" /> : <LockOpen className="h-4 w-4 text-muted-foreground" />}
+                  Lock this room
+                </span>
+                <input
+                  type="checkbox"
+                  checked={settingsLock}
+                  onChange={e => setSettingsLock(e.target.checked)}
+                  className="h-4 w-4 accent-primary"
+                />
+              </label>
+              {settingsLock && (
+                <div className="space-y-1.5">
+                  <label className="text-xs text-muted-foreground">Set / update 4-digit PIN (leave blank to keep current)</label>
+                  <Input
+                    inputMode="numeric"
+                    maxLength={4}
+                    placeholder="• • • •"
+                    value={settingsPin}
+                    onChange={e => setSettingsPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                    className="h-12 text-xl tracking-[0.5em] text-center"
+                  />
+                </div>
+              )}
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground">Max participants (2–50, blank = unlimited)</label>
+                <Input
+                  type="number"
+                  min={2}
+                  max={50}
+                  placeholder="Unlimited"
+                  value={settingsMax}
+                  onChange={e => setSettingsMax(e.target.value)}
+                  className="h-11"
+                />
+              </div>
+              <Button onClick={saveRoomSettings} disabled={savingSettings} className="w-full h-11">
+                {savingSettings ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }
@@ -1254,6 +1310,12 @@ function RoomCard({ room, index, currentUserId, onJoin, onDelete }: {
           <h4 className="font-bold text-[15px] flex items-center gap-2">
             {room.name}
             {room.is_permanent && <Crown className="h-4 w-4 text-primary shrink-0" />}
+            {room.is_locked && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider">
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Locked
+              </span>
+            )}
           </h4>
           <p className="text-sm text-muted-foreground truncate">
             {room.description || 'Open study room'}
@@ -1272,7 +1334,7 @@ function RoomCard({ room, index, currentUserId, onJoin, onDelete }: {
             onClick={onJoin}
             disabled={isFull}
           >
-            {isFull ? 'Full' : 'Join'}
+            {isFull ? 'Full' : room.is_locked && room.created_by !== currentUserId ? 'Unlock' : 'Join'}
           </Button>
           {onDelete && (
             <button
