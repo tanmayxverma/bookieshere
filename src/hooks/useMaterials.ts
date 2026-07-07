@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Material, ExamType, SubjectType, ResourceType } from "@/types/materials";
+import { useEffect } from "react";
 
 // Priority materials that should always appear first (ordered by rank)
 const PRIORITY_MATERIALS = [
@@ -28,6 +29,17 @@ function getPriorityRank(materialName: string): number {
 }
 
 export function useMaterials() {
+  const qc = useQueryClient();
+  useEffect(() => {
+    const ch = supabase
+      .channel('materials-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'materials' }, () => {
+        qc.invalidateQueries({ queryKey: ['materials'] });
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [qc]);
+
   return useQuery({
     queryKey: ["materials"],
     queryFn: async (): Promise<Material[]> => {

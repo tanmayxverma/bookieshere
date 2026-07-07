@@ -691,10 +691,12 @@ export type Database = {
           description: string | null
           emoji: string | null
           id: string
+          is_locked: boolean
           is_permanent: boolean
           last_activity_at: string
           max_participants: number | null
           name: string
+          pin_hash: string | null
         }
         Insert: {
           created_at?: string
@@ -702,10 +704,12 @@ export type Database = {
           description?: string | null
           emoji?: string | null
           id?: string
+          is_locked?: boolean
           is_permanent?: boolean
           last_activity_at?: string
           max_participants?: number | null
           name: string
+          pin_hash?: string | null
         }
         Update: {
           created_at?: string
@@ -713,10 +717,12 @@ export type Database = {
           description?: string | null
           emoji?: string | null
           id?: string
+          is_locked?: boolean
           is_permanent?: boolean
           last_activity_at?: string
           max_participants?: number | null
           name?: string
+          pin_hash?: string | null
         }
         Relationships: [
           {
@@ -1012,6 +1018,34 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_room_lock: {
+        Args: {
+          _creator: string
+          _is_locked: boolean
+          _max: number
+          _pin: string
+          _room_id: string
+        }
+        Returns: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          emoji: string | null
+          id: string
+          is_locked: boolean
+          is_permanent: boolean
+          last_activity_at: string
+          max_participants: number | null
+          name: string
+          pin_hash: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "ypt_rooms"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       upsert_guest_profile: {
         Args: {
           _avatar_url?: string
@@ -1037,6 +1071,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      verify_room_pin: {
+        Args: { _pin: string; _room_id: string }
+        Returns: boolean
       }
     }
     Enums: {
