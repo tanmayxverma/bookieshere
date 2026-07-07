@@ -109,6 +109,18 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const [newName, setNewName] = useState('');
   const [newDesc, setNewDesc] = useState('');
   const [newMax, setNewMax] = useState('');
+  const [newLock, setNewLock] = useState(false);
+  const [newPin, setNewPin] = useState('');
+  // PIN prompt when joining a locked room
+  const [pinPromptRoom, setPinPromptRoom] = useState<Room | null>(null);
+  const [pinInput, setPinInput] = useState('');
+  const [pinChecking, setPinChecking] = useState(false);
+  // Owner settings dialog inside an active room
+  const [showRoomSettings, setShowRoomSettings] = useState(false);
+  const [settingsLock, setSettingsLock] = useState(false);
+  const [settingsPin, setSettingsPin] = useState('');
+  const [settingsMax, setSettingsMax] = useState('');
+  const [savingSettings, setSavingSettings] = useState(false);
   const [loading, setLoading] = useState(true);
   const [roomView, setRoomView] = useState<'members' | 'chat'>('members');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -497,13 +509,94 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       toast.error('Inappropriate language in room name/description.');
       return;
     }
-    await (supabase as any).from('ypt_rooms').insert({
+    if (newLock && newPin && !/^\d{4}$/.test(newPin)) {
+      toast.error('PIN must be exactly 4 digits.');
+      return;
+    }
+    const { data: created, error } = await (supabase as any).from('ypt_rooms').insert({
       name, description: newDesc.trim() || null, emoji: '💡',
       is_permanent: false, max_participants: newMax ? parseInt(newMax) : null, created_by: currentUser.id,
-    });
-    setNewName(''); setNewDesc(''); setNewMax('');
+      is_locked: newLock,
+    }).select().single();
+    if (error) { toast.error('Failed to create room'); return; }
+    if (newLock && newPin && created?.id) {
+      await (supabase as any).rpc('set_room_lock', {
+        _room_id: created.id, _creator: currentUser.id,
+        _is_locked: true, _pin: newPin,
+        _max: newMax ? parseInt(newMax) : null,
+      });
+    }
+    setNewName(''); setNewDesc(''); setNewMax(''); setNewLock(false); setNewPin('');
     setShowCreate(false);
     fetchRooms();
+  };
+
+  const attemptJoin = async (room: Room) => {
+    if (room.is_locked && room.created_by !== currentUser.id) {
+      setPinPromptRoom(room);
+      setPinInput('');
+      return;
+    }
+    await handleJoinRoom(room);
+  };
+
+  const submitPin = async () => {
+    if (!pinPromptRoom) return;
+    if (!/^\d{4}$/.test(pinInput)) { toast.error('Enter the 4-digit PIN'); return; }
+    setPinChecking(true);
+    try {
+      const { data, error } = await (supabase as any).rpc('verify_room_pin', {
+        _room_id: pinPromptRoom.id, _pin: pinInput,
+      });
+      if (error) throw error;
+      if (!data) { toast.error('Incorrect PIN'); return; }
+      const room = pinPromptRoom;
+      setPinPromptRoom(null); setPinInput('');
+      await handleJoinRoom(room);
+    } catch (e: any) {
+      toast.error(e?.message || 'Could not verify PIN');
+    } finally {
+      setPinChecking(false);
+    }
+  };
+
+  const openRoomSettings = () => {
+    const r = rooms.find(x => x.id === activeRoomId);
+    if (!r) return;
+    setSettingsLock(!!r.is_locked);
+    setSettingsPin('');
+    setSettingsMax(r.max_participants?.toString() ?? '');
+    setShowRoomSettings(true);
+  };
+
+  const saveRoomSettings = async () => {
+    if (!activeRoomId) return;
+    if (settingsLock && settingsPin && !/^\d{4}$/.test(settingsPin)) {
+      toast.error('PIN must be exactly 4 digits.');
+      return;
+    }
+    const maxNum = settingsMax ? parseInt(settingsMax) : null;
+    if (maxNum !== null && (isNaN(maxNum) || maxNum < 2 || maxNum > 50)) {
+      toast.error('Max participants must be 2–50.');
+      return;
+    }
+    setSavingSettings(true);
+    try {
+      const { error } = await (supabase as any).rpc('set_room_lock', {
+        _room_id: activeRoomId, _creator: currentUser.id,
+        _is_locked: settingsLock,
+        _pin: settingsLock ? (settingsPin || null) : null,
+        _max: maxNum,
+      });
+      if (error) throw error;
+      toast.success('Room settings updated');
+      setShowRoomSettings(false);
+      fetchRooms();
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to update');
+    } finally {
+      setSavingSettings(false);
+    }
   };
 
   const deleteRoom = async (roomId: string) => {
