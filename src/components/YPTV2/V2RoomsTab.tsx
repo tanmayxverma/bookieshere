@@ -635,6 +635,16 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                 {presenceMembers.length}
               </span>
+              {currentRoom.created_by === currentUser.id && !currentRoom.is_permanent && (
+                <Button
+                  variant="ghost" size="sm"
+                  onClick={openRoomSettings}
+                  className="h-8 px-2.5 text-muted-foreground hover:text-foreground"
+                  aria-label="Room settings"
+                >
+                  <Settings className="h-4 w-4" />
+                </Button>
+              )}
               <Button
                 variant="ghost" size="sm"
                 onClick={handleLeaveRoom}
@@ -1131,7 +1141,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       <div className="space-y-3">
         {permanentRooms.map((room, idx) => (
           <RoomCard key={room.id} room={room} index={idx} currentUserId={currentUser.id}
-            onJoin={() => handleJoinRoom(room)} onDelete={undefined} />
+            onJoin={() => attemptJoin(room)} onDelete={undefined} />
         ))}
       </div>
 
@@ -1140,7 +1150,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
           <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Custom Rooms</h3>
           {customRooms.map((room, idx) => (
             <RoomCard key={room.id} room={room} index={idx + permanentRooms.length} currentUserId={currentUser.id}
-              onJoin={() => handleJoinRoom(room)}
+              onJoin={() => attemptJoin(room)}
               onDelete={room.created_by === currentUser.id ? () => deleteRoom(room.id) : undefined}
             />
           ))}
@@ -1156,9 +1166,68 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             <Input placeholder="Room name" value={newName} onChange={e => setNewName(e.target.value)} maxLength={40} className="h-12 text-base" />
             <Input placeholder="Description (optional)" value={newDesc} onChange={e => setNewDesc(e.target.value)} maxLength={100} className="h-12 text-base" />
             <Input placeholder="Max participants (optional)" type="number" value={newMax} onChange={e => setNewMax(e.target.value)} min={2} max={50} className="h-12 text-base" />
+            <div className="rounded-xl border border-border/30 bg-muted/20 p-3 space-y-3">
+              <label className="flex items-center justify-between text-sm cursor-pointer">
+                <span className="flex items-center gap-2 font-medium">
+                  <Lock className="h-4 w-4 text-primary" /> Lock room
+                </span>
+                <input
+                  type="checkbox"
+                  checked={newLock}
+                  onChange={e => setNewLock(e.target.checked)}
+                  className="h-4 w-4 accent-primary"
+                />
+              </label>
+              {newLock && (
+                <Input
+                  placeholder="Optional 4-digit PIN"
+                  inputMode="numeric"
+                  maxLength={4}
+                  value={newPin}
+                  onChange={e => setNewPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                  className="h-11 text-base tracking-[0.4em] text-center"
+                />
+              )}
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Only you can change these later. Lock, PIN and member limit live inside this room and vanish when the room auto-deletes (1 hr inactivity). No history is kept.
+              </p>
+            </div>
             <p className="text-xs text-muted-foreground">Custom rooms auto-delete after 1hr of inactivity. Chats live for 24 hours.</p>
             <Button onClick={createRoom} disabled={!newName.trim()} className="w-full h-12 text-base active:scale-95 transition-transform">
               Create Room
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* PIN prompt when joining a locked room */}
+      <Dialog open={!!pinPromptRoom} onOpenChange={(o) => { if (!o) { setPinPromptRoom(null); setPinInput(''); } }}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Lock className="h-4 w-4 text-primary" /> Enter room PIN
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">{pinPromptRoom?.name}</span> is locked. Ask the creator for the 4-digit PIN.
+            </p>
+            <Input
+              autoFocus
+              inputMode="numeric"
+              maxLength={4}
+              placeholder="• • • •"
+              value={pinInput}
+              onChange={e => setPinInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
+              onKeyDown={e => { if (e.key === 'Enter') submitPin(); }}
+              className="h-14 text-2xl tracking-[0.5em] text-center"
+            />
+            <Button
+              onClick={submitPin}
+              disabled={pinChecking || pinInput.length !== 4}
+              className="w-full h-11"
+            >
+              {pinChecking ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Unlock & Join'}
             </Button>
           </div>
         </DialogContent>
