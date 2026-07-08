@@ -8,7 +8,7 @@ const NAV = [
   { to: '/admin', label: 'Overview', icon: LayoutDashboard, exact: true },
   { to: '/admin/notifications', label: 'Notifications', icon: Bell },
   { to: '/admin/materials', label: 'Materials', icon: Library },
-  { to: '/admin/tickets', label: 'Tickets', icon: MessagesSquare },
+  { to: '/admin/support', label: 'Support', icon: MessagesSquare },
   { to: '/admin/users', label: 'Users', icon: Users },
 ];
 

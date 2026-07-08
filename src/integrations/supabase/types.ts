@@ -124,6 +124,121 @@ export type Database = {
         }
         Relationships: []
       }
+      community_comments: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          post_id: string
+          profile_id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          post_id: string
+          profile_id: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          profile_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_comments_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_posts: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          image_url: string | null
+          profile_id: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          profile_id: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          profile_id?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_posts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       materials: {
         Row: {
           badge: string | null
@@ -365,6 +480,82 @@ export type Database = {
             columns: ["ypt_user_id"]
             isOneToOne: false
             referencedRelation: "ypt_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_chats: {
+        Row: {
+          created_at: string
+          id: string
+          last_admin_read_at: string | null
+          last_message_at: string
+          last_user_read_at: string | null
+          profile_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_admin_read_at?: string | null
+          last_message_at?: string
+          last_user_read_at?: string | null
+          profile_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_admin_read_at?: string | null
+          last_message_at?: string
+          last_user_read_at?: string | null
+          profile_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_chats_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_messages: {
+        Row: {
+          author_role: string
+          body: string | null
+          chat_id: string
+          created_at: string
+          id: string
+          image_url: string | null
+        }
+        Insert: {
+          author_role: string
+          body?: string | null
+          chat_id: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+        }
+        Update: {
+          author_role?: string
+          body?: string | null
+          chat_id?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "support_chats"
             referencedColumns: ["id"]
           },
         ]
@@ -816,6 +1007,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auth_get_or_create_support_chat: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          last_admin_read_at: string | null
+          last_message_at: string
+          last_user_read_at: string | null
+          profile_id: string
+          status: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "support_chats"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       cleanup_inactive_rooms: { Args: never; Returns: undefined }
       cleanup_old_messages: { Args: never; Returns: undefined }
       cleanup_old_sessions: { Args: never; Returns: undefined }
@@ -868,6 +1078,44 @@ export type Database = {
           to: "tickets"
           isOneToOne: true
           isSetofReturn: false
+        }
+      }
+      guest_get_or_create_support_chat: {
+        Args: { _device_id: string }
+        Returns: {
+          created_at: string
+          id: string
+          last_admin_read_at: string | null
+          last_message_at: string
+          last_user_read_at: string | null
+          profile_id: string
+          status: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "support_chats"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      guest_get_support_chat: {
+        Args: { _device_id: string }
+        Returns: {
+          created_at: string
+          id: string
+          last_admin_read_at: string | null
+          last_message_at: string
+          last_user_read_at: string | null
+          profile_id: string
+          status: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "support_chats"
+          isOneToOne: false
+          isSetofReturn: true
         }
       }
       guest_get_ticket: {
@@ -923,6 +1171,23 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "notification_reads"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      guest_list_support_messages: {
+        Args: { _device_id: string }
+        Returns: {
+          author_role: string
+          body: string | null
+          chat_id: string
+          created_at: string
+          id: string
+          image_url: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "support_messages"
           isOneToOne: false
           isSetofReturn: true
         }
@@ -990,6 +1255,23 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "ticket_messages"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      guest_send_support_message: {
+        Args: { _body: string; _device_id: string; _image_url?: string }
+        Returns: {
+          author_role: string
+          body: string | null
+          chat_id: string
+          created_at: string
+          id: string
+          image_url: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "support_messages"
           isOneToOne: true
           isSetofReturn: false
         }

@@ -17,9 +17,11 @@ import Auth from "./pages/Auth";
 import AdminOverview from "./pages/admin/AdminOverview";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 import AdminTickets from "./pages/admin/AdminTickets";
+import AdminSupport from "./pages/admin/AdminSupport";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminMaterials from "./pages/admin/AdminMaterials";
 import NotificationsPage from "./pages/Notifications";
+import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
 import CopyrightTerms from "./pages/CopyrightTerms";
 import DMCA from "./pages/DMCA";
@@ -68,6 +70,7 @@ const AppInner = () => {
         <Route path="/ypt" element={<YPT />} />
         <Route path="/portals" element={<Portals />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/community" element={<Community />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/onboarding" element={<Onboarding />} />
@@ -77,6 +80,7 @@ const AppInner = () => {
         <Route path="/admin" element={<AdminOverview />} />
         <Route path="/admin/notifications" element={<AdminNotifications />} />
         <Route path="/admin/tickets" element={<AdminTickets />} />
+        <Route path="/admin/support" element={<AdminSupport />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/materials" element={<AdminMaterials />} />
         <Route path="/copyright-terms" element={<CopyrightTerms />} />
