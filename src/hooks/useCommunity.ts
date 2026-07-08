@@ -45,7 +45,7 @@ export function useCommunity(sort: Sort = 'recent') {
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    const { data: rows } = await supabase
+    const { data: rows } = await (supabase as any)
       .from('community_posts')
       .select('*, author:profiles!community_posts_profile_id_fkey(display_name, avatar_url)')
       .order('created_at', { ascending: false })
@@ -54,8 +54,8 @@ export function useCommunity(sort: Sort = 'recent') {
     let reactions: any[] = [];
     let comments: any[] = [];
     if (ids.length) {
-      const { data: r } = await supabase.from('community_reactions').select('*').in('post_id', ids);
-      const { data: c } = await supabase.from('community_comments').select('post_id').in('post_id', ids);
+      const { data: r } = await (supabase as any).from('community_reactions').select('*').in('post_id', ids);
+      const { data: c } = await (supabase as any).from('community_comments').select('post_id').in('post_id', ids);
       reactions = r ?? []; comments = c ?? [];
     }
     const uid = user?.id ?? null;
@@ -110,7 +110,7 @@ export function useCommunity(sort: Sort = 'recent') {
 
   const createPost = useCallback(async (input: { subject: string; body: string; image_url?: string | null }) => {
     if (!isAuthenticated || !user || !profile) throw new Error('Sign in with Google to post.');
-    const { data, error } = await supabase.from('community_posts').insert({
+    const { data, error } = await (supabase as any).from('community_posts').insert({
       user_id: user.id, profile_id: profile.id,
       subject: input.subject, body: input.body, image_url: input.image_url ?? null,
     }).select().single();
@@ -119,19 +119,19 @@ export function useCommunity(sort: Sort = 'recent') {
   }, [isAuthenticated, user, profile]);
 
   const deletePost = useCallback(async (id: string) => {
-    const { error } = await supabase.from('community_posts').delete().eq('id', id);
+    const { error } = await (supabase as any).from('community_posts').delete().eq('id', id);
     if (error) throw error;
   }, []);
 
   const setReaction = useCallback(async (postId: string, emoji: ReactionKey | null) => {
     if (!isAuthenticated || !user) throw new Error('Sign in to react.');
     if (emoji === null) {
-      const { error } = await supabase.from('community_reactions').delete().eq('post_id', postId).eq('user_id', user.id);
+      const { error } = await (supabase as any).from('community_reactions').delete().eq('post_id', postId).eq('user_id', user.id);
       if (error) throw error;
       return;
     }
     // upsert
-    const { error } = await supabase.from('community_reactions')
+    const { error } = await (supabase as any).from('community_reactions')
       .upsert({ post_id: postId, user_id: user.id, emoji }, { onConflict: 'post_id,user_id' });
     if (error) throw error;
   }, [isAuthenticated, user]);
@@ -146,7 +146,7 @@ export function useComments(postId: string | null) {
 
   const load = useCallback(async () => {
     if (!postId) return;
-    const { data } = await supabase.from('community_comments')
+    const { data } = await (supabase as any).from('community_comments')
       .select('*, author:profiles!community_comments_profile_id_fkey(display_name, avatar_url)')
       .eq('post_id', postId)
       .order('created_at');
@@ -166,7 +166,7 @@ export function useComments(postId: string | null) {
 
   const addComment = useCallback(async (body: string) => {
     if (!isAuthenticated || !user || !profile || !postId) throw new Error('Sign in to comment.');
-    const { error } = await supabase.from('community_comments').insert({
+    const { error } = await (supabase as any).from('community_comments').insert({
       post_id: postId, user_id: user.id, profile_id: profile.id, body,
     });
     if (error) throw error;

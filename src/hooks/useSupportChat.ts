@@ -32,7 +32,7 @@ export function useSupportChat() {
       const chatRow = Array.isArray(c) ? c[0] : c;
       setChat(chatRow ?? null);
       if (chatRow?.id) {
-        const { data: m } = await supabase.from('support_messages').select('*').eq('chat_id', chatRow.id).order('created_at');
+        const { data: m } = await (supabase as any).from('support_messages').select('*').eq('chat_id', chatRow.id).order('created_at');
         setMessages((m as SupportMessage[]) ?? []);
       }
     } else {
@@ -59,7 +59,7 @@ export function useSupportChat() {
   const send = useCallback(async (body: string, image_url?: string | null) => {
     if (!chat) throw new Error('no chat');
     if (isAuthenticated) {
-      const { error } = await supabase.from('support_messages').insert({
+      const { error } = await (supabase as any).from('support_messages').insert({
         chat_id: chat.id, author_role: 'user', body: body || null, image_url: image_url ?? null,
       });
       if (error) throw error;
