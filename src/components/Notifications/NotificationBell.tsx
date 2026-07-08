@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bell, Check, Pin, AlertTriangle, Sparkles, Wrench, Megaphone, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,14 @@ export function NotificationBell() {
   const { items, readIds, unreadCount, markRead, markAllRead } = useNotifications();
   const [open, setOpen] = useState(false);
   const top = items.slice(0, 8);
+
+  // Auto-persist "seen" when the user opens the bell — badge should not
+  // reappear on nav / reopen unless a new or modified notification arrives.
+  useEffect(() => {
+    if (open && unreadCount > 0) {
+      markAllRead();
+    }
+  }, [open, unreadCount, markAllRead]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

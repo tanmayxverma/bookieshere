@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pin, AlertTriangle, Sparkles, Wrench, Megaphone, BookOpen, Check } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,11 @@ export default function NotificationsPage() {
   const { items, readIds, unreadCount, markRead, markAllRead, loading } = useNotifications();
   const [tab, setTab] = useState<'all'|'unread'|'pinned'>('all');
   const filtered = items.filter(n => tab === 'all' ? true : tab === 'unread' ? !readIds.has(n.id) : n.is_pinned);
+
+  useEffect(() => {
+    if (!loading && unreadCount > 0) markAllRead();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   return (
     <Layout>
