@@ -195,7 +195,6 @@ function PostCard({ post, currentUserId, onReact, onDelete }: {
 
 function CommentsSection({ postId }: { postId: string }) {
   const { comments, addComment } = useComments(postId);
-  const { canPost } = { canPost: true } as any;
   const { user } = useProfile();
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
