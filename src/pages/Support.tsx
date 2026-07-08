@@ -1,255 +1,166 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import { useSupportChat, type SupportMessage } from '@/hooks/useSupportChat';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useTickets, useTicket, type Ticket } from '@/hooks/useTickets';
-import { useProfile } from '@/hooks/useProfile';
-import { Plus, Send, MessageSquare, Loader2, ArrowLeft, Sparkles } from 'lucide-react';
-import { z } from 'zod';
-import { formatDistanceToNow } from 'date-fns';
-
-const CATEGORIES: { value: Ticket['category']; label: string }[] = [
-  { value: 'bug', label: 'Report a bug' },
-  { value: 'help', label: 'Request help' },
-  { value: 'feature', label: 'Feature request' },
-  { value: 'feedback', label: 'Feedback' },
-  { value: 'content_report', label: 'Content report' },
-  { value: 'technical', label: 'Technical issue' },
-];
-
-const STATUS_COLOR: Record<Ticket['status'], string> = {
-  open: 'bg-amber-500/15 text-amber-600 border-amber-500/30',
-  under_review: 'bg-blue-500/15 text-blue-600 border-blue-500/30',
-  accepted: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30',
-  rejected: 'bg-destructive/15 text-destructive border-destructive/30',
-  in_progress: 'bg-primary/15 text-primary border-primary/30',
-  resolved: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30',
-  closed: 'bg-muted text-muted-foreground border-border',
-  reopened: 'bg-amber-500/15 text-amber-600 border-amber-500/30',
-};
-
-const ticketSchema = z.object({
-  subject: z.string().trim().min(3, 'At least 3 characters').max(120),
-  category: z.enum(['bug','help','feature','feedback','content_report','technical']),
-  description: z.string().trim().min(10, 'Tell us a bit more').max(2000),
-  priority: z.enum(['low','normal','high','urgent']),
-});
+import { ArrowLeft, Send, Paperclip, ShieldCheck, X, Loader2, Image as ImageIcon } from 'lucide-react';
+import { format, isSameDay } from 'date-fns';
 
 export default function SupportPage() {
-  const { profile } = useProfile();
-  const { tickets, loading, createTicket } = useTickets();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
+  const navigate = useNavigate();
+  const { chat, messages, loading, send } = useSupportChat();
+  const [draft, setDraft] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (!selectedId && tickets[0]) setSelectedId(tickets[0].id);
-  }, [tickets, selectedId]);
+    if (!image) { setPreview(null); return; }
+    const u = URL.createObjectURL(image); setPreview(u);
+    return () => URL.revokeObjectURL(u);
+  }, [image]);
+
+  useEffect(() => {
+    if (scrollerRef.current) scrollerRef.current.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: 'smooth' });
+  }, [messages.length]);
+
+  const canSend = chat && chat.status !== 'rejected';
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const v = draft.trim();
+    if (!v && !image) return;
+    setBusy(true);
+    try {
+      let image_url: string | null = null;
+      if (image) {
+        const ext = image.name.split('.').pop() || 'jpg';
+        const path = `support/${crypto.randomUUID()}.${ext}`;
+        const up = await supabase.storage.from('room-images').upload(path, image, { upsert: false });
+        if (up.error) throw up.error;
+        image_url = supabase.storage.from('room-images').getPublicUrl(path).data.publicUrl;
+      }
+      await send(v, image_url);
+      setDraft(''); setImage(null);
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: 'Could not send', description: err.message });
+    } finally { setBusy(false); }
+  };
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="flex items-end justify-between gap-4 mb-6">
-          <div>
-            <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
-              <Sparkles className="h-3 w-3 text-primary" /> Support Center
+      <div className="min-h-[calc(100vh-8rem)] flex flex-col">
+        {/* Bright blue header */}
+        <header className="bg-primary text-primary-foreground">
+          <div className="container mx-auto px-4 py-3.5 flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="h-9 w-9 rounded-full hover:bg-white/10 flex items-center justify-center">
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <div className="h-10 w-10 rounded-full bg-white/15 border border-white/25 flex items-center justify-center font-bold">O</div>
+            <div className="min-w-0">
+              <div className="font-semibold leading-tight">Owner</div>
+              <div className="text-xs opacity-80">Direct line — replies as soon as possible</div>
             </div>
-            <h1 className="font-display text-3xl md:text-4xl font-black tracking-tight">Help & Support</h1>
-            <p className="text-sm text-muted-foreground mt-1">Open a ticket and chat with the team — no Telegram needed.</p>
+            {chat?.status === 'pending' && (
+              <span className="ml-auto text-[10px] uppercase tracking-wider bg-white/15 rounded-full px-2 py-0.5 border border-white/25">Awaiting</span>
+            )}
+            {chat?.status === 'rejected' && (
+              <span className="ml-auto text-[10px] uppercase tracking-wider bg-red-500/25 rounded-full px-2 py-0.5 border border-white/25">Closed</span>
+            )}
           </div>
-          <NewTicketDialog open={creating} onOpenChange={setCreating} onCreate={async (input) => {
-            const t = await createTicket(input);
-            setSelectedId(t.id);
-            setCreating(false);
-          }} disabled={!profile} />
+        </header>
+
+        {/* Body */}
+        <div ref={scrollerRef} className="flex-1 overflow-y-auto bg-muted/30">
+          {loading ? (
+            <div className="p-10 text-center text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin inline mr-2" />Loading…</div>
+          ) : messages.length === 0 ? (
+            <div className="h-full min-h-[50vh] flex flex-col items-center justify-center p-8 text-center">
+              <div className="h-14 w-14 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                <ShieldCheck className="h-7 w-7 text-primary" />
+              </div>
+              <h2 className="font-bold text-lg">Start a private conversation</h2>
+              <p className="text-sm text-muted-foreground mt-1 max-w-xs">Only you and the owner can read these messages.</p>
+            </div>
+          ) : (
+            <div className="container mx-auto max-w-2xl px-4 py-4 space-y-2">
+              {messages.map((m, i) => {
+                const prev = messages[i-1];
+                const showDate = !prev || !isSameDay(new Date(prev.created_at), new Date(m.created_at));
+                return (
+                  <div key={m.id}>
+                    {showDate && (
+                      <div className="text-center my-3">
+                        <span className="text-[10px] uppercase tracking-wider bg-background/70 border border-border/40 rounded-full px-2.5 py-0.5 text-muted-foreground">
+                          {format(new Date(m.created_at), 'MMM d, yyyy')}
+                        </span>
+                      </div>
+                    )}
+                    <Bubble m={m} perspective="user" />
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        <div className="grid md:grid-cols-[320px_1fr] gap-4 min-h-[60vh]">
-          {/* Sidebar */}
-          <aside className="rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl p-2 max-h-[70vh] overflow-y-auto">
-            {loading ? (
-              <div className="p-6 text-sm text-muted-foreground">Loading…</div>
-            ) : tickets.length === 0 ? (
-              <div className="p-8 text-center text-sm text-muted-foreground">
-                <MessageSquare className="mx-auto h-8 w-8 mb-3 opacity-50" />
-                No tickets yet. Create one to get started.
-              </div>
-            ) : tickets.map(t => {
-              const active = t.id === selectedId;
-              return (
-                <button key={t.id} onClick={() => setSelectedId(t.id)}
-                  className={`w-full text-left p-3 rounded-xl mb-1 transition-colors ${active ? 'bg-primary/10 border border-primary/30' : 'hover:bg-surface-2/50 border border-transparent'}`}>
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <div className="text-sm font-semibold line-clamp-1">{t.subject}</div>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Badge variant="outline" className={`text-[10px] uppercase tracking-wider ${STATUS_COLOR[t.status]}`}>{t.status.replace('_',' ')}</Badge>
-                    <span className="text-[10px] text-muted-foreground ml-auto">{formatDistanceToNow(new Date(t.last_message_at), { addSuffix: true })}</span>
-                  </div>
+        {/* Input bar */}
+        <form onSubmit={submit} className="border-t border-border/50 bg-background">
+          {preview && (
+            <div className="container mx-auto max-w-2xl px-4 pt-2">
+              <div className="relative inline-block rounded-lg overflow-hidden border border-border/40">
+                <img src={preview} className="h-20 w-auto" alt="" />
+                <button type="button" onClick={() => setImage(null)} className="absolute top-1 right-1 h-5 w-5 rounded-full bg-black/70 text-white flex items-center justify-center">
+                  <X className="h-3 w-3" />
                 </button>
-              );
-            })}
-          </aside>
-
-          {/* Detail */}
-          <section className="rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl overflow-hidden">
-            {selectedId ? <TicketView id={selectedId} onClose={() => setSelectedId(null)} /> :
-              <div className="h-full flex items-center justify-center p-10 text-center text-sm text-muted-foreground">
-                Select a ticket or create a new one.
               </div>
-            }
-          </section>
-        </div>
+            </div>
+          )}
+          <div className="container mx-auto max-w-2xl px-4 py-2.5 flex items-center gap-2">
+            <button type="button" onClick={() => fileRef.current?.click()} disabled={!canSend}
+              className="h-10 w-10 rounded-full flex items-center justify-center text-muted-foreground hover:bg-muted transition disabled:opacity-40">
+              <Paperclip className="h-4 w-4" />
+            </button>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => setImage(e.target.files?.[0] ?? null)} />
+            <input value={draft} onChange={e => setDraft(e.target.value)} maxLength={4000} disabled={!canSend}
+              placeholder={canSend ? "Write a message to the owner…" : "This conversation is closed"}
+              className="flex-1 h-10 rounded-full bg-muted/60 px-4 text-sm outline-none border border-transparent focus:border-primary/30 focus:bg-background transition disabled:opacity-50" />
+            <button type="submit" disabled={!canSend || busy || (!draft.trim() && !image)}
+              className="h-10 w-10 shrink-0 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center transition disabled:opacity-40">
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            </button>
+          </div>
+        </form>
       </div>
     </Layout>
   );
 }
 
-function TicketView({ id, onClose }: { id: string; onClose: () => void }) {
-  const { ticket, messages, loading, sendMessage } = useTicket(id);
-  const [draft, setDraft] = useState('');
-  const [sending, setSending] = useState(false);
-  const scrollerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (scrollerRef.current) scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight;
-  }, [messages.length]);
-
-  if (loading || !ticket) return <div className="p-10 text-sm text-muted-foreground">Loading ticket…</div>;
-
-  const canSend = !['closed','rejected'].includes(ticket.status);
-
+function Bubble({ m, perspective }: { m: SupportMessage; perspective: 'user' | 'admin' }) {
+  if (m.author_role === 'system') {
+    return <div className="text-center my-2 text-[11px] italic text-muted-foreground">{m.body}</div>;
+  }
+  const isMine = perspective === 'user' ? m.author_role === 'user' : m.author_role === 'admin';
   return (
-    <div className="flex flex-col h-[70vh]">
-      <header className="px-5 py-4 border-b border-border/40 flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <button className="md:hidden" onClick={onClose}><ArrowLeft className="h-4 w-4" /></button>
-            <Badge variant="outline" className={`text-[10px] uppercase ${STATUS_COLOR[ticket.status]}`}>{ticket.status.replace('_',' ')}</Badge>
-            <Badge variant="outline" className="text-[10px] uppercase">{ticket.category.replace('_',' ')}</Badge>
-            <Badge variant="outline" className="text-[10px] uppercase">{ticket.priority}</Badge>
-          </div>
-          <h2 className="font-display text-lg font-bold line-clamp-1">{ticket.subject}</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">Opened {formatDistanceToNow(new Date(ticket.created_at), { addSuffix: true })}</p>
-        </div>
-      </header>
-      <div ref={scrollerRef} className="flex-1 overflow-y-auto p-5 space-y-3">
-        {/* Original description as first message */}
-        <Bubble side="user" body={ticket.description} time={ticket.created_at} system label="Your request" />
-        {ticket.status === 'open' && <div className="text-center text-xs text-muted-foreground italic">Awaiting admin review…</div>}
-        {ticket.status === 'rejected' && ticket.rejection_reason && (
-          <div className="text-center text-xs text-destructive border border-destructive/30 bg-destructive/5 rounded-xl p-3">Rejected: {ticket.rejection_reason}</div>
-        )}
-        {messages.map(m => (
-          <Bubble key={m.id} side={m.author_role === 'admin' ? 'admin' : 'user'} body={m.body} time={m.created_at} />
-        ))}
-      </div>
-      <form className="p-3 border-t border-border/40 flex gap-2" onSubmit={async (e) => {
-        e.preventDefault();
-        const v = draft.trim();
-        if (!v || sending || !canSend) return;
-        setSending(true);
-        try { await sendMessage(v); setDraft(''); } finally { setSending(false); }
-      }}>
-        <Input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={canSend ? 'Type a reply…' : 'This ticket is closed'} disabled={!canSend} maxLength={2000} />
-        <Button type="submit" disabled={!canSend || sending || !draft.trim()} className="gap-1.5">
-          {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-          Send
-        </Button>
-      </form>
-    </div>
-  );
-}
-
-function Bubble({ side, body, time, system, label }: { side: 'user'|'admin'; body: string; time: string; system?: boolean; label?: string }) {
-  const isUser = side === 'user';
-  return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed border ${
-        isUser ? 'bg-primary/10 border-primary/25 rounded-br-sm' : 'bg-surface-2/60 border-border/40 rounded-bl-sm'
+    <div className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
+      <div className={`max-w-[80%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed shadow-sm ${
+        isMine ? 'bg-primary text-primary-foreground rounded-br-sm' : 'bg-background border border-border/50 rounded-bl-sm'
       }`}>
-        {label && <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{label}</div>}
-        <div className="whitespace-pre-wrap text-foreground">{body}</div>
-        <div className="text-[10px] text-muted-foreground mt-1">{formatDistanceToNow(new Date(time), { addSuffix: true })}{!isUser && ' · Bookie team'}</div>
+        {m.image_url && (
+          <a href={m.image_url} target="_blank" rel="noreferrer" className="block mb-1.5 rounded-lg overflow-hidden">
+            <img src={m.image_url} alt="" className="max-h-64 w-auto rounded-lg" />
+          </a>
+        )}
+        {m.body && <div className="whitespace-pre-wrap break-words">{m.body}</div>}
+        <div className={`text-[10px] mt-0.5 ${isMine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
+          {format(new Date(m.created_at), 'h:mm a')}
+        </div>
       </div>
     </div>
-  );
-}
-
-function NewTicketDialog({ open, onOpenChange, onCreate, disabled }: { open: boolean; onOpenChange: (v: boolean) => void; onCreate: (i: any) => Promise<void>; disabled?: boolean }) {
-  const { toast } = useToast();
-  const [form, setForm] = useState({ subject: '', category: 'help' as Ticket['category'], description: '', priority: 'normal' as Ticket['priority'] });
-  const [busy, setBusy] = useState(false);
-
-  const submit = async () => {
-    const parsed = ticketSchema.safeParse(form);
-    if (!parsed.success) {
-      toast({ variant: 'destructive', title: 'Check your input', description: parsed.error.errors[0]?.message });
-      return;
-    }
-    setBusy(true);
-    try {
-      await onCreate(parsed.data);
-      setForm({ subject: '', category: 'help', description: '', priority: 'normal' });
-      toast({ title: 'Ticket created', description: 'A team member will reply shortly.' });
-    } catch (e: any) {
-      toast({ variant: 'destructive', title: 'Could not create ticket', description: e.message });
-    } finally { setBusy(false); }
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button disabled={disabled} className="gap-2"><Plus className="h-4 w-4" /> New ticket</Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Create support ticket</DialogTitle>
-          <DialogDescription>Tell us what's going on. We typically reply within a day.</DialogDescription>
-        </DialogHeader>
-        <div className="space-y-3">
-          <div className="space-y-1.5">
-            <Label>Subject</Label>
-            <Input maxLength={120} value={form.subject} onChange={(e) => setForm(f => ({ ...f, subject: e.target.value }))} placeholder="Short summary" />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label>Category</Label>
-              <Select value={form.category} onValueChange={(v) => setForm(f => ({ ...f, category: v as any }))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>{CATEGORIES.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5">
-              <Label>Priority</Label>
-              <Select value={form.priority} onValueChange={(v) => setForm(f => ({ ...f, priority: v as any }))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <Label>Description</Label>
-            <Textarea maxLength={2000} rows={5} value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} placeholder="What happened? Include steps to reproduce if relevant." />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={submit} disabled={busy} className="gap-1.5">
-            {busy && <Loader2 className="h-4 w-4 animate-spin" />} Submit
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   );
 }
