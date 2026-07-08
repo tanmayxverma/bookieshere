@@ -140,6 +140,59 @@ Deno.serve(async (req) => {
         return jr({ ok: true }, 200);
       }
 
+      case 'support.list': {
+        const filter = payload?.status as string | undefined;
+        let q = supabase.from('support_chats')
+          .select('*, profiles(display_name, account_type, avatar_url)')
+          .order('last_message_at', { ascending: false }).limit(300);
+        if (filter && filter !== 'all') q = q.eq('status', filter);
+        const { data } = await q;
+        // last message preview
+        const ids = (data ?? []).map((c: any) => c.id);
+        let lasts: Record<string, any> = {};
+        if (ids.length) {
+          const { data: msgs } = await supabase.from('support_messages').select('chat_id, body, image_url, author_role, created_at').in('chat_id', ids).order('created_at', { ascending: false });
+          (msgs ?? []).forEach((m: any) => { if (!lasts[m.chat_id]) lasts[m.chat_id] = m; });
+        }
+        const items = (data ?? []).map((c: any) => ({ ...c, last_message: lasts[c.id] ?? null }));
+        return jr({ items }, 200);
+      }
+      case 'support.detail': {
+        const { data: chat } = await supabase.from('support_chats')
+          .select('*, profiles(display_name, account_type, avatar_url)').eq('id', payload.id).single();
+        const { data: messages } = await supabase.from('support_messages').select('*').eq('chat_id', payload.id).order('created_at');
+        await supabase.from('support_chats').update({ last_admin_read_at: new Date().toISOString() }).eq('id', payload.id);
+        return jr({ chat, messages: messages ?? [] }, 200);
+      }
+      case 'support.accept': {
+        const { data, error } = await supabase.from('support_chats').update({ status: 'accepted' }).eq('id', payload.id).select().single();
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'support.accept', { id: payload.id });
+        return jr({ item: data }, 200);
+      }
+      case 'support.reject': {
+        const { data, error } = await supabase.from('support_chats').update({ status: 'rejected' }).eq('id', payload.id).select().single();
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'support.reject', { id: payload.id });
+        return jr({ item: data }, 200);
+      }
+      case 'support.delete': {
+        await supabase.from('support_chats').delete().eq('id', payload.id);
+        await log(sessionId, 'support.delete', { id: payload.id });
+        return jr({ ok: true }, 200);
+      }
+      case 'support.reply': {
+        const { chat_id, body } = payload;
+        if (!body || !String(body).trim()) return jr({ error: 'empty message' }, 400);
+        const { data: msg, error } = await supabase.from('support_messages').insert({
+          chat_id, author_role: 'admin', body: String(body),
+        }).select().single();
+        if (error) return jr({ error: error.message }, 400);
+        await supabase.from('support_chats').update({ last_admin_read_at: new Date().toISOString() }).eq('id', chat_id);
+        await log(sessionId, 'support.reply', { chat_id });
+        return jr({ item: msg }, 200);
+      }
+
       default:
         return jr({ error: 'unknown op' }, 400);
     }
