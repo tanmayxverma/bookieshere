@@ -40,8 +40,11 @@ export default function AdminSupport() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'support_chats' }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'support_messages' }, () => load())
       .subscribe();
+    const events = supabase.channel('support-events')
+      .on('broadcast', { event: 'message' }, () => load())
+      .subscribe();
     const t = setInterval(() => { load(); }, 5000);
-    return () => { supabase.removeChannel(ch); clearInterval(t); };
+    return () => { supabase.removeChannel(ch); supabase.removeChannel(events); clearInterval(t); };
     // eslint-disable-next-line
   }, [status]);
 
