@@ -102,19 +102,33 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
   const [msgs, setMsgs] = useState<any[]>([]);
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const load = async () => {
-    const r = await call('support.detail', { id });
-    setChat(r.chat); setMsgs(r.messages ?? []);
+    try {
+      setError(null);
+      const r = await call('support.detail', { id });
+      setChat(r.chat); setMsgs(r.messages ?? []);
+    } catch (e: any) {
+      setError(e?.message || 'Support chat could not load.');
+    }
   };
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [id]);
   useEffect(() => {
     const ch = supabase.channel(`admin-support-${id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${id}` }, () => load())
       .subscribe();
+    const events = supabase.channel('support-events')
+      .on('broadcast', { event: 'message' }, ({ payload }) => {
+        if (!payload?.chat_id || payload.chat_id === id) {
+          load();
+          onChange();
+        }
+      })
+      .subscribe();
     const t = setInterval(() => { load(); }, 3000);
-    return () => { supabase.removeChannel(ch); clearInterval(t); };
+    return () => { supabase.removeChannel(ch); supabase.removeChannel(events); clearInterval(t); };
     // eslint-disable-next-line
   }, [id]);
   useEffect(() => {
@@ -128,11 +142,24 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
   const reply = async () => {
     const v = draft.trim(); if (!v) return;
     setBusy(true);
-    try { await call('support.reply', { chat_id: id, body: v }); setDraft(''); await load(); onChange(); }
+    try {
+      await call('support.reply', { chat_id: id, body: v });
+      setDraft(''); await load(); onChange();
+      const events = supabase.channel(`support-events-admin-${id}`);
+      await new Promise<void>((resolve) => {
+        const timer = window.setTimeout(resolve, 1200);
+        events.subscribe((status) => {
+          if (status === 'SUBSCRIBED') { window.clearTimeout(timer); resolve(); }
+        });
+      });
+      await events.send({ type: 'broadcast', event: 'message', payload: { chat_id: id } });
+      supabase.removeChannel(events);
+    }
     catch (e: any) { toast({ variant: 'destructive', title: 'Failed', description: e.message }); }
     finally { setBusy(false); }
   };
 
+  if (error) return <div className="p-6 space-y-3 text-sm"><div className="text-destructive">{error}</div><Button size="sm" variant="outline" onClick={load}>Retry</Button></div>;
   if (!chat) return <div className="p-6"><Loader2 className="h-4 w-4 animate-spin" /></div>;
 
   const name = chat.profiles?.display_name ?? 'Unknown';
