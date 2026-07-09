@@ -209,7 +209,7 @@ function PostCard({ post, currentUserId, onReact, onDelete }: {
 }
 
 function CommentsSection({ postId }: { postId: string }) {
-  const { comments, addComment } = useComments(postId);
+  const { comments, addComment, loading } = useComments(postId);
   const { user } = useProfile();
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
@@ -229,7 +229,11 @@ function CommentsSection({ postId }: { postId: string }) {
   return (
     <div className="border-t border-border/40 bg-surface-2/20">
       <div className="p-3 space-y-2 max-h-72 overflow-y-auto">
-        {comments.length === 0 && <div className="text-center text-xs text-muted-foreground py-3">No comments yet</div>}
+        {loading ? (
+          <div className="text-center text-xs text-muted-foreground py-3">Loading replies…</div>
+        ) : comments.length === 0 ? (
+          <div className="text-center text-xs text-muted-foreground py-3">No replies yet</div>
+        ) : null}
         {comments.map(c => (
           <div key={c.id} className="flex items-start gap-2">
             <Avatar className="h-7 w-7 border border-border/40">
