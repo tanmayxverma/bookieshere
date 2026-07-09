@@ -53,7 +53,9 @@ export function useSupportChat() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${chat.id}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'support_chats', filter: `id=eq.${chat.id}` }, () => load())
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    // Poll every 4s as a fallback (guests / anon RLS blocks realtime SELECT)
+    const t = setInterval(() => { load(); }, 4000);
+    return () => { supabase.removeChannel(ch); clearInterval(t); };
   }, [chat?.id, load]);
 
   const send = useCallback(async (body: string, image_url?: string | null) => {
@@ -69,7 +71,8 @@ export function useSupportChat() {
       });
       if (error) throw error;
     }
-  }, [chat, isAuthenticated, deviceId]);
+    await load();
+  }, [chat, isAuthenticated, deviceId, load]);
 
   return { chat, messages, loading, send, refetch: load };
 }
