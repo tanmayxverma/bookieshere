@@ -145,7 +145,7 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
     try {
       await call('support.reply', { chat_id: id, body: v });
       setDraft(''); await load(); onChange();
-      const events = supabase.channel(`support-events-admin-${id}`);
+      const events = supabase.channel('support-events');
       await new Promise<void>((resolve) => {
         const timer = window.setTimeout(resolve, 1200);
         events.subscribe((status) => {

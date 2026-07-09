@@ -77,7 +77,7 @@ export function useSupportChat() {
   }, [chat?.id, load]);
 
   const broadcastChange = useCallback(async (chatId: string) => {
-    const channel = supabase.channel(`${SUPPORT_EVENTS_CHANNEL}-send-${chatId}`);
+    const channel = supabase.channel(SUPPORT_EVENTS_CHANNEL);
     await new Promise<void>((resolve) => {
       const timer = window.setTimeout(resolve, 1200);
       channel.subscribe((status) => {
