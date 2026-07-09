@@ -31,7 +31,8 @@ export default function AdminSupport() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'support_chats' }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'support_messages' }, () => load())
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    const t = setInterval(() => { load(); }, 5000);
+    return () => { supabase.removeChannel(ch); clearInterval(t); };
     // eslint-disable-next-line
   }, [status]);
 
@@ -102,7 +103,8 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
     const ch = supabase.channel(`admin-support-${id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${id}` }, () => load())
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    const t = setInterval(() => { load(); }, 3000);
+    return () => { supabase.removeChannel(ch); clearInterval(t); };
     // eslint-disable-next-line
   }, [id]);
   useEffect(() => {
