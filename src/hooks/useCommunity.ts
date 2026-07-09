@@ -125,6 +125,18 @@ export function useCommunity(sort: Sort = 'recent') {
 
   const setReaction = useCallback(async (postId: string, emoji: ReactionKey | null) => {
     if (!isAuthenticated || !user) throw new Error('Sign in to react.');
+    // Optimistic update
+    setPosts(prev => prev.map(p => {
+      if (p.id !== postId) return p;
+      const prevEmoji = p.my_reaction;
+      const counts = new Map(p.reactions.map(r => [r.emoji, r.count] as const));
+      if (prevEmoji) counts.set(prevEmoji, Math.max(0, (counts.get(prevEmoji) ?? 0) - 1));
+      if (emoji) counts.set(emoji, (counts.get(emoji) ?? 0) + 1);
+      const reactions = Array.from(counts.entries())
+        .filter(([, c]) => c > 0)
+        .map(([e, c]) => ({ emoji: e as ReactionKey, count: c }));
+      return { ...p, reactions, my_reaction: emoji };
+    }));
     if (emoji === null) {
       const { error } = await (supabase as any).from('community_reactions').delete().eq('post_id', postId).eq('user_id', user.id);
       if (error) throw error;
