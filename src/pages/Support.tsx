@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Send, Paperclip, ShieldCheck, X, Loader2, Image as ImageIcon } from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
+import siteLogo from '@/assets/logo.jfif';
 
 export default function SupportPage() {
   const navigate = useNavigate();
@@ -61,7 +62,9 @@ export default function SupportPage() {
             <button onClick={() => navigate(-1)} className="h-9 w-9 rounded-full hover:bg-white/10 flex items-center justify-center">
               <ArrowLeft className="h-4 w-4" />
             </button>
-            <div className="h-10 w-10 rounded-full bg-white/15 border border-white/25 flex items-center justify-center font-bold">O</div>
+            <div className="h-10 w-10 rounded-full overflow-hidden bg-white/15 border border-white/25 flex items-center justify-center">
+              <img src={siteLogo} alt="Bookie" className="h-full w-full object-cover" />
+            </div>
             <div className="min-w-0">
               <div className="font-semibold leading-tight">Owner</div>
               <div className="text-xs opacity-80">Direct line — replies as soon as possible</div>
