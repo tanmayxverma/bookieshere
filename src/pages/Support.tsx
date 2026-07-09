@@ -11,7 +11,7 @@ import siteLogo from '@/assets/logo.jfif';
 
 export default function SupportPage() {
   const navigate = useNavigate();
-  const { chat, messages, loading, send } = useSupportChat();
+  const { chat, messages, loading, error, send, refetch } = useSupportChat();
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
   const [image, setImage] = useState<File | null>(null);
@@ -82,6 +82,11 @@ export default function SupportPage() {
         <div ref={scrollerRef} className="flex-1 overflow-y-auto bg-muted/30">
           {loading ? (
             <div className="p-10 text-center text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin inline mr-2" />Loading…</div>
+          ) : error ? (
+            <div className="h-full min-h-[50vh] flex flex-col items-center justify-center gap-3 p-8 text-center">
+              <p className="text-sm text-destructive">{error}</p>
+              <Button type="button" variant="outline" size="sm" onClick={refetch}>Retry</Button>
+            </div>
           ) : messages.length === 0 ? (
             <div className="h-full min-h-[50vh] flex flex-col items-center justify-center p-8 text-center">
               <div className="h-14 w-14 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
