@@ -18,10 +18,19 @@ export default function AdminSupport() {
   const [status, setStatus] = useState('all');
   const [selected, setSelected] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
-    try { const r = await call('support.list', { status }); setItems(r.items ?? []); }
+    try {
+      setError(null);
+      const r = await call('support.list', { status });
+      setItems(r.items ?? []);
+    }
+    catch (e: any) {
+      setError(e?.message || 'Support inbox could not load.');
+      setItems([]);
+    }
     finally { setLoading(false); }
   };
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [status]);
@@ -51,6 +60,7 @@ export default function AdminSupport() {
             </div>
             <div className="rounded-xl border border-border/40 max-h-[70vh] overflow-y-auto">
               {loading ? <div className="p-4"><Loader2 className="h-4 w-4 animate-spin" /></div> :
+                error ? <div className="p-6 space-y-3 text-sm"><div className="text-destructive">{error}</div><Button size="sm" variant="outline" onClick={load}>Retry</Button></div> :
                 items.length === 0 ? <div className="p-6 text-sm text-muted-foreground">No chats.</div> :
                 items.map((c) => {
                   const name = c.profiles?.display_name ?? 'Unknown';
