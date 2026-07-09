@@ -69,7 +69,22 @@ export default function CommunityPage() {
         )}
 
         {loading ? (
-          <div className="text-center py-10 text-sm text-muted-foreground">Loading feed…</div>
+          <div className="space-y-4">
+            {[0,1,2].map(i => (
+              <div key={i} className="rounded-2xl border border-border/50 bg-card p-4 animate-pulse">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-full bg-muted/60" />
+                  <div className="flex-1 space-y-1.5">
+                    <div className="h-3 w-32 bg-muted/60 rounded" />
+                    <div className="h-2 w-20 bg-muted/40 rounded" />
+                  </div>
+                </div>
+                <div className="h-3 w-2/3 bg-muted/60 rounded mb-2" />
+                <div className="h-2 w-full bg-muted/40 rounded mb-1.5" />
+                <div className="h-2 w-5/6 bg-muted/40 rounded" />
+              </div>
+            ))}
+          </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-20 text-sm text-muted-foreground">
             <MessageCircle className="mx-auto h-8 w-8 mb-3 opacity-40" />
