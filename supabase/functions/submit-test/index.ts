@@ -12,18 +12,47 @@
    }
  
    try {
-     const { testId, answers } = await req.json();
-     
-     console.log("Submitting test:", { testId, answersCount: answers?.length });
- 
-     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
-     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
- 
-     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-       throw new Error("Supabase not configured");
-     }
- 
-     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error("Supabase not configured");
+    }
+
+    // Authenticate the caller.
+    const authHeader = req.headers.get("Authorization") ?? "";
+    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Sign in to submit a test." }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data: userData, error: authErr } = await authClient.auth.getUser(token);
+    if (authErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: "Sign in to submit a test." }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const authUserId = userData.user.id;
+
+    const { testId, answers } = await req.json();
+    console.log("Submitting test:", { testId, answersCount: answers?.length });
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    // Verify ownership before doing anything.
+    const { data: ownerCheck, error: ownerErr } = await supabase
+      .from("tests")
+      .select("id, user_id, status")
+      .eq("id", testId)
+      .maybeSingle();
+    if (ownerErr) throw ownerErr;
+    if (!ownerCheck || ownerCheck.user_id !== authUserId) {
+      return new Response(JSON.stringify({ error: "Not authorised for this test." }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
  
      // Get all questions for this test
      const { data: questions, error: questionsError } = await supabase

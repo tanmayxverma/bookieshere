@@ -442,13 +442,33 @@ serve(async (req) => {
   }
 
   try {
-    const { examType, syllabusType, chapters, userId, stream = false } = await req.json();
+    // Authenticate: derive user_id from the verified JWT, never trust the client body.
+    const authHeader = req.headers.get("Authorization") ?? "";
+    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!token || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      return new Response(JSON.stringify({ error: "Sign in to generate a test." }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data: userData, error: authErr } = await authClient.auth.getUser(token);
+    if (authErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: "Sign in to generate a test." }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userId = userData.user.id;
+
+    const { examType, syllabusType, chapters, stream = false } = await req.json();
     console.log("Generating test from question bank:", { examType, chaptersCount: chapters?.length });
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
       throw new Error("Supabase not configured");
     }
 
@@ -502,7 +522,7 @@ serve(async (req) => {
           const { data: test, error: testError } = await supabase
             .from("tests")
             .insert({
-              user_id: userId || null,
+              user_id: userId,
               exam_type: examType,
               syllabus: { type: syllabusType, chapters },
               status: "draft",
@@ -543,10 +563,12 @@ serve(async (req) => {
             .update({ status: "in_progress", started_at: new Date().toISOString() })
             .eq("id", test.id);
 
+          // Strip sensitive fields — correct_answer and solution must never reach the client mid-test.
+          const safeQuestions = (savedQuestions ?? []).map(({ correct_answer, solution, ...rest }: any) => rest);
           send({
             type: "complete",
             test: { ...test, status: "in_progress" },
-            questions: savedQuestions,
+            questions: safeQuestions,
             message: `Ready! ${savedQuestions.length} questions loaded`,
           });
           controller.close();
@@ -566,7 +588,7 @@ serve(async (req) => {
     const { data: test, error: testError } = await supabase
       .from("tests")
       .insert({
-        user_id: userId || null,
+        user_id: userId,
         exam_type: examType,
         syllabus: { type: syllabusType, chapters },
         status: "draft",
@@ -601,8 +623,9 @@ serve(async (req) => {
 
     console.log(`Test ${test.id} ready with ${questions.length} questions`);
 
+    const safeQuestions = (questions ?? []).map(({ correct_answer, solution, ...rest }: any) => rest);
     return new Response(
-      JSON.stringify({ test: { ...test, status: "in_progress" }, questions }),
+      JSON.stringify({ test: { ...test, status: "in_progress" }, questions: safeQuestions }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
