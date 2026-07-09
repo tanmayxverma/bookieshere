@@ -51,6 +51,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     accent: "from-indigo-500/20 to-blue-500/20",
     resources: [
       { name: "Novatra — JEE Main & Advanced PYQs", url: "https://novatra.in/exams/", badge: "Featured" },
+      { name: "PrepJEE", url: "https://prepjee.lovable.app/", badge: "New" },
     ],
   },
   {
