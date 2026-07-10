@@ -11,7 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   Play, Pause, Square, Clock, TrendingUp, Flame, Zap, Maximize2, Minimize2,
   Pencil, Check, Target, Plus, ListTodo, ArrowRight, BarChart3, Users, Trophy,
-  CalendarDays, Sparkles, ChevronRight,
+  CalendarDays, Sparkles, ChevronRight, Brain, ArrowUpRight,
 } from 'lucide-react';
 import type { YPTUser } from '@/types/ypt';
 import { FormulaFlashcards } from '@/components/FormulaFlashcards';
@@ -658,6 +658,40 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
 
           {/* Formula flashcards — lightweight revision tool */}
           <FormulaFlashcards />
+
+          {/* Personal AI Tutor promo */}
+          <a
+            href="https://www.acrolly.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block"
+          >
+            <Card className="relative overflow-hidden p-5 border-border/60 hover:border-foreground/30 transition-all">
+              <div aria-hidden className="pointer-events-none absolute -top-16 -right-10 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
+              <div aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-40 w-40 rounded-full bg-[hsl(195_85%_55%_/_0.18)] blur-3xl" />
+              <div className="relative">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                    <Sparkles className="h-3 w-3 text-foreground" /> AI Tutor
+                  </span>
+                  <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-foreground/10 flex items-center justify-center shrink-0">
+                    <Brain className="h-5 w-5 text-foreground" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-bold leading-tight">Personal AI Tutor</h3>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">for JEE Main &amp; Advanced</p>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground/90 leading-relaxed mt-3">
+                  Doubt-solving, concept walkthroughs and instant explanations — built for JEE aspirants.
+                </p>
+                <p className="text-[10px] text-muted-foreground/60 mt-2 truncate">acrolly.com</p>
+              </div>
+            </Card>
+          </a>
         </div>
       </div>
 
