@@ -26,6 +26,8 @@ const ALLOWED_DOMAINS = [
   'novatra.in',
   'ophub-testseries-books-notes.pages.dev',
   'pages.dev',
+  'ovibattle.in',
+  'acrolly.com',
 ];
 
 /**
