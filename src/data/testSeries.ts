@@ -6,6 +6,7 @@ import narayanaLogo from "@/assets/test-series/narayana.png.asset.json";
 import sriChaitanyaLogo from "@/assets/test-series/sri-chaitanya.png.asset.json";
 import vmcLogo from "@/assets/test-series/vmc.png.asset.json";
 import eklavyaLogo from "@/assets/test-series/eklavya.webp.asset.json";
+import jeebattleLogo from "@/assets/test-series/jeebattle.png.asset.json";
 
 export interface TestSeriesResource {
   name: string;
@@ -23,6 +24,16 @@ export interface TestSeriesProvider {
 }
 
 export const TEST_SERIES: TestSeriesProvider[] = [
+  {
+    id: "ovibattle",
+    name: "1v1 Mock Test Battle",
+    description: "NTA-style 1v1 mock test battles — challenge peers head-to-head.",
+    logo: jeebattleLogo.url,
+    accent: "from-violet-500/25 to-fuchsia-500/20",
+    resources: [
+      { name: "Ovibattle — 1v1 NTA-Style Battle", url: "https://www.ovibattle.in/", badge: "New" },
+    ],
+  },
   {
     id: "all-live-hub",
     name: "All Live Test Series Hub",
