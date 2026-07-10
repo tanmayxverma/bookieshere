@@ -33,23 +33,32 @@ export function useSupportChat() {
     try {
       setError(null);
       if (isAuthenticated) {
-        const { data: c, error: chatError } = await (supabase as any).rpc('auth_get_or_create_support_chat');
+        // Read-only fetch — do NOT auto-create. Chat is created on first send.
+        const { data: c, error: chatError } = await (supabase as any)
+          .from('support_chats').select('*').eq('profile_id', profile.id).maybeSingle();
         if (chatError) throw chatError;
-        const chatRow = Array.isArray(c) ? c[0] : c;
-        setChat(chatRow ?? null);
+        const chatRow = c ?? null;
+        setChat(chatRow);
         if (chatRow?.id) {
           const { data: m, error: msgError } = await (supabase as any).from('support_messages').select('*').eq('chat_id', chatRow.id).order('created_at');
           if (msgError) throw msgError;
           setMessages((m as SupportMessage[]) ?? []);
+        } else {
+          setMessages([]);
         }
       } else {
-        const { data: c, error: chatError } = await (supabase as any).rpc('guest_get_or_create_support_chat', { _device_id: deviceId });
+        // Read-only fetch — do NOT auto-create for guests either.
+        const { data: c, error: chatError } = await (supabase as any).rpc('guest_get_support_chat', { _device_id: deviceId });
         if (chatError) throw chatError;
         const chatRow = Array.isArray(c) ? c[0] : c;
         setChat(chatRow ?? null);
-        const { data: m, error: msgError } = await (supabase as any).rpc('guest_list_support_messages', { _device_id: deviceId });
-        if (msgError) throw msgError;
-        setMessages((m as SupportMessage[]) ?? []);
+        if (chatRow?.id) {
+          const { data: m, error: msgError } = await (supabase as any).rpc('guest_list_support_messages', { _device_id: deviceId });
+          if (msgError) throw msgError;
+          setMessages((m as SupportMessage[]) ?? []);
+        } else {
+          setMessages([]);
+        }
       }
     } catch (e: any) {
       setError(e?.message || 'Support chat could not load.');
@@ -92,20 +101,30 @@ export function useSupportChat() {
   }, []);
 
   const send = useCallback(async (body: string, image_url?: string | null) => {
-    if (!chat) throw new Error('no chat');
+    let chatId = chat?.id ?? null;
     if (isAuthenticated) {
+      // Create the chat on first send only.
+      if (!chatId) {
+        const { data: c, error: cErr } = await (supabase as any).rpc('auth_get_or_create_support_chat');
+        if (cErr) throw cErr;
+        const row = Array.isArray(c) ? c[0] : c;
+        chatId = row?.id ?? null;
+        if (row) setChat(row);
+      }
+      if (!chatId) throw new Error('Could not open chat');
       const { error } = await (supabase as any).from('support_messages').insert({
-        chat_id: chat.id, author_role: 'user', body: body || null, image_url: image_url ?? null,
+        chat_id: chatId, author_role: 'user', body: body || null, image_url: image_url ?? null,
       });
       if (error) throw error;
     } else {
+      // guest_send_support_message creates the chat on first send server-side.
       const { error } = await (supabase as any).rpc('guest_send_support_message', {
         _device_id: deviceId, _body: body || null, _image_url: image_url ?? null,
       });
       if (error) throw error;
     }
     await load();
-    await broadcastChange(chat.id);
+    if (chatId) await broadcastChange(chatId);
   }, [chat, isAuthenticated, deviceId, load, broadcastChange]);
 
   return { chat, messages, loading, error, send, refetch: load };
