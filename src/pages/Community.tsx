@@ -209,7 +209,7 @@ function PostCard({ post, currentUserId, onReact, onDelete }: {
 }
 
 function CommentsSection({ postId }: { postId: string }) {
-  const { comments, addComment, loading } = useComments(postId);
+  const { comments, addComment, loading, deleteComment } = useComments(postId);
   const { user } = useProfile();
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
@@ -247,6 +247,19 @@ function CommentsSection({ postId }: { postId: string }) {
               </div>
               <div className="text-sm text-foreground/85 whitespace-pre-wrap">{c.body}</div>
             </div>
+            {user && c.user_id === user.id && (
+              <button
+                onClick={async () => {
+                  if (!confirm('Delete this reply?')) return;
+                  try { await deleteComment(c.id); }
+                  catch (e: any) { toast({ variant: 'destructive', title: 'Failed', description: e.message }); }
+                }}
+                className="text-muted-foreground hover:text-destructive transition p-1 shrink-0"
+                aria-label="Delete reply"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
         ))}
       </div>
