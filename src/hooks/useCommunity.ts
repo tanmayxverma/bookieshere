@@ -184,5 +184,11 @@ export function useComments(postId: string | null) {
     if (error) throw error;
   }, [isAuthenticated, user, profile, postId]);
 
-  return { comments, loading, addComment };
+  const deleteComment = useCallback(async (commentId: string) => {
+    if (!isAuthenticated || !user) throw new Error('Sign in required.');
+    const { error } = await (supabase as any).from('community_comments').delete().eq('id', commentId);
+    if (error) throw error;
+  }, [isAuthenticated, user]);
+
+  return { comments, loading, addComment, deleteComment };
 }
