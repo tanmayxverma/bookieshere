@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
-import { LogOut, User, Settings, Sparkles } from "lucide-react";
+import { LogOut, User, Settings, Sparkles, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Switch } from "@/components/ui/switch";
 import { useProfile } from "@/hooks/useProfile";
 
 function initials(name: string) {
@@ -13,6 +15,16 @@ function initials(name: string) {
 export function UserMenu({ compact = false }: { compact?: boolean }) {
   const navigate = useNavigate();
   const { profile, loading, isAuthenticated, signOut } = useProfile();
+  const [lite, setLite] = useState<boolean>(() => {
+    try { return localStorage.getItem("bookie_lite_mode") === "true"; } catch { return false; }
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (lite) root.classList.add("lite-mode");
+    else root.classList.remove("lite-mode");
+    try { localStorage.setItem("bookie_lite_mode", lite ? "true" : "false"); } catch { /* ignore */ }
+  }, [lite]);
 
   if (loading) return null;
 
@@ -73,6 +85,20 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
             <Sparkles className="h-4 w-4 mr-2 text-primary" /> Upgrade account
           </DropdownMenuItem>
         )}
+        <DropdownMenuSeparator />
+        <div
+          className="flex items-center justify-between gap-3 px-2 py-1.5 text-sm cursor-pointer rounded-sm hover:bg-accent"
+          onClick={(e) => { e.preventDefault(); setLite(v => !v); }}
+        >
+          <span className="flex items-center gap-2">
+            <Zap className={`h-4 w-4 ${lite ? "text-primary" : "text-muted-foreground"}`} />
+            <span className="flex flex-col">
+              <span className="font-medium leading-tight">Lite mode</span>
+              <span className="text-[10px] text-muted-foreground leading-tight">Faster on slow devices</span>
+            </span>
+          </span>
+          <Switch checked={lite} onCheckedChange={setLite} onClick={(e) => e.stopPropagation()} />
+        </div>
         <DropdownMenuSeparator />
         {isAuthenticated ? (
           <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">

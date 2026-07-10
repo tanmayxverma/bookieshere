@@ -219,7 +219,8 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const fetchRooms = async () => {
     await (supabase as any).rpc('cleanup_inactive_rooms');
     const { data: roomsData } = await (supabase as any)
-      .from('ypt_rooms').select('*')
+      .from('ypt_rooms')
+      .select('id, name, description, emoji, is_permanent, max_participants, created_by, last_activity_at, created_at, is_locked')
       .order('is_permanent', { ascending: false })
       .order('created_at', { ascending: true });
     if (!roomsData) { setLoading(false); return; }

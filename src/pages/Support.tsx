@@ -30,7 +30,7 @@ export default function SupportPage() {
     if (scrollerRef.current) scrollerRef.current.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages.length]);
 
-  const canSend = chat && chat.status !== 'rejected';
+  const canSend = !chat || chat.status !== 'rejected';
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();

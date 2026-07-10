@@ -676,3 +676,35 @@
       0 2px 4px 0 hsl(0 0% 0% / 0.2);
   }
 }
+
+/* ============================================================
+   LITE MODE — Performance-first override for low-end devices.
+   Toggled from the profile menu; persisted in localStorage.
+   Disables animations, transitions, blur, and shadows for speed.
+   ============================================================ */
+html.lite-mode,
+html.lite-mode *,
+html.lite-mode *::before,
+html.lite-mode *::after {
+  animation-duration: 0.001ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0ms !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  scroll-behavior: auto !important;
+}
+html.lite-mode img,
+html.lite-mode video {
+  image-rendering: auto;
+}
+html.lite-mode .animate-pulse,
+html.lite-mode .animate-spin,
+html.lite-mode .animate-bounce,
+html.lite-mode .animate-ping {
+  animation: none !important;
+}
