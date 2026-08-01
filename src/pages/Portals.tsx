@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { PORTALS, Portal } from "@/data/portals";
 import { BookieLoader } from "@/components/BookieLoader";
-import { Heart, ArrowUpRight, Sparkles, ExternalLink, Info, ArrowLeft } from "lucide-react";
+import { Heart, ArrowUpRight, Sparkles, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
 
@@ -52,9 +52,9 @@ function PortalLogo({ portal, size = 56 }: { portal: Portal; size?: number }) {
 }
 
 export default function Portals() {
+  const navigate = useNavigate();
   const { favs, toggle, isFav } = useFavorites();
   const [launching, setLaunching] = useState<{ portal: Portal; url: string } | null>(null);
-  const [openPortal, setOpenPortal] = useState<Portal | null>(null);
 
   const orderedPortals = useMemo(() => {
     const favSet = new Set(favs);
@@ -110,7 +110,7 @@ export default function Portals() {
                 {favPortals.map((p) => (
                   <button
                     key={p.id}
-                    onClick={() => setOpenPortal(p)}
+                    onClick={() => navigate(`/portals/${p.id}`)}
                     className="group inline-flex items-center gap-2 rounded-full border border-border/50 bg-card/60 backdrop-blur px-2 py-1 pr-3 hover:border-primary/40 transition"
                   >
                     <PortalLogo portal={p} size={22} />
@@ -166,7 +166,7 @@ export default function Portals() {
                   </div>
                 </div>
                 <Button
-                  onClick={() => setOpenPortal(p)}
+                  onClick={() => navigate(`/portals/${p.id}`)}
                   className="relative mt-5 w-full h-10 rounded-xl gap-2 bg-foreground text-background hover:bg-foreground/90"
                 >
                   Open Portal <ArrowUpRight className="h-4 w-4" />
@@ -176,57 +176,6 @@ export default function Portals() {
           })}
         </div>
       </div>
-
-      {/* Portal Detail Dialog */}
-      <Dialog open={!!openPortal} onOpenChange={(o) => !o && setOpenPortal(null)}>
-        <DialogContent className="max-w-lg">
-          {openPortal && (
-            <>
-              <DialogHeader>
-                <div className="flex items-center gap-3">
-                  <PortalLogo portal={openPortal} size={48} />
-                  <div className="min-w-0">
-                    <DialogTitle className="font-display text-xl">{openPortal.name}</DialogTitle>
-                    <DialogDescription>{openPortal.tagline}</DialogDescription>
-                  </div>
-                </div>
-              </DialogHeader>
-
-              {openPortal.instructions && (
-                <div className="rounded-xl border border-primary/30 bg-primary/5 p-3 text-xs text-foreground/90 leading-relaxed">
-                  <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-primary font-bold mb-1.5">
-                    <Info className="h-3 w-3" /> Instructions
-                  </div>
-                  {openPortal.instructions}
-                </div>
-              )}
-
-              <div className="space-y-2 mt-1 max-h-[55vh] overflow-y-auto pr-1">
-                {openPortal.links.map((link, i) => (
-                  <button
-                    key={link.url}
-                    onClick={() => launch(openPortal, link.url)}
-                    className="w-full group flex items-center gap-3 rounded-xl border border-border/50 bg-surface-2/40 hover:bg-surface-2/80 hover:border-primary/40 transition px-3 py-3 text-left"
-                  >
-                    <span className="shrink-0 h-8 w-8 rounded-lg bg-primary/10 text-primary font-bold text-sm flex items-center justify-center">
-                      #{i + 1}
-                    </span>
-                    <span className="flex-1 min-w-0">
-                      <span className="block text-sm font-semibold truncate">{link.label}</span>
-                      <span className="block text-[11px] text-muted-foreground truncate">{link.url}</span>
-                    </span>
-                    <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
-                  </button>
-                ))}
-              </div>
-
-              <p className="text-[10px] text-muted-foreground/70 leading-relaxed mt-2">
-                Bookie does not own or host any content. All resources belong to their respective owners.
-              </p>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
     </Layout>
   );
 }
