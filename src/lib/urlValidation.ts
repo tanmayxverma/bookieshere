@@ -28,6 +28,8 @@ const ALLOWED_DOMAINS = [
   'pages.dev',
   'ovibattle.in',
   'acrolly.com',
+  'studyuk.online',
+  'workers.dev',
 ];
 
 /**
