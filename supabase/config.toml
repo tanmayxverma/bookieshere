@@ -1,12 +1,6 @@
  project_id = "grizjnhnoxnzwvcewenu"
- 
+
  [functions.bookie-chat]
- verify_jwt = false
- 
- [functions.generate-test]
- verify_jwt = false
- 
- [functions.submit-test]
  verify_jwt = false
 
 [functions.end-study-session]

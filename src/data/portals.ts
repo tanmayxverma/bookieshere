@@ -72,6 +72,9 @@ export const PORTALS: Portal[] = [
     links: [
       { label: "Pikachu X", url: "https://pikachux.netlify.app" },
       { label: "It's Pikachu", url: "https://itspikachu.netlify.app/" },
+      { label: "Study UK", url: "https://studyuk.online/" },
+      { label: "UC Web", url: "https://uc-web.uc27.workers.dev" },
+      { label: "Unacademy Scholarverse", url: "https://unacademy.thescholarverse.site" },
     ],
   },
   {
