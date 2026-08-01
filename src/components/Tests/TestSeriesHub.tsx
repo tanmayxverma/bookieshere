@@ -1,18 +1,20 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Search, ChevronDown, ExternalLink, Library, Sparkles, ArrowUpRight,
+  Search, ChevronDown, Library, Sparkles, ArrowUpRight, ArrowRight,
 } from "lucide-react";
 import { TEST_SERIES, type TestSeriesProvider, type TestSeriesResource } from "@/data/testSeries";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
 
 function ProviderCard({
-  provider, expanded, onToggle, query,
+  provider, expanded, onToggle,
 }: { provider: TestSeriesProvider; expanded: boolean; onToggle: () => void; query: string }) {
+  const navigate = useNavigate();
   const open = (r: TestSeriesResource) => {
     if (!isSafeUrl(r.url)) {
       toast({ title: "Link blocked", description: "This URL isn't on the allowed list.", variant: "destructive" });
@@ -94,6 +96,17 @@ function ProviderCard({
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all shrink-0" />
               </button>
             ))}
+          </div>
+          <div className="border-t border-border/40 bg-background/40 px-3 pb-3 md:px-4 md:pb-4">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="w-full group"
+              onClick={() => navigate(`/test-series/${provider.id}`)}
+            >
+              View full page
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Button>
           </div>
         </div>
       </div>

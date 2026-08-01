@@ -12,6 +12,8 @@ import Materials from "./pages/Materials";
 import Tests from "./pages/Tests";
 import YPT from "./pages/YPT";
 import Portals from "./pages/Portals";
+import PortalDetail from "./pages/PortalDetail";
+import TestSeriesDetail from "./pages/TestSeriesDetail";
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
 import AdminOverview from "./pages/admin/AdminOverview";
@@ -67,8 +69,10 @@ const AppInner = () => {
         <Route path="/" element={<Index />} />
         <Route path="/materials" element={<Materials />} />
         <Route path="/tests" element={<Tests />} />
+        <Route path="/test-series/:id" element={<TestSeriesDetail />} />
         <Route path="/ypt" element={<YPT />} />
         <Route path="/portals" element={<Portals />} />
+        <Route path="/portals/:id" element={<PortalDetail />} />
         <Route path="/support" element={<Support />} />
         <Route path="/community" element={<Community />} />
         <Route path="/auth" element={<Auth />} />
