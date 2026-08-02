@@ -288,6 +288,16 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
   const maxBar = Math.max(...weeklyData.map(d => d.secs), 1);
   const totalMix = subjectMix.reduce((s, x) => s + x.secs, 0) || 1;
 
+  // Timer display: countdown shows time left, stopwatch shows time elapsed.
+  const isCountdown = timer.mode === 'countdown' && timer.targetSeconds != null;
+  const displaySeconds = isCountdown ? (timer.remainingSeconds ?? 0) : timer.elapsedSeconds;
+  const ringProgress = isCountdown
+    ? timer.elapsedSeconds / (timer.targetSeconds || 1)
+    : (timer.elapsedSeconds % 3600) / 3600;
+  const ringLabel = isCountdown
+    ? (timer.phase === 'break' ? 'Break' : 'Focus block')
+    : 'Stopwatch';
+
   // ============ FOCUS MODE ============
   if (focusMode && timer.isActive) {
     return (
