@@ -310,14 +310,14 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
             <span className="w-2.5 h-2.5 rounded-full bg-foreground animate-pulse" />
             <span className="text-base font-medium text-muted-foreground">{timer.subject}</span>
           </div>
-          <div className="relative">
-            <p className="text-7xl md:text-8xl lg:text-9xl font-mono font-bold tracking-tight tabular-nums text-foreground select-none">
-              {formatTime(timer.elapsedSeconds)}
-            </p>
-            {!timer.isPaused && (
-              <div className="absolute -inset-6 rounded-3xl bg-foreground/5 animate-[pulse_3s_ease-in-out_infinite] -z-10" />
-            )}
-          </div>
+          <TimerRing
+            progress={ringProgress}
+            seconds={displaySeconds}
+            label={ringLabel}
+            sublabel={timer.isPaused ? 'Paused' : undefined}
+            paused={timer.isPaused}
+            size={340}
+          />
           <p className="text-sm text-muted-foreground/60 italic font-medium h-5">
             "{MOTIVATIONAL_QUOTES[quoteIndex]}"
           </p>
