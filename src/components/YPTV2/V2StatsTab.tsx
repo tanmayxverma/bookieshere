@@ -30,7 +30,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
         .from('study_sessions')
         .select('*')
         .eq('ypt_user_id', userId)
-        .in('status', ['completed', 'active'])
+        .eq('status', 'completed')
         .gte('started_at', thirtyDaysAgo.toISOString())
         .order('started_at', { ascending: false });
       setSessions(data || []);
