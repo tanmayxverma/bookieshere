@@ -407,9 +407,16 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 {timer.subject}
                 {timer.isPaused && <span className="text-muted-foreground font-normal">· paused</span>}
               </div>
-              <p className="text-6xl md:text-7xl font-mono font-bold tracking-tight tabular-nums select-none">
-                {formatTime(timer.elapsedSeconds)}
-              </p>
+              <div className="flex justify-center">
+                <TimerRing
+                  progress={ringProgress}
+                  seconds={displaySeconds}
+                  label={ringLabel}
+                  sublabel={isCountdown ? `${formatTime(timer.elapsedSeconds)} done` : undefined}
+                  paused={timer.isPaused}
+                  size={250}
+                />
+              </div>
               <div className="flex justify-center gap-2.5 flex-wrap">
                 {timer.isPaused ? (
                   <Button onClick={timer.resumeSession} size="lg" className="px-7 h-12 text-base btn-lift">
@@ -435,6 +442,39 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
                 Pick a subject. Lock in. Your time, streaks, and focus all start with one tap.
               </p>
+              {/* Mode switch: open stopwatch vs timed pomodoro block */}
+              <div className="flex justify-center pt-1">
+                <div className="inline-flex p-1 rounded-xl border border-border/60 bg-background/50">
+                  {(['stopwatch', 'countdown'] as TimerMode[]).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setPendingMode(m)}
+                      className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                        pendingMode === m ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {m === 'stopwatch' ? 'Stopwatch' : 'Pomodoro'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {pendingMode === 'countdown' && (
+                <div className="flex justify-center gap-2 flex-wrap">
+                  {POMODORO_PRESETS.map((p, i) => (
+                    <button
+                      key={p.label}
+                      onClick={() => setPresetIndex(i)}
+                      className={`px-4 py-2 rounded-lg border text-sm font-semibold transition-colors ${
+                        presetIndex === i
+                          ? 'border-foreground/40 bg-foreground/10 text-foreground'
+                          : 'border-border/60 text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {p.label} · {p.work}/{p.break}
+                    </button>
+                  ))}
+                </div>
+              )}
               <div className="flex justify-center gap-2.5 flex-wrap pt-2">
                 <Button size="lg" className="text-base px-8 h-12 btn-lift" onClick={() => setShowSubjectSelect(true)}>
                   <Play className="h-5 w-5 mr-2" /> Start studying
