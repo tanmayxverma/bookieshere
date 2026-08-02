@@ -6,8 +6,9 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { SUBJECTS, formatTime, formatHours, getISTTodayStartUTC, getISTDate, getISTDateString } from '@/types/ypt';
+import { SUBJECTS, formatTime, formatHours, getISTTodayStartUTC, getISTDate, getISTDateString, POMODORO_PRESETS, type TimerMode } from '@/types/ypt';
 import { supabase } from '@/integrations/supabase/client';
+import { TimerRing } from '@/components/YPT/TimerRing';
 import {
   Play, Pause, Square, Clock, TrendingUp, Flame, Zap, Maximize2, Minimize2,
   Pencil, Check, Target, Plus, ListTodo, ArrowRight, BarChart3, Users, Trophy,
@@ -21,13 +22,23 @@ interface TimerControls {
   isPaused: boolean;
   subject: string | null;
   elapsedSeconds: number;
-  startSession: (subject: string) => Promise<void>;
+  mode: TimerMode;
+  phase: 'work' | 'break';
+  targetSeconds: number | null;
+  remainingSeconds: number | null;
+  startSession: (
+    subject: string,
+    opts?: { mode?: TimerMode; targetSeconds?: number; breakSeconds?: number; phase?: 'work' | 'break' },
+  ) => Promise<void>;
   pauseSession: () => void;
   resumeSession: () => void;
   endSession: () => Promise<void>;
   showInactivityModal: boolean;
   inactivityCountdown: number;
   dismissInactivity: () => void;
+  countdownDone: null | { phase: 'work' | 'break'; breakSeconds: number };
+  dismissCountdownDone: () => void;
+  startBreak: (subject: string, breakSeconds: number) => Promise<void>;
 }
 
 interface Props {
