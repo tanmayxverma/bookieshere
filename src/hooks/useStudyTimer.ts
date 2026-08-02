@@ -1,10 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { TIMER_STORAGE_KEY, type TimerState } from '@/types/ypt';
+import { TIMER_STORAGE_KEY, type TimerState, type TimerMode } from '@/types/ypt';
 
 const THREE_HOURS = 3 * 60 * 60;
 const HEARTBEAT_INTERVAL = 30_000; // 30s
 const INACTIVITY_COUNTDOWN = 15; // seconds
+const STALE_CLEANUP_INTERVAL = 5 * 60_000; // 5 min
+/** Wall-clock vs monotonic-clock divergence (ms) treated as impossible */
+const CLOCK_JUMP_TOLERANCE_MS = 120_000;
 
 function getTimerState(): TimerState | null {
   const raw = localStorage.getItem(TIMER_STORAGE_KEY);
@@ -17,62 +20,145 @@ function saveTimerState(state: TimerState | null) {
   else localStorage.removeItem(TIMER_STORAGE_KEY);
 }
 
+/** Subtle chime when a countdown hits zero */
+function playChime() {
+  try {
+    const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    [880, 1320].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.28;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.18, t + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.3);
+    });
+    setTimeout(() => { try { ctx.close(); } catch {} }, 1500);
+  } catch {}
+}
+
+function notify(title: string, body: string) {
+  try {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(title, { body });
+    }
+  } catch {}
+}
+
 export function useStudyTimer(yptUserId: string | undefined) {
   const [timerState, setTimerStateLocal] = useState<TimerState | null>(getTimerState);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [showInactivityModal, setShowInactivityModal] = useState(false);
   const [inactivityCountdown, setInactivityCountdown] = useState(INACTIVITY_COUNTDOWN);
+  const [countdownDone, setCountdownDone] = useState<null | { phase: 'work' | 'break'; breakSeconds: number }>(null);
   const intervalRef = useRef<number | null>(null);
   const heartbeatRef = useRef<number | null>(null);
   const countdownRef = useRef<number | null>(null);
+  const doneFiredRef = useRef(false);
+
+  // ---- Monotonic clock guard (anti clock-tampering / clock drift) ----
+  // Anchors are re-established whenever the timer state changes (start/pause/resume/reload).
+  const anchorRef = useRef<{ wall: number; mono: number; base: number } | null>(null);
+  const driftMsRef = useRef(0);      // wall-clock time we refuse to count
+  const flaggedRef = useRef(false);  // reported to server, never shown to the student
+
+  const resetAnchor = useCallback((state: TimerState | null) => {
+    if (!state || state.pausedAt) { anchorRef.current = null; return; }
+    const base = Math.max(0, Date.now() - state.startedAt - state.totalPausedMs - driftMsRef.current);
+    anchorRef.current = { wall: Date.now(), mono: performance.now(), base };
+  }, []);
 
   const calcElapsed = useCallback((state: TimerState | null) => {
     if (!state) return 0;
-    const now = state.pausedAt || Date.now();
-    return Math.max(0, Math.floor((now - state.startedAt - state.totalPausedMs) / 1000));
+    if (state.pausedAt) {
+      return Math.max(0, Math.floor((state.pausedAt - state.startedAt - state.totalPausedMs - driftMsRef.current) / 1000));
+    }
+    const wallElapsedMs = Date.now() - state.startedAt - state.totalPausedMs - driftMsRef.current;
+    const a = anchorRef.current;
+    if (a) {
+      const monoElapsedMs = a.base + (performance.now() - a.mono);
+      const divergence = wallElapsedMs - monoElapsedMs;
+      // Impossible jump (system clock moved, state replayed) → trust the monotonic clock
+      if (Math.abs(divergence) > CLOCK_JUMP_TOLERANCE_MS) {
+        driftMsRef.current += divergence;
+        flaggedRef.current = true;
+        return Math.max(0, Math.floor(monoElapsedMs / 1000));
+      }
+    }
+    return Math.max(0, Math.floor(wallElapsedMs / 1000));
   }, []);
 
-  // End session helper (used by auto-stop and manual end)
+  /** Server-authoritative end: the edge function recomputes duration from DB timestamps. */
   const endSessionNow = useCallback(async (state: TimerState | null) => {
     if (!state) return;
-    const duration = Math.max(0, Math.floor(((state.pausedAt || Date.now()) - state.startedAt - state.totalPausedMs) / 1000));
-    await (supabase as any)
-      .from('study_sessions')
-      .update({
-        ended_at: new Date().toISOString(),
-        duration_seconds: duration,
-        status: 'completed',
-      })
-      .eq('id', state.sessionId);
+    const clientDuration = calcElapsed(state);
+    // Final heartbeat so the server has an accurate "last known alive" timestamp
+    try {
+      await (supabase as any)
+        .from('study_sessions')
+        .update({ last_heartbeat: new Date().toISOString() })
+        .eq('id', state.sessionId);
+    } catch {}
+    try {
+      await supabase.functions.invoke('end-study-session', {
+        body: {
+          sessionId: state.sessionId,
+          clientDuration,
+          clientFlagged: flaggedRef.current,
+        },
+      });
+    } catch {
+      // Offline / function unreachable — cleanup_stale_sessions will finalise it server-side.
+    }
+    driftMsRef.current = 0;
+    flaggedRef.current = false;
+    anchorRef.current = null;
+    doneFiredRef.current = false;
     saveTimerState(null);
     setTimerStateLocal(null);
     setElapsedSeconds(0);
     setShowInactivityModal(false);
     setInactivityCountdown(INACTIVITY_COUNTDOWN);
     if (countdownRef.current) clearInterval(countdownRef.current);
-  }, []);
+  }, [calcElapsed]);
 
-  // Heartbeat: periodically update last_heartbeat + duration in DB
+  // Heartbeat: last_heartbeat is the server's source of truth for real duration
   useEffect(() => {
     if (heartbeatRef.current) clearInterval(heartbeatRef.current);
 
     if (timerState && !timerState.pausedAt) {
       const sendHeartbeat = async () => {
-        const duration = calcElapsed(timerState);
         await (supabase as any)
           .from('study_sessions')
           .update({
             last_heartbeat: new Date().toISOString(),
-            duration_seconds: duration,
+            duration_seconds: calcElapsed(timerState),
           })
           .eq('id', timerState.sessionId);
       };
-      sendHeartbeat(); // immediate
+      sendHeartbeat();
       heartbeatRef.current = window.setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
     }
 
     return () => { if (heartbeatRef.current) clearInterval(heartbeatRef.current); };
   }, [timerState, calcElapsed]);
+
+  // Re-anchor the monotonic guard on every state transition
+  useEffect(() => { resetAnchor(timerState); }, [timerState, resetAnchor]);
+
+  // Periodically finalise stale sessions so totals never include dangling rows
+  useEffect(() => {
+    if (!yptUserId) return;
+    const run = () => { (supabase as any).rpc('cleanup_stale_sessions'); };
+    run();
+    const id = window.setInterval(run, STALE_CLEANUP_INTERVAL);
+    return () => clearInterval(id);
+  }, [yptUserId]);
 
   // Timer tick
   useEffect(() => {
@@ -82,6 +168,26 @@ export function useStudyTimer(yptUserId: string | undefined) {
       const tick = () => {
         const elapsed = calcElapsed(timerState);
         setElapsedSeconds(elapsed);
+
+        // Countdown completion
+        if (
+          timerState.mode === 'countdown' &&
+          timerState.targetSeconds &&
+          elapsed >= timerState.targetSeconds &&
+          !doneFiredRef.current
+        ) {
+          doneFiredRef.current = true;
+          playChime();
+          const phase = timerState.phase === 'break' ? 'break' : 'work';
+          notify(
+            phase === 'break' ? 'Break over' : 'Session complete',
+            phase === 'break' ? 'Back to work — start your next block.' : 'Nice work. Time for a break.',
+          );
+          setCountdownDone({ phase, breakSeconds: timerState.breakSeconds || 300 });
+          endSessionNow(timerState);
+          return;
+        }
+
         if (elapsed >= THREE_HOURS && !showInactivityModal) {
           setShowInactivityModal(true);
           setInactivityCountdown(INACTIVITY_COUNTDOWN);
@@ -94,7 +200,7 @@ export function useStudyTimer(yptUserId: string | undefined) {
     }
 
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [timerState, calcElapsed, showInactivityModal]);
+  }, [timerState, calcElapsed, showInactivityModal, endSessionNow]);
 
   // Inactivity countdown - auto-end after 15 seconds
   useEffect(() => {
@@ -105,7 +211,6 @@ export function useStudyTimer(yptUserId: string | undefined) {
       countdownRef.current = window.setInterval(() => {
         setInactivityCountdown((prev) => {
           if (prev <= 1) {
-            // Auto-end session
             endSessionNow(timerState);
             return 0;
           }
@@ -118,7 +223,6 @@ export function useStudyTimer(yptUserId: string | undefined) {
   }, [showInactivityModal, timerState, endSessionNow]);
 
   // Reliable end on real tab/app close via sendBeacon → edge function.
-  // Note: visibilitychange alone is NOT treated as end — user can switch tabs.
   useEffect(() => {
     const fireEnd = () => {
       const state = getTimerState();
@@ -134,12 +238,9 @@ export function useStudyTimer(yptUserId: string | undefined) {
 
     const handleOffline = () => {
       const state = getTimerState();
-      if (state) {
-        endSessionNow(state);
-      }
+      if (state) endSessionNow(state);
     };
 
-    // pagehide fires reliably on mobile Safari + tab close; beforeunload as fallback
     window.addEventListener('pagehide', fireEnd);
     window.addEventListener('beforeunload', fireEnd);
     window.addEventListener('offline', handleOffline);
@@ -151,48 +252,71 @@ export function useStudyTimer(yptUserId: string | undefined) {
     };
   }, [endSessionNow]);
 
-  // On mount: check if there's a stale session from a previous tab close
+  // On mount: reconcile the cached timer with the DB (source of truth)
   useEffect(() => {
     const state = getTimerState();
     if (state && yptUserId) {
-      // Check if session is still active in DB
       (supabase as any)
         .from('study_sessions')
-        .select('status')
+        .select('status, started_at')
         .eq('id', state.sessionId)
         .maybeSingle()
         .then(({ data }: any) => {
           if (!data || data.status !== 'active') {
-            // Session was already ended (by heartbeat cleanup or beforeunload)
             saveTimerState(null);
             setTimerStateLocal(null);
             setElapsedSeconds(0);
+            return;
+          }
+          // Realign the local start time to the server's started_at — the DB wins.
+          const serverStart = new Date(data.started_at).getTime();
+          if (Math.abs(serverStart - state.startedAt) > 5000) {
+            const fixed = { ...state, startedAt: serverStart };
+            saveTimerState(fixed);
+            setTimerStateLocal(fixed);
           }
         });
     }
   }, [yptUserId]);
 
-  const startSession = async (subject: string) => {
+  const startSession = async (
+    subject: string,
+    opts?: { mode?: TimerMode; targetSeconds?: number; breakSeconds?: number; phase?: 'work' | 'break' },
+  ) => {
     if (!yptUserId) return;
-    // First, clean up stale sessions
     await (supabase as any).rpc('cleanup_stale_sessions');
-    
-    const { data } = await (supabase as any)
+    if ('Notification' in window && Notification.permission === 'default') {
+      try { Notification.requestPermission(); } catch {}
+    }
+
+    const { data, error } = await (supabase as any)
       .from('study_sessions')
       .insert({ ypt_user_id: yptUserId, subject, status: 'active', last_heartbeat: new Date().toISOString() })
-      .select()
+      .select('id, started_at')
       .single();
+    if (error) {
+      console.error('[studyTimer] failed to start session:', error);
+      throw error;
+    }
     if (data) {
+      driftMsRef.current = 0;
+      flaggedRef.current = false;
+      doneFiredRef.current = false;
       const state: TimerState = {
         sessionId: data.id,
         subject,
-        startedAt: Date.now(),
+        startedAt: new Date(data.started_at).getTime(),
         pausedAt: null,
         totalPausedMs: 0,
         yptUserId,
+        mode: opts?.mode || 'stopwatch',
+        targetSeconds: opts?.targetSeconds,
+        breakSeconds: opts?.breakSeconds,
+        phase: opts?.phase || 'work',
       };
       saveTimerState(state);
       setTimerStateLocal(state);
+      setCountdownDone(null);
     }
   };
 
@@ -205,7 +329,7 @@ export function useStudyTimer(yptUserId: string | undefined) {
 
   const resumeSession = () => {
     if (!timerState || !timerState.pausedAt) return;
-    const pauseDuration = Date.now() - timerState.pausedAt;
+    const pauseDuration = Math.max(0, Date.now() - timerState.pausedAt);
     const updated = { ...timerState, pausedAt: null, totalPausedMs: timerState.totalPausedMs + pauseDuration };
     saveTimerState(updated);
     setTimerStateLocal(updated);
@@ -221,11 +345,33 @@ export function useStudyTimer(yptUserId: string | undefined) {
     if (countdownRef.current) clearInterval(countdownRef.current);
   };
 
+  const dismissCountdownDone = () => setCountdownDone(null);
+
+  /** Start the break block after a completed pomodoro work block */
+  const startBreak = async (subject: string, breakSeconds: number) => {
+    setCountdownDone(null);
+    await startSession(subject, {
+      mode: 'countdown',
+      targetSeconds: breakSeconds,
+      breakSeconds,
+      phase: 'break',
+    });
+  };
+
+  const targetSeconds = timerState?.targetSeconds;
+  const remainingSeconds = timerState?.mode === 'countdown' && targetSeconds
+    ? Math.max(0, targetSeconds - elapsedSeconds)
+    : null;
+
   return {
     isActive: !!timerState,
     isPaused: !!timerState?.pausedAt,
     subject: timerState?.subject || null,
     sessionId: timerState?.sessionId || null,
+    mode: (timerState?.mode || 'stopwatch') as TimerMode,
+    phase: timerState?.phase || 'work',
+    targetSeconds: targetSeconds ?? null,
+    remainingSeconds,
     elapsedSeconds,
     startSession,
     pauseSession,
@@ -234,5 +380,8 @@ export function useStudyTimer(yptUserId: string | undefined) {
     showInactivityModal,
     inactivityCountdown,
     dismissInactivity,
+    countdownDone,
+    dismissCountdownDone,
+    startBreak,
   };
 }
