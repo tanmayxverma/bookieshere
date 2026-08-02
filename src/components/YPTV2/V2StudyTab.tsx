@@ -803,6 +803,36 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Pomodoro block finished */}
+      <AlertDialog open={!!timer.countdownDone}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {timer.countdownDone?.phase === 'break' ? 'Break over' : 'Focus block complete'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {timer.countdownDone?.phase === 'break'
+                ? 'Recharged? Start your next focus block.'
+                : `Time logged. Take a ${Math.round((timer.countdownDone?.breakSeconds || 300) / 60)} minute break.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={timer.dismissCountdownDone}>Done for now</AlertDialogCancel>
+            {timer.countdownDone?.phase === 'work' ? (
+              <AlertDialogAction
+                onClick={() => timer.startBreak('Self Study', timer.countdownDone?.breakSeconds || 300)}
+              >
+                Start break
+              </AlertDialogAction>
+            ) : (
+              <AlertDialogAction onClick={() => { timer.dismissCountdownDone(); setShowSubjectSelect(true); }}>
+                Next block
+              </AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
