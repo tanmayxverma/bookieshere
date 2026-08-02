@@ -46,6 +46,9 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
 
     sessions.forEach((s: any) => {
       const uid = s.ypt_user_id;
+      // The current user's live session is added separately via liveElapsed —
+      // counting its heartbeat duration here would double it.
+      if (s.status === 'active' && uid === currentUserId) return;
       const entry = { userId: uid, name: s.ypt_users?.name || 'Unknown', jeeYear: s.ypt_users?.jee_focus_year || '', totalSeconds: 0 };
       if (!weekMap[uid]) weekMap[uid] = { ...entry };
       weekMap[uid].totalSeconds += s.duration_seconds || 0;
