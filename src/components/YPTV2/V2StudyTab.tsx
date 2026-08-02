@@ -79,6 +79,8 @@ const SUBJECT_TINT: Record<string, string> = {
 
 export function V2StudyTab({ user, timer, onNavigate }: Props) {
   const [showSubjectSelect, setShowSubjectSelect] = useState(false);
+  const [pendingMode, setPendingMode] = useState<TimerMode>('stopwatch');
+  const [presetIndex, setPresetIndex] = useState(0);
   const [todaySeconds, setTodaySeconds] = useState(0);
   const [weekSeconds, setWeekSeconds] = useState(0);
   const [sessionCount, setSessionCount] = useState(0);
@@ -134,7 +136,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         .from('study_sessions')
         .select('duration_seconds, started_at, status, subject')
         .eq('ypt_user_id', user.id)
-        .in('status', ['completed', 'active'])
+        .eq('status', 'completed')
         .gte('started_at', yearAgo.toISOString());
 
       if (!data) return;
@@ -242,7 +244,17 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
 
   const handleStart = async (subject: string) => {
     setShowSubjectSelect(false);
-    await timer.startSession(subject);
+    if (pendingMode === 'countdown') {
+      const p = POMODORO_PRESETS[presetIndex];
+      await timer.startSession(subject, {
+        mode: 'countdown',
+        targetSeconds: p.work * 60,
+        breakSeconds: p.break * 60,
+        phase: 'work',
+      });
+    } else {
+      await timer.startSession(subject, { mode: 'stopwatch' });
+    }
   };
 
   const addQuickTask = async () => {
