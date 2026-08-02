@@ -514,12 +514,17 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       toast.error('PIN must be exactly 4 digits.');
       return;
     }
+    // Explicit column list — `select('*')` fails because pin_hash is not readable by clients.
     const { data: created, error } = await (supabase as any).from('ypt_rooms').insert({
       name, description: newDesc.trim() || null, emoji: '💡',
       is_permanent: false, max_participants: newMax ? parseInt(newMax) : null, created_by: currentUser.id,
       is_locked: newLock,
-    }).select().single();
-    if (error) { toast.error('Failed to create room'); return; }
+    }).select('id, name, description, emoji, is_permanent, max_participants, created_by, last_activity_at, created_at, is_locked').single();
+    if (error) {
+      console.error('[rooms] create failed:', error);
+      toast.error(error.message || 'Failed to create room');
+      return;
+    }
     if (newLock && newPin && created?.id) {
       await (supabase as any).rpc('set_room_lock', {
         _room_id: created.id, _creator: currentUser.id,

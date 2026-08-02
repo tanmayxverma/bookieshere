@@ -445,6 +445,8 @@ export type Database = {
           created_at: string
           duration_seconds: number | null
           ended_at: string | null
+          flag_reason: string | null
+          flagged: boolean
           id: string
           last_heartbeat: string | null
           started_at: string
@@ -456,6 +458,8 @@ export type Database = {
           created_at?: string
           duration_seconds?: number | null
           ended_at?: string | null
+          flag_reason?: string | null
+          flagged?: boolean
           id?: string
           last_heartbeat?: string | null
           started_at?: string
@@ -467,6 +471,8 @@ export type Database = {
           created_at?: string
           duration_seconds?: number | null
           ended_at?: string | null
+          flag_reason?: string | null
+          flagged?: boolean
           id?: string
           last_heartbeat?: string | null
           started_at?: string

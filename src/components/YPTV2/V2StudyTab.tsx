@@ -6,8 +6,9 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { SUBJECTS, formatTime, formatHours, getISTTodayStartUTC, getISTDate, getISTDateString } from '@/types/ypt';
+import { SUBJECTS, formatTime, formatHours, getISTTodayStartUTC, getISTDate, getISTDateString, POMODORO_PRESETS, type TimerMode } from '@/types/ypt';
 import { supabase } from '@/integrations/supabase/client';
+import { TimerRing } from '@/components/YPT/TimerRing';
 import {
   Play, Pause, Square, Clock, TrendingUp, Flame, Zap, Maximize2, Minimize2,
   Pencil, Check, Target, Plus, ListTodo, ArrowRight, BarChart3, Users, Trophy,
@@ -21,13 +22,23 @@ interface TimerControls {
   isPaused: boolean;
   subject: string | null;
   elapsedSeconds: number;
-  startSession: (subject: string) => Promise<void>;
+  mode: TimerMode;
+  phase: 'work' | 'break';
+  targetSeconds: number | null;
+  remainingSeconds: number | null;
+  startSession: (
+    subject: string,
+    opts?: { mode?: TimerMode; targetSeconds?: number; breakSeconds?: number; phase?: 'work' | 'break' },
+  ) => Promise<void>;
   pauseSession: () => void;
   resumeSession: () => void;
   endSession: () => Promise<void>;
   showInactivityModal: boolean;
   inactivityCountdown: number;
   dismissInactivity: () => void;
+  countdownDone: null | { phase: 'work' | 'break'; breakSeconds: number };
+  dismissCountdownDone: () => void;
+  startBreak: (subject: string, breakSeconds: number) => Promise<void>;
 }
 
 interface Props {
@@ -68,6 +79,8 @@ const SUBJECT_TINT: Record<string, string> = {
 
 export function V2StudyTab({ user, timer, onNavigate }: Props) {
   const [showSubjectSelect, setShowSubjectSelect] = useState(false);
+  const [pendingMode, setPendingMode] = useState<TimerMode>('stopwatch');
+  const [presetIndex, setPresetIndex] = useState(0);
   const [todaySeconds, setTodaySeconds] = useState(0);
   const [weekSeconds, setWeekSeconds] = useState(0);
   const [sessionCount, setSessionCount] = useState(0);
@@ -123,7 +136,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         .from('study_sessions')
         .select('duration_seconds, started_at, status, subject')
         .eq('ypt_user_id', user.id)
-        .in('status', ['completed', 'active'])
+        .eq('status', 'completed')
         .gte('started_at', yearAgo.toISOString());
 
       if (!data) return;
@@ -231,7 +244,17 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
 
   const handleStart = async (subject: string) => {
     setShowSubjectSelect(false);
-    await timer.startSession(subject);
+    if (pendingMode === 'countdown') {
+      const p = POMODORO_PRESETS[presetIndex];
+      await timer.startSession(subject, {
+        mode: 'countdown',
+        targetSeconds: p.work * 60,
+        breakSeconds: p.break * 60,
+        phase: 'work',
+      });
+    } else {
+      await timer.startSession(subject, { mode: 'stopwatch' });
+    }
   };
 
   const addQuickTask = async () => {
@@ -265,6 +288,16 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
   const maxBar = Math.max(...weeklyData.map(d => d.secs), 1);
   const totalMix = subjectMix.reduce((s, x) => s + x.secs, 0) || 1;
 
+  // Timer display: countdown shows time left, stopwatch shows time elapsed.
+  const isCountdown = timer.mode === 'countdown' && timer.targetSeconds != null;
+  const displaySeconds = isCountdown ? (timer.remainingSeconds ?? 0) : timer.elapsedSeconds;
+  const ringProgress = isCountdown
+    ? timer.elapsedSeconds / (timer.targetSeconds || 1)
+    : (timer.elapsedSeconds % 3600) / 3600;
+  const ringLabel = isCountdown
+    ? (timer.phase === 'break' ? 'Break' : 'Focus block')
+    : 'Stopwatch';
+
   // ============ FOCUS MODE ============
   if (focusMode && timer.isActive) {
     return (
@@ -277,14 +310,14 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
             <span className="w-2.5 h-2.5 rounded-full bg-foreground animate-pulse" />
             <span className="text-base font-medium text-muted-foreground">{timer.subject}</span>
           </div>
-          <div className="relative">
-            <p className="text-7xl md:text-8xl lg:text-9xl font-mono font-bold tracking-tight tabular-nums text-foreground select-none">
-              {formatTime(timer.elapsedSeconds)}
-            </p>
-            {!timer.isPaused && (
-              <div className="absolute -inset-6 rounded-3xl bg-foreground/5 animate-[pulse_3s_ease-in-out_infinite] -z-10" />
-            )}
-          </div>
+          <TimerRing
+            progress={ringProgress}
+            seconds={displaySeconds}
+            label={ringLabel}
+            sublabel={timer.isPaused ? 'Paused' : undefined}
+            paused={timer.isPaused}
+            size={340}
+          />
           <p className="text-sm text-muted-foreground/60 italic font-medium h-5">
             "{MOTIVATIONAL_QUOTES[quoteIndex]}"
           </p>
@@ -374,9 +407,16 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 {timer.subject}
                 {timer.isPaused && <span className="text-muted-foreground font-normal">· paused</span>}
               </div>
-              <p className="text-6xl md:text-7xl font-mono font-bold tracking-tight tabular-nums select-none">
-                {formatTime(timer.elapsedSeconds)}
-              </p>
+              <div className="flex justify-center">
+                <TimerRing
+                  progress={ringProgress}
+                  seconds={displaySeconds}
+                  label={ringLabel}
+                  sublabel={isCountdown ? `${formatTime(timer.elapsedSeconds)} done` : undefined}
+                  paused={timer.isPaused}
+                  size={250}
+                />
+              </div>
               <div className="flex justify-center gap-2.5 flex-wrap">
                 {timer.isPaused ? (
                   <Button onClick={timer.resumeSession} size="lg" className="px-7 h-12 text-base btn-lift">
@@ -402,6 +442,39 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
                 Pick a subject. Lock in. Your time, streaks, and focus all start with one tap.
               </p>
+              {/* Mode switch: open stopwatch vs timed pomodoro block */}
+              <div className="flex justify-center pt-1">
+                <div className="inline-flex p-1 rounded-xl border border-border/60 bg-background/50">
+                  {(['stopwatch', 'countdown'] as TimerMode[]).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setPendingMode(m)}
+                      className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                        pendingMode === m ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {m === 'stopwatch' ? 'Stopwatch' : 'Pomodoro'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {pendingMode === 'countdown' && (
+                <div className="flex justify-center gap-2 flex-wrap">
+                  {POMODORO_PRESETS.map((p, i) => (
+                    <button
+                      key={p.label}
+                      onClick={() => setPresetIndex(i)}
+                      className={`px-4 py-2 rounded-lg border text-sm font-semibold transition-colors ${
+                        presetIndex === i
+                          ? 'border-foreground/40 bg-foreground/10 text-foreground'
+                          : 'border-border/60 text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {p.label} · {p.work}/{p.break}
+                    </button>
+                  ))}
+                </div>
+              )}
               <div className="flex justify-center gap-2.5 flex-wrap pt-2">
                 <Button size="lg" className="text-base px-8 h-12 btn-lift" onClick={() => setShowSubjectSelect(true)}>
                   <Play className="h-5 w-5 mr-2" /> Start studying
@@ -727,6 +800,36 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
           <AlertDialogFooter>
             <AlertDialogCancel onClick={timer.endSession}>End Session</AlertDialogCancel>
             <AlertDialogAction onClick={timer.dismissInactivity}>Yes, continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Pomodoro block finished */}
+      <AlertDialog open={!!timer.countdownDone}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {timer.countdownDone?.phase === 'break' ? 'Break over' : 'Focus block complete'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {timer.countdownDone?.phase === 'break'
+                ? 'Recharged? Start your next focus block.'
+                : `Time logged. Take a ${Math.round((timer.countdownDone?.breakSeconds || 300) / 60)} minute break.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={timer.dismissCountdownDone}>Done for now</AlertDialogCancel>
+            {timer.countdownDone?.phase === 'work' ? (
+              <AlertDialogAction
+                onClick={() => timer.startBreak('Self Study', timer.countdownDone?.breakSeconds || 300)}
+              >
+                Start break
+              </AlertDialogAction>
+            ) : (
+              <AlertDialogAction onClick={() => { timer.dismissCountdownDone(); setShowSubjectSelect(true); }}>
+                Next block
+              </AlertDialogAction>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

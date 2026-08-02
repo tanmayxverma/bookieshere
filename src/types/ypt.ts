@@ -35,6 +35,8 @@ export interface YPTTodo {
   created_at: string;
 }
 
+export type TimerMode = 'stopwatch' | 'countdown';
+
 export interface TimerState {
   sessionId: string;
   subject: string;
@@ -42,7 +44,27 @@ export interface TimerState {
   pausedAt: number | null;
   totalPausedMs: number;
   yptUserId: string;
+  /** 'stopwatch' counts up (default), 'countdown' counts down from targetSeconds */
+  mode?: TimerMode;
+  /** Countdown target in seconds (countdown mode only) */
+  targetSeconds?: number;
+  /** Pomodoro phase, used to offer the follow-up break */
+  phase?: 'work' | 'break';
+  /** Break length in seconds to offer once a work countdown completes */
+  breakSeconds?: number;
 }
+
+export interface PomodoroPreset {
+  label: string;
+  work: number; // minutes
+  break: number; // minutes
+}
+
+export const POMODORO_PRESETS: PomodoroPreset[] = [
+  { label: 'Classic', work: 25, break: 5 },
+  { label: 'Deep', work: 50, break: 10 },
+  { label: 'Marathon', work: 90, break: 15 },
+];
 
 export interface ActiveStudyUser {
   name: string;
