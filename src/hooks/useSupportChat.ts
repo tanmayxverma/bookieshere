@@ -69,23 +69,51 @@ export function useSupportChat() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Merge a single message into state without re-rendering the whole thread.
+  const mergeMessage = useCallback((m: SupportMessage | null | undefined) => {
+    if (!m?.id) return;
+    setMessages(prev => (prev.some(x => x.id === m.id) ? prev : [...prev, m]
+      .sort((a, b) => a.created_at.localeCompare(b.created_at))));
+  }, []);
+
+  // Fetch only messages (no loading flash, no chat re-fetch).
+  const syncMessages = useCallback(async (chatId: string) => {
+    try {
+      if (isAuthenticated) {
+        const { data } = await (supabase as any).from('support_messages').select('*').eq('chat_id', chatId).order('created_at');
+        if (data) setMessages(prev => (prev.length === data.length ? prev : (data as SupportMessage[])));
+      } else {
+        const { data } = await (supabase as any).rpc('guest_list_support_messages', { _device_id: deviceId });
+        const rows = (data as SupportMessage[]) ?? [];
+        setMessages(prev => (prev.length === rows.length ? prev : rows));
+      }
+    } catch { /* fallback interval will retry */ }
+  }, [isAuthenticated, deviceId]);
+
   useEffect(() => {
-    if (!chat?.id) return;
-    const ch = supabase.channel(`support-${chat.id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${chat.id}` }, () => load())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'support_chats', filter: `id=eq.${chat.id}` }, () => load())
+    const chatId = chat?.id;
+    if (!chatId) return;
+    const ch = supabase.channel(`support-${chatId}`)
+      // Targeted: append the new message only.
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${chatId}` },
+        ({ new: row }) => mergeMessage(row as SupportMessage))
+      // Targeted: patch the changed chat row (status etc.).
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'support_chats', filter: `id=eq.${chatId}` },
+        ({ new: row }) => setChat(prev => ({ ...(prev as SupportChat), ...(row as SupportChat) })))
       .subscribe();
     const events = supabase.channel(SUPPORT_EVENTS_CHANNEL)
       .on('broadcast', { event: 'message' }, ({ payload }) => {
-        if (!payload?.chat_id || payload.chat_id === chat.id) load();
+        if (payload?.chat_id && payload.chat_id !== chatId) return;
+        if (payload?.message) mergeMessage(payload.message as SupportMessage);
+        else syncMessages(chatId);
       })
       .subscribe();
-    // Poll every 4s as a fallback (guests / anon RLS blocks realtime SELECT)
-    const t = setInterval(() => { load(); }, 4000);
+    // Safety net only — realtime is the primary path.
+    const t = setInterval(() => { syncMessages(chatId); }, 45000);
     return () => { supabase.removeChannel(ch); supabase.removeChannel(events); clearInterval(t); };
-  }, [chat?.id, load]);
+  }, [chat?.id, mergeMessage, syncMessages]);
 
-  const broadcastChange = useCallback(async (chatId: string) => {
+  const broadcastChange = useCallback(async (chatId: string, message?: SupportMessage | null) => {
     const channel = supabase.channel(SUPPORT_EVENTS_CHANNEL);
     await new Promise<void>((resolve) => {
       const timer = window.setTimeout(resolve, 1200);
@@ -96,12 +124,13 @@ export function useSupportChat() {
         }
       });
     });
-    await channel.send({ type: 'broadcast', event: 'message', payload: { chat_id: chatId } });
+    await channel.send({ type: 'broadcast', event: 'message', payload: { chat_id: chatId, message: message ?? null } });
     supabase.removeChannel(channel);
   }, []);
 
   const send = useCallback(async (body: string, image_url?: string | null) => {
     let chatId = chat?.id ?? null;
+    let inserted: SupportMessage | null = null;
     if (isAuthenticated) {
       // Create the chat on first send only.
       if (!chatId) {
@@ -112,20 +141,24 @@ export function useSupportChat() {
         if (row) setChat(row);
       }
       if (!chatId) throw new Error('Could not open chat');
-      const { error } = await (supabase as any).from('support_messages').insert({
+      const { data, error } = await (supabase as any).from('support_messages').insert({
         chat_id: chatId, author_role: 'user', body: body || null, image_url: image_url ?? null,
-      });
+      }).select().single();
       if (error) throw error;
+      inserted = data as SupportMessage;
     } else {
       // guest_send_support_message creates the chat on first send server-side.
-      const { error } = await (supabase as any).rpc('guest_send_support_message', {
+      const { data, error } = await (supabase as any).rpc('guest_send_support_message', {
         _device_id: deviceId, _body: body || null, _image_url: image_url ?? null,
       });
       if (error) throw error;
+      inserted = (Array.isArray(data) ? data[0] : data) as SupportMessage;
+      if (!chatId && inserted?.chat_id) chatId = inserted.chat_id;
     }
-    await load();
-    if (chatId) await broadcastChange(chatId);
-  }, [chat, isAuthenticated, deviceId, load, broadcastChange]);
+    if (inserted) mergeMessage(inserted);
+    if (!chat?.id) await load(); // first message: pull the newly created chat row
+    if (chatId) await broadcastChange(chatId, inserted);
+  }, [chat, isAuthenticated, deviceId, load, broadcastChange, mergeMessage]);
 
   return { chat, messages, loading, error, send, refetch: load };
 }
