@@ -370,6 +370,10 @@ export type Database = {
           device_id: string | null
           display_name: string
           id: string
+          is_banned: boolean
+          is_muted: boolean
+          moderation_note: string | null
+          muted_until: string | null
           onboarded_at: string | null
           target_category: string
           updated_at: string
@@ -382,6 +386,10 @@ export type Database = {
           device_id?: string | null
           display_name?: string
           id?: string
+          is_banned?: boolean
+          is_muted?: boolean
+          moderation_note?: string | null
+          muted_until?: string | null
           onboarded_at?: string | null
           target_category?: string
           updated_at?: string
@@ -394,6 +402,10 @@ export type Database = {
           device_id?: string | null
           display_name?: string
           id?: string
+          is_banned?: boolean
+          is_muted?: boolean
+          moderation_note?: string | null
+          muted_until?: string | null
           onboarded_at?: string | null
           target_category?: string
           updated_at?: string
@@ -1045,6 +1057,10 @@ export type Database = {
           device_id: string | null
           display_name: string
           id: string
+          is_banned: boolean
+          is_muted: boolean
+          moderation_note: string | null
+          muted_until: string | null
           onboarded_at: string | null
           target_category: string
           updated_at: string
@@ -1306,6 +1322,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_user_banned: { Args: { _user_id: string }; Returns: boolean }
+      is_user_muted: { Args: { _user_id: string }; Returns: boolean }
       set_room_lock: {
         Args: {
           _creator: string
@@ -1348,6 +1366,10 @@ export type Database = {
           device_id: string | null
           display_name: string
           id: string
+          is_banned: boolean
+          is_muted: boolean
+          moderation_note: string | null
+          muted_until: string | null
           onboarded_at: string | null
           target_category: string
           updated_at: string
