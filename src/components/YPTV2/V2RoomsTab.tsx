@@ -358,11 +358,15 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       setAiThinking(true);
       try {
         const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bookie-chat`;
+        const { data: sessionData } = await supabase.auth.getSession();
+        const accessToken = sessionData.session?.access_token;
+        if (!accessToken) throw new Error('Sign in with Google to use /ai in rooms.');
         const resp = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
             messages: [{ role: 'user', content: `${prompt}\n\n(Answer in ≤120 words, focused JEE mentor tone.)` }],
@@ -388,6 +392,14 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
               } catch { /* skip non-JSON */ }
             }
           }
+        } else {
+          const errText = await resp.text().catch(() => '');
+          console.error('Bookie AI (/ai) failed', resp.status, errText);
+          if (resp.status === 401) throw new Error('Sign in with Google to use /ai.');
+          if (resp.status === 429) throw new Error('Bookie AI is rate-limited — try again shortly.');
+          if (resp.status === 402) throw new Error('AI credits exhausted.');
+          if (resp.status === 503) throw new Error("Bookie AI isn't configured (missing API key).");
+          throw new Error(`Bookie AI error (${resp.status}).`);
         }
         const clean = (full || 'I couldn’t reach the AI right now. Try again in a moment.').slice(0, 1400);
         await (supabase as any).from('room_messages').insert({
@@ -396,7 +408,8 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
           message: `[ai-reply] ${clean}`,
         });
       } catch (e: any) {
-        toast.error('Bookie AI is unavailable right now.');
+        console.error('/ai command failed', e);
+        toast.error(e?.message || 'Bookie AI is unavailable right now.');
       } finally {
         setAiThinking(false);
       }

@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 type MessageContent = 
   | string 
@@ -90,18 +91,30 @@ export function useBookieChat() {
           content: m.content
         }));
 
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (!accessToken) {
+        throw new Error("Sign in with Google to use Bookie AI.");
+      }
+
       const response = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ messages: apiMessages }),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `Request failed with status ${response.status}`);
+        console.error("Bookie AI gateway failure", response.status, errorData);
+        if (response.status === 401) throw new Error("Sign in with Google to use Bookie AI.");
+        if (response.status === 429) throw new Error("Too many requests — wait a moment and try again.");
+        if (response.status === 402) throw new Error("AI credits are exhausted. Try again later.");
+        if (response.status === 503) throw new Error("Bookie AI isn't configured yet (missing API key).");
+        throw new Error(errorData.error || `Bookie AI failed (status ${response.status}).`);
       }
 
       if (!response.body) throw new Error("No response body");
