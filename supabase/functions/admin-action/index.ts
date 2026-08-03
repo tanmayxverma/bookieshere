@@ -188,6 +188,12 @@ Deno.serve(async (req) => {
       case 'support.reply': {
         const { chat_id, body } = payload;
         if (!body || !String(body).trim()) return jr({ error: 'empty message' }, 400);
+        // Accept-as-you-message: replying to a pending chat auto-accepts it first.
+        const { data: existing } = await supabase.from('support_chats').select('status').eq('id', chat_id).maybeSingle();
+        if (existing?.status === 'pending') {
+          await supabase.from('support_chats').update({ status: 'accepted' }).eq('id', chat_id);
+          await log(sessionId, 'support.accept', { id: chat_id, auto: true });
+        }
         const { data: msg, error } = await supabase.from('support_messages').insert({
           chat_id, author_role: 'admin', body: String(body),
         }).select().single();
@@ -195,6 +201,56 @@ Deno.serve(async (req) => {
         await supabase.from('support_chats').update({ last_admin_read_at: new Date().toISOString() }).eq('id', chat_id);
         await log(sessionId, 'support.reply', { chat_id });
         return jr({ item: msg }, 200);
+      }
+
+      case 'community.list': {
+        const { data: posts } = await supabase
+          .from('community_posts')
+          .select('*, profiles!community_posts_profile_id_fkey(id, display_name, avatar_url, is_banned, is_muted, muted_until)')
+          .order('created_at', { ascending: false }).limit(100);
+        const { data: comments } = await supabase
+          .from('community_comments')
+          .select('*, profiles!community_comments_profile_id_fkey(id, display_name, avatar_url, is_banned, is_muted, muted_until)')
+          .order('created_at', { ascending: false }).limit(100);
+        return jr({ posts: posts ?? [], comments: comments ?? [] }, 200);
+      }
+      case 'community.delete_post': {
+        const { error } = await supabase.from('community_posts').delete().eq('id', payload.id);
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'community.delete_post', { id: payload.id });
+        return jr({ ok: true }, 200);
+      }
+      case 'community.delete_comment': {
+        const { error } = await supabase.from('community_comments').delete().eq('id', payload.id);
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'community.delete_comment', { id: payload.id });
+        return jr({ ok: true }, 200);
+      }
+      case 'moderation.list': {
+        const { data } = await supabase.from('profiles')
+          .select('id, display_name, avatar_url, account_type, is_banned, is_muted, muted_until, moderation_note')
+          .or('is_banned.eq.true,is_muted.eq.true')
+          .order('updated_at', { ascending: false }).limit(200);
+        return jr({ items: data ?? [] }, 200);
+      }
+      case 'moderation.set': {
+        const { profile_id, is_banned, is_muted, mute_hours, note } = payload ?? {};
+        if (!profile_id) return jr({ error: 'profile_id required' }, 400);
+        const patch: Record<string, unknown> = {};
+        if (typeof is_banned === 'boolean') patch.is_banned = is_banned;
+        if (typeof is_muted === 'boolean') {
+          patch.is_muted = is_muted;
+          patch.muted_until = is_muted && mute_hours
+            ? new Date(Date.now() + Number(mute_hours) * 3600 * 1000).toISOString()
+            : null;
+        }
+        if (note !== undefined) patch.moderation_note = note;
+        if (!Object.keys(patch).length) return jr({ error: 'nothing to update' }, 400);
+        const { data, error } = await supabase.from('profiles').update(patch).eq('id', profile_id)
+          .select('id, display_name, is_banned, is_muted, muted_until, moderation_note').single();
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'moderation.set', { profile_id, patch });
+        return jr({ item: data }, 200);
       }
 
       default:

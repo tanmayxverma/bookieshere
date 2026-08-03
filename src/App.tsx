@@ -20,6 +20,7 @@ import AdminOverview from "./pages/admin/AdminOverview";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 import AdminTickets from "./pages/admin/AdminTickets";
 import AdminSupport from "./pages/admin/AdminSupport";
+import AdminCommunity from "./pages/admin/AdminCommunity";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminMaterials from "./pages/admin/AdminMaterials";
 import NotificationsPage from "./pages/Notifications";
@@ -87,6 +88,7 @@ const AppInner = () => {
         <Route path="/admin/support" element={<AdminSupport />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/materials" element={<AdminMaterials />} />
+        <Route path="/admin/community" element={<AdminCommunity />} />
         <Route path="/copyright-terms" element={<CopyrightTerms />} />
         <Route path="/dmca" element={<DMCA />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
