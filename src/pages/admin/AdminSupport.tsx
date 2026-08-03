@@ -20,8 +20,8 @@ export default function AdminSupport() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (showSpinner = false) => {
+    if (showSpinner) setLoading(true);
     try {
       setError(null);
       const r = await call('support.list', { status });
@@ -33,17 +33,42 @@ export default function AdminSupport() {
     }
     finally { setLoading(false); }
   };
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [status]);
+  useEffect(() => { load(true); /* eslint-disable-next-line */ }, [status]);
+
+  // Targeted list updates — patch the affected row instead of reloading everything.
+  const patchChat = (row: any) => {
+    setItems(prev => {
+      const idx = prev.findIndex(c => c.id === row.id);
+      if (idx === -1) return prev; // unknown chat -> safety-net refresh handles it
+      const next = [...prev];
+      next[idx] = { ...next[idx], ...row };
+      return next;
+    });
+  };
+  const patchLastMessage = (m: any) => {
+    setItems(prev => {
+      const idx = prev.findIndex(c => c.id === m.chat_id);
+      if (idx === -1) return prev;
+      const next = [...prev];
+      next[idx] = { ...next[idx], last_message: m, last_message_at: m.created_at };
+      return next;
+    });
+  };
 
   useEffect(() => {
     const ch = supabase.channel('admin-support')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'support_chats' }, () => load())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'support_messages' }, () => load())
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'support_chats' }, ({ new: row }) => patchChat(row))
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_chats' }, () => load())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_messages' }, ({ new: row }) => patchLastMessage(row))
       .subscribe();
     const events = supabase.channel('support-events')
-      .on('broadcast', { event: 'message' }, () => load())
+      .on('broadcast', { event: 'message' }, ({ payload }) => {
+        if (payload?.message) patchLastMessage(payload.message);
+        else load();
+      })
       .subscribe();
-    const t = setInterval(() => { load(); }, 5000);
+    // Safety net only (realtime is primary): silent, no spinner.
+    const t = setInterval(() => { load(); }, 60000);
     return () => { supabase.removeChannel(ch); supabase.removeChannel(events); clearInterval(t); };
     // eslint-disable-next-line
   }, [status]);
@@ -119,23 +144,34 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
   };
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [id]);
   useEffect(() => {
+    const mergeMsg = (m: any) => {
+      if (!m?.id || m.chat_id !== id) return;
+      setMsgs(prev => (prev.some(x => x.id === m.id) ? prev : [...prev, m].sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))));
+    };
     const ch = supabase.channel(`admin-support-${id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${id}` }, () => load())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${id}` },
+        ({ new: row }) => mergeMsg(row))
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'support_chats', filter: `id=eq.${id}` },
+        ({ new: row }) => setChat((prev: any) => ({ ...prev, ...(row as any) })))
       .subscribe();
     const events = supabase.channel('support-events')
       .on('broadcast', { event: 'message' }, ({ payload }) => {
-        if (!payload?.chat_id || payload.chat_id === id) {
-          load();
-          onChange();
-        }
+        if (payload?.chat_id && payload.chat_id !== id) return;
+        if (payload?.message) mergeMsg(payload.message);
+        else load();
       })
       .subscribe();
-    const t = setInterval(() => { load(); }, 3000);
+    // Safety net only — realtime handles the live updates.
+    const t = setInterval(() => { load(); }, 45000);
     return () => { supabase.removeChannel(ch); supabase.removeChannel(events); clearInterval(t); };
     // eslint-disable-next-line
   }, [id]);
+  // Only auto-scroll when the admin is already near the bottom (preserves scroll-back reading).
   useEffect(() => {
-    if (scrollerRef.current) scrollerRef.current.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: 'smooth' });
+    const el = scrollerRef.current;
+    if (!el) return;
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 160;
+    if (nearBottom) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [msgs.length]);
 
   const accept = async () => { await call('support.accept', { id }); load(); onChange(); };
@@ -146,8 +182,11 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
     const v = draft.trim(); if (!v) return;
     setBusy(true);
     try {
-      await call('support.reply', { chat_id: id, body: v });
-      setDraft(''); await load(); onChange();
+      // Server auto-accepts a pending chat as part of this call.
+      const res = await call<{ item: any }>('support.reply', { chat_id: id, body: v });
+      setDraft('');
+      if (res?.item) setMsgs(prev => (prev.some(x => x.id === res.item.id) ? prev : [...prev, res.item]));
+      if (chat?.status === 'pending') setChat((prev: any) => ({ ...prev, status: 'accepted' }));
       const events = supabase.channel('support-events');
       await new Promise<void>((resolve) => {
         const timer = window.setTimeout(resolve, 1200);
@@ -155,8 +194,9 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
           if (status === 'SUBSCRIBED') { window.clearTimeout(timer); resolve(); }
         });
       });
-      await events.send({ type: 'broadcast', event: 'message', payload: { chat_id: id } });
+      await events.send({ type: 'broadcast', event: 'message', payload: { chat_id: id, message: res?.item ?? null } });
       supabase.removeChannel(events);
+      onChange();
     }
     catch (e: any) { toast({ variant: 'destructive', title: 'Failed', description: e.message }); }
     finally { setBusy(false); }
@@ -204,10 +244,13 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
           );
         })}
       </div>
-      <form onSubmit={(e) => { e.preventDefault(); reply(); }} className="border-t border-border/40 bg-background p-2.5 flex items-center gap-2">
+      <div className="border-t border-border/40 bg-background px-4 pt-2 text-[11px] text-muted-foreground">
+        Only send a message if it's actually important — don't waste the admin's time with hi/hello.
+      </div>
+      <form onSubmit={(e) => { e.preventDefault(); reply(); }} className="bg-background p-2.5 flex items-center gap-2">
         <input value={draft} onChange={e => setDraft(e.target.value)} maxLength={4000}
           disabled={chat.status === 'rejected'}
-          placeholder={chat.status === 'rejected' ? 'Chat rejected' : 'Reply as Owner…'}
+          placeholder={chat.status === 'rejected' ? 'Chat rejected' : chat.status === 'pending' ? 'Reply (auto-accepts this chat)…' : 'Reply as Owner…'}
           className="flex-1 h-10 rounded-full bg-muted/60 px-4 text-sm outline-none border border-transparent focus:border-primary/30 focus:bg-background transition disabled:opacity-50" />
         <button type="submit" disabled={busy || !draft.trim() || chat.status === 'rejected'}
           className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40">
