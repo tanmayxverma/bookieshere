@@ -9,6 +9,7 @@ import { useRoomSession } from '@/hooks/useRoomSession';
 import { YPTOnboarding } from '@/components/YPT/YPTOnboarding';
 import { YPTLoadingSkeleton } from '@/components/YPT/YPTSkeletons';
 import { YPTNameChange } from '@/components/YPT/YPTNameChange';
+import { YPTYearChange } from '@/components/YPT/YPTYearChange';
 import { V2StudyTab, V2StatsTab, V2TasksTab, V2RoomsTab, V2LeaderboardTab } from '@/components/YPTV2';
 import { YPTTracker } from '@/components/YPT/YPTTracker';
 import { Timer, BarChart3, Users, ListTodo, Trophy, LogOut, X, Target } from 'lucide-react';
@@ -27,7 +28,7 @@ const TABS = [
 type TabId = typeof TABS[number]['id'];
 
 export default function YPT() {
-  const { user, isLoading, isOnboarded, createUser, changeName } = useYPTUser();
+  const { user, isLoading, isOnboarded, createUser, changeName, changeJeeYear } = useYPTUser();
   const { profile, isOnboarded: profileOnboarded } = useProfile();
 
   // Auto-bridge: if the visitor already has a Bookie profile, hydrate the YPT user from it
@@ -89,6 +90,9 @@ export default function YPT() {
                 <span className="text-muted-foreground/30">·</span>
                 <span className="text-sm font-medium">{user.name}</span>
                 <YPTNameChange user={user} onChangeName={changeName} />
+                <span className="text-muted-foreground/30">·</span>
+                <span className="text-sm text-muted-foreground">{user.jee_focus_year}</span>
+                <YPTYearChange user={user} onChangeYear={changeJeeYear} />
               </div>
             </div>
             {/* Desktop nav */}
