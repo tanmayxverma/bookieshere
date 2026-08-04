@@ -1,0 +1,1 @@
+ALTER TABLE public.support_chats ADD COLUMN IF NOT EXISTS is_flagged boolean NOT NULL DEFAULT false;
