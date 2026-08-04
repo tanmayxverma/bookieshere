@@ -69,6 +69,12 @@ export function useStudyTimer(yptUserId: string | undefined) {
 
   const resetAnchor = useCallback((state: TimerState | null) => {
     if (!state || state.pausedAt) { anchorRef.current = null; return; }
+    const raw = Date.now() - state.startedAt - state.totalPausedMs - driftMsRef.current;
+    // Clock skew: the row's started_at comes from the server, so a client clock
+    // running behind makes the elapsed time negative and freezes the display at
+    // 00:00:00. Absorb that constant offset into the drift so the very first
+    // tick starts moving. This is skew, not tampering — do NOT flag it.
+    if (raw < 0) driftMsRef.current += raw;
     const base = Math.max(0, Date.now() - state.startedAt - state.totalPausedMs - driftMsRef.current);
     anchorRef.current = { wall: Date.now(), mono: performance.now(), base };
   }, []);
