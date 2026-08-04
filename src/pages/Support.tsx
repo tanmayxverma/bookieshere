@@ -94,6 +94,9 @@ export default function SupportPage() {
               </div>
               <h2 className="font-bold text-lg">Start a private conversation</h2>
               <p className="text-sm text-muted-foreground mt-1 max-w-xs">Only you and the owner can read these messages.</p>
+              <p className="text-xs text-muted-foreground/80 mt-4 max-w-xs leading-relaxed">
+                Please only message if it's actually important — skip the "hi"/"hello" and describe your issue in one go.
+              </p>
             </div>
           ) : (
             <div className="container mx-auto max-w-2xl px-4 py-4 space-y-2">
@@ -119,6 +122,9 @@ export default function SupportPage() {
 
         {/* Input bar */}
         <form onSubmit={submit} className="border-t border-border/50 bg-background">
+          <div className="container mx-auto max-w-2xl px-4 pt-2 text-[11px] text-muted-foreground/80">
+            Keep it to what matters — the owner reads every message personally.
+          </div>
           {preview && (
             <div className="container mx-auto max-w-2xl px-4 pt-2">
               <div className="relative inline-block rounded-lg overflow-hidden border border-border/40">
