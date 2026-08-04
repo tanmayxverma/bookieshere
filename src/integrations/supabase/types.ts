@@ -506,6 +506,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_flagged: boolean
           last_admin_read_at: string | null
           last_message_at: string
           last_user_read_at: string | null
@@ -516,6 +517,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          is_flagged?: boolean
           last_admin_read_at?: string | null
           last_message_at?: string
           last_user_read_at?: string | null
@@ -526,6 +528,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          is_flagged?: boolean
           last_admin_read_at?: string | null
           last_message_at?: string
           last_user_read_at?: string | null
@@ -1030,6 +1033,7 @@ export type Database = {
         Returns: {
           created_at: string
           id: string
+          is_flagged: boolean
           last_admin_read_at: string | null
           last_message_at: string
           last_user_read_at: string | null
@@ -1107,6 +1111,7 @@ export type Database = {
         Returns: {
           created_at: string
           id: string
+          is_flagged: boolean
           last_admin_read_at: string | null
           last_message_at: string
           last_user_read_at: string | null
@@ -1126,6 +1131,7 @@ export type Database = {
         Returns: {
           created_at: string
           id: string
+          is_flagged: boolean
           last_admin_read_at: string | null
           last_message_at: string
           last_user_read_at: string | null

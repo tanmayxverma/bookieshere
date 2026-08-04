@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { SUBJECTS, formatTime, formatHours, getISTTodayStartUTC, getISTDate, getISTDateString, POMODORO_PRESETS, type TimerMode } from '@/types/ypt';
 import { supabase } from '@/integrations/supabase/client';
 import { TimerRing } from '@/components/YPT/TimerRing';
+import { StopwatchDial } from '@/components/YPT/StopwatchDial';
 import {
   Play, Pause, Square, Clock, TrendingUp, Flame, Zap, Maximize2, Minimize2,
   Pencil, Check, Target, Plus, ListTodo, ArrowRight, BarChart3, Users, Trophy,
@@ -291,9 +292,9 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
   // Timer display: countdown shows time left, stopwatch shows time elapsed.
   const isCountdown = timer.mode === 'countdown' && timer.targetSeconds != null;
   const displaySeconds = isCountdown ? (timer.remainingSeconds ?? 0) : timer.elapsedSeconds;
-  const ringProgress = isCountdown
-    ? timer.elapsedSeconds / (timer.targetSeconds || 1)
-    : (timer.elapsedSeconds % 3600) / 3600;
+  // Only a countdown has a real "total" to fill toward. The stopwatch uses a
+  // rotating sweep instead, so it never resets or reads as progress.
+  const ringProgress = isCountdown ? timer.elapsedSeconds / (timer.targetSeconds || 1) : 0;
   const ringLabel = isCountdown
     ? (timer.phase === 'break' ? 'Break' : 'Focus block')
     : 'Stopwatch';
@@ -310,14 +311,18 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
             <span className="w-2.5 h-2.5 rounded-full bg-foreground animate-pulse" />
             <span className="text-base font-medium text-muted-foreground">{timer.subject}</span>
           </div>
-          <TimerRing
-            progress={ringProgress}
-            seconds={displaySeconds}
-            label={ringLabel}
-            sublabel={timer.isPaused ? 'Paused' : undefined}
-            paused={timer.isPaused}
-            size={340}
-          />
+          {isCountdown ? (
+            <TimerRing
+              progress={ringProgress}
+              seconds={displaySeconds}
+              label={ringLabel}
+              sublabel={timer.isPaused ? 'Paused' : undefined}
+              paused={timer.isPaused}
+              size={340}
+            />
+          ) : (
+            <StopwatchDial seconds={displaySeconds} paused={timer.isPaused} size={340} />
+          )}
           <p className="text-sm text-muted-foreground/60 italic font-medium h-5">
             "{MOTIVATIONAL_QUOTES[quoteIndex]}"
           </p>
@@ -408,14 +413,18 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 {timer.isPaused && <span className="text-muted-foreground font-normal">· paused</span>}
               </div>
               <div className="flex justify-center">
-                <TimerRing
-                  progress={ringProgress}
-                  seconds={displaySeconds}
-                  label={ringLabel}
-                  sublabel={isCountdown ? `${formatTime(timer.elapsedSeconds)} done` : undefined}
-                  paused={timer.isPaused}
-                  size={250}
-                />
+                {isCountdown ? (
+                  <TimerRing
+                    progress={ringProgress}
+                    seconds={displaySeconds}
+                    label={ringLabel}
+                    sublabel={`${formatTime(timer.elapsedSeconds)} done`}
+                    paused={timer.isPaused}
+                    size={250}
+                  />
+                ) : (
+                  <StopwatchDial seconds={displaySeconds} paused={timer.isPaused} size={250} />
+                )}
               </div>
               <div className="flex justify-center gap-2.5 flex-wrap">
                 {timer.isPaused ? (
