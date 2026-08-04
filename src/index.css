@@ -708,3 +708,23 @@ html.lite-mode .animate-bounce,
 html.lite-mode .animate-ping {
   animation: none !important;
 }
+
+/* ── Stopwatch (open-ended) dial ───────────────────────────── */
+@keyframes stopwatch-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes stopwatch-breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.78; }
+}
+
+.stopwatch-breathe {
+  animation: stopwatch-breathe 3.2s ease-in-out infinite;
+}
+
+.lite-mode .stopwatch-breathe,
+.lite-mode [style*="stopwatch-sweep"] {
+  animation: none !important;
+}
