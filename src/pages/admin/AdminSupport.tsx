@@ -6,11 +6,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Send, Trash2, Check, X } from 'lucide-react';
+import { Loader2, Send, Trash2, Check, X, Flag } from 'lucide-react';
 import { format, formatDistanceToNow, isSameDay } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 
-const FILTERS = ['all','pending','accepted','rejected'];
+const FILTERS = ['all','pending','accepted','rejected','flagged'];
 
 export default function AdminSupport() {
   const { call } = useAdminSession();
@@ -114,7 +114,7 @@ export default function AdminSupport() {
             </div>
           </aside>
           <section className="rounded-xl border border-border/40 min-h-[70vh]">
-            {selected ? <ChatView key={selected} id={selected} onChange={() => { load(); }} onDeleted={() => { setSelected(null); load(); }} /> :
+            {selected ? <ChatView key={selected} id={selected} onChange={() => { load(); }} onFlag={patchChat} onDeleted={() => { setSelected(null); load(); }} /> :
               <div className="h-full flex items-center justify-center text-sm text-muted-foreground p-10">Select a conversation.</div>}
           </section>
         </div>
