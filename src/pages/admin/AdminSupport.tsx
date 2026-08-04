@@ -97,7 +97,10 @@ export default function AdminSupport() {
                     <button key={c.id} onClick={() => setSelected(c.id)}
                       className={`block w-full text-left p-3 border-b border-border/30 last:border-0 transition ${selected === c.id ? 'bg-primary/10' : 'hover:bg-surface-2/50'}`}>
                       <div className="flex items-center justify-between gap-2">
-                        <div className="font-medium text-sm">{name}</div>
+                        <div className="font-medium text-sm flex items-center gap-1.5">
+                          {c.is_flagged && <Flag className="h-3 w-3 text-amber-500 fill-amber-500" />}
+                          {name}
+                        </div>
                         <span className="text-[10px] text-muted-foreground">{formatDistanceToNow(new Date(c.last_message_at), { addSuffix: true })}</span>
                       </div>
                       <div className="flex items-center gap-1.5 mt-1">
@@ -123,7 +126,7 @@ export default function AdminSupport() {
   );
 }
 
-function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => void; onDeleted: () => void }) {
+function ChatView({ id, onChange, onFlag, onDeleted }: { id: string; onChange: () => void; onFlag: (row: any) => void; onDeleted: () => void }) {
   const { call } = useAdminSession();
   const { toast } = useToast();
   const [chat, setChat] = useState<any>(null);
@@ -177,6 +180,17 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
   const accept = async () => { await call('support.accept', { id }); load(); onChange(); };
   const reject = async () => { if (!confirm('Reject this chat?')) return; await call('support.reject', { id }); load(); onChange(); };
   const del = async () => { if (!confirm('Delete this entire chat forever?')) return; await call('support.delete', { id }); onDeleted(); };
+  const toggleFlag = async () => {
+    const next = !chat?.is_flagged;
+    setChat((prev: any) => ({ ...prev, is_flagged: next })); // optimistic
+    try {
+      const res = await call<{ item: any }>('support.flag', { id, flagged: next });
+      if (res?.item) { setChat(res.item); onFlag(res.item); }
+    } catch (e: any) {
+      setChat((prev: any) => ({ ...prev, is_flagged: !next }));
+      toast({ variant: 'destructive', title: 'Could not update flag', description: e.message });
+    }
+  };
 
   const reply = async () => {
     const v = draft.trim(); if (!v) return;
@@ -221,6 +235,16 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
             <Button size="sm" variant="outline" className="gap-1.5" onClick={reject}><X className="h-3.5 w-3.5" />Reject</Button>
           </>
         )}
+        <Button
+          size="sm"
+          variant="outline"
+          className={`gap-1.5 ${chat.is_flagged ? 'text-amber-600 border-amber-500/40' : ''}`}
+          onClick={toggleFlag}
+          title={chat.is_flagged ? 'Remove review flag' : 'Flag for review later'}
+        >
+          <Flag className={`h-3.5 w-3.5 ${chat.is_flagged ? 'fill-amber-500' : ''}`} />
+          {chat.is_flagged ? 'Flagged' : 'Flag'}
+        </Button>
         <Button size="sm" variant="outline" className="gap-1.5 text-destructive" onClick={del}><Trash2 className="h-3.5 w-3.5" />Delete</Button>
       </header>
       <div ref={scrollerRef} className="flex-1 overflow-y-auto bg-muted/20 p-4 space-y-2">
@@ -244,10 +268,7 @@ function ChatView({ id, onChange, onDeleted }: { id: string; onChange: () => voi
           );
         })}
       </div>
-      <div className="border-t border-border/40 bg-background px-4 pt-2 text-[11px] text-muted-foreground">
-        Only send a message if it's actually important — don't waste the admin's time with hi/hello.
-      </div>
-      <form onSubmit={(e) => { e.preventDefault(); reply(); }} className="bg-background p-2.5 flex items-center gap-2">
+      <form onSubmit={(e) => { e.preventDefault(); reply(); }} className="border-t border-border/40 bg-background p-2.5 flex items-center gap-2">
         <input value={draft} onChange={e => setDraft(e.target.value)} maxLength={4000}
           disabled={chat.status === 'rejected'}
           placeholder={chat.status === 'rejected' ? 'Chat rejected' : chat.status === 'pending' ? 'Reply (auto-accepts this chat)…' : 'Reply as Owner…'}
