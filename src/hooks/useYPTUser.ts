@@ -82,5 +82,22 @@ export function useYPTUser() {
     return { success: true };
   };
 
-  return { user, isLoading, isOnboarded: !!user, createUser, changeName, deviceId, refetch: fetchUser };
+  const changeJeeYear = async (newYear: string): Promise<{ success: boolean; error?: string }> => {
+    if (!user) return { success: false, error: 'No user found' };
+    const year = newYear.trim();
+    if (!year) return { success: false, error: 'Pick a target year' };
+    if (year === user.jee_focus_year) return { success: true };
+
+    const { error } = await (supabase as any)
+      .from('ypt_users')
+      .update({ jee_focus_year: year })
+      .eq('id', user.id);
+
+    if (error) return { success: false, error: 'Failed to update target year' };
+
+    setUser({ ...user, jee_focus_year: year });
+    return { success: true };
+  };
+
+  return { user, isLoading, isOnboarded: !!user, createUser, changeName, changeJeeYear, deviceId, refetch: fetchUser };
 }
