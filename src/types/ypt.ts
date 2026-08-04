@@ -98,6 +98,17 @@ export function getISTTodayStartUTC(): string {
 }
 
 /** Check if a UTC timestamp falls on "today" in IST */
+/** Get IST midnight of the current week's Monday as a UTC ISO string */
+export function getISTWeekStartUTC(): string {
+  const ist = getISTDate();
+  const day = ist.getDay(); // 0 = Sunday
+  const diff = day === 0 ? 6 : day - 1; // days since Monday
+  ist.setDate(ist.getDate() - diff);
+  ist.setHours(0, 0, 0, 0);
+  return new Date(ist.getTime() - IST_OFFSET_MS).toISOString();
+}
+
+/** Check if a UTC timestamp falls on "today" in IST */
 export function isISTToday(utcTimestamp: string): boolean {
   const istDate = getISTDate(new Date(utcTimestamp));
   const istNow = getISTDate();
