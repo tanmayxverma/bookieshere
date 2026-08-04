@@ -189,12 +189,6 @@ Deno.serve(async (req) => {
         await log(sessionId, 'support.flag', { id: payload.id, flagged });
         return jr({ item: data }, 200);
       }
-      case 'support.reject_legacy': {
-        const { data, error } = await supabase.from('support_chats').update({ status: 'rejected' }).eq('id', payload.id).select().single();
-        if (error) return jr({ error: error.message }, 400);
-        await log(sessionId, 'support.reject', { id: payload.id });
-        return jr({ item: data }, 200);
-      }
       case 'support.delete': {
         await supabase.from('support_chats').delete().eq('id', payload.id);
         await log(sessionId, 'support.delete', { id: payload.id });
