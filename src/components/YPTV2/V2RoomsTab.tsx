@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { supabase } from '@/integrations/supabase/client';
 import { Users, Plus, LogOut, ArrowLeft, Crown, Trash2, MessageCircle, Send, AlertTriangle, BookOpen, Atom, FlaskConical, Calculator, Copy, Reply, X, BellOff, Bell, Ban, ShieldBan, Smile, ImagePlus, Loader2, Sparkles, AtSign, Lock, LockOpen, Settings } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { StudyProfilePopover } from '@/components/YPT/StudyProfilePopover';
 import { toast } from 'sonner';
 import type { YPTUser } from '@/types/ypt';
 import type { RoomSession } from '@/hooks/useRoomSession';
@@ -753,17 +754,23 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                         }`}
                         style={{ animationDelay: `${i * 0.04}s` }}
                       >
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-                          isMe ? 'bg-primary/15 text-primary' : 'bg-muted text-foreground/70'
-                        }`}>
-                          {m.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className={`text-[15px] font-semibold truncate ${isMe ? 'text-primary' : ''}`}>
-                            {m.name} {isMe && <span className="text-xs text-muted-foreground font-normal">(you)</span>}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{m.jee_focus_year}</p>
-                        </div>
+                        <StudyProfilePopover yptUserId={m.user_id} fallbackName={m.name}>
+                          <button
+                            className={`flex items-center gap-3 flex-1 min-w-0 text-left ${isMe ? '' : 'hover:opacity-80'} transition-opacity`}
+                          >
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+                              isMe ? 'bg-primary/15 text-primary' : 'bg-muted text-foreground/70'
+                            }`}>
+                              {m.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-[15px] font-semibold truncate ${isMe ? 'text-primary' : ''}`}>
+                                {m.name} {isMe && <span className="text-xs text-muted-foreground font-normal">(you)</span>}
+                              </p>
+                              <p className="text-xs text-muted-foreground">{m.jee_focus_year}</p>
+                            </div>
+                          </button>
+                        </StudyProfilePopover>
                         <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shrink-0" />
                       </div>
                     );
@@ -908,7 +915,11 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                               : 'bg-muted/60 rounded-bl-md'
                           } ${isSelected ? 'ring-2 ring-primary/40 scale-[1.02]' : ''}`}>
                             {!isMe && (
-                              <p className="text-[11px] font-bold text-primary mb-0.5">{msg.user_name}</p>
+                              <StudyProfilePopover yptUserId={msg.ypt_user_id} fallbackName={msg.user_name}>
+                                <button className="text-[11px] font-bold text-primary mb-0.5 hover:underline underline-offset-2">
+                                  {msg.user_name}
+                                </button>
+                              </StudyProfilePopover>
                             )}
                             {isAiAsk && (
                               <p className="text-[10px] font-semibold uppercase tracking-wider mb-1 opacity-70 inline-flex items-center gap-1">
