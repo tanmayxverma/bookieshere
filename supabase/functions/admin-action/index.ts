@@ -145,7 +145,8 @@ Deno.serve(async (req) => {
         let q = supabase.from('support_chats')
           .select('*, profiles(display_name, account_type, avatar_url)')
           .order('last_message_at', { ascending: false }).limit(300);
-        if (filter && filter !== 'all') q = q.eq('status', filter);
+        if (filter === 'flagged') q = q.eq('is_flagged', true);
+        else if (filter && filter !== 'all') q = q.eq('status', filter);
         const { data, error } = await q;
         if (error) return jr({ error: error.message }, 400);
         // last message preview
@@ -175,6 +176,20 @@ Deno.serve(async (req) => {
         return jr({ item: data }, 200);
       }
       case 'support.reject': {
+        const { data, error } = await supabase.from('support_chats').update({ status: 'rejected' }).eq('id', payload.id).select().single();
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'support.reject', { id: payload.id });
+        return jr({ item: data }, 200);
+      }
+      case 'support.flag': {
+        const flagged = !!payload?.flagged;
+        const { data, error } = await supabase.from('support_chats')
+          .update({ is_flagged: flagged }).eq('id', payload.id).select().single();
+        if (error) return jr({ error: error.message }, 400);
+        await log(sessionId, 'support.flag', { id: payload.id, flagged });
+        return jr({ item: data }, 200);
+      }
+      case 'support.reject_legacy': {
         const { data, error } = await supabase.from('support_chats').update({ status: 'rejected' }).eq('id', payload.id).select().single();
         if (error) return jr({ error: error.message }, 400);
         await log(sessionId, 'support.reject', { id: payload.id });
