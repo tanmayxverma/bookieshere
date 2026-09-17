@@ -104,20 +104,23 @@ function useProfileInternal() {
         let prof = (data as Profile | null) ?? null;
 
         if (prof) {
-          // If the profile hasn't been customized by the user, and avatar_url is missing or empty,
-          // automatically assign and persist their Google profile photo
-          if (!prof.avatar_customized && googleAvatar && (!prof.avatar_url || prof.avatar_url === '')) {
+          // Determine if avatar was customized vs using default Google avatar
+          const isCustomized = !!(prof.avatar_url && prof.avatar_url !== googleAvatar);
+          prof.avatar_customized = isCustomized;
+
+          // If avatar is missing or empty and Google avatar is available, persist it
+          if (!isCustomized && googleAvatar && (!prof.avatar_url || prof.avatar_url === '')) {
             prof = { ...prof, avatar_url: googleAvatar, avatar_customized: false };
             (supabase as any)
               .from('profiles')
-              .update({ avatar_url: googleAvatar, avatar_customized: false })
+              .update({ avatar_url: googleAvatar })
               .eq('user_id', sess.user.id)
               .then(() => {});
           }
         } else {
           // Synthesize profile if row doesn't exist yet
           const isGoogle = sess.user.app_metadata?.provider === 'google' || !!googleAvatar;
-          const meta = sess.user.user_metadata || {};
+          const meta = (sess.user.user_metadata || {}) as Record<string, any>;
           const displayName = meta.full_name || meta.name || sess.user.email?.split('@')[0] || 'Aspirant';
           const newProf: Profile = {
             id: sess.user.id,
@@ -133,6 +136,8 @@ function useProfileInternal() {
             updated_at: new Date().toISOString(),
           };
           prof = newProf;
+
+          // Safely persist to Supabase without invalid schema columns
           (supabase as any)
             .from('profiles')
             .upsert({
@@ -140,9 +145,18 @@ function useProfileInternal() {
               account_type: isGoogle ? 'google' : 'email',
               display_name: displayName,
               avatar_url: googleAvatar || null,
-              avatar_customized: false,
+              target_category: 'JEE 2027',
             }, { onConflict: 'user_id' })
-            .then(() => {});
+            .select()
+            .maybeSingle()
+            .then(({ data: createdRow }: any) => {
+              if (createdRow) {
+                const cp = createdRow as Profile;
+                cp.avatar_customized = !!(cp.avatar_url && cp.avatar_url !== googleAvatar);
+                setProfile(cp);
+              }
+            })
+            .catch(() => {});
         }
 
         setProfile(prof);
@@ -205,7 +219,6 @@ function useProfileInternal() {
         display_name: input.display_name,
         target_category: input.target_category,
         avatar_url: avatar,
-        avatar_customized: customized,
         account_type: isGoogle ? 'google' : 'email',
         onboarded_at: new Date().toISOString(),
       };
@@ -214,7 +227,11 @@ function useProfileInternal() {
         .upsert(payload, { onConflict: 'user_id' })
         .select()
         .single();
-      if (!error && data) setProfile(data as Profile);
+      if (!error && data) {
+        const p = data as Profile;
+        p.avatar_customized = customized;
+        setProfile(p);
+      }
       return { data: data as Profile | null, error };
     } else {
       const { data, error } = await (supabase as any).rpc('upsert_guest_profile', {
@@ -235,11 +252,15 @@ function useProfileInternal() {
       const isCustomized = avatar_url !== googleAvatar;
       const { data, error } = await (supabase as any)
         .from('profiles')
-        .update({ avatar_url, avatar_customized: isCustomized })
+        .update({ avatar_url })
         .eq('user_id', session.user.id)
         .select()
         .single();
-      if (!error && data) setProfile(data as Profile);
+      if (!error && data) {
+        const p = data as Profile;
+        p.avatar_customized = isCustomized;
+        setProfile(p);
+      }
       return { data, error };
     } else {
       return saveProfile({
@@ -257,11 +278,15 @@ function useProfileInternal() {
     if (!googleAvatar) return { error: new Error('No Google avatar available') };
     const { data, error } = await (supabase as any)
       .from('profiles')
-      .update({ avatar_url: googleAvatar, avatar_customized: false })
+      .update({ avatar_url: googleAvatar })
       .eq('user_id', session.user.id)
       .select()
       .single();
-    if (!error && data) setProfile(data as Profile);
+    if (!error && data) {
+      const p = data as Profile;
+      p.avatar_customized = false;
+      setProfile(p);
+    }
     return { data, error };
   }, [session, setProfile]);
 
