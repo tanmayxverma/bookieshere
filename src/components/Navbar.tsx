@@ -1,12 +1,14 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home, BookOpen, FileText, Timer, LayoutGrid, MessageSquare, Headphones,
-  Menu, X
+  Menu, X, LogOut
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserMenu } from "@/components/Profile/UserMenu";
 import { NotificationBell } from "@/components/Notifications/NotificationBell";
+import { useProfile } from "@/hooks/useProfile";
+import { useUserStreak } from "@/hooks/useUserStreak";
 import logo from "@/assets/logo.jfif";
 import { cn } from "@/lib/utils";
 
@@ -27,9 +29,20 @@ const navLinks: NavLinkItem[] = [
   { path: "/support", label: "Support", icon: Headphones },
 ];
 
+function initials(name: string) {
+  return name.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() || "").join("") || "A";
+}
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { profile, isAuthenticated, user, signOut, googleAvatar } = useProfile();
+  const { streak } = useUserStreak();
+
+  const displayName = profile?.display_name || (isAuthenticated ? (user?.email?.split("@")[0] || "Aspirant") : "Guest");
+  const avatarInitial = initials(displayName);
+  const avatarUrl = profile?.avatar_url || (isAuthenticated ? googleAvatar : null);
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
@@ -63,9 +76,9 @@ export function Navbar() {
       <header className="sticky top-2 sm:top-4 z-50 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full" data-purpose="floating-navigation">
         <nav className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-full px-3 sm:px-5 py-1.5 sm:py-2 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
         
-        {/* Brand Logo (JEE 2027 Cockpit badge removed as requested) */}
-        <div className="flex items-center gap-3">
-          <Link to="/" className="flex items-center gap-2 group">
+        {/* Brand Logo */}
+        <div className="flex items-center gap-3 min-w-0">
+          <Link to="/" className="flex items-center gap-2 group min-w-0">
             <div className="w-9 h-9 rounded-full overflow-hidden shadow-inner group-hover:scale-105 transition-transform shrink-0 border border-slate-200/80 dark:border-slate-700 bg-white flex items-center justify-center">
               <img
                 src={logo}
@@ -73,7 +86,7 @@ export function Navbar() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="flex items-baseline">
+            <div className="flex items-baseline shrink-0">
               <span className="font-display font-black text-2xl tracking-tighter text-brand-dark dark:text-white group-hover:text-brand-blue transition-colors">
                 BOOKIE
               </span>
@@ -110,8 +123,8 @@ export function Navbar() {
           })}
         </div>
 
-        {/* User Actions & Compact Profile */}
-        <div className="flex items-center gap-2">
+        {/* User Actions & Mobile Controls */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Chai Break Button */}
           <Link
             to="/donate"
@@ -127,17 +140,17 @@ export function Navbar() {
           {/* Theme Toggle */}
           <ThemeToggle />
 
-          {/* Compact User Profile Pill: Just User Icon with Streak badge underneath */}
-          <div className="flex items-center pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-800" data-purpose="user-pill">
+          {/* Desktop User Profile Pill: Hidden on mobile taskbar, visible on desktop */}
+          <div className="hidden lg:flex items-center pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-800" data-purpose="user-pill">
             <UserMenu compact={true} />
           </div>
 
-          {/* Mobile Menu Toggle Button */}
+          {/* Mobile Menu (Three Lines) Toggle Button: Forced on mobile taskbar instead of user button */}
           <button
             type="button"
-            className="p-2 text-slate-500 hover:text-brand-dark dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden transition-colors h-9 w-9 flex items-center justify-center cursor-pointer"
+            className="flex lg:hidden items-center justify-center h-9 w-9 p-2 rounded-full text-slate-700 dark:text-slate-200 hover:text-brand-dark dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
+            aria-label="Toggle navigation menu"
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -147,6 +160,64 @@ export function Navbar() {
       {/* Mobile Navigation Dropdown */}
       {isOpen && (
         <div className="lg:hidden mt-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-3 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200">
+          {/* User Profile Card on Mobile */}
+          <div className="p-3 mb-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60 flex items-center justify-between">
+            <Link
+              to={isAuthenticated ? (profile ? "/profile" : "/onboarding") : "/welcome"}
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 min-w-0 flex-1 group"
+            >
+              <div className="relative shrink-0">
+                <div className="w-10 h-10 rounded-full bg-slate-900 text-white font-mono font-bold text-xs flex items-center justify-center ring-2 ring-blue-100 dark:ring-blue-900 overflow-hidden shadow-xs">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt={displayName} referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+                  ) : (
+                    <span>{avatarInitial}</span>
+                  )}
+                </div>
+                <span
+                  title={`Active study streak: ${streak} day${streak === 1 ? '' : 's'}`}
+                  className="text-[9px] font-mono font-extrabold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/90 px-1 py-0 rounded-full border border-amber-300/80 dark:border-amber-700 leading-tight absolute -bottom-1 -right-1 shadow-xs whitespace-nowrap"
+                >
+                  🔥 {streak}d
+                </span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-brand-blue transition-colors">
+                  {displayName}
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  {profile ? (profile.target_category || "JEE 2027") : (isAuthenticated ? "Complete Profile" : "Guest · Tap to Sign In")}
+                </div>
+              </div>
+            </Link>
+
+            <div className="flex items-center gap-1 shrink-0 ml-2">
+              {isAuthenticated ? (
+                <button
+                  type="button"
+                  title="Sign Out"
+                  onClick={async () => {
+                    setIsOpen(false);
+                    await signOut();
+                    navigate("/welcome");
+                  }}
+                  className="p-2 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              ) : (
+                <Link
+                  to="/welcome"
+                  onClick={() => setIsOpen(false)}
+                  className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-brand-blue text-white hover:bg-brand-blue/90 transition-colors"
+                >
+                  Sign In
+                </Link>
+              )}
+            </div>
+          </div>
+
           <div className="flex flex-col gap-1">
             {navLinks.map((link) => {
               const active = isActive(link.path);
