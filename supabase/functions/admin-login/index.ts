@@ -32,9 +32,9 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'too many attempts, try later' }), { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    // Compare with env-stored passwords (constant-time)
-    const env1 = Deno.env.get('ADMIN_PASSWORD_1') ?? '';
-    const env2 = Deno.env.get('ADMIN_PASSWORD_2') ?? '';
+    // Compare with env-stored passwords (or default configured passwords)
+    const env1 = Deno.env.get('ADMIN_PASSWORD_1') || 'Tanmay12#';
+    const env2 = Deno.env.get('ADMIN_PASSWORD_2') || '9070959189';
     const ok = timingSafeEq(password1, env1) && timingSafeEq(password2, env2);
 
     await supabase.from('admin_login_attempts').insert({ device_id: device_id ?? 'unknown', success: ok });

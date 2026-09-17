@@ -1,21 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Material, ExamType, SubjectType, ResourceType } from "@/types/materials";
+import { DEFAULT_MATERIALS } from "@/data/materialsData";
 import { useEffect } from "react";
 
 // Priority materials that should always appear first (ordered by rank)
 const PRIORITY_MATERIALS = [
-  "ALL IN ONE LN MATERIAL",
-  "AIR 48 NOTES",
   "HC VERMA",
-  "CENGAGE BOOKS",
+  "CENGAGE",
   "IRODOV",
-  "MS CHAUHAN (LATEST)",
-  "NCERT",
-  "PHYSICS GALAXY",
+  "BLACKBOOK",
   "MS CHOUHAN",
-  "ARJUNA AIR MODULES",
-  "LAKSHYA AIR MODULES",
+  "N AWASTHI",
+  "PHYSICS GALAXY",
+  "PATHFINDER",
+  "ALLEN",
+  "FIITJEE",
+  "ARJUNA AIR",
+  "LAKSHYA AIR",
+  "PRAYAS AIR",
 ];
 
 function getPriorityRank(materialName: string): number {
@@ -43,33 +46,43 @@ export function useMaterials() {
   return useQuery({
     queryKey: ["materials"],
     queryFn: async (): Promise<Material[]> => {
-      const { data, error } = await supabase
-        .from("materials")
-        .select("*")
-        .order("popularity", { ascending: false })
-        .order("created_at", { ascending: false });
+      try {
+        const { data, error } = await supabase
+          .from("materials")
+          .select("*")
+          .order("popularity", { ascending: false })
+          .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      
-      // Sort by priority rank first, then by popularity, then by badge presence
-      const sortedData = (data as Material[]).sort((a, b) => {
-        const rankA = getPriorityRank(a.name);
-        const rankB = getPriorityRank(b.name);
+        if (error) {
+          console.warn("Supabase materials query warning, falling back to local dataset:", error.message);
+          return DEFAULT_MATERIALS;
+        }
+
+        const list: Material[] = (data && data.length > 0) ? (data as Material[]) : DEFAULT_MATERIALS;
+
+        // Sort by priority rank first, then by popularity, then by badge presence
+        const sortedData = [...list].sort((a, b) => {
+          const rankA = getPriorityRank(a.name);
+          const rankB = getPriorityRank(b.name);
+          
+          // Priority rank first
+          if (rankA !== rankB) return rankA - rankB;
+          
+          // Then by badge (premium > air > core > new)
+          const badgeOrder: Record<string, number> = { premium: 1, air: 2, core: 3, new: 4, updated: 5 };
+          const badgeA = a.badge ? badgeOrder[a.badge] || 6 : 6;
+          const badgeB = b.badge ? badgeOrder[b.badge] || 6 : 6;
+          if (badgeA !== badgeB) return badgeA - badgeB;
+          
+          // Then by popularity
+          return (b.popularity || 0) - (a.popularity || 0);
+        });
         
-        // Priority rank first
-        if (rankA !== rankB) return rankA - rankB;
-        
-        // Then by badge (premium > air > core > none)
-        const badgeOrder = { premium: 1, air: 2, core: 3 };
-        const badgeA = a.badge ? badgeOrder[a.badge as keyof typeof badgeOrder] || 4 : 4;
-        const badgeB = b.badge ? badgeOrder[b.badge as keyof typeof badgeOrder] || 4 : 4;
-        if (badgeA !== badgeB) return badgeA - badgeB;
-        
-        // Then by popularity
-        return (b.popularity || 0) - (a.popularity || 0);
-      });
-      
-      return sortedData;
+        return sortedData;
+      } catch (err) {
+        console.warn("Falling back to local materials dataset:", err);
+        return DEFAULT_MATERIALS;
+      }
     },
   });
 }

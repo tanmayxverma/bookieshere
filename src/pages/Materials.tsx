@@ -1,9 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { Search, Filter, X, BookOpen, Sparkles, Atom, FlaskConical, Sigma, Library, ShieldCheck } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Layout } from "@/components/Layout";
 import { MaterialCard } from "@/components/MaterialCard";
 import { MaterialFilters } from "@/components/MaterialFilters";
@@ -17,8 +13,8 @@ const Materials = () => {
   const [search, setSearch] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState<SubjectType[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<ResourceType[]>([]);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  // Handle URL params for subject filter
   useEffect(() => {
     const subjectParam = searchParams.get('subject');
     if (subjectParam && ['physics', 'chemistry', 'mathematics', 'combined'].includes(subjectParam)) {
@@ -28,15 +24,12 @@ const Materials = () => {
 
   const filteredMaterials = useMemo(() => {
     if (!materials) return [];
-
     return materials.filter((material) => {
       const matchesSearch = search === "" || 
         material.name.toLowerCase().includes(search.toLowerCase()) ||
         (material.description?.toLowerCase().includes(search.toLowerCase()) ?? false);
-
       const matchesSubject = selectedSubjects.length === 0 || selectedSubjects.includes(material.subject);
       const matchesType = selectedTypes.length === 0 || selectedTypes.includes(material.resource_type);
-
       return matchesSearch && matchesSubject && matchesType;
     });
   }, [materials, search, selectedSubjects, selectedTypes]);
@@ -48,253 +41,281 @@ const Materials = () => {
     setSelectedTypes([]);
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Subject quick-stats for editorial hero
   const subjectStats = useMemo(() => {
     const list = materials ?? [];
+    const total = list.length;
+    const physics = list.filter((m) => m.subject === "physics").length;
+    const chemistry = list.filter((m) => m.subject === "chemistry").length;
+    const mathematics = list.filter((m) => m.subject === "mathematics").length;
     return {
-      total: list.length,
-      physics: list.filter((m) => m.subject === "physics").length,
-      chemistry: list.filter((m) => m.subject === "chemistry").length,
-      mathematics: list.filter((m) => m.subject === "mathematics").length,
+      total,
+      physicsPercentage: total ? `${(physics / total * 100).toFixed(0)}%` : "0%",
+      chemistryPercentage: total ? `${(chemistry / total * 100).toFixed(0)}%` : "0%",
+      mathematicsPercentage: total ? `${(mathematics / total * 100).toFixed(0)}%` : "0%",
+      physics, chemistry, mathematics
     };
   }, [materials]);
 
   return (
     <Layout>
-      <div className="min-h-screen">
-        {/* Editorial Glass Premium Hero */}
-        <section className="relative overflow-hidden border-b border-border/40">
-          {/* Ambient glows */}
-          <div aria-hidden className="pointer-events-none absolute -top-32 -left-20 h-[480px] w-[480px] rounded-full bg-primary/10 blur-[120px]" />
-          <div aria-hidden className="pointer-events-none absolute -bottom-40 right-0 h-[420px] w-[420px] rounded-full bg-jee/10 blur-[120px]" />
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,hsl(var(--primary)/0.08),transparent_60%)]" />
+      <div className="w-full pt-8 sm:pt-16 flex-1 max-w-7xl mx-auto px-3 sm:px-margin lg:px-margin-desktop bg-background blueprint-grid text-on-surface">
+        <div className="flex flex-col w-full pb-space-xl">
+          
 
-          <div className="container mx-auto px-4 py-16 md:py-24 relative">
-            <div className="grid lg:grid-cols-12 gap-12 items-end">
-              {/* Left: Editorial heading */}
-              <div className="lg:col-span-8 space-y-7 opacity-0 animate-fade-in">
-                <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface-2/60 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-muted-foreground backdrop-blur">
-                  <Library className="h-3 w-3 text-primary" />
-                  Study Resources · Curated for JEE
-                </span>
-
-                <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-foreground leading-[0.92] tracking-tight">
-                  Materials
-                  <br />
-                  <span className="italic font-medium text-muted-foreground">Library<span className="text-primary not-italic">.</span></span>
-                </h1>
-
-                <p className="max-w-xl text-base md:text-lg text-muted-foreground leading-relaxed">
-                  Modules, books, PYQs, test series and reference works — every resource hand-picked, organised, and ready for serious preparation.
-                </p>
-
-                <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <span className="inline-flex items-center gap-2 text-xs text-muted-foreground/80">
-                    <ShieldCheck className="h-3.5 w-3.5 text-primary/80" />
-                    External resources · BOOKIE does not host any files
+          {/* Hero Section */}
+          <section className="w-full mt-space-sm sm:mt-space-md relative">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-md sm:gap-space-lg items-start">
+              {/* Left Hero Column */}
+              <div className="lg:col-span-8 flex flex-col items-start">
+                <div className="inline-flex items-center gap-space-xs px-3 sm:px-space-md py-1 rounded-full bg-surface-container-high text-on-surface font-label-code-sm text-[10px] sm:text-label-code-sm tracking-wider uppercase mb-space-sm shadow-sm max-w-full truncate">
+                  <span>📚 STUDY ARSENAL</span>
+                  <span className="text-primary font-bold">//</span>
+                  <span className="text-primary font-bold truncate">JEE ADVANCED 2027</span>
+                </div>
+                <h1 className="font-headline-xl text-3xl sm:text-headline-xl lg:text-[54px] lg:leading-[60px] tracking-tight text-on-surface font-extrabold uppercase italic mt-1 mb-space-sm">
+                  MATERIALS <span className="relative inline-block text-primary">LIBRARY.
+                    <svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary-container" fill="none" preserveAspectRatio="none" viewBox="0 0 250 12">
+                      <path d="M3 8.5C45 3.5 130 1.5 247 7.5" stroke="currentColor" strokeLinecap="round" strokeWidth="5"></path>
+                    </svg>
                   </span>
+                </h1>
+                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed mt-space-xs">
+                  Modules, books, PYQs, test series and reference works — every single resource hand-picked, zero filler, organized for serious rankers without the emotional damage.
+                </p>
+                <div className="flex flex-wrap items-center gap-space-sm mt-space-md">
+                  <div className="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-code-sm text-label-code-sm">
+                    <span className="material-symbols-outlined text-[16px] text-tertiary">verified_user</span>
+                    <span>External verified drives</span>
+                    <span className="text-outline-variant">•</span>
+                    <span>BOOKIE does not host files</span>
+                    <span className="text-outline-variant">•</span>
+                    <span className="text-tertiary font-bold">Pure signal, zero rot</span>
+                  </div>
+                  <div className="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-ui text-label-ui">
+                    <span className="material-symbols-outlined text-[15px]">auto_stories</span>
+                    <span>Clean OCR PDF Only</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Right: Glass stat panel */}
-              <div className="lg:col-span-4 opacity-0 animate-fade-in stagger-2">
-                <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl p-6 shadow-[0_30px_60px_-30px_hsl(var(--primary)/0.3)]">
-                  <div aria-hidden className="absolute -top-16 -right-10 h-44 w-44 rounded-full bg-primary/20 blur-3xl" />
-                  <div className="relative space-y-5">
-                    <div className="flex items-center justify-between">
-                      <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Library Snapshot</div>
-                      <Sparkles className="h-3.5 w-3.5 text-primary" />
+              {/* Right Floating Snapshot Card */}
+              <div className="lg:col-span-4 w-full">
+                <div className="relative bg-surface-container-lowest rounded-xl p-space-md shadow-[0_10px_25px_-5px_rgba(19,27,46,0.06)] flex flex-col gap-space-md brutal-border">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-5 bg-secondary-container/60 rotate-1 backdrop-blur-sm sticker-tape pointer-events-none"></div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-label-code-sm text-label-code-sm tracking-wider text-on-surface-variant uppercase flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-primary"></span>
+                      LIBRARY SNAPSHOT
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-label-code-sm text-label-code-sm font-bold">v2026.04</span>
+                  </div>
+                  <div>
+                    <div className="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight">
+                      {isLoading ? "..." : `${subjectStats.total}`}<span className="text-primary">+</span>
                     </div>
-                    <div>
-                      <div className="font-display text-6xl font-black text-foreground leading-none tracking-tight">
-                        {isLoading ? "—" : subjectStats.total}
+                    <p className="font-label-code-sm text-label-code-sm text-on-surface-variant uppercase tracking-wider">
+                      TOTAL COMBAT-READY RESOURCES
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="h-2.5 w-full bg-surface-container rounded-full overflow-hidden flex">
+                      <div className="bg-primary h-full" style={{ width: subjectStats.physicsPercentage }} title={`Physics: ${subjectStats.physicsPercentage}`}></div>
+                      <div className="bg-secondary h-full" style={{ width: subjectStats.chemistryPercentage }} title={`Chemistry: ${subjectStats.chemistryPercentage}`}></div>
+                      <div className="bg-tertiary h-full" style={{ width: subjectStats.mathematicsPercentage }} title={`Mathematics: ${subjectStats.mathematicsPercentage}`}></div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-space-xs font-label-code-sm text-label-code-sm mt-1">
+                      <div className="bg-surface-container-low rounded-lg p-2 flex flex-col">
+                        <span className="text-on-surface-variant flex items-center gap-1">⚛️ PHY</span>
+                        <span className="font-bold text-on-surface">{isLoading ? "-" : subjectStats.physics} Items</span>
                       </div>
-                      <div className="mt-1 text-xs text-muted-foreground uppercase tracking-[0.2em]">Total Resources</div>
+                      <div className="bg-surface-container-low rounded-lg p-2 flex flex-col">
+                        <span className="text-on-surface-variant flex items-center gap-1">🧪 CHEM</span>
+                        <span className="font-bold text-on-surface">{isLoading ? "-" : subjectStats.chemistry} Items</span>
+                      </div>
+                      <div className="bg-surface-container-low rounded-lg p-2 flex flex-col">
+                        <span className="text-on-surface-variant flex items-center gap-1">∑ MATH</span>
+                        <span className="font-bold text-on-surface">{isLoading ? "-" : subjectStats.mathematics} Items</span>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 pt-3 border-t border-border/40">
-                      <StatPill icon={<Atom className="h-3.5 w-3.5" />} label="Physics" value={subjectStats.physics} loading={isLoading} />
-                      <StatPill icon={<FlaskConical className="h-3.5 w-3.5" />} label="Chem" value={subjectStats.chemistry} loading={isLoading} />
-                      <StatPill icon={<Sigma className="h-3.5 w-3.5" />} label="Math" value={subjectStats.mathematics} loading={isLoading} />
-                    </div>
+                  </div>
+                  <div className="pt-space-xs flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+                    <span className="material-symbols-outlined text-error text-[18px]">verified</span>
+                    <span className="font-label-ui text-label-ui text-on-surface">Strict Curation:</span>
+                    <span className="italic text-on-surface-variant">No 800-page useless PDFs allowed.</span>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Main Content - Surface Level 1 */}
-        <div className="py-12 bg-surface-1 relative">
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_10%,hsl(var(--jee)/0.05),transparent_60%)]" />
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Desktop Filters Sidebar */}
-              <aside className="hidden lg:block w-72 flex-shrink-0 opacity-0 animate-fade-in stagger-1 relative z-10">
-                <div className="sticky top-24 rounded-2xl border border-border/50 bg-card/40 backdrop-blur-xl p-6 shadow-[0_20px_50px_-30px_hsl(var(--primary)/0.25)]">
-                  <div className="flex items-center justify-between mb-5">
-                    <div>
-                      <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-1">Refine</div>
-                      <h2 className="font-display text-lg font-bold text-foreground flex items-center gap-2">
-                        <Filter className="h-4 w-4 text-primary" />
-                        Filters
-                      </h2>
-                    </div>
+          {/* Relatable Sticky Note Banner */}
+          <section className="w-full mt-space-lg relative flex justify-center">
+            <div className="w-full max-w-3xl relative bg-secondary-fixed text-on-secondary-fixed rounded-lg p-space-md shadow-[0_8px_18px_-2px_rgba(92,67,0,0.12)] rotate-[-0.6deg] hover:rotate-0 transition-transform duration-200 brutal-border border-secondary-fixed">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-surface-container-lowest/80 backdrop-blur-sm -rotate-2 sticker-tape pointer-events-none flex items-center justify-center">
+                <span className="font-label-code-sm text-[9px] uppercase tracking-widest text-outline">KOTA_DESK_MEMO</span>
+              </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm pt-1">
+                <div className="flex items-start gap-space-sm">
+                  <span className="text-[24px] leading-none select-none">📌</span>
+                  <div>
+                    <span className="font-label-code-sm text-label-code-sm font-bold text-secondary uppercase tracking-wider block">
+                      BATCH REALITY PROTOCOL
+                    </span>
+                    <p className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight mt-0.5">
+                      "Cengage download kar li, ab bas padhna baki hai!"
+                    </p>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                      Day 42 of staring at the Irodov cover page waiting for momentum to appear by Osmosis.
+                    </p>
+                  </div>
+                </div>
+                <div className="self-end sm:self-center shrink-0">
+                  <span className="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-code-sm text-label-code-sm font-bold shadow-[0_2px_0_0_#5c4300]">
+                    🔥 3,842 Aspirants Felt This
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Search & Quick Navigation Bar */}
+          <section className="w-full mt-space-lg">
+            <div className="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_4px_16px_-4px_rgba(19,27,46,0.06)] flex flex-col gap-space-md brutal-border">
+              <div className="relative w-full flex items-center">
+                <span className="absolute left-3 sm:left-space-md material-symbols-outlined text-primary text-[20px] sm:text-[22px] pointer-events-none">search</span>
+                <input 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-10 sm:pl-12 pr-12 sm:pr-28 py-3 sm:py-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-sm sm:text-body-md focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all duration-150 shadow-inner brutal-border" 
+                  placeholder="Search modules, PYQs, Allen sheets, Cengage, MS Chouhan..." 
+                  type="text" 
+                />
+                <div className="absolute right-2 sm:right-space-sm flex items-center gap-1.5">
+                  <kbd className="hidden sm:inline-block px-2 py-1 rounded bg-surface-container-highest text-on-surface-variant font-label-code-sm text-label-code-sm font-bold tracking-wider shadow-xs">
+                    ⌘K
+                  </kbd>
+                  <button className="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center shadow-[0_2px_0_0_#00174b] active:translate-y-0.5 active:shadow-none transition-all" type="button" aria-label="Search">
+                    <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center gap-space-xs overflow-x-auto pb-1 scrollbar-none">
+                <button onClick={clearFilters} className={`px-3 sm:px-space-md py-1.5 rounded-full font-label-ui text-xs sm:text-label-ui whitespace-nowrap transition-colors flex items-center gap-1 ${!hasActiveFilters ? 'bg-primary text-on-primary shadow-[0_2px_0_0_#00174b] active:translate-y-0.5' : 'bg-surface-container-low hover:bg-surface-container text-on-surface'}`} type="button">
+                  All ({subjectStats.total})
+                </button>
+                <button onClick={() => setSelectedTypes(['pyqs' as ResourceType])} className={`px-3 sm:px-space-md py-1.5 rounded-full font-label-ui text-xs sm:text-label-ui whitespace-nowrap transition-colors flex items-center gap-1 ${selectedTypes.includes('pyqs' as ResourceType) ? 'bg-primary text-on-primary shadow-[0_2px_0_0_#00174b] active:translate-y-0.5' : 'bg-surface-container-low hover:bg-surface-container text-on-surface'}`} type="button">
+                  <span>⚡</span> PYQ Archives
+                </button>
+                <button onClick={() => setSelectedTypes(['modules' as ResourceType])} className={`px-3 sm:px-space-md py-1.5 rounded-full font-label-ui text-xs sm:text-label-ui whitespace-nowrap transition-colors flex items-center gap-1 ${selectedTypes.includes('modules' as ResourceType) ? 'bg-primary text-on-primary shadow-[0_2px_0_0_#00174b] active:translate-y-0.5' : 'bg-surface-container-low hover:bg-surface-container text-on-surface'}`} type="button">
+                  <span>📘</span> Coaching Modules
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* Main Content Layout */}
+          <section className="w-full mt-space-md sm:mt-space-lg">
+            {/* Mobile Filter Toggle Button */}
+            <div className="lg:hidden mb-4">
+              <button
+                type="button"
+                onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+                className="w-full p-3 rounded-xl bg-surface-container-lowest border-2 border-on-surface flex items-center justify-between shadow-brutal active:translate-y-0.5 transition-all"
+              >
+                <div className="flex items-center gap-2 font-headline-md text-sm font-bold text-on-surface">
+                  <span className="material-symbols-outlined text-primary text-[20px]">tune</span>
+                  <span>Filter Resources</span>
+                  {hasActiveFilters && (
+                    <span className="px-2 py-0.5 rounded-full bg-primary text-on-primary text-[10px] font-mono font-bold">
+                      {selectedSubjects.length + selectedTypes.length} Active
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs font-mono font-bold text-primary">
+                  {mobileFiltersOpen ? "Hide Filters ▲" : "Show Filters ▼"}
+                </span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-md sm:gap-space-lg items-start">
+              
+              {/* Filter Sidebar (collapsible on mobile, sticky on desktop) */}
+              <aside className={`lg:col-span-4 xl:col-span-3 flex-col gap-space-md sticky top-20 ${mobileFiltersOpen ? 'flex' : 'hidden lg:flex'}`}>
+                <div className="bg-surface-container-lowest rounded-xl p-space-md flex flex-col gap-space-md brutal-border">
+                  <div className="flex items-center justify-between">
+                    <span className="font-headline-md text-label-ui uppercase tracking-wider text-on-surface font-bold flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[18px] text-primary">tune</span>
+                      REFINE CATALOG
+                    </span>
                     {hasActiveFilters && (
-                      <Button variant="ghost" size="sm" onClick={clearFilters} className="h-auto p-1 text-xs text-muted-foreground hover:text-foreground">
-                        Clear all
-                      </Button>
+                      <button onClick={clearFilters} className="font-label-code-sm text-label-code-sm text-primary hover:underline font-bold uppercase" type="button">
+                        RESET
+                      </button>
                     )}
                   </div>
+                  
                   <MaterialFilters
                     selectedSubjects={selectedSubjects}
                     selectedTypes={selectedTypes}
                     onSubjectChange={setSelectedSubjects}
                     onTypeChange={setSelectedTypes}
-                    onResourceTypeSelect={scrollToTop}
+                    onResourceTypeSelect={() => {}}
                   />
+                  
+                  <div className="p-space-sm rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-[12px] flex items-start gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-secondary shrink-0">tips_and_updates</span>
+                    <span>Focus rule: Pick 1 core coaching module + 1 reference standard per subject. Do not hoarde 15 PDFs you won't touch!</span>
+                  </div>
+                </div>
+                
+                <div className="p-space-sm rounded-xl bg-surface-container-high flex items-center justify-between brutal-border">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
+                    <span className="font-label-code-sm text-label-code-sm font-bold text-on-surface">DRIVE MIRROR: HIGH-BANDWIDTH</span>
+                  </div>
+                  <span className="font-label-code-sm text-[11px] text-on-surface-variant">0 SEC WAIT</span>
                 </div>
               </aside>
 
-              {/* Main Content */}
-              <div className="flex-1 relative z-10">
-                {/* Search and Mobile Filter */}
-                <div className="flex gap-3 mb-8 opacity-0 animate-fade-in stagger-2">
-                  <div className="relative flex-1 group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                    <Input
-                      placeholder="Search modules, PYQs, books, test series…"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      className="h-12 pl-11 pr-4 rounded-2xl bg-card/40 backdrop-blur-xl border-border/50 text-sm placeholder:text-muted-foreground/70 transition-all duration-200 focus:shadow-[0_0_0_4px_hsl(var(--primary)/0.08)] focus:border-primary/40"
-                    />
+              {/* Right Catalog Cards Grid */}
+              <main className="lg:col-span-8 xl:col-span-9 flex flex-col gap-space-md">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+                  <div className="flex items-center gap-space-xs">
+                    <span className="font-label-code-sm text-label-code-sm text-on-surface-variant uppercase tracking-wider">SHOWING:</span>
+                    <span className="font-label-ui text-label-ui text-primary font-bold uppercase">
+                      {search ? `"${search}"` : "ALLEN + STANDARD REFERENCE CLASSICS"}
+                    </span>
+                    <span className="text-on-surface-variant font-label-code-sm text-label-code-sm uppercase">({filteredMaterials.length} RESOURCES)</span>
                   </div>
-
-                  {/* Mobile Filter Sheet */}
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <Button variant="outline" size="icon" className="lg:hidden btn-press h-12 w-12 rounded-2xl bg-card/40 backdrop-blur-xl border-border/50">
-                        <Filter className="h-4 w-4" />
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="right" className="w-80 bg-surface-1">
-                      <SheetHeader>
-                        <SheetTitle>Filters</SheetTitle>
-                      </SheetHeader>
-                      <div className="mt-6">
-                        {hasActiveFilters && (
-                          <Button variant="outline" size="sm" onClick={clearFilters} className="mb-4 w-full">
-                            <X className="h-4 w-4 mr-2" />
-                            Clear all filters
-                          </Button>
-                        )}
-                        <MaterialFilters
-                          selectedSubjects={selectedSubjects}
-                          selectedTypes={selectedTypes}
-                          onSubjectChange={setSelectedSubjects}
-                          onTypeChange={setSelectedTypes}
-                          onResourceTypeSelect={scrollToTop}
-                        />
-                      </div>
-                    </SheetContent>
-                  </Sheet>
                 </div>
 
-                {/* Results Header */}
-                <div className="flex items-end justify-between mb-6 opacity-0 animate-fade-in stagger-3">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-1">Results</div>
-                    <p className="font-display text-2xl font-bold text-foreground">
-                      {isLoading ? "Loading…" : (
-                        <>
-                          {filteredMaterials.length}{" "}
-                          <span className="text-muted-foreground font-normal italic text-lg">
-                            {filteredMaterials.length === 1 ? "material" : "materials"}
-                          </span>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                  {hasActiveFilters && !isLoading && (
-                    <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs gap-1.5">
-                      <X className="h-3 w-3" />
-                      Clear filters
-                    </Button>
-                  )}
-                </div>
-
-                {/* Materials Grid */}
                 {isLoading ? (
-                  <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {[...Array(6)].map((_, i) => (
-                      <div key={i} className="h-52">
-                        <Skeleton className="h-full w-full rounded-xl" />
-                      </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                    {[...Array(4)].map((_, i) => (
+                      <div key={i} className="h-56"><Skeleton className="h-full w-full rounded-2xl" /></div>
                     ))}
                   </div>
                 ) : filteredMaterials.length > 0 ? (
-                  <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {filteredMaterials.map((material, index) => (
-                      <div
-                        key={material.id}
-                        className="opacity-0 animate-scale-in"
-                        style={{ animationDelay: `${Math.min(index * 50, 300)}ms` }}
-                      >
-                        <MaterialCard material={material} />
-                      </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                    {filteredMaterials.map((material) => (
+                      <MaterialCard key={material.id} material={material} />
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-20 px-6 opacity-0 animate-fade-in rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl">
-                    <div className="w-16 h-16 rounded-2xl bg-surface-2/80 border border-border/40 flex items-center justify-center mx-auto mb-5">
-                      <Search className="h-7 w-7 text-muted-foreground" />
-                    </div>
-                    <h3 className="font-display text-xl font-bold text-foreground mb-2">Nothing matches that yet</h3>
-                    <p className="text-sm text-muted-foreground max-w-sm mx-auto">Try a broader keyword or clear your filters to see the full library.</p>
-                    {hasActiveFilters && (
-                      <Button variant="outline" onClick={clearFilters} className="mt-5 rounded-xl">
-                        Clear filters
-                      </Button>
-                    )}
+                  <div className="text-center py-20 px-6 bg-surface-container-lowest rounded-2xl brutal-border">
+                    <span className="material-symbols-outlined text-[48px] text-on-surface-variant opacity-50 mb-4">search_off</span>
+                    <h3 className="font-headline-md text-headline-md font-bold text-on-surface mb-2">Nothing matches that yet</h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant max-w-sm mx-auto">Try a broader keyword or clear your filters to see the full library.</p>
                   </div>
                 )}
+              </main>
 
-                {/* Bottom Protection Line */}
-                <div className="mt-16 opacity-0 animate-fade-in stagger-4">
-                  <div className="relative overflow-hidden rounded-2xl border border-border/40 bg-card/30 backdrop-blur-xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <ShieldCheck className="h-4 w-4 text-primary/80 flex-shrink-0" />
-                      <span>All materials shared strictly for educational purposes. © Respective owners.</span>
-                    </div>
-                    <Link to="/copyright-terms" className="text-xs text-primary hover:underline whitespace-nowrap">
-                      Copyright & Terms →
-                    </Link>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </Layout>
   );
 };
-
-function StatPill({ icon, label, value, loading }: { icon: React.ReactNode; label: string; value: number; loading: boolean }) {
-  return (
-    <div className="rounded-xl border border-border/40 bg-surface-2/40 px-2 py-2.5 text-center">
-      <div className="flex items-center justify-center gap-1 text-muted-foreground mb-1">
-        {icon}
-      </div>
-      <div className="font-display text-lg font-bold text-foreground leading-none">
-        {loading ? "—" : value}
-      </div>
-      <div className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/70 mt-1">{label}</div>
-    </div>
-  );
-}
 
 export default Materials;

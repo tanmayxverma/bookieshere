@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, Target, Shield, CheckCircle, FileText, HeadphonesIcon, Atom, FlaskConical, Sigma, Copy, ExternalLink, BookOpen } from "lucide-react";
+import { Copy, MessageSquareText, ArrowUpRight, ArrowRight, BookOpen, FileText, HeadphonesIcon, Sparkles } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { JEECountdown } from "@/components/JEECountdown";
@@ -13,210 +13,324 @@ const Index = () => {
 
   const handleCopyCoupon = () => {
     navigator.clipboard.writeText("9906DZRL");
-    toast.success("Coupon code copied!");
+    toast.success("Code copied: 9906DZRL");
   };
 
   return (
     <Layout>
-      <div ref={scrollRef} className="overflow-x-hidden selection:bg-primary/30">
-        {/* ───── HERO ───── */}
-        <section className="relative max-w-7xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32">
-          {/* Asymmetric ambient glows */}
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute top-1/2 -right-24 w-72 h-72 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
-
-          <div className="grid lg:grid-cols-12 gap-12 items-end relative z-10">
-            <div className="lg:col-span-8 space-y-8 opacity-0 animate-fade-in">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-[11px] font-semibold uppercase tracking-widest">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                </span>
-                {firstName ? `Welcome back, ${firstName}` : "Built for serious aspirants"}
+      <div ref={scrollRef} className="overflow-x-hidden selection:bg-brand-yellow selection:text-brand-dark min-h-screen relative bg-background blueprint-grid text-on-surface">
+        <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-16">
+          
+          {/* ───── HERO ───── */}
+          <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-4" id="home">
+            {/* Left Column: Hero Banter & CTAs */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* Welcome Pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50/80 border border-blue-200 text-brand-blue text-xs font-mono font-bold">
+                <span className="w-2 h-2 rounded-full bg-brand-blue animate-ping"></span>
+                {firstName ? `WELCOME BACK, ${firstName.toUpperCase()} • ` : ""}JEE 2027 TARGET
+              </div>
+              
+              {/* Big Headline */}
+              <div className="space-y-1">
+                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-display tracking-tight leading-[1.05] text-brand-dark uppercase break-words">
+                  SURVIVE THE <br/>
+                  <span className="text-brand-blue italic wavy-underline">SYLLABUS.</span><br/>
+                  RULE THE RANKS.
+                </h1>
               </div>
 
-              <h1 className="font-display text-6xl sm:text-7xl lg:text-9xl font-black text-foreground leading-[0.9] tracking-tighter">
-                BOOKIE<span className="text-primary text-2xl sm:text-3xl align-top ml-1">®</span>
-              </h1>
-
-              <p className="max-w-xl text-lg md:text-xl text-muted-foreground leading-relaxed font-light">
-                Your single platform for <span className="text-foreground font-medium">JEE materials</span>, tests, and guidance — engineered with clarity and focus for every aspirant.
+              <p className="text-slate-600 dark:text-slate-300 text-base sm:text-xl font-medium leading-relaxed max-w-xl">
+                Your single platform for <strong className="text-slate-900 dark:text-white font-bold">JEE materials</strong>, savagely honest mocks, and test strategies — engineered with clarity, zero fluff, and anti-burnout humor.
               </p>
 
-              <div className="flex flex-wrap gap-3 pt-2">
+              {/* CTA Buttons Row */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2 w-full">
                 <Link
                   to="/materials"
-                  className="group inline-flex items-center gap-2 px-7 py-3.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wide rounded-md transition-all shadow-[0_0_24px_hsl(var(--primary)/0.3)] active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 rounded-full bg-brand-blue text-white font-bold text-base hover:bg-blue-600 transition-all shadow-brutal-blue hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto"
                 >
-                  <BookOpen className="h-4 w-4" />
-                  BROWSE MATERIALS
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <BookOpen className="w-5 h-5" />
+                  BROWSE MATERIALS →
                 </Link>
                 <Link
                   to="/tests"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 border border-border hover:border-primary/50 hover:bg-surface-1 text-foreground font-bold tracking-wide rounded-md transition-all"
+                  className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-full bg-white dark:bg-slate-900 text-brand-dark font-bold text-base border-2 border-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-brutal hover:-translate-y-0.5 w-full sm:w-auto"
                 >
-                  <FileText className="h-4 w-4" />
+                  <FileText className="w-5 h-5" />
                   PRACTICE TESTS
                 </Link>
                 <Link
                   to="/support"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 text-muted-foreground hover:text-foreground font-bold tracking-wide transition-all underline underline-offset-8 decoration-primary/30 hover:decoration-primary"
+                  className="inline-flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-brand-blue font-mono font-bold text-sm underline underline-offset-4 decoration-2 decoration-blue-200 dark:decoration-blue-900 hover:decoration-brand-blue transition-colors px-2 py-2"
                 >
-                  <HeadphonesIcon className="h-4 w-4" />
-                  CHAT SUPPORT
+                  <span>🎧</span> CHAT SUPPORT
                 </Link>
+              </div>
+
+              {/* Sticky Note Banter Box */}
+              <div className="relative mt-8 pt-4 max-w-lg">
+                <div className="sticker-tape"></div>
+                <div className="bg-brand-softYellow dark:bg-amber-950/70 border-2 border-amber-300/80 dark:border-amber-700/80 rounded-2xl p-4 shadow-sm relative rotate-[-1deg] hover:rotate-0 transition-transform">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">✨</span>
+                    <div>
+                      <p className="font-mono text-xs font-extrabold text-amber-900 dark:text-amber-300 tracking-wide uppercase">
+                        BATCH REALITY CHECK
+                      </p>
+                      <p className="text-sm font-semibold text-amber-950 dark:text-amber-100 mt-1 leading-snug">
+                        <span className="italic font-bold">Kuchuuu Puchuuu!</span> MathonGo, Allen aur PW ke naye test series questions upload ho chuke hain. 
+                        Ab website pe jao aur test do, warna rank goodnight bol degi!
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Side column: promo + trust */}
-            <div className="lg:col-span-4 space-y-5 opacity-0 animate-fade-in stagger-2">
-              <div className="relative p-6 rounded-2xl bg-surface-1/60 backdrop-blur-xl border border-border/60 overflow-hidden">
-                <div className="absolute top-0 right-0 px-2 py-1 bg-primary text-primary-foreground text-[10px] font-black tracking-widest">
-                  LIMITED
+            {/* Right Column: Promo Card + Live Stats Dashboard */}
+            <div className="lg:col-span-5 space-y-5">
+              <div className="bg-white dark:bg-slate-900 border-2 border-slate-900 rounded-2xl p-6 shadow-brutal relative overflow-hidden">
+                <div className="absolute top-4 right-4">
+                  <span className="bg-brand-blue text-white text-[11px] font-mono font-extrabold px-2.5 py-1 rounded-md tracking-wider">
+                    LIMITED
+                  </span>
                 </div>
-                <p className="text-[10px] text-muted-foreground mb-1 font-bold uppercase tracking-widest">Promo Active</p>
-                <h3 className="text-3xl font-display font-bold text-foreground mb-1">10% OFF</h3>
-                <p className="text-sm text-muted-foreground mb-4">On any PW batch with code below.</p>
-
-                <div className="flex items-center gap-2 mb-3">
-                  <button
-                    onClick={handleCopyCoupon}
-                    className="flex-1 inline-flex items-center justify-between gap-2 px-3 py-2 rounded-md bg-background/60 border border-border/60 text-sm font-mono font-bold text-primary hover:border-primary/50 transition-colors"
-                  >
-                    9906DZRL
-                    <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                <div className="space-y-1">
+                  <span className="text-[11px] font-mono font-bold tracking-wider text-slate-500 uppercase">PROMO ACTIVE</span>
+                  <div className="text-3xl font-black font-display text-brand-dark">10% OFF</div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">On any PW batch with the community code below.</p>
+                </div>
+                
+                <div className="mt-4 flex items-center justify-between bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 hover:border-brand-blue transition-colors">
+                  <span className="font-mono font-extrabold text-brand-blue tracking-wider text-base select-all">9906DZRL</span>
+                  <button onClick={handleCopyCoupon} className="text-slate-500 hover:text-brand-blue transition-colors p-1" title="Copy coupon code">
+                    <Copy className="w-5 h-5" />
                   </button>
                 </div>
-
-                <a
-                  href="https://physicswallah.onelink.me/ZAZB/km5qwl9y"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
-                >
-                  Get Discount <ExternalLink className="h-3 w-3" />
+                
+                <a href="https://physicswallah.onelink.me/ZAZB/km5qwl9y" target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-1 text-xs font-mono font-extrabold text-brand-blue hover:underline tracking-wider">
+                  GET DISCOUNT <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                {[
-                  { k: "Free", v: "Access" },
-                  { k: "No", v: "Signup" },
-                  { k: "Daily", v: "Updates" },
-                ].map((s) => (
-                  <div key={s.v} className="px-3 py-3 rounded-lg bg-surface-1/40 border border-border/40">
-                    <p className="text-[10px] uppercase tracking-widest text-primary font-bold">{s.k}</p>
-                    <p className="text-sm text-foreground font-semibold">{s.v}</p>
-                  </div>
-                ))}
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
+                  <div className="text-[10px] font-mono font-bold text-slate-500 uppercase">FREE</div>
+                  <div className="text-sm font-black text-brand-dark mt-0.5">Full Access</div>
+                </div>
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
+                  <div className="text-[10px] font-mono font-bold text-slate-500 uppercase">NO</div>
+                  <div className="text-sm font-black text-brand-dark mt-0.5">Credit Card</div>
+                </div>
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
+                  <div className="text-[10px] font-mono font-bold text-slate-500 uppercase">DAILY</div>
+                  <div className="text-sm font-black text-brand-dark mt-0.5">PYQ Drop</div>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* ───── JEE ADVANCED 2027 COUNTDOWN ───── */}
-        <JEECountdown />
+          {/* ───── JEE COUNTDOWN ───── */}
+          <JEECountdown />
 
-        {/* ───── EXPLORE SUBJECTS ───── */}
-        <section className="max-w-7xl mx-auto px-6 py-24 border-t border-border/40">
-          <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-14 scroll-reveal">
-            <div className="space-y-3">
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground">Explore Subjects</h2>
-              <div className="h-1 w-12 bg-primary rounded-full" />
+          {/* ───── THE 3 PILLARS ───── */}
+          <section className="space-y-6" id="materials">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div>
+                <div className="font-mono text-xs font-extrabold text-brand-blue tracking-wider uppercase">CURATED FOR CLARITY</div>
+                <h2 className="text-3xl sm:text-4xl font-display font-black text-brand-dark tracking-tight mt-1">
+                  The 3 Pillars of Prep.
+                </h2>
+                <p className="font-mono text-xs text-slate-500 mt-1">(and how we survive them without emotional breakdown)</p>
+              </div>
+              <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1 rounded-full self-start sm:self-auto">
+                Updated with 2024-2015 PYQs
+              </span>
             </div>
-            <p className="text-muted-foreground text-sm max-w-xs">
-              Curated study materials across the three pillars of JEE — chosen for clarity, depth, and trust.
-            </p>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-5">
-            {[
-              { subject: "physics", icon: Atom, label: "Physics", desc: "Mechanics, electromagnetism, thermodynamics & optics — taught with conceptual rigor.", books: "HC Verma · Irodov · DC Pandey", accent: "physics" },
-              { subject: "chemistry", icon: FlaskConical, label: "Chemistry", desc: "Organic, inorganic & physical chemistry — structured for clean retention.", books: "MS Chouhan · VK Jaiswal · N Avasthi", accent: "chemistry" },
-              { subject: "mathematics", icon: Sigma, label: "Mathematics", desc: "Calculus, algebra & coordinate geometry — sharpened with high-yield problem sets.", books: "Cengage · Black Book · Amit Agarwal", accent: "mathematics" },
-            ].map((item, i) => {
-              const Icon = item.icon;
-              const accentText = { physics: "text-physics", chemistry: "text-chemistry", mathematics: "text-mathematics" }[item.accent];
-              const accentBg = { physics: "bg-physics/10", chemistry: "bg-chemistry/10", mathematics: "bg-mathematics/10" }[item.accent];
-              const accentBorder = { physics: "hover:border-physics/50", chemistry: "hover:border-chemistry/50", mathematics: "hover:border-mathematics/50" }[item.accent];
-              return (
-                <Link
-                  key={item.subject}
-                  to={`/materials?subject=${item.subject}`}
-                  className={`group relative p-8 rounded-3xl bg-surface-1/60 backdrop-blur-xl border border-border/60 ${accentBorder} transition-all duration-500 hover:-translate-y-1 scroll-reveal scroll-reveal-delay-${i + 1}`}
-                >
-                  <div className={`w-12 h-12 mb-6 rounded-xl ${accentBg} flex items-center justify-center ${accentText} transition-transform group-hover:scale-110`}>
-                    <Icon className="w-6 h-6" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Physics */}
+              <article className="bg-white dark:bg-slate-900 border-2 border-slate-900 rounded-2xl p-6 shadow-brutal flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[11px] font-mono font-extrabold text-brand-blue tracking-wider">01 / PHYSICS CORE</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950 text-brand-blue">94% High-Yield</span>
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-foreground mb-2">{item.label}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-6">{item.desc}</p>
-                  <div className="pt-4 border-t border-border/40 mb-4">
-                    <p className="text-[11px] text-muted-foreground/70 font-medium tracking-wide">{item.books}</p>
+                  <h3 className="text-2xl font-display font-black leading-snug text-brand-dark group-hover:text-brand-blue transition-colors">
+                    When you finally hit that flow state...
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm mt-3 leading-relaxed">
+                    Master Irodov traps, rotational motion inertia shortcuts, and ray diagrams that actually make sense. No 4-page derivations when a 2-line impulse-momentum trick works.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-slate-500">HC Verma + DC Pandey drills</span>
+                  <Link to="/materials" className="w-8 h-8 rounded-full bg-slate-900 dark:bg-brand-blue text-white flex items-center justify-center font-mono hover:bg-brand-blue transition-colors">→</Link>
+                </div>
+              </article>
+
+              {/* Chemistry */}
+              <article className="bg-brand-yellow dark:bg-amber-950/80 border-2 border-slate-900 rounded-2xl p-6 shadow-brutal flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[11px] font-mono font-extrabold text-amber-950 dark:text-amber-200 tracking-wider">02 / THE 3 AM DELUSION</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white/90 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200">Organic Chemistry</span>
                   </div>
-                  <span className={`inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase ${accentText}`}>
-                    View Resources <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
-                  </span>
+                  <h3 className="text-2xl font-display font-black leading-snug text-amber-950 dark:text-amber-100">
+                    The 3 AM motivation spike.
+                  </h3>
+                  <div className="bg-white/90 dark:bg-amber-900/40 rounded-xl p-3.5 mt-3 border border-amber-900/20 text-xs font-mono text-amber-900 dark:text-amber-200 font-semibold italic shadow-sm">
+                    "Organic Chem at 3 AM makes total sense until you wake up next morning and can't name a single ketone."
+                  </div>
+                  <p className="text-amber-950 dark:text-amber-200/90 text-sm mt-3 font-medium leading-relaxed">
+                    Reaction mechanism flowcharts, GOC acidity orders, and MS Chouhan question banks indexed with hints.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-amber-400/60 dark:border-amber-700/60 flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-amber-900 dark:text-amber-300">Named Reactions Cheat Sheet</span>
+                  <Link to="/materials" className="w-8 h-8 rounded-full bg-amber-950 text-white flex items-center justify-center font-mono hover:bg-white hover:text-amber-950 transition-colors">→</Link>
+                </div>
+              </article>
+
+              {/* Mathematics */}
+              <article className="bg-slate-900 dark:bg-slate-950 text-white border-2 border-slate-900 rounded-2xl p-6 shadow-brutal flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[11px] font-mono font-extrabold text-blue-400 tracking-wider">03 / REALITY CHECK</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-800 text-blue-300">Calculus & Vectors</span>
+                  </div>
+                  <h3 className="text-2xl font-display font-black leading-snug text-white group-hover:text-blue-400 transition-colors">
+                    Facing the calculus reality.
+                  </h3>
+                  <div className="bg-slate-800 rounded-xl p-3.5 mt-3 border border-slate-700 text-xs font-mono text-slate-300 font-medium leading-relaxed">
+                    My pending revision pile staring at me while I calculate the absolute minimum marks needed to clear the cutoff.
+                  </div>
+                  <p className="text-slate-400 text-sm mt-3 leading-relaxed">
+                    Definite Integrals King's property templates, 3D Geometry vector lines, and probability speed cards.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-slate-400">Black Book Solution Bank</span>
+                  <Link to="/materials" className="w-8 h-8 rounded-full bg-brand-blue text-white flex items-center justify-center font-mono hover:bg-white hover:text-slate-900 transition-colors">→</Link>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          {/* ───── COMMUNITY BANTER ───── */}
+          <section className="space-y-6" id="banter">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div>
+                <div className="font-mono text-xs font-extrabold text-brand-blue tracking-wider uppercase">COMMUNITY DOSSIER</div>
+                <h2 className="text-3xl font-display font-black text-brand-dark tracking-tight mt-0.5">
+                  Batch Buzz & Relatable Trauma
+                </h2>
+              </div>
+              <span className="text-xs font-mono font-bold text-slate-500 hidden md:block">Live Aspirant Feed</span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Post 1 */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 hover:border-slate-400 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-amber-500 text-white font-mono font-bold text-xs flex items-center justify-center">TT</div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-none">@topper_translator</div>
+                      <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">TOPPER LOGIC • 2m ago</div>
+                    </div>
+                  </div>
+                  <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded">▲ 7.4K</span>
+                </div>
+                <div className="bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-amber-950 dark:text-amber-200 leading-relaxed italic">
+                  “Kuch nahi padha” ka matlab: Sirf NCERT, 15 saal ke PYQs, coaching modules aur 14 mock tests.
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-base text-slate-900 dark:text-slate-100 leading-tight">Topper: “Bhai kuch nahi padha.”</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Also topper: 99.8 percentile in first attempt with neat color-coded notes.</p>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span className="flex items-center gap-1"><MessageSquareText className="w-3.5 h-3.5"/> 603 comments</span>
+                  <button className="hover:text-brand-blue font-bold">Share with batch ↗</button>
+                </div>
+              </div>
+
+              {/* Post 2 */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 hover:border-slate-400 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-rose-500 text-white font-mono font-bold text-xs flex items-center justify-center">PR</div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-none">@paper_review_expert</div>
+                      <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">DAMAGE CONTROL • 18m ago</div>
+                    </div>
+                  </div>
+                  <span className="font-mono text-xs font-bold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded">▲ 5.9K</span>
+                </div>
+                <div className="bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-rose-950 dark:text-rose-200 leading-relaxed italic">
+                  Marks discuss nahi karenge. User experience solid tha. Invigilator bhi chill the.
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-base text-slate-900 dark:text-slate-100 leading-tight">Mummy: “Beta paper kaisa gaya?”</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Me: Paper ka font bohot readable tha aur exam hall mein AC sahi temperature pe chal raha tha.</p>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span className="flex items-center gap-1"><MessageSquareText className="w-3.5 h-3.5"/> 447 comments</span>
+                  <button className="hover:text-brand-blue font-bold">Share with batch ↗</button>
+                </div>
+              </div>
+
+              {/* Post 3 */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 hover:border-slate-400 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-emerald-600 text-white font-mono font-bold text-xs flex items-center justify-center">PA</div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-none">@pyq_archaeologist</div>
+                      <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">JEE + CET • 1h ago</div>
+                    </div>
+                  </div>
+                  <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">▲ 4.6K</span>
+                </div>
+                <div className="bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-emerald-950 dark:text-emerald-200 leading-relaxed italic">
+                  Chapter: “Main toh bilkul easy hoon.” <br/>First PYQ: “Toh ab prove karke dikhao.”
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-base text-slate-900 dark:text-slate-100 leading-tight">Easy chapter bolke start kiya tha...</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Do questions baad confidence, calculator aur Sunday — teeno missing report mein hain.</p>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span className="flex items-center gap-1"><MessageSquareText className="w-3.5 h-3.5"/> 318 comments</span>
+                  <button className="hover:text-brand-blue font-bold">Share with batch ↗</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ───── PUNCHLINE CTA ───── */}
+          <section className="bg-brand-softYellow border-2 border-slate-900 rounded-3xl p-6 sm:p-10 shadow-brutal">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-2 text-center md:text-left">
+                <div className="inline-block px-3 py-1 bg-amber-300 rounded-md text-[11px] font-mono font-black text-amber-950 tracking-wider uppercase">
+                  PLOT TWIST
+                </div>
+                <h3 className="text-2xl sm:text-4xl font-display font-black text-slate-950 tracking-tight leading-tight">
+                  Itna scroll kar hi liya? Ab ek test bhi de hi do.
+                </h3>
+                <p className="text-amber-950 font-medium text-sm sm:text-base">
+                  Memes marks nahi badhaate. Honest timed mocks kabhi-kabhi badha dete hain.
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <Link to="/tests" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-slate-950 text-white font-display font-black text-base tracking-wide hover:bg-brand-blue transition-all shadow-md hover:scale-105 active:scale-95">
+                  OPEN BOOKIE MOCK →
                 </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ───── WHY BOOKIE ───── */}
-        <section className="max-w-7xl mx-auto px-6 py-24 mb-12 bg-primary/5 rounded-[3rem] border border-primary/10 scroll-reveal">
-          <div className="text-center mb-16 max-w-2xl mx-auto">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-primary mb-4">
-              <Shield className="h-3 w-3" /> Our Promise
-            </span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">Why BOOKIE?</h2>
-            <p className="text-muted-foreground">Built with intention, not just features — for aspirants who value quality over quantity.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              { n: "01", icon: Target, title: "Curated Resources", desc: "Carefully selected materials from trusted sources — vetted for relevance to JEE Main & Advanced." },
-              { n: "02", icon: Sparkles, title: "Clean Interface", desc: "No clutter. No noise. Find what you need, fast — and get back to studying." },
-              { n: "03", icon: Shield, title: "Always Updated", desc: "Daily refreshes with new materials, tests, and resources from the BOOKIE library." },
-            ].map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.title}
-                  className={`relative text-center md:text-left space-y-4 p-6 ${i === 1 ? "md:border-x md:border-border/40" : ""} scroll-reveal scroll-reveal-delay-${i + 1}`}
-                >
-                  <p className="font-mono text-primary text-sm tracking-widest">{item.n}</p>
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto md:mx-0">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h4 className="text-xl font-display font-bold text-foreground">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ───── CLOSING VALUES STRIP ───── */}
-        <section className="max-w-7xl mx-auto px-6 pb-20">
-          <div className="border-t border-border/40 pt-10 flex flex-wrap items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <span className="font-display font-black italic text-2xl text-foreground">BOOKIE</span>
-              <span className="hidden sm:block h-5 w-px bg-border" />
-              <span className="text-[11px] font-bold tracking-widest uppercase text-muted-foreground">Academic Excellence</span>
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-6 sm:gap-8">
-              {["Clarity", "Focus", "Consistency"].map((w, i) => (
-                <div key={w} className="flex items-center gap-2">
-                  {i > 0 && <span className="w-1 h-1 rounded-full bg-primary" />}
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-widest uppercase text-muted-foreground">
-                    <CheckCircle className="h-3 w-3 text-primary" /> {w}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+
+        </main>
       </div>
     </Layout>
   );

@@ -1,13 +1,3 @@
-import pwLogo from "@/assets/test-series/pw-tests.jpg.asset.json";
-import novatraLogo from "@/assets/test-series/novatra.png.asset.json";
-import fiitjeeLogo from "@/assets/test-series/fiitjee.png.asset.json";
-import allenLogo from "@/assets/test-series/allen.jpg.asset.json";
-import narayanaLogo from "@/assets/test-series/narayana.png.asset.json";
-import sriChaitanyaLogo from "@/assets/test-series/sri-chaitanya.png.asset.json";
-import vmcLogo from "@/assets/test-series/vmc.png.asset.json";
-import eklavyaLogo from "@/assets/test-series/eklavya.webp.asset.json";
-import jeebattleLogo from "@/assets/test-series/jeebattle.png.asset.json";
-
 export interface TestSeriesResource {
   name: string;
   url: string;
@@ -28,7 +18,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     id: "ovibattle",
     name: "1v1 Mock Test Battle",
     description: "NTA-style 1v1 mock test battles — challenge peers head-to-head.",
-    logo: jeebattleLogo.url,
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbwQ8XsaNkXg-IoOxsaLp-N2K2MTReL0NMogLp4-zaz9wECAxhbba3-Cgg&s=10",
     accent: "from-violet-500/25 to-fuchsia-500/20",
     resources: [
       { name: "Ovibattle — 1v1 NTA-Style Battle", url: "https://www.ovibattle.in/", badge: "New" },
@@ -48,7 +38,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     id: "pw",
     name: "PW Tests",
     description: "Physics Wallah test portal — full coverage mirrors.",
-    logo: pwLogo.url,
+    logo: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Physics_wallah_logo.svg/960px-Physics_wallah_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20230304132210",
     accent: "from-slate-700/25 to-slate-900/40",
     resources: [
       { name: "PW Tests Portal", url: "https://www.sstudy.site/" },
@@ -58,7 +48,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     id: "pyq",
     name: "PYQ Practice",
     description: "Previous Year Question archive, year-wise.",
-    logo: novatraLogo.url,
+    logo: "https://novatra.in/static/images/icons/maskable/maskable_icon.png",
     accent: "from-indigo-500/20 to-blue-500/20",
     resources: [
       { name: "Novatra — JEE Main & Advanced PYQs", url: "https://novatra.in/exams/", badge: "Featured" },
@@ -69,7 +59,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     id: "fiitjee",
     name: "FIITJEE",
     description: "AITS, Rank Booster, Rank Improvement & archives.",
-    logo: fiitjeeLogo.url,
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSIgQXM1PppCyD-hbhiNaeVoA6EvCH4ngGvWGnV4V9Cw&s",
     accent: "from-yellow-400/25 to-red-500/20",
     resources: [
       { name: "All India Series", url: "https://drive.google.com/drive/folders/1HPzc0gQReeMpWvJpEEbumbtGn5oe7jJ7" },
@@ -83,7 +73,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     id: "allen",
     name: "ALLEN",
     description: "Enthusiast, Leader, LN, Score series & online tests.",
-    logo: allenLogo.url,
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSghD7C6kJjI8ZV0nJbgm4X_zdJbvt2KW2kdFM34Nr_HqLzBAWYyTk5gJQ&s=10",
     accent: "from-blue-600/25 to-amber-400/25",
     resources: [
       { name: "Test Series", url: "https://drive.google.com/drive/folders/106onfdejEpVrHs2409w4f013dLYJSczH" },
@@ -101,7 +91,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     id: "narayana",
     name: "Narayana",
     description: "Full syllabus, Grand Test Series & GTM (Main).",
-    logo: narayanaLogo.url,
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIEfh3DW9ClQlBuxn19DWeWXM_Jw483BRzyl-s8LOXlQ&s",
     accent: "from-orange-500/25 to-blue-600/25",
     resources: [
       { name: "Full Syllabus Tests", url: "https://drive.google.com/drive/folders/1wB6LoAQcSyrlU_qMi-1KXNm8QPdjmwht" },
@@ -115,7 +105,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     id: "sri-chaitanya",
     name: "Sri Chaitanya",
     description: "Full test series & GTM bank.",
-    logo: sriChaitanyaLogo.url,
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj2Qnuu1L-148vC64239xaWSVVN5HGjfKuLE5yvS-mlA&s",
     accent: "from-blue-500/25 to-rose-500/20",
     resources: [
       { name: "Test Series", url: "https://drive.google.com/drive/folders/15VDRRpuWZ8_qbNemKm_il78N0jrj4l8s" },
@@ -126,7 +116,7 @@ export const TEST_SERIES: TestSeriesProvider[] = [
     id: "vmc",
     name: "VMC",
     description: "Vidyamandir Classes test series.",
-    logo: vmcLogo.url,
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlwfudYrS554vkWrzGgfOae7Lr9ME2dWBDyRvQ3G2wiQ&s",
     accent: "from-indigo-700/25 to-amber-400/25",
     resources: [
       { name: "Test Series", url: "https://drive.google.com/drive/folders/1WJUyCtziCrsEYmY2XJikki0eVDDx1xme" },
@@ -146,9 +136,9 @@ export const TEST_SERIES: TestSeriesProvider[] = [
   },
   {
     id: "eklavya",
-    name: "Eklavya",
-    description: "Eklavya test series & advanced tests.",
-    logo: eklavyaLogo.url,
+    name: "Vedantu (Eklavya)",
+    description: "Vedantu Eklavya test series & advanced tests.",
+    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiyZbR2coMBC8ECBIZZZdIAXN6Gr1POHDaLGZJuNdw8w&s",
     accent: "from-orange-500/25 to-rose-500/25",
     resources: [
       { name: "Test Series", url: "https://t.me/bookiestorageBot?start=BQADAQADjw4AAiuQSUR-M87K-IfIAhYE" },

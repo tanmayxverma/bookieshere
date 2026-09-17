@@ -1,7 +1,7 @@
 import { SubjectType, ResourceType, subjectLabels, resourceLabels } from "@/types/materials";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Atom, FlaskConical, Sigma, Layers, BookOpen, FileText, Sparkles, History, ClipboardList, GraduationCap, PenLine, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useMaterials } from "@/hooks/useMaterials";
 
 interface MaterialFiltersProps {
   selectedSubjects: SubjectType[];
@@ -18,22 +18,26 @@ export function MaterialFilters({
   onTypeChange,
   onResourceTypeSelect,
 }: MaterialFiltersProps) {
-  const subjects: { id: SubjectType; icon: React.ComponentType<{ className?: string }>; accent: string }[] = [
-    { id: 'physics', icon: Atom, accent: 'text-physics' },
-    { id: 'chemistry', icon: FlaskConical, accent: 'text-chemistry' },
-    { id: 'mathematics', icon: Sigma, accent: 'text-mathematics' },
-    { id: 'combined', icon: Layers, accent: 'text-jee' },
+  const { data: materials } = useMaterials();
+  
+  const subjects: { id: SubjectType; emoji: string }[] = [
+    { id: 'physics', emoji: '⚛️' },
+    { id: 'chemistry', emoji: '🧪' },
+    { id: 'mathematics', emoji: '∑' },
+    { id: 'combined', emoji: '📦' },
   ];
 
-  const resourceTypes: { id: ResourceType; icon: React.ComponentType<{ className?: string }> }[] = [
-    { id: 'books', icon: BookOpen },
-    { id: 'notes', icon: FileText },
-    { id: 'crux', icon: Sparkles },
-    { id: 'pyqs', icon: History },
-    { id: 'test_series', icon: ClipboardList },
-    { id: 'modules', icon: GraduationCap },
-    { id: 'practice_sheets', icon: PenLine },
+  const resourceTypes: ResourceType[] = [
+    'modules', 'books', 'pyqs', 'crux', 'test_series', 'notes', 'practice_sheets'
   ];
+
+  const getSubjectCount = (id: SubjectType) => {
+    return materials?.filter(m => m.subject === id).length || 0;
+  };
+
+  const getTypeCount = (id: ResourceType) => {
+    return materials?.filter(m => m.resource_type === id).length || 0;
+  };
 
   const toggleSubject = (subject: SubjectType) => {
     if (selectedSubjects.includes(subject)) {
@@ -43,31 +47,25 @@ export function MaterialFilters({
     }
   };
 
-  // Single-select for resource type with auto-scroll
-  const selectResourceType = (type: ResourceType) => {
+  const toggleResourceType = (type: ResourceType) => {
     if (selectedTypes.includes(type)) {
-      onTypeChange([]);
+      onTypeChange(selectedTypes.filter((v) => v !== type));
     } else {
-      onTypeChange([type]);
+      onTypeChange([...selectedTypes, type]);
       onResourceTypeSelect?.();
     }
   };
 
   return (
     <ScrollArea className="h-[calc(100vh-280px)] max-h-[480px] pr-3 -mr-3">
-      <div className="space-y-7">
-        {/* Subject Filter Group — chip grid */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground/80">
-              Subject
-            </h3>
-            {selectedSubjects.length > 0 && (
-              <span className="text-[10px] text-primary font-medium">{selectedSubjects.length} active</span>
-            )}
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {subjects.map(({ id, icon: Icon, accent }) => {
+      <div className="space-y-6">
+        {/* Subject Filter Group */}
+        <div className="flex flex-col gap-space-xs">
+          <span className="font-label-code-sm text-label-code-sm uppercase tracking-wider text-on-surface-variant font-bold">
+            1. SUBJECT STREAM
+          </span>
+          <div className="grid grid-cols-2 gap-space-xs">
+            {subjects.map(({ id, emoji }) => {
               const active = selectedSubjects.includes(id);
               return (
                 <button
@@ -75,21 +73,16 @@ export function MaterialFilters({
                   type="button"
                   onClick={() => toggleSubject(id)}
                   className={cn(
-                    "group relative flex flex-col items-start gap-1.5 rounded-xl border px-3 py-2.5 text-left transition-all duration-200",
+                    "p-2 rounded-lg font-label-ui text-label-ui flex items-center justify-between text-left transition-all",
                     active
-                      ? "border-primary/50 bg-primary/10 text-foreground shadow-[0_0_0_1px_hsl(var(--primary)/0.2)]"
-                      : "border-border/50 bg-surface-2/40 text-foreground/80 hover:border-border hover:bg-surface-2/80"
+                      ? "bg-primary text-on-primary font-bold shadow-[0_2px_0_0_#00174b]"
+                      : "bg-surface-container-low hover:bg-surface-container text-on-surface"
                   )}
                 >
-                  <Icon className={cn("h-4 w-4 transition-colors", active ? accent : "text-muted-foreground group-hover:" + accent)} />
-                  <span className="text-xs font-medium leading-tight">
-                    {id === 'combined' ? 'PCM Mix' : subjectLabels[id]}
+                  <span className="flex items-center gap-1.5"><span>{emoji}</span> {id === 'combined' ? 'PCM Mix' : subjectLabels[id].substring(0, 4)}</span>
+                  <span className={cn("text-label-code-sm font-normal", active ? "text-primary-foreground/80" : "text-on-surface-variant")}>
+                    {getSubjectCount(id)}
                   </span>
-                  {active && (
-                    <span className="absolute top-1.5 right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                      <Check className="h-2.5 w-2.5" strokeWidth={3} />
-                    </span>
-                  )}
                 </button>
               );
             })}
@@ -97,52 +90,55 @@ export function MaterialFilters({
         </div>
 
         {/* Divider */}
-        <div className="flex items-center gap-3">
-          <span className="h-px flex-1 bg-border/40" />
-          <span className="h-1 w-1 rounded-full bg-border" />
-          <span className="h-px flex-1 bg-border/40" />
-        </div>
+        <div className="border-t border-outline-variant/30" />
 
-        {/* Resource Type Filter Group — list with icon */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground/80">
-              Resource Type
-            </h3>
-            <span className="text-[10px] text-muted-foreground/60 italic">Single select</span>
-          </div>
-          <div className="space-y-1">
-            {resourceTypes.map(({ id, icon: Icon }) => {
+        {/* Resource Type Filter Group */}
+        <div className="flex flex-col gap-space-xs">
+          <span className="font-label-code-sm text-label-code-sm uppercase tracking-wider text-on-surface-variant font-bold">
+            2. ARSENAL CATEGORY
+          </span>
+          <div className="flex flex-col gap-2">
+            {resourceTypes.map((id) => {
               const active = selectedTypes.includes(id);
+              const count = getTypeCount(id);
+              
+              if (count === 0 && !active) return null; // Hide empty categories
+              
               return (
-                <button
+                <label 
                   key={id}
-                  type="button"
-                  onClick={() => selectResourceType(id)}
-                  className={cn(
-                    "group w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all duration-150",
-                    active
-                      ? "bg-primary/10 text-foreground"
-                      : "text-foreground/75 hover:bg-surface-2/60 hover:text-foreground"
-                  )}
+                  className="flex items-center justify-between p-1.5 rounded hover:bg-surface-container-low cursor-pointer"
                 >
-                  <span
-                    className={cn(
-                      "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
-                      active
-                        ? "border-primary/40 bg-primary/15 text-primary"
-                        : "border-border/40 bg-surface-2/40 text-muted-foreground group-hover:text-foreground"
-                    )}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
+                  <span className="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+                    <input
+                      type="checkbox"
+                      checked={active}
+                      onChange={() => toggleResourceType(id)}
+                      className="w-4 h-4 rounded text-primary accent-primary focus:ring-0"
+                    />
+                    {resourceLabels[id]}
                   </span>
-                  <span className="flex-1 text-sm font-medium">{resourceLabels[id]}</span>
-                  {active && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary))]" />
-                  )}
-                </button>
+                  <span className="font-label-code-sm text-[11px] text-on-surface-variant">
+                    {count}
+                  </span>
+                </label>
               );
             })}
+          </div>
+        </div>
+        
+        {/* Difficulty Target Level (Static for Visual) */}
+        <div className="flex flex-col gap-space-xs pt-space-xs border-t border-outline-variant/30">
+          <span className="font-label-code-sm text-label-code-sm uppercase tracking-wider text-on-surface-variant font-bold">
+            3. TARGET BENCHMARK
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            <span className="px-2.5 py-1 rounded-md bg-surface-container text-on-surface font-label-code-sm text-label-code-sm cursor-pointer hover:bg-surface-container-high transition-colors">
+              Mains Speed (99%ile)
+            </span>
+            <span className="px-2.5 py-1 rounded-md bg-primary text-on-primary font-label-code-sm text-label-code-sm font-bold cursor-pointer">
+              Adv Standard (Top 5k)
+            </span>
           </div>
         </div>
       </div>

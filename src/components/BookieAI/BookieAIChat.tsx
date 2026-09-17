@@ -221,10 +221,10 @@ export function BookieAIChat() {
           "border border-border/50",
           "shadow-2xl shadow-primary/10",
           "transition-all duration-300 ease-out",
-          // Docked mode
-          !isFullscreen && "bottom-5 right-5 w-[420px] max-w-[calc(100vw-40px)] h-[620px] max-h-[calc(100vh-100px)] rounded-2xl origin-bottom-right",
+          // Mobile full-screen, desktop docked
+          !isFullscreen && "inset-0 sm:inset-auto sm:bottom-5 sm:right-5 w-full sm:w-[420px] sm:max-w-[calc(100vw-40px)] h-full sm:h-[620px] sm:max-h-[calc(100vh-100px)] rounded-none sm:rounded-2xl origin-bottom-right",
           // Fullscreen mode
-          isFullscreen && "inset-4 md:inset-8 rounded-2xl max-w-none max-h-none",
+          isFullscreen && "inset-0 sm:inset-4 md:inset-8 rounded-none sm:rounded-2xl max-w-none max-h-none",
           // Open/close state
           isOpen
             ? "opacity-100 scale-100 translate-y-0"
@@ -232,7 +232,7 @@ export function BookieAIChat() {
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-surface-1 rounded-t-2xl">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-surface-1 rounded-none sm:rounded-t-2xl">
           <div className="flex items-center gap-3">
             {/* AI Logo */}
             <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-blue-500 to-violet-500 flex items-center justify-center shadow-md">

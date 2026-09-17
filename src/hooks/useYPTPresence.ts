@@ -17,7 +17,7 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
 
     const updateCount = () => {
       const state = presenceChannel.presenceState();
-      setOnlineCount(Object.keys(state).length);
+      setOnlineCount(Math.max(Object.keys(state).length, 1));
     };
 
     presenceChannel
@@ -102,5 +102,6 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
     };
   }, [userId, userName, jeeYear]);
 
-  return { onlineCount, activeUsers };
+  const displayOnlineCount = Math.max(onlineCount, activeUsers.length, 1);
+  return { onlineCount: displayOnlineCount, activeUsers };
 }

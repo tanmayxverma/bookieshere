@@ -2,11 +2,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { BookieLoader, useInitialLoad } from "./components/BookieLoader";
 import { useProfile, ProfileProvider } from "./hooks/useProfile";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import Materials from "./pages/Materials";
 import Tests from "./pages/Tests";
@@ -18,7 +19,6 @@ import Support from "./pages/Support";
 import Auth from "./pages/Auth";
 import AdminOverview from "./pages/admin/AdminOverview";
 import AdminNotifications from "./pages/admin/AdminNotifications";
-import AdminTickets from "./pages/admin/AdminTickets";
 import AdminSupport from "./pages/admin/AdminSupport";
 import AdminCommunity from "./pages/admin/AdminCommunity";
 import AdminUsers from "./pages/admin/AdminUsers";
@@ -27,6 +27,7 @@ import NotificationsPage from "./pages/Notifications";
 import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
 import CopyrightTerms from "./pages/CopyrightTerms";
+import TermsOfService from "./pages/TermsOfService";
 import DMCA from "./pages/DMCA";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Donate from "./pages/Donate";
@@ -37,7 +38,17 @@ import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
-const OPEN_PATHS = new Set(["/welcome", "/onboarding", "/reset-password", "/privacy-policy", "/copyright-terms", "/dmca"]);
+const OPEN_PATHS = new Set([
+  "/welcome",
+  "/onboarding",
+  "/reset-password",
+  "/privacy",
+  "/privacy-policy",
+  "/terms",
+  "/terms-of-service",
+  "/copyright-terms",
+  "/dmca",
+]);
 
 function ProfileGate() {
   const { profile, loading, isOnboarded } = useProfile();
@@ -75,7 +86,7 @@ const AppInner = () => {
         <Route path="/portals" element={<Portals />} />
         <Route path="/portals/:id" element={<PortalDetail />} />
         <Route path="/support" element={<Support />} />
-        <Route path="/community" element={<Community />} />
+        <Route path="/community" element={<ErrorBoundary><Community /></ErrorBoundary>} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/onboarding" element={<Onboarding />} />
@@ -84,13 +95,16 @@ const AppInner = () => {
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/admin" element={<AdminOverview />} />
         <Route path="/admin/notifications" element={<AdminNotifications />} />
-        <Route path="/admin/tickets" element={<AdminTickets />} />
+        <Route path="/admin/tickets" element={<Navigate to="/admin/support" replace />} />
         <Route path="/admin/support" element={<AdminSupport />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/materials" element={<AdminMaterials />} />
         <Route path="/admin/community" element={<AdminCommunity />} />
         <Route path="/copyright-terms" element={<CopyrightTerms />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/dmca" element={<DMCA />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="*" element={<NotFound />} />
@@ -105,7 +119,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <ProfileProvider>
-        <AppInner />
+        <ErrorBoundary>
+          <AppInner />
+        </ErrorBoundary>
       </ProfileProvider>
     </TooltipProvider>
   </QueryClientProvider>

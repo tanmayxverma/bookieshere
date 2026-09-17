@@ -52,6 +52,10 @@ export interface TimerState {
   phase?: 'work' | 'break';
   /** Break length in seconds to offer once a work countdown completes */
   breakSeconds?: number;
+  /** Strict anti-cheat: last timestamp when site was actively ticking/running */
+  lastActiveAt?: number;
+  /** Strict anti-cheat: exact verified seconds accumulated while site was open */
+  accumulatedSeconds?: number;
 }
 
 export interface PomodoroPreset {
@@ -61,9 +65,9 @@ export interface PomodoroPreset {
 }
 
 export const POMODORO_PRESETS: PomodoroPreset[] = [
-  { label: 'Classic', work: 25, break: 5 },
-  { label: 'Deep', work: 50, break: 10 },
-  { label: 'Marathon', work: 90, break: 15 },
+  { label: 'Standard 25/5', work: 25, break: 5 },
+  { label: 'Long Block 50/10', work: 50, break: 10 },
+  { label: 'JEE Shift 90/15', work: 90, break: 15 },
 ];
 
 export interface ActiveStudyUser {
@@ -73,7 +77,14 @@ export interface ActiveStudyUser {
   started_at?: string;
 }
 
-export const SUBJECTS = ['Physics', 'Chemistry', 'Mathematics', 'Self Study'] as const;
+export const SUBJECTS = [
+  'Physics',
+  'Chemistry',
+  'Mathematics',
+  'Self Study',
+  'Mock Test',
+  'Revision',
+] as const;
 
 export const JEE_YEARS = ['JEE 2027', 'JEE 2028', 'Early Starter'] as const;
 
@@ -88,37 +99,51 @@ export function getISTDate(date?: Date): Date {
   return new Date(utc + IST_OFFSET_MS);
 }
 
-/** Get IST midnight (start of today in IST) as a UTC ISO string */
+/**
+ * Daily reset time is 3:00 AM IST (not midnight).
+ * Study between 00:00 and 02:59 IST counts towards the previous study day.
+ * Returns the UTC ISO string for 3:00 AM IST of the active study day.
+ */
 export function getISTTodayStartUTC(): string {
   const ist = getISTDate();
-  ist.setHours(0, 0, 0, 0);
-  // Convert back to UTC
+  if (ist.getHours() < 3) {
+    // Before 3:00 AM IST, the study day started at 3:00 AM yesterday
+    ist.setDate(ist.getDate() - 1);
+  }
+  ist.setHours(3, 0, 0, 0);
   const utcMs = ist.getTime() - IST_OFFSET_MS;
   return new Date(utcMs).toISOString();
 }
 
-/** Check if a UTC timestamp falls on "today" in IST */
-/** Get IST midnight of the current week's Monday as a UTC ISO string */
+/**
+ * Weekly reset is Monday 3:00 AM IST.
+ */
 export function getISTWeekStartUTC(): string {
   const ist = getISTDate();
+  if (ist.getHours() < 3) {
+    ist.setDate(ist.getDate() - 1);
+  }
   const day = ist.getDay(); // 0 = Sunday
   const diff = day === 0 ? 6 : day - 1; // days since Monday
   ist.setDate(ist.getDate() - diff);
-  ist.setHours(0, 0, 0, 0);
+  ist.setHours(3, 0, 0, 0);
   return new Date(ist.getTime() - IST_OFFSET_MS).toISOString();
 }
 
-/** Check if a UTC timestamp falls on "today" in IST */
-export function isISTToday(utcTimestamp: string): boolean {
-  const istDate = getISTDate(new Date(utcTimestamp));
-  const istNow = getISTDate();
-  return istDate.toDateString() === istNow.toDateString();
+/**
+ * Get the IST study date string (YYYY-MM-DD) based on 3:00 AM IST cutoff.
+ * Any timestamp between 00:00:00 and 02:59:59 IST belongs to the previous day.
+ */
+export function getISTDateString(utcTimestamp: string | Date): string {
+  const ist = getISTDate(typeof utcTimestamp === 'string' ? new Date(utcTimestamp) : utcTimestamp);
+  // Shift back by 3 hours so 00:00 - 02:59 maps to previous day's date string
+  ist.setHours(ist.getHours() - 3);
+  return ist.toISOString().split('T')[0];
 }
 
-/** Get the IST date string (YYYY-MM-DD) from a UTC timestamp */
-export function getISTDateString(utcTimestamp: string): string {
-  const ist = getISTDate(new Date(utcTimestamp));
-  return ist.toISOString().split('T')[0];
+/** Check if a UTC timestamp falls on "today" in IST with 3:00 AM cutoff */
+export function isISTToday(utcTimestamp: string): boolean {
+  return getISTDateString(utcTimestamp) === getISTDateString(new Date());
 }
 
 export function formatTime(seconds: number): string {

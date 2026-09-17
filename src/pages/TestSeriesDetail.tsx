@@ -42,9 +42,9 @@ export default function TestSeriesDetail() {
         <header className={`relative mt-5 overflow-hidden rounded-[28px] border border-border/50 bg-gradient-to-br ${provider.accent} p-8 md:p-12`}>
           <div aria-hidden className="pointer-events-none absolute -top-28 -right-16 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
           <div className="relative flex flex-col md:flex-row md:items-end gap-6">
-            <div className="h-24 w-24 shrink-0 rounded-3xl overflow-hidden bg-background/85 backdrop-blur ring-1 ring-border/60 flex items-center justify-center">
+            <div className="h-24 w-24 shrink-0 rounded-3xl overflow-hidden bg-white ring-1 ring-border/60 flex items-center justify-center p-2 shadow-sm">
               {provider.logo ? (
-                <img src={provider.logo} alt={`${provider.name} logo`} className="h-full w-full object-cover" />
+                <img src={provider.logo} alt={`${provider.name} logo`} className="h-full w-full object-contain" />
               ) : (
                 <span className="font-display text-4xl font-black text-foreground/80">{provider.name.charAt(0)}</span>
               )}

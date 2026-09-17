@@ -1,197 +1,192 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Home, Library, ClipboardList, Timer, LifeBuoy, Coffee, AppWindow, Users2 } from "lucide-react";
-import { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { Button } from "@/components/ui/button";
+import {
+  Home, BookOpen, FileText, Timer, LayoutGrid, MessageSquare, Headphones,
+  Menu, X
+} from "lucide-react";
+import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserMenu } from "@/components/Profile/UserMenu";
 import { NotificationBell } from "@/components/Notifications/NotificationBell";
 import logo from "@/assets/logo.jfif";
+import { cn } from "@/lib/utils";
 
-const navLinks = [
+interface NavLinkItem {
+  path: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+}
+
+const navLinks: NavLinkItem[] = [
   { path: "/", label: "Home", icon: Home },
-  { path: "/materials", label: "Materials", icon: Library },
-  { path: "/tests", label: "Tests", icon: ClipboardList },
-  { path: "/ypt", label: "YPT", icon: Timer },
-  { path: "/portals", label: "Portals", icon: AppWindow },
-  { path: "/community", label: "Community", icon: Users2 },
-  { path: "/support", label: "Support", icon: LifeBuoy },
+  { path: "/materials", label: "Materials", icon: BookOpen },
+  { path: "/tests", label: "Tests", icon: FileText },
+  { path: "/ypt", label: "YPT", icon: Timer, badge: "LIVE" },
+  { path: "/portals", label: "Portals", icon: LayoutGrid },
+  { path: "/community", label: "Community", icon: MessageSquare },
+  { path: "/support", label: "Support", icon: Headphones },
 ];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-
-  // Sliding active indicator
-  const navRef = useRef<HTMLDivElement>(null);
-  const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
-  const [indicator, setIndicator] = useState<{ left: number; width: number; visible: boolean }>({
-    left: 0, width: 0, visible: false,
-  });
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
-    return location.pathname === path;
+    return location.pathname.startsWith(path);
   };
 
-  useLayoutEffect(() => {
-    const active = navLinks.find((l) => isActive(l.path));
-    if (!active || !navRef.current) {
-      setIndicator((s) => ({ ...s, visible: false }));
-      return;
-    }
-    const el = linkRefs.current[active.path];
-    const parent = navRef.current.getBoundingClientRect();
-    if (el) {
-      const r = el.getBoundingClientRect();
-      setIndicator({ left: r.left - parent.left, width: r.width, visible: true });
-    }
-  }, [location.pathname, scrolled]);
+  // Close menu on location change or Escape key
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
-    <nav
-      className={`sticky top-0 z-50 transition-all duration-500 navbar-glass ${
-        scrolled ? "py-2" : "py-3.5"
-      }`}
-    >
-      {/* Backdrop layer - subtle, never heavy */}
-      <div
-        aria-hidden
-        className={`absolute inset-0 transition-all duration-500 ${
-          scrolled
-            ? "bg-background/70 backdrop-blur-xl backdrop-saturate-150 border-b border-border/40"
-            : "bg-transparent border-b border-transparent"
-        }`}
-      />
-      {/* Top accent line */}
-      <div aria-hidden className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-opacity duration-500 ${scrolled ? "opacity-100" : "opacity-0"}`} />
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-40 lg:hidden animate-in fade-in duration-200"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
-      <div className="container mx-auto px-4 relative">
-        <div className="flex items-center justify-between gap-4">
-          {/* Brand */}
-          <Link to="/" className="group flex items-center gap-2.5 shrink-0">
-            <span className="relative">
-              <span className="absolute -inset-1.5 rounded-2xl bg-gradient-to-br from-primary/40 to-accent/30 blur-md opacity-0 group-hover:opacity-80 transition-opacity duration-500" />
+      <header className="sticky top-2 sm:top-4 z-50 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full" data-purpose="floating-navigation">
+        <nav className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-full px-3 sm:px-5 py-1.5 sm:py-2 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
+        
+        {/* Brand Logo (JEE 2027 Cockpit badge removed as requested) */}
+        <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-9 h-9 rounded-full overflow-hidden shadow-inner group-hover:scale-105 transition-transform shrink-0 border border-slate-200/80 dark:border-slate-700 bg-white flex items-center justify-center">
               <img
                 src={logo}
                 alt="BOOKIE Logo"
-                className={`relative rounded-xl object-cover ring-1 ring-border/50 shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.4)] transition-all duration-500 ${
-                  scrolled ? "h-8 w-8" : "h-9 w-9"
-                }`}
+                className="w-full h-full object-cover"
               />
-            </span>
-            <span className="font-display text-xl font-bold tracking-tight text-foreground leading-none">
-              BOOKIE<span className="text-primary">.</span>
-            </span>
+            </div>
+            <div className="flex items-baseline">
+              <span className="font-display font-black text-2xl tracking-tighter text-brand-dark dark:text-white group-hover:text-brand-blue transition-colors">
+                BOOKIE
+              </span>
+              <span className="text-brand-blue font-bold text-xs ml-0.5">®</span>
+            </div>
+          </Link>
+        </div>
+
+        {/* Desktop Navigation Links with matching Symbols */}
+        <div className="hidden lg:flex items-center gap-1 text-sm font-semibold font-sans">
+          {navLinks.map((link) => {
+            const active = isActive(link.path);
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={cn(
+                  "px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 text-xs xl:text-sm",
+                  active
+                    ? "bg-blue-50 dark:bg-blue-950/60 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
+                    : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium"
+                )}
+              >
+                <Icon className={cn("w-4 h-4", active ? "text-brand-blue dark:text-blue-400" : "text-slate-500 dark:text-slate-400")} />
+                <span>{link.label}</span>
+                {link.badge && (
+                  <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 px-1 py-0.2 rounded font-mono font-bold">
+                    {link.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* User Actions & Compact Profile */}
+        <div className="flex items-center gap-2">
+          {/* Chai Break Button */}
+          <Link
+            to="/donate"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all"
+          >
+            <span>☕</span>
+            <span>Chai</span>
           </Link>
 
-          {/* Desktop Navigation — floating glass capsule with sliding indicator */}
-          <div
-            ref={navRef}
-            className="hidden md:flex relative items-center gap-1 rounded-full border border-border/50 bg-background/60 backdrop-blur-xl backdrop-saturate-150 px-2 py-1.5 shadow-[0_10px_40px_-15px_hsl(var(--primary)/0.25),inset_0_1px_0_hsl(var(--background)/0.4)]"
-          >
-            {/* Sliding indicator */}
-            <span
-              aria-hidden
-              className={`pointer-events-none absolute top-1.5 bottom-1.5 rounded-full bg-gradient-to-b from-primary/15 to-primary/5 border border-primary/30 shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.5),inset_0_1px_0_hsl(var(--primary)/0.3)] transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-                indicator.visible ? "opacity-100" : "opacity-0"
-              }`}
-              style={{ left: indicator.left, width: indicator.width }}
-            />
+          {/* Notification Bell */}
+          <NotificationBell />
 
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
+          {/* Compact User Profile Pill: Just User Icon with Streak badge underneath */}
+          <div className="flex items-center pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-800" data-purpose="user-pill">
+            <UserMenu compact={true} />
+          </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            type="button"
+            className="p-2 text-slate-500 hover:text-brand-dark dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden transition-colors h-9 w-9 flex items-center justify-center cursor-pointer"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Navigation Dropdown */}
+      {isOpen && (
+        <div className="lg:hidden mt-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-3 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex flex-col gap-1">
             {navLinks.map((link) => {
               const active = isActive(link.path);
               const Icon = link.icon;
               return (
                 <Link
                   key={link.path}
-                  ref={(el) => (linkRefs.current[link.path] = el)}
                   to={link.path}
-                  className={`relative z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium tracking-tight transition-colors duration-300 ${
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-all",
                     active
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
+                      ? "bg-blue-50 dark:bg-blue-950 text-brand-blue font-bold"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  )}
                 >
-                  <Icon className={`h-3.5 w-3.5 transition-all duration-300 ${active ? "text-primary" : "text-muted-foreground/70"}`} />
-                  {link.label}
+                  <div className="flex items-center gap-2.5">
+                    <Icon className={cn("w-4 h-4", active ? "text-brand-blue" : "text-slate-500")} />
+                    <span>{link.label}</span>
+                  </div>
+                  {link.badge && (
+                    <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">
+                      {link.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
-          </div>
-
-          {/* Right side */}
-          <div className="hidden md:flex items-center gap-2 shrink-0">
             <Link
               to="/donate"
-              className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/50 bg-background/60 backdrop-blur-xl text-xs font-semibold text-foreground hover:border-primary/40 hover:bg-primary/10 transition-all"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-amber-900 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 mt-1"
             >
-              <Coffee className="h-3.5 w-3.5 text-primary group-hover:rotate-[-8deg] transition-transform duration-500" />
-              Chai
+              <span>☕</span>
+              <span>Chai Break</span>
             </Link>
-            <NotificationBell />
-            <ThemeToggle />
-            <UserMenu />
-          </div>
-
-          {/* Mobile Controls */}
-          <div className="flex items-center gap-2 md:hidden">
-            <NotificationBell />
-            <ThemeToggle />
-            <UserMenu compact />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 rounded-full border border-border/50 bg-background/60 backdrop-blur-xl"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden mt-3 pop-in rounded-2xl border border-border/50 bg-background/85 backdrop-blur-xl p-2 shadow-[0_20px_60px_-20px_hsl(var(--primary)/0.3)]">
-            <div className="flex flex-col gap-1">
-              {navLinks.map((link) => {
-                const active = isActive(link.path);
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      active
-                        ? "bg-primary/10 text-foreground border border-primary/30"
-                        : "text-muted-foreground hover:text-foreground hover:bg-surface-2/60 border border-transparent"
-                    }`}
-                  >
-                    <Icon className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground/70"}`} />
-                    {link.label}
-                  </Link>
-                );
-              })}
-              <Link
-                to="/donate"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-foreground bg-gradient-to-r from-primary/10 to-amber-500/10 border border-primary/30 mt-1"
-              >
-                <Coffee className="h-4 w-4 text-primary" />
-                Buy me a Chai
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
+      )}
+      </header>
+    </>
   );
 }

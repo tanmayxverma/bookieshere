@@ -7,6 +7,8 @@ interface Props {
   avatarUrl: string | null;
   displayName: string;
   onChange: (url: string | null) => void;
+  googleAvatar?: string | null;
+  onResetGoogle?: () => void;
   /** Owner folder prefix in storage. Defaults to auth.uid() (signed-in). For guests, pass `guest/<deviceId>`. */
   ownerId?: string;
 }
@@ -17,7 +19,7 @@ function initials(name: string) {
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 
-export function AvatarUploader({ avatarUrl, displayName, onChange, ownerId }: Props) {
+export function AvatarUploader({ avatarUrl, displayName, onChange, googleAvatar, onResetGoogle, ownerId }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const [busy, setBusy] = useState(false);
@@ -67,7 +69,7 @@ export function AvatarUploader({ avatarUrl, displayName, onChange, ownerId }: Pr
       <div className="relative group">
         <div className="h-28 w-28 rounded-full overflow-hidden ring-2 ring-border/60 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-3xl font-display font-black text-foreground/80">
           {avatarUrl ? (
-            <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
+            <img src={avatarUrl} alt={displayName} referrerPolicy="no-referrer" className="h-full w-full object-cover" />
           ) : (
             <span>{initials(displayName)}</span>
           )}
@@ -98,6 +100,19 @@ export function AvatarUploader({ avatarUrl, displayName, onChange, ownerId }: Pr
             <button type="button" onClick={() => onChange(null)} disabled={busy}
               className="text-xs font-semibold text-destructive/80 hover:text-destructive inline-flex items-center gap-1">
               <X className="h-3 w-3" /> Remove
+            </button>
+          </>
+        )}
+        {googleAvatar && avatarUrl !== googleAvatar && (
+          <>
+            <span className="text-muted-foreground/30">·</span>
+            <button
+              type="button"
+              onClick={onResetGoogle ? onResetGoogle : () => onChange(googleAvatar)}
+              disabled={busy}
+              className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+            >
+              Use Google photo
             </button>
           </>
         )}

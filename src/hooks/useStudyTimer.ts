@@ -81,6 +81,9 @@ export function useStudyTimer(yptUserId: string | undefined) {
 
   const calcElapsed = useCallback((state: TimerState | null) => {
     if (!state) return 0;
+    if (state.accumulatedSeconds !== undefined) {
+      return Math.max(0, Math.floor(state.accumulatedSeconds));
+    }
     if (state.pausedAt) {
       return Math.max(0, Math.floor((state.pausedAt - state.startedAt - state.totalPausedMs - driftMsRef.current) / 1000));
     }
@@ -89,7 +92,6 @@ export function useStudyTimer(yptUserId: string | undefined) {
     if (a) {
       const monoElapsedMs = a.base + (performance.now() - a.mono);
       const divergence = wallElapsedMs - monoElapsedMs;
-      // Impossible jump (system clock moved, state replayed) → trust the monotonic clock
       if (Math.abs(divergence) > CLOCK_JUMP_TOLERANCE_MS) {
         driftMsRef.current += divergence;
         flaggedRef.current = true;
@@ -107,7 +109,12 @@ export function useStudyTimer(yptUserId: string | undefined) {
     try {
       await (supabase as any)
         .from('study_sessions')
-        .update({ last_heartbeat: new Date().toISOString() })
+        .update({
+          status: 'completed',
+          ended_at: new Date(state.lastActiveAt || Date.now()).toISOString(),
+          last_heartbeat: new Date(state.lastActiveAt || Date.now()).toISOString(),
+          duration_seconds: clientDuration,
+        })
         .eq('id', state.sessionId);
     } catch {}
     try {
@@ -131,6 +138,9 @@ export function useStudyTimer(yptUserId: string | undefined) {
     setShowInactivityModal(false);
     setInactivityCountdown(INACTIVITY_COUNTDOWN);
     if (countdownRef.current) clearInterval(countdownRef.current);
+    try {
+      window.dispatchEvent(new CustomEvent('study-session-ended'));
+    } catch {}
   }, [calcElapsed]);
 
   // Heartbeat: last_heartbeat is the server's source of truth for real duration
@@ -166,13 +176,39 @@ export function useStudyTimer(yptUserId: string | undefined) {
     return () => clearInterval(id);
   }, [yptUserId]);
 
-  // Timer tick
+  // Strict Anti-Cheat Timer tick:
+  // ONLY collects time while the site is actively ON or working in background tab.
+  // If tab was closed or computer slept (gap >= 45s), automatically closes the session without adding fake time.
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
     if (timerState && !timerState.pausedAt) {
       const tick = () => {
-        const elapsed = calcElapsed(timerState);
+        const now = Date.now();
+        const lastActive = timerState.lastActiveAt || timerState.startedAt;
+        const gapMs = now - lastActive;
+
+        // If site was closed or inactive for >= 45s, auto-end session immediately
+        if (gapMs >= 45_000) {
+          endSessionNow(timerState);
+          return;
+        }
+
+        // Add real active seconds (capped at gapMs to handle background tab throttling)
+        const deltaSec = Math.max(0, gapMs / 1000);
+        const currentAcc = timerState.accumulatedSeconds ?? calcElapsed(timerState);
+        const nextAcc = currentAcc + deltaSec;
+
+        const updatedState: TimerState = {
+          ...timerState,
+          lastActiveAt: now,
+          accumulatedSeconds: nextAcc,
+        };
+
+        saveTimerState(updatedState);
+        setTimerStateLocal(updatedState);
+
+        const elapsed = Math.floor(nextAcc);
         setElapsedSeconds(elapsed);
 
         // Countdown completion
@@ -190,7 +226,7 @@ export function useStudyTimer(yptUserId: string | undefined) {
             phase === 'break' ? 'Back to work — start your next block.' : 'Nice work. Time for a break.',
           );
           setCountdownDone({ phase, breakSeconds: timerState.breakSeconds || 300 });
-          endSessionNow(timerState);
+          endSessionNow(updatedState);
           return;
         }
 
@@ -199,7 +235,7 @@ export function useStudyTimer(yptUserId: string | undefined) {
           setInactivityCountdown(INACTIVITY_COUNTDOWN);
         }
       };
-      tick();
+
       intervalRef.current = window.setInterval(tick, 1000);
     } else {
       setElapsedSeconds(calcElapsed(timerState));
@@ -258,9 +294,39 @@ export function useStudyTimer(yptUserId: string | undefined) {
     };
   }, [endSessionNow]);
 
-  // On mount: reconcile the cached timer with the DB (source of truth)
+  // On mount: reconcile the cached timer with the DB (source of truth).
+  // If the browser was closed or inactive for > 45 seconds, finalize it immediately — do not resume!
   useEffect(() => {
     const state = getTimerState();
+    if (state) {
+      const lastActive = state.lastActiveAt || state.startedAt;
+      const gapMs = Date.now() - lastActive;
+
+      if (gapMs >= 45_000) {
+        // Site was closed/off. Auto-finalize at the exact time it went off.
+        const verifiedSeconds = Math.max(
+          0,
+          Math.floor(state.accumulatedSeconds ?? (lastActive - state.startedAt - state.totalPausedMs) / 1000)
+        );
+        (supabase as any)
+          .from('study_sessions')
+          .update({
+            status: 'completed',
+            ended_at: new Date(lastActive).toISOString(),
+            last_heartbeat: new Date(lastActive).toISOString(),
+            duration_seconds: verifiedSeconds,
+          })
+          .eq('id', state.sessionId)
+          .then(() => {
+            try { window.dispatchEvent(new CustomEvent('study-session-ended')); } catch {}
+          });
+        saveTimerState(null);
+        setTimerStateLocal(null);
+        setElapsedSeconds(0);
+        return;
+      }
+    }
+
     if (state && yptUserId) {
       (supabase as any)
         .from('study_sessions')
@@ -274,7 +340,7 @@ export function useStudyTimer(yptUserId: string | undefined) {
             setElapsedSeconds(0);
             return;
           }
-          // Realign the local start time to the server's started_at — the DB wins.
+          // Realign the local start time to the server's started_at if drift is detected
           const serverStart = new Date(data.started_at).getTime();
           if (Math.abs(serverStart - state.startedAt) > 5000) {
             const fixed = { ...state, startedAt: serverStart };
@@ -308,6 +374,7 @@ export function useStudyTimer(yptUserId: string | undefined) {
       driftMsRef.current = 0;
       flaggedRef.current = false;
       doneFiredRef.current = false;
+      const now = Date.now();
       const state: TimerState = {
         sessionId: data.id,
         subject,
@@ -319,24 +386,42 @@ export function useStudyTimer(yptUserId: string | undefined) {
         targetSeconds: opts?.targetSeconds,
         breakSeconds: opts?.breakSeconds,
         phase: opts?.phase || 'work',
+        lastActiveAt: now,
+        accumulatedSeconds: 0,
       };
       saveTimerState(state);
       setTimerStateLocal(state);
+      setElapsedSeconds(0);
       setCountdownDone(null);
     }
   };
 
   const pauseSession = () => {
     if (!timerState || timerState.pausedAt) return;
-    const updated = { ...timerState, pausedAt: Date.now() };
+    const now = Date.now();
+    const lastActive = timerState.lastActiveAt || timerState.startedAt;
+    const gapMs = Math.min(now - lastActive, 45_000);
+    const acc = (timerState.accumulatedSeconds ?? 0) + Math.max(0, gapMs / 1000);
+    const updated: TimerState = {
+      ...timerState,
+      pausedAt: now,
+      lastActiveAt: now,
+      accumulatedSeconds: acc,
+    };
     saveTimerState(updated);
     setTimerStateLocal(updated);
   };
 
   const resumeSession = () => {
     if (!timerState || !timerState.pausedAt) return;
-    const pauseDuration = Math.max(0, Date.now() - timerState.pausedAt);
-    const updated = { ...timerState, pausedAt: null, totalPausedMs: timerState.totalPausedMs + pauseDuration };
+    const now = Date.now();
+    const pauseDuration = Math.max(0, now - timerState.pausedAt);
+    const updated: TimerState = {
+      ...timerState,
+      pausedAt: null,
+      totalPausedMs: timerState.totalPausedMs + pauseDuration,
+      lastActiveAt: now,
+    };
     saveTimerState(updated);
     setTimerStateLocal(updated);
   };

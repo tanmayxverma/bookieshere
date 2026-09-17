@@ -12,12 +12,13 @@ import logo from "@/assets/logo.jfif";
 export default function Onboarding() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { profile, loading, isAuthenticated, isOnboarded, saveProfile, deviceId } = useProfile();
+  const { profile, loading, isAuthenticated, isOnboarded, saveProfile, deviceId, googleAvatar } = useProfile();
 
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [target, setTarget] = useState<TargetCategory>("JEE 2027");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarCustomized, setAvatarCustomized] = useState(false);
   const [busy, setBusy] = useState(false);
 
   // Hydrate from existing profile (Google etc.)
@@ -25,9 +26,11 @@ export default function Onboarding() {
     if (profile && !isOnboarded) {
       setName(profile.display_name && profile.display_name !== "Aspirant" ? profile.display_name : "");
       setTarget((profile.target_category as TargetCategory) || "JEE 2027");
-      setAvatarUrl(profile.avatar_url ?? null);
+      const defaultAvatar = profile.avatar_url || googleAvatar || null;
+      setAvatarUrl(defaultAvatar);
+      setAvatarCustomized(!!profile.avatar_customized);
     }
-  }, [profile, isOnboarded]);
+  }, [profile, isOnboarded, googleAvatar]);
 
   // If already onboarded, bounce home
   useEffect(() => {
@@ -51,6 +54,7 @@ export default function Onboarding() {
       display_name: name.trim(),
       target_category: target,
       avatar_url: avatarUrl,
+      avatar_customized: avatarCustomized,
     });
     setBusy(false);
     if (error) {
@@ -130,7 +134,15 @@ export default function Onboarding() {
                 <AvatarUploader
                   avatarUrl={avatarUrl}
                   displayName={name || profile?.display_name || "A"}
-                  onChange={setAvatarUrl}
+                  onChange={(url) => {
+                    setAvatarUrl(url);
+                    setAvatarCustomized(true);
+                  }}
+                  googleAvatar={googleAvatar}
+                  onResetGoogle={() => {
+                    setAvatarUrl(googleAvatar || null);
+                    setAvatarCustomized(false);
+                  }}
                   ownerId={isAuthenticated ? undefined : `guest/${deviceId}`}
                 />
               </div>

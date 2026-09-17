@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -74,14 +73,35 @@ export function useAuth() {
     return { error };
   };
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (redirectTo?: string) => {
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: redirectTo || `${window.location.origin}/`,
+        },
       });
-      return { error: result.error ?? null, redirected: !!result.redirected };
-    } catch (e: any) {
-      return { error: e, redirected: false };
+      if (error) throw error;
+      return { data, error: null, redirected: true };
+    } catch (e: unknown) {
+      const err = e instanceof Error ? e : new Error(String(e));
+      return { error: err, redirected: false };
+    }
+  };
+
+  const linkGoogleIdentity = async () => {
+    try {
+      const { data, error } = await supabase.auth.linkIdentity({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/profile`,
+        },
+      });
+      if (error) throw error;
+      return { data, error: null };
+    } catch (e: unknown) {
+      const err = e instanceof Error ? e : new Error(String(e));
+      return { error: err };
     }
   };
 
@@ -92,5 +112,5 @@ export function useAuth() {
     return { error };
   };
 
-  return { user, session, loading, isAdmin, signIn, signUp, signOut, signInWithGoogle, resetPassword };
+  return { user, session, loading, isAdmin, signIn, signUp, signOut, signInWithGoogle, linkGoogleIdentity, resetPassword };
 }

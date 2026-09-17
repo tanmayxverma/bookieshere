@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sparkles, Loader2, ArrowRight, UserCircle2 } from "lucide-react";
+import { Sparkles, Loader2, ArrowRight, UserCircle2, Mail, Lock, ChevronLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import logo from "@/assets/logo.jfif";
+import { cn } from "@/lib/utils";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5">
@@ -15,9 +16,13 @@ const GoogleIcon = () => (
 export default function Welcome() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signIn, signUp } = useAuth();
   const { profile, isOnboarded, loading, isAuthenticated } = useProfile();
+  
   const [busy, setBusy] = useState<string | null>(null);
+  const [mode, setMode] = useState<'main' | 'email-login' | 'email-register'>('main');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Only auto-redirect authenticated users away from /welcome.
   // Guests stay so they can upgrade to a real account, and signed-out users see sign-in options.
@@ -39,65 +44,174 @@ export default function Welcome() {
     }
   };
 
-  return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-10">
-      {/* Ambient */}
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,hsl(var(--primary)/0.12),transparent_55%),radial-gradient(circle_at_85%_85%,hsl(var(--primary)/0.10),transparent_55%)]" />
-      <div aria-hidden className="absolute -top-32 -left-24 w-[420px] h-[420px] rounded-full bg-primary/15 blur-[140px]" />
-      <div aria-hidden className="absolute -bottom-32 -right-24 w-[420px] h-[420px] rounded-full bg-primary/10 blur-[140px]" />
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast({ variant: "destructive", title: "Missing fields", description: "Please enter both email and password." });
+      return;
+    }
+    setBusy("email");
+    
+    if (mode === 'email-register') {
+      const r = await signUp(email, password);
+      if (r.error) {
+        toast({ variant: "destructive", title: "Sign up failed", description: String(r.error?.message || r.error) });
+      } else {
+        toast({ title: "Check your email", description: "We sent you a confirmation link to complete your registration." });
+        setMode('main');
+        setEmail('');
+        setPassword('');
+      }
+    } else {
+      const r = await signIn(email, password);
+      if (r.error) {
+        toast({ variant: "destructive", title: "Sign in failed", description: String(r.error?.message || r.error) });
+      } else {
+        // Successful login will be handled by the useEffect above
+      }
+    }
+    setBusy(null);
+  };
 
-      <div className="relative w-full max-w-md">
+  return (
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-10 bg-background blueprint-grid text-on-surface">
+      <div className="relative w-full max-w-md z-10">
         {/* Brand */}
-        <Link to="/" className="flex items-center justify-center gap-2.5 mb-8">
-          <img src={logo} alt="BOOKIE" className="h-10 w-10 rounded-xl ring-1 ring-border/60" />
-          <span className="font-display text-2xl font-black tracking-tight">
+        <Link to="/" className="flex items-center justify-center gap-3 mb-8">
+          <img src={logo} alt="BOOKIE" className="h-12 w-12 rounded-xl border-2 border-on-surface shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]" />
+          <span className="font-headline-xl text-3xl font-black tracking-tight text-on-surface">
             BOOKIE<span className="text-primary">.</span>
           </span>
         </Link>
 
-        <div className="rounded-3xl border border-border/50 bg-card/70 backdrop-blur-2xl p-7 md:p-8 shadow-[0_40px_80px_-30px_hsl(var(--primary)/0.35)]">
-          <div className="text-center mb-7">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border/60 bg-surface-2/60 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              <Sparkles className="h-3 w-3 text-primary" /> Welcome
-            </span>
-            <h1 className="mt-3 font-display text-2xl md:text-[28px] font-bold tracking-tight">
-              Step into Bookie
-            </h1>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Pick how you'd like to continue.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-              <button
-                onClick={handleGoogle}
-                disabled={busy === "google"}
-                className="w-full inline-flex items-center justify-center gap-3 h-12 rounded-xl border border-border/60 bg-background hover:bg-surface-2 text-foreground font-semibold transition-all active:scale-[0.99]"
-              >
-                {busy === "google" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
-                Continue with Google
-              </button>
-
-              <div className="relative my-1">
-                <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/40" /></div>
-                <div className="relative flex justify-center text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  <span className="px-2 bg-card/70">or</span>
-                </div>
+        <div className="rounded-2xl border-2 border-on-surface bg-surface-container-lowest p-7 md:p-8 shadow-[8px_8px_0px_0px_rgba(19,27,46,1)] relative overflow-hidden transition-all duration-300">
+          {mode === 'main' ? (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="text-center mb-8">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-on-surface bg-secondary-container text-[11px] font-label-code-sm uppercase tracking-wider font-bold text-on-secondary-container shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]">
+                  <Sparkles className="h-3 w-3" /> Welcome
+                </span>
+                <h1 className="mt-4 font-headline-xl text-3xl font-black tracking-tight text-on-surface">
+                  Step into Bookie
+                </h1>
+                <p className="mt-2 text-sm font-body-md font-medium text-on-surface-variant">
+                  Pick how you'd like to continue.
+                </p>
               </div>
 
-              <button
-                onClick={handleGuest}
-                className="w-full inline-flex items-center justify-center gap-3 h-12 rounded-xl bg-foreground text-background hover:bg-foreground/90 font-semibold transition-all active:scale-[0.99]"
-              >
-                <UserCircle2 className="h-4 w-4" />
-                Continue as Guest
-                <ArrowRight className="h-4 w-4" />
-              </button>
+              <div className="space-y-4">
+                  <button
+                    onClick={handleGoogle}
+                    disabled={busy === "google"}
+                    className="w-full inline-flex items-center justify-center gap-3 h-14 rounded-xl border-2 border-on-surface bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md font-bold text-base transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] disabled:opacity-50 disabled:shadow-none"
+                  >
+                    {busy === "google" ? <Loader2 className="h-5 w-5 animate-spin" /> : <GoogleIcon />}
+                    Continue with Google
+                  </button>
 
-              <p className="text-[11px] text-muted-foreground/80 text-center pt-3 leading-relaxed">
-                By continuing you agree to Bookie's <Link to="/privacy-policy" className="underline hover:text-foreground">Privacy</Link> & <Link to="/copyright-terms" className="underline hover:text-foreground">Terms</Link>.
-              </p>
-          </div>
+                  <button
+                    onClick={() => setMode('email-login')}
+                    className="w-full inline-flex items-center justify-center gap-3 h-14 rounded-xl border-2 border-on-surface bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md font-bold text-base transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]"
+                  >
+                    <Mail className="h-5 w-5" />
+                    Continue with Email
+                  </button>
+
+                  <div className="relative py-2">
+                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t-2 border-on-surface border-dashed" /></div>
+                    <div className="relative flex justify-center text-[10px] font-label-code-sm font-bold uppercase tracking-wider text-on-surface-variant">
+                      <span className="px-3 bg-surface-container-lowest">or</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleGuest}
+                    className="w-full inline-flex items-center justify-center gap-3 h-14 rounded-xl border-2 border-on-surface bg-primary hover:bg-primary-hover text-on-primary font-headline-md font-bold text-base transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]"
+                  >
+                    <UserCircle2 className="h-5 w-5" />
+                    Continue as Guest
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+
+                  <p className="text-[11px] font-body-sm font-medium text-on-surface-variant text-center pt-2 leading-relaxed">
+                    By continuing you agree to Bookie's <Link to="/privacy" className="underline hover:text-on-surface font-bold">Privacy Policy</Link> & <Link to="/terms" className="underline hover:text-on-surface font-bold">Terms of Service</Link>.
+                  </p>
+              </div>
+            </div>
+          ) : (
+            <div className="animate-in fade-in slide-in-from-right-8 duration-300">
+              <button 
+                onClick={() => {
+                  setMode('main');
+                  setEmail('');
+                  setPassword('');
+                }}
+                className="absolute top-5 left-5 h-8 w-8 rounded-full border-2 border-on-surface bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-[2px] active:translate-x-[2px] active:shadow-none"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              
+              <div className="text-center mb-8 mt-4">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl border-2 border-on-surface bg-primary-container shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] mb-4">
+                  <Mail className="h-6 w-6 text-on-primary-container" />
+                </div>
+                <h2 className="font-headline-xl text-2xl font-black tracking-tight text-on-surface">
+                  {mode === 'email-login' ? 'Welcome back' : 'Create an account'}
+                </h2>
+                <p className="mt-2 text-sm font-body-md font-medium text-on-surface-variant">
+                  {mode === 'email-login' ? 'Enter your details to sign in.' : 'Enter your details to get started.'}
+                </p>
+              </div>
+
+              <form onSubmit={handleEmailAuth} className="space-y-5">
+                <div className="space-y-4">
+                  <div className="relative">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface-variant" />
+                    <input 
+                      type="email" 
+                      placeholder="Email address" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full h-12 pl-12 pr-4 rounded-xl border-2 border-on-surface bg-surface-container-low text-on-surface text-sm font-body-md font-medium focus:outline-none focus:border-primary shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface-variant" />
+                    <input 
+                      type="password" 
+                      placeholder="Password" 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full h-12 pl-12 pr-4 rounded-xl border-2 border-on-surface bg-surface-container-low text-on-surface text-sm font-body-md font-medium focus:outline-none focus:border-primary shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] transition-all"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={busy === "email"}
+                  className="w-full inline-flex items-center justify-center gap-2 h-14 rounded-xl border-2 border-on-surface bg-primary text-on-primary font-headline-md font-bold text-base transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] disabled:opacity-50 disabled:shadow-none mt-2"
+                >
+                  {busy === "email" ? <Loader2 className="h-5 w-5 animate-spin" /> : null}
+                  {mode === 'email-login' ? 'Sign in' : 'Create account'}
+                </button>
+              </form>
+
+              <div className="mt-8 text-center text-sm font-body-md font-medium">
+                <span className="text-on-surface-variant">
+                  {mode === 'email-login' ? "Don't have an account? " : "Already have an account? "}
+                </span>
+                <button 
+                  onClick={() => setMode(mode === 'email-login' ? 'email-register' : 'email-login')}
+                  className="font-bold text-primary hover:text-primary-hover underline decoration-2 underline-offset-2 transition-colors ml-1"
+                >
+                  {mode === 'email-login' ? 'Sign up' : 'Sign in'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

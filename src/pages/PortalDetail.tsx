@@ -51,9 +51,11 @@ export default function PortalDetail() {
           <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
           <div className="relative flex flex-col md:flex-row md:items-center gap-6">
             {portal.logo ? (
-              <img src={portal.logo} alt={`${portal.name} logo`} className="h-24 w-24 rounded-3xl object-cover ring-1 ring-border/60 bg-background" />
+              <div className="h-24 w-24 rounded-3xl bg-white ring-1 ring-border/60 p-2 flex items-center justify-center shadow-sm shrink-0">
+                <img src={portal.logo} alt={`${portal.name} logo`} className="h-full w-full object-contain" />
+              </div>
             ) : (
-              <div className="h-24 w-24 rounded-3xl bg-background/80 ring-1 ring-border/60 flex items-center justify-center font-display text-4xl font-black">
+              <div className="h-24 w-24 rounded-3xl bg-background/80 ring-1 ring-border/60 flex items-center justify-center font-display text-4xl font-black shrink-0">
                 {portal.name.charAt(0)}
               </div>
             )}

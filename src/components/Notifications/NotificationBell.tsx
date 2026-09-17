@@ -27,14 +27,23 @@ export function NotificationBell() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-full border border-border/50 bg-background/60 backdrop-blur-xl" aria-label="Notifications">
-          <Bell className="h-4 w-4" />
+        <button
+          aria-label="Notifications"
+          className="p-2 text-slate-500 hover:text-brand-dark dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 relative transition-colors h-9 w-9 flex items-center justify-center cursor-pointer"
+          type="button"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+            />
+          </svg>
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center">
-              {unreadCount > 9 ? '9+' : unreadCount}
-            </span>
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-coral rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse"></span>
           )}
-        </Button>
+        </button>
       </PopoverTrigger>
       <PopoverContent align="end" sideOffset={8} className="w-[360px] p-0 overflow-hidden border-border/60 bg-background/95 backdrop-blur-xl">
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">

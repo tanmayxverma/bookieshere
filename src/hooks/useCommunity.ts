@@ -74,9 +74,27 @@ export function useCommunity(sort: Sort = 'recent') {
         counts.set(r.emoji, (counts.get(r.emoji) ?? 0) + 1);
         if (uid && r.user_id === uid) mine = r.emoji;
       });
+      // Normalize author — Supabase may return object, array, or null
+      let author: { display_name: string; avatar_url: string | null } | undefined;
+      const rawAuthor = row.author;
+      if (rawAuthor && typeof rawAuthor === 'object') {
+        const authorObj = Array.isArray(rawAuthor) ? rawAuthor[0] : rawAuthor;
+        if (authorObj && typeof authorObj === 'object') {
+          author = {
+            display_name: String(authorObj.display_name || 'Aspirant'),
+            avatar_url: authorObj.avatar_url ?? null,
+          };
+        }
+      }
       return {
-        ...row,
-        author: row.author ?? undefined,
+        id: row.id ?? '',
+        user_id: row.user_id ?? '',
+        profile_id: row.profile_id ?? '',
+        subject: row.subject ?? '',
+        body: row.body ?? '',
+        image_url: row.image_url ?? null,
+        created_at: row.created_at ?? new Date().toISOString(),
+        author,
         reactions: Array.from(counts.entries()).map(([emoji, count]) => ({ emoji, count })),
         my_reaction: mine,
         comment_count: cCount.get(row.id) ?? 0,
@@ -162,7 +180,29 @@ export function useComments(postId: string | null) {
       .select('*, author:profiles!community_comments_profile_id_fkey(display_name, avatar_url)')
       .eq('post_id', postId)
       .order('created_at');
-    setComments((data as any[]) ?? []);
+    const shaped: CommunityComment[] = ((data as any[]) ?? []).map((row: any) => {
+      let author: { display_name: string; avatar_url: string | null } | undefined;
+      const rawAuthor = row.author;
+      if (rawAuthor && typeof rawAuthor === 'object') {
+        const authorObj = Array.isArray(rawAuthor) ? rawAuthor[0] : rawAuthor;
+        if (authorObj && typeof authorObj === 'object') {
+          author = {
+            display_name: String(authorObj.display_name || 'Aspirant'),
+            avatar_url: authorObj.avatar_url ?? null,
+          };
+        }
+      }
+      return {
+        id: row.id ?? '',
+        post_id: row.post_id ?? '',
+        user_id: row.user_id ?? '',
+        profile_id: row.profile_id ?? '',
+        body: row.body ?? '',
+        created_at: row.created_at ?? new Date().toISOString(),
+        author,
+      };
+    });
+    setComments(shaped);
     setLoading(false);
   }, [postId]);
 

@@ -15,6 +15,7 @@ import { YPTTracker } from '@/components/YPT/YPTTracker';
 import { Timer, BarChart3, Users, ListTodo, Trophy, LogOut, X, Target } from 'lucide-react';
 import { formatTime } from '@/types/ypt';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const TABS = [
   { id: 'study', label: 'Study', icon: Timer },
@@ -77,94 +78,98 @@ export default function YPT() {
       />
 
       {isOnboarded && user && (
-        <div className="container mx-auto px-4 py-6 pb-28 md:pb-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6 pop-in">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight font-display">Bookie YPT</h1>
-              <div className="flex items-center gap-2.5 mt-1">
-                <p className="text-sm text-muted-foreground flex items-center gap-1.5">
-                  <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  {onlineCount} online
-                </p>
-                <span className="text-muted-foreground/30">·</span>
-                <span className="text-sm font-medium">{user.name}</span>
-                <YPTNameChange user={user} onChangeName={changeName} />
-                <span className="text-muted-foreground/30">·</span>
-                <span className="text-sm text-muted-foreground">{user.jee_focus_year}</span>
-                <YPTYearChange user={user} onChangeYear={changeJeeYear} />
+        <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen">
+          <main className="max-w-7xl mx-auto w-full px-6 py-6 space-y-6 flex-1">
+            
+            {/* Header section with tabs */}
+            <section className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-outline-variant/50" data-purpose="sub-navigation">
+              <div>
+                <div className="flex items-center gap-2 text-xs font-mono font-medium text-on-surface-variant uppercase tracking-wide">
+                  <span className="inline-block w-2 h-2 rounded-full bg-tertiary animate-ping"></span>
+                  <span className="inline-block w-2 h-2 -ml-3 rounded-full bg-tertiary"></span>
+                  <span className="text-tertiary font-semibold">{onlineCount} online</span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    {user.name} <YPTNameChange user={user} onChangeName={changeName} />
+                  </span>
+                  <span className="text-on-surface-variant/50">|</span>
+                  <span className="flex items-center gap-1">
+                    {user.jee_focus_year} <YPTYearChange user={user} onChangeYear={changeJeeYear} />
+                  </span>
+                </div>
+                <h1 className="text-2xl md:text-[28px] font-headline-lg font-black tracking-tight text-on-surface mt-1">Bookie YPT Cockpit</h1>
               </div>
-            </div>
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1 p-1.5 rounded-xl liquid-glass-subtle">
-              {TABS.map((t) => {
-                const Icon = t.icon;
-                const isActive = tab === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => switchTab(t.id)}
-                    className={`relative flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 active:scale-95 ${
-                      isActive
-                        ? 'bg-background text-foreground shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
-                    }`}
-                  >
-                    <Icon className="h-[18px] w-[18px]" />
-                    {t.label}
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
 
-          {/* Floating Room Indicator - shows when in a room but NOT on rooms tab */}
-          {roomSession.activeRoomId && tab !== 'rooms' && (
-            <div className="mb-4 pop-in">
-              <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl liquid-glass">
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-xl shrink-0">{roomSession.activeRoomEmoji || '📖'}</span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold truncate">{roomSession.activeRoomName}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                      {roomSession.presenceMembers.length} online
-                      {timer.isActive && (
-                        <>
-                          <span className="text-muted-foreground/30 mx-1">·</span>
-                          <span className="font-mono tabular-nums text-primary font-semibold">{formatTime(timer.elapsedSeconds)}</span>
-                          <span className="text-muted-foreground/60">({timer.subject})</span>
-                        </>
+              {/* Segmented Module Selector based on YPT Reference */}
+              <div className="flex items-center bg-surface-container-lowest border-2 border-on-surface rounded-lg p-1 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-xs font-bold overflow-x-auto scrollbar-none">
+                {TABS.map((t) => {
+                  const Icon = t.icon;
+                  const isActive = tab === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => switchTab(t.id)}
+                      className={cn(
+                        "px-3.5 py-1.5 rounded font-medium flex items-center gap-1.5 transition-colors whitespace-nowrap",
+                        isActive 
+                          ? "bg-primary text-on-primary shadow-sm" 
+                          : "text-on-surface-variant hover:text-on-surface"
                       )}
-                    </p>
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      {t.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* Floating Room Indicator - shows when in a room but NOT on rooms tab */}
+            {roomSession.activeRoomId && tab !== 'rooms' && (
+              <div className="mb-4 pop-in brutal-border bg-surface-container-high rounded-xl p-3 shadow-sm border-2 border-on-surface">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-xl shrink-0">{roomSession.activeRoomEmoji || '📖'}</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold truncate font-headline-md">{roomSession.activeRoomName}</p>
+                      <p className="text-xs text-on-surface-variant flex items-center gap-1.5 font-label-code-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse" />
+                        {roomSession.presenceMembers.length} online
+                        {timer.isActive && (
+                          <>
+                            <span className="text-on-surface-variant/30 mx-1">·</span>
+                            <span className="tabular-nums text-primary font-bold">{formatTime(timer.elapsedSeconds)}</span>
+                            <span className="text-on-surface-variant/60">({timer.subject})</span>
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 px-3 text-xs font-bold brutal-border"
+                      onClick={() => switchTab('rooms')}
+                    >
+                      Open
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-error hover:bg-error-container"
+                      onClick={roomSession.leaveRoom}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 px-3 text-xs font-semibold"
-                    onClick={() => switchTab('rooms')}
-                  >
-                    Open
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"
-                    onClick={roomSession.leaveRoom}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Content — each tab gets minimum full viewport height so bottom nav never overlaps */}
-          <main className="max-w-3xl mx-auto min-h-[calc(100vh-200px)] md:min-h-[calc(100vh-160px)]">
+            {/* Content Tab Content Area */}
             <div
-              className={`transition-all duration-250 ease-out ${
+              className={`transition-all duration-250 ease-out min-h-[calc(100vh-250px)] ${
                 animating
                   ? 'opacity-0 translate-y-2 scale-[0.99]'
                   : 'opacity-100 translate-y-0 scale-100'
@@ -177,38 +182,39 @@ export default function YPT() {
               {tab === 'tracker' && <YPTTracker />}
               {tab === 'leaderboard' && <V2LeaderboardTab currentUserId={user.id} liveElapsed={timer.isActive ? timer.elapsedSeconds : 0} />}
             </div>
-          </main>
 
-          {/* Mobile Bottom Nav */}
-          <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 liquid-glass-strong px-2 py-2 safe-area-bottom">
-            <div className="flex items-center justify-around max-w-md mx-auto">
-              {TABS.map((t) => {
-                const Icon = t.icon;
-                const isActive = tab === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => switchTab(t.id)}
-                    className={`relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-200 min-w-[56px] active:scale-95 ${
-                      isActive
-                        ? 'text-primary'
-                        : 'text-muted-foreground'
-                    }`}
-                  >
-                    <Icon className={`h-6 w-6 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
-                    <span className="text-[11px] font-semibold">{t.label}</span>
-                    {isActive && (
-                      <div className="absolute -bottom-0.5 w-7 h-0.5 rounded-full bg-primary transition-all duration-300" />
-                    )}
-                    {/* Room indicator dot on rooms tab */}
-                    {t.id === 'rooms' && roomSession.activeRoomId && !isActive && (
-                      <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
+            {/* Mobile Bottom Nav is hidden since we use the scrollable module selector, but kept for ultra-small screens just in case */}
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/90 backdrop-blur-md px-2 py-2 safe-area-bottom border-t border-outline-variant/30 hidden">
+              <div className="flex items-center justify-around max-w-md mx-auto">
+                {TABS.map((t) => {
+                  const Icon = t.icon;
+                  const isActive = tab === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => switchTab(t.id)}
+                      className={`relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-200 min-w-[56px] active:scale-95 ${
+                        isActive
+                          ? 'text-primary'
+                          : 'text-on-surface-variant'
+                      }`}
+                    >
+                      <Icon className={`h-6 w-6 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
+                      <span className="text-[11px] font-semibold">{t.label}</span>
+                      {isActive && (
+                        <div className="absolute -bottom-0.5 w-7 h-0.5 rounded-full bg-primary transition-all duration-300" />
+                      )}
+                      {/* Room indicator dot on rooms tab */}
+                      {t.id === 'rooms' && roomSession.activeRoomId && !isActive && (
+                        <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-tertiary animate-pulse" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </nav>
+
+          </main>
         </div>
       )}
     </Layout>

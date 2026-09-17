@@ -18,29 +18,40 @@ function subjectStats(subject: SyllabusSubject, stars: Record<string, number>) {
   return { percent, weak, chapters };
 }
 
-function StarRow({ value, onCycle }: { value: number; onCycle: () => void }) {
+function StarRow({ value, onSelect }: { value: number; onSelect: (stars: number) => void }) {
   return (
-    <button
-      onClick={onCycle}
-      className="flex items-center gap-0.5 px-2 py-1 rounded-md hover:bg-surface-2/60 transition-colors group"
-      aria-label={`Set stars (${value}/3)`}
-    >
-      {[1, 2, 3].map((i) => (
-        <Star
-          key={i}
-          className={`h-4 w-4 transition-all ${
-            i <= value
-              ? "fill-primary text-primary"
-              : "text-muted-foreground/40 group-hover:text-muted-foreground/70"
-          }`}
-        />
-      ))}
-    </button>
+    <div className="flex items-center gap-0.5 p-0.5 rounded-lg border border-border/40 bg-muted/20">
+      {[1, 2, 3].map((starIdx) => {
+        const isFilled = starIdx <= value;
+        return (
+          <button
+            key={starIdx}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              // If clicking current star rating, reset to 0; otherwise set directly to starIdx
+              onSelect(value === starIdx ? 0 : starIdx);
+            }}
+            className={`p-1 rounded-md transition-all active:scale-90 hover:bg-muted ${
+              isFilled ? 'text-amber-500 hover:text-amber-600' : 'text-muted-foreground/30 hover:text-muted-foreground/70'
+            }`}
+            title={`Set to ${starIdx} star${starIdx > 1 ? 's' : ''}${value === starIdx ? ' (click again to clear)' : ''}`}
+            aria-label={`${starIdx} of 3 stars`}
+          >
+            <Star
+              className={`h-3.5 w-3.5 transition-transform ${
+                isFilled ? 'fill-amber-400 text-amber-500 scale-105' : 'fill-none'
+              }`}
+            />
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
 export function YPTTracker() {
-  const { stars, cycleStar, resetAll, overall } = useSyllabusTracker();
+  const { stars, setStar, resetAll, overall } = useSyllabusTracker();
   const [openSubject, setOpenSubject] = useState<string | null>("physics");
 
   const subjectStatsAll = useMemo(
@@ -144,7 +155,7 @@ export function YPTTracker() {
                               <span className={`text-sm truncate ${v >= 3 ? "text-foreground" : v >= 1 ? "text-foreground/90" : "text-muted-foreground"}`}>
                                 {c.name}
                               </span>
-                              <StarRow value={v} onCycle={() => cycleStar(c.key)} />
+                              <StarRow value={v} onSelect={(newVal) => setStar(c.key, newVal)} />
                             </div>
                           );
                         })}

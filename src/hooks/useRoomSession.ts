@@ -111,6 +111,18 @@ export function useRoomSession(
     };
   }, [currentUser?.id]);
 
+  // Re-track on global channel whenever activeRoomId changes
+  useEffect(() => {
+    if (!currentUser || !globalChannelRef.current) return;
+    try {
+      globalChannelRef.current.track({
+        user_id: currentUser.id,
+        name: currentUser.name,
+        room_id: activeRoomId || null,
+      });
+    } catch {}
+  }, [activeRoomId, currentUser?.id, currentUser?.name]);
+
   // Room-specific presence
   useEffect(() => {
     if (!activeRoomId || !currentUser) {

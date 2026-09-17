@@ -1,39 +1,52 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
-import { Button } from '@/components/ui/button';
 import { useSupportChat, type SupportMessage } from '@/hooks/useSupportChat';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Send, Paperclip, ShieldCheck, X, Loader2, Image as ImageIcon } from 'lucide-react';
+import {
+  Send, Paperclip, ShieldCheck, X, Loader2, Search,
+  CheckCheck, RefreshCw, Bug, BookOpen, HelpCircle,
+  Sparkles, ExternalLink, ArrowLeft, ArrowRight,
+  Coffee, Heart
+} from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
-import siteLogo from '@/assets/logo.jfif';
+import { cn } from '@/lib/utils';
+
+const MATH_SYMBOLS = ['θ', 'π', 'μ', 'λ', 'α', 'β', 'Δ', '∫', 'Σ', '→', '∞', '≈'];
 
 export default function SupportPage() {
-  const navigate = useNavigate();
   const { chat, messages, loading, error, send, refetch } = useSupportChat();
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSymbolBar, setShowSymbolBar] = useState(false);
+  const [showQuickTopics, setShowQuickTopics] = useState(true);
+  const [mobileView, setMobileView] = useState<'threads' | 'chat'>('chat');
   const scrollerRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     if (!image) { setPreview(null); return; }
-    const u = URL.createObjectURL(image); setPreview(u);
+    const u = URL.createObjectURL(image);
+    setPreview(u);
     return () => URL.revokeObjectURL(u);
   }, [image]);
 
   useEffect(() => {
-    if (scrollerRef.current) scrollerRef.current.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: 'smooth' });
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: 'smooth' });
+    }
   }, [messages.length]);
 
   const canSend = !chat || chat.status !== 'rejected';
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     const v = draft.trim();
     if (!v && !image) return;
     setBusy(true);
@@ -47,134 +60,486 @@ export default function SupportPage() {
         image_url = supabase.storage.from('room-images').getPublicUrl(path).data.publicUrl;
       }
       await send(v, image_url);
-      setDraft(''); setImage(null);
+      setDraft('');
+      setImage(null);
+      if (inputRef.current) inputRef.current.focus();
     } catch (err: any) {
       toast({ variant: 'destructive', title: 'Could not send', description: err.message });
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   };
+
+  const handleQuickTopic = (prefix: string) => {
+    setDraft(prefix);
+    setMobileView('chat');
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  const insertSymbol = (sym: string) => {
+    setDraft((prev) => prev + sym);
+    if (inputRef.current) inputRef.current.focus();
+  };
+
+  const filteredMessages = searchQuery.trim()
+    ? messages.filter((m) => m.body?.toLowerCase().includes(searchQuery.toLowerCase()))
+    : messages;
 
   return (
     <Layout>
-      <div className="min-h-[calc(100vh-8rem)] flex flex-col">
-        {/* Bright blue header */}
-        <header className="bg-primary text-primary-foreground">
-          <div className="container mx-auto px-4 py-3.5 flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="h-9 w-9 rounded-full hover:bg-white/10 flex items-center justify-center">
-              <ArrowLeft className="h-4 w-4" />
-            </button>
-            <div className="h-10 w-10 rounded-full overflow-hidden bg-white/15 border border-white/25 flex items-center justify-center">
-              <img src={siteLogo} alt="Bookie" className="h-full w-full object-cover" />
+      <div className="min-h-screen bg-background blueprint-grid text-on-surface flex flex-col">
+        
+        {/* Status Banner Ticker */}
+        <aside className="bg-brand-blue text-white border-b border-blue-700 py-1.5 px-4 sm:px-8 shrink-0" data-purpose="live-status-ticker">
+          <div className="max-w-7xl mx-auto flex items-center justify-between font-mono text-[11px] tracking-wide">
+            <div className="flex items-center gap-2">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
+              </span>
+              <span className="font-bold">SOLO CREATOR DIRECT INBOX</span>
+              <span className="hidden sm:inline text-blue-200">• Direct line to the solo developer of BOOKIE</span>
             </div>
-            <div className="min-w-0">
-              <div className="font-semibold leading-tight">Owner</div>
-              <div className="text-xs opacity-80">Direct line — replies as soon as possible</div>
+            <div className="hidden md:flex items-center gap-3 text-blue-100 text-[10px]">
+              <span>NO BOTS • 100% PRIVATE</span>
+              <span className="px-2 py-0.5 rounded bg-blue-700/80 text-white font-bold">REPLIES IN FREE TIME</span>
             </div>
-            {chat?.status === 'pending' && (
-              <span className="ml-auto text-[10px] uppercase tracking-wider bg-white/15 rounded-full px-2 py-0.5 border border-white/25">Awaiting</span>
-            )}
-            {chat?.status === 'rejected' && (
-              <span className="ml-auto text-[10px] uppercase tracking-wider bg-red-500/25 rounded-full px-2 py-0.5 border border-white/25">Closed</span>
-            )}
           </div>
-        </header>
+        </aside>
 
-        {/* Body */}
-        <div ref={scrollerRef} className="flex-1 overflow-y-auto bg-muted/30">
-          {loading ? (
-            <div className="p-10 text-center text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin inline mr-2" />Loading…</div>
-          ) : error ? (
-            <div className="h-full min-h-[50vh] flex flex-col items-center justify-center gap-3 p-8 text-center">
-              <p className="text-sm text-destructive">{error}</p>
-              <Button type="button" variant="outline" size="sm" onClick={refetch}>Retry</Button>
-            </div>
-          ) : messages.length === 0 ? (
-            <div className="h-full min-h-[50vh] flex flex-col items-center justify-center p-8 text-center">
-              <div className="h-14 w-14 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
-                <ShieldCheck className="h-7 w-7 text-primary" />
-              </div>
-              <h2 className="font-bold text-lg">Start a private conversation</h2>
-              <p className="text-sm text-muted-foreground mt-1 max-w-xs">Only you and the owner can read these messages.</p>
-              <p className="text-xs text-muted-foreground/80 mt-4 max-w-xs leading-relaxed">
-                Please only message if it's actually important — skip the "hi"/"hello" and describe your issue in one go.
-              </p>
-            </div>
-          ) : (
-            <div className="container mx-auto max-w-2xl px-4 py-4 space-y-2">
-              {messages.map((m, i) => {
-                const prev = messages[i-1];
-                const showDate = !prev || !isSameDay(new Date(prev.created_at), new Date(m.created_at));
-                return (
-                  <div key={m.id}>
-                    {showDate && (
-                      <div className="text-center my-3">
-                        <span className="text-[10px] uppercase tracking-wider bg-background/70 border border-border/40 rounded-full px-2.5 py-0.5 text-muted-foreground">
-                          {format(new Date(m.created_at), 'MMM d, yyyy')}
-                        </span>
-                      </div>
-                    )}
-                    <Bubble m={m} perspective="user" />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Input bar */}
-        <form onSubmit={submit} className="border-t border-border/50 bg-background">
-          <div className="container mx-auto max-w-2xl px-4 pt-2 text-[11px] text-muted-foreground/80">
-            Keep it to what matters — the owner reads every message personally.
-          </div>
-          {preview && (
-            <div className="container mx-auto max-w-2xl px-4 pt-2">
-              <div className="relative inline-block rounded-lg overflow-hidden border border-border/40">
-                <img src={preview} className="h-20 w-auto" alt="" />
-                <button type="button" onClick={() => setImage(null)} className="absolute top-1 right-1 h-5 w-5 rounded-full bg-black/70 text-white flex items-center justify-center">
-                  <X className="h-3 w-3" />
+        {/* Main Content Area */}
+        <main className="flex-1 max-w-7xl w-full mx-auto p-2 sm:p-6 lg:p-8 flex flex-col">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 flex-1 items-stretch bg-surface-container-lowest border-2 border-slate-900 rounded-2xl sm:rounded-3xl shadow-[6px_6px_0px_0px_rgba(15,23,42,0.95)] overflow-hidden min-h-[560px] sm:min-h-[640px]">
+            
+            {/* ───── LEFT SIDEBAR: CREATOR INFO, CHAI & QUICK SHORTCUTS ───── */}
+            <aside className={cn("lg:col-span-4 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex-col bg-slate-50/70 dark:bg-slate-900/50", mobileView === 'threads' ? 'flex' : 'hidden lg:flex')}>
+              
+              {/* Mobile View Active Indicator */}
+              <div className="p-2.5 bg-blue-50 dark:bg-blue-950/60 border-b border-blue-200 dark:border-blue-900 lg:hidden flex items-center justify-between">
+                <span className="text-xs font-bold text-brand-blue">Doubt Inbox & Shortcuts</span>
+                <button
+                  type="button"
+                  onClick={() => setMobileView('chat')}
+                  className="px-3 py-1 rounded-lg bg-brand-blue text-white text-xs font-bold flex items-center gap-1 shadow-sm"
+                >
+                  <span>Open Chat</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
-            </div>
-          )}
-          <div className="container mx-auto max-w-2xl px-4 py-2.5 flex items-center gap-2">
-            <button type="button" onClick={() => fileRef.current?.click()} disabled={!canSend}
-              className="h-10 w-10 rounded-full flex items-center justify-center text-muted-foreground hover:bg-muted transition disabled:opacity-40">
-              <Paperclip className="h-4 w-4" />
-            </button>
-            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => setImage(e.target.files?.[0] ?? null)} />
-            <input value={draft} onChange={e => setDraft(e.target.value)} maxLength={4000} disabled={!canSend}
-              placeholder={canSend ? "Write a message to the owner…" : "This conversation is closed"}
-              className="flex-1 h-10 rounded-full bg-muted/60 px-4 text-sm outline-none border border-transparent focus:border-primary/30 focus:bg-background transition disabled:opacity-50" />
-            <button type="submit" disabled={!canSend || busy || (!draft.trim() && !image)}
-              className="h-10 w-10 shrink-0 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center transition disabled:opacity-40">
-              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            </button>
+
+              {/* Header: Direct Line & Status */}
+              <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white font-display">
+                      Direct Inbox
+                    </span>
+                    <span className="bg-blue-100 dark:bg-blue-950 text-brand-blue text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-900 font-mono">
+                      1v1
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded border border-amber-300 dark:border-amber-800 font-semibold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    Replies in Free Time
+                  </span>
+                </div>
+
+                {/* Search Bar */}
+                <div className="relative flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl px-3 py-2 border border-slate-200 dark:border-slate-700 focus-within:border-brand-blue focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+                  <Search className="w-3.5 h-3.5 text-slate-400 mr-2 shrink-0" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search messages or doubts..."
+                    className="bg-transparent border-none text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none w-full p-0"
+                  />
+                  {searchQuery && (
+                    <button onClick={() => setSearchQuery('')} className="text-slate-400 hover:text-slate-600 text-xs">
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Sidebar Content Cards */}
+              <div className="p-3.5 flex-1 overflow-y-auto space-y-3">
+                
+                {/* Honest Solo Dev Availability Notice */}
+                <div className="p-3.5 bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-2xl shadow-xs space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-brand-blue text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                      💻
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                        Solo Dev &amp; Fellow Aspirant
+                      </h4>
+                      <p className="text-[10px] text-brand-blue font-mono">
+                        Not a 24/7 corporate team
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-[11.5px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Hey! I build and run BOOKIE alone alongside my own studies. I'm not always online, but I read every single message and reply during study breaks and free time. Drop your message below!
+                  </p>
+                </div>
+
+                {/* ☕ Buy Me a Chai Card */}
+                <div className="p-3.5 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border-2 border-amber-300 dark:border-amber-800 rounded-2xl shadow-sm space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black text-amber-950 dark:text-amber-200 flex items-center gap-1.5 font-display">
+                      <span>☕</span> Buy Me a Chai
+                    </span>
+                    <span className="text-[9px] font-mono bg-amber-200/80 dark:bg-amber-900 text-amber-900 dark:text-amber-100 px-1.5 py-0.5 rounded font-bold uppercase">
+                      Support
+                    </span>
+                  </div>
+                  <p className="text-[11.5px] text-amber-900/90 dark:text-amber-200/90 leading-relaxed">
+                    BOOKIE is 100% free with zero ads. If the notes, mock tools, or YPT timer help your prep, buying a cup of chai keeps the servers alive and fuels late-night coding!
+                  </p>
+                  <Link
+                    to="/donate"
+                    className="w-full inline-flex items-center justify-center gap-2 py-2 px-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-bold text-xs shadow-sm transition-all"
+                  >
+                    <Coffee className="w-3.5 h-3.5" />
+                    <span>Buy Me a Chai</span>
+                    <Heart className="w-3.5 h-3.5 fill-rose-600 text-rose-600 ml-0.5" />
+                  </Link>
+                </div>
+
+                {/* Quick Topic Starter Pills */}
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowQuickTopics((prev) => !prev)}
+                    className="w-full flex items-center justify-between text-left text-[10.5px] font-mono font-bold uppercase tracking-wider text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                  >
+                    <span>Quick Topic Starters</span>
+                    <span className="text-xs">{showQuickTopics ? '▲' : '▼'}</span>
+                  </button>
+                  {showQuickTopics && (
+                    <div className="grid grid-cols-2 gap-1.5 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => handleQuickTopic('[Broken Link]: ')}
+                        className="text-[11px] font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:text-brand-blue border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5 truncate active:scale-95"
+                      >
+                        <Bug className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                        <span className="truncate">Broken Link</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickTopic('[Material Request]: ')}
+                        className="text-[11px] font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:text-brand-blue border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5 truncate active:scale-95"
+                      >
+                        <BookOpen className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span className="truncate">Book Request</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickTopic('[Doubt / Question]: ')}
+                        className="text-[11px] font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:text-brand-blue border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5 truncate active:scale-95"
+                      >
+                        <HelpCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                        <span className="truncate">Study Doubt</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickTopic('[Feature Idea]: ')}
+                        className="text-[11px] font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:text-brand-blue border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5 truncate active:scale-95"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-purple-500 shrink-0" />
+                        <span className="truncate">Suggest Idea</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </aside>
+
+            {/* ───── RIGHT MAIN CHAT CONVERSATION CANVAS ───── */}
+            <section className={cn("lg:col-span-8 flex-col h-full bg-white dark:bg-slate-950", mobileView === 'chat' ? 'flex' : 'hidden lg:flex')}>
+              
+              {/* Chat Canvas Header */}
+              <div className="bg-slate-900 text-white px-3 sm:px-5 py-3 sm:py-3.5 flex items-center justify-between border-b border-slate-800 shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  {/* Mobile Back Button to Shortcuts */}
+                  <button
+                    type="button"
+                    onClick={() => setMobileView('threads')}
+                    className="lg:hidden p-2 -ml-1 rounded-xl bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-700 transition-colors flex items-center justify-center shrink-0"
+                    title="Back to Doubt Topics & Shortcuts"
+                    aria-label="Back to doubt shortcuts"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+
+                  <div className="relative">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-blue border border-white/20 flex items-center justify-center font-bold text-white shadow-inner">
+                      💻
+                    </div>
+                    <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-amber-400 border-2 border-slate-900 rounded-full" />
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-sm tracking-tight text-white font-display">Site Owner (Solo Creator)</h3>
+                      <span className="hidden sm:inline-flex text-[9.5px] font-mono text-amber-300 bg-amber-950/80 border border-amber-700/60 px-2 py-0.5 rounded-md font-bold">
+                        ⏳ REPLIES IN FREE TIME
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 font-mono">
+                      Direct 1v1 Aspirant Inbox • Real Human Reply
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action icons */}
+                <div className="flex items-center gap-2">
+                  <Link
+                    to="/donate"
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold transition-colors shadow-xs"
+                    title="Buy Me a Chai"
+                  >
+                    <Coffee className="w-3.5 h-3.5" />
+                    <span>Buy Me a Chai</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => refetch()}
+                    className="p-2 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+                    title="Refresh chat"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Direct DM Guarantee */}
+              <div className="bg-slate-100/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 px-4 py-1.5 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-medium text-[11px]">
+                  <span>🛡️</span>
+                  <span>Direct 1v1 thread with Site Owner — No middleman, no bots.</span>
+                </div>
+                <span className="text-[10px] font-mono text-amber-700 dark:text-amber-400 font-semibold">Replies during study breaks</span>
+              </div>
+
+              {/* Messages Thread Feed */}
+              <div ref={scrollerRef} className="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/50">
+                {loading ? (
+                  <div className="h-full flex items-center justify-center p-10 text-sm font-mono text-slate-500 gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin text-brand-blue" />
+                    <span>Connecting to Direct Line…</span>
+                  </div>
+                ) : error ? (
+                  <div className="h-full flex flex-col items-center justify-center gap-3 p-8 text-center max-w-md mx-auto">
+                    <div className="bg-rose-50 text-rose-700 border border-rose-200 p-4 rounded-2xl text-xs font-mono">
+                      {error}
+                    </div>
+                    <button
+                      onClick={() => refetch()}
+                      className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold font-mono"
+                    >
+                      Retry Connection
+                    </button>
+                  </div>
+                ) : filteredMessages.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto space-y-3">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-100 text-brand-blue flex items-center justify-center shadow-sm border border-blue-200">
+                      <ShieldCheck className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800 dark:text-white uppercase font-display tracking-wider">
+                        DIRECT 1v1 WITH SITE OWNER
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Solo project run by an aspirant for aspirants. Drop your doubt, bug report, or book request directly. No formal "hi/hello" needed.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => handleQuickTopic('Bhai, test series ka link check karoge? ')}
+                        className="text-xs font-mono px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full hover:border-brand-blue text-slate-700 dark:text-slate-300"
+                      >
+                        ⚡ "Check broken test link"
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickTopic('Bhai, Allen/Reso ke milestone notes upload ho sakte hain kya? ')}
+                        className="text-xs font-mono px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full hover:border-brand-blue text-slate-700 dark:text-slate-300"
+                      >
+                        📚 "Request Coaching Notes"
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  filteredMessages.map((m, idx) => {
+                    const prev = filteredMessages[idx - 1];
+                    const showDate = !prev || !isSameDay(new Date(prev.created_at), new Date(m.created_at));
+                    const isMine = m.author_role === 'user';
+                    
+                    return (
+                      <div key={m.id} className="space-y-3">
+                        {showDate && (
+                          <div className="text-center my-4">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full px-3 py-1 text-slate-500 shadow-xs">
+                              {format(new Date(m.created_at), 'MMM d, yyyy')}
+                            </span>
+                          </div>
+                        )}
+                        
+                        <div className={cn("flex items-end gap-2.5 max-w-[85%] sm:max-w-[78%]", isMine ? "ml-auto justify-end" : "justify-start")}>
+                          {!isMine && (
+                            <div className="w-7 h-7 rounded-lg bg-brand-blue text-white flex items-center justify-center text-[10px] font-black shrink-0 mb-1 font-mono shadow-xs">
+                              DEV
+                            </div>
+                          )}
+                          
+                          <div className="space-y-1">
+                            <div className={cn(
+                              "p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-sm",
+                              isMine
+                                ? "bg-brand-blue text-white rounded-br-sm shadow-blue-500/10"
+                                : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-sm"
+                            )}>
+                              {m.image_url && (
+                                <a
+                                  href={m.image_url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="block mb-2 rounded-xl overflow-hidden border border-white/20 bg-slate-950/20 max-w-sm group"
+                                >
+                                  <img src={m.image_url} alt="Attachment" className="max-h-56 w-auto object-cover group-hover:opacity-90" />
+                                </a>
+                              )}
+                              <p className="whitespace-pre-wrap break-words font-medium">{m.body}</p>
+                            </div>
+                            <div className={cn("flex items-center gap-1 text-[10px] font-mono text-slate-400 px-1", isMine ? "justify-end" : "justify-start")}>
+                              <span>{format(new Date(m.created_at), 'h:mm a')}</span>
+                              {isMine && <CheckCheck className="w-3 h-3 text-brand-blue" />}
+                            </div>
+                          </div>
+
+                          {isMine && (
+                            <div className="w-7 h-7 rounded-lg bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center text-[10px] font-black shrink-0 mb-1 font-mono shadow-xs">
+                              YOU
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Enhanced Rich Input Bar */}
+              <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-3 sm:p-4 shrink-0">
+                
+                {/* Math Symbol Helper Ribbon */}
+                {showSymbolBar && (
+                  <div className="flex items-center gap-1.5 pb-2.5 overflow-x-auto scrollbar-none animate-in fade-in duration-150">
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase pr-1">JEE Symbols:</span>
+                    {MATH_SYMBOLS.map((sym) => (
+                      <button
+                        key={sym}
+                        type="button"
+                        onClick={() => insertSymbol(sym)}
+                        className="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 hover:text-brand-blue text-xs font-mono font-bold border border-slate-200 dark:border-slate-700 transition-colors"
+                      >
+                        {sym}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Preview Thumbnail if image chosen */}
+                {preview && (
+                  <div className="relative inline-block mb-2 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-slate-100 p-1">
+                    <img src={preview} className="h-16 w-auto rounded-lg" alt="Upload Preview" />
+                    <button
+                      type="button"
+                      onClick={() => setImage(null)}
+                      className="absolute top-1 right-1 h-5 w-5 rounded-full bg-rose-500 text-white flex items-center justify-center hover:bg-rose-600 transition-colors"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                )}
+
+                <form onSubmit={submit} className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-2xl px-3 py-2 border border-slate-200 dark:border-slate-700 focus-within:border-brand-blue focus-within:bg-white dark:focus-within:bg-slate-900 focus-within:ring-2 focus-within:ring-brand-blue/20 transition-all">
+                  <div className="flex items-center gap-1 text-slate-500">
+                    <button
+                      type="button"
+                      onClick={() => fileRef.current?.click()}
+                      disabled={!canSend}
+                      className="p-1.5 hover:text-brand-blue hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                      title="Attach question screenshot or PDF"
+                    >
+                      <Paperclip className="w-4 h-4 transform -rotate-45" />
+                    </button>
+                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] ?? null)} />
+
+                    <button
+                      type="button"
+                      onClick={() => handleQuickTopic('Formula verification: ')}
+                      className="p-1.5 hover:text-brand-blue hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors font-mono text-xs font-bold"
+                      title="Insert Formula Note"
+                    >
+                      fx
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowSymbolBar(!showSymbolBar)}
+                      className={cn(
+                        "p-1.5 rounded-lg transition-colors text-xs font-mono font-bold",
+                        showSymbolBar ? "bg-blue-100 text-brand-blue" : "hover:text-brand-blue hover:bg-slate-200 dark:hover:bg-slate-700"
+                      )}
+                      title="Toggle Math / Physics Symbols (θ, π, μ, λ)"
+                    >
+                      Ω
+                    </button>
+                  </div>
+
+                  <input
+                    ref={inputRef}
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    maxLength={4000}
+                    disabled={!canSend}
+                    placeholder={canSend ? "Message the site owner directly (doubts, broken links, book requests)..." : "This conversation is closed"}
+                    className="flex-1 bg-transparent border-none text-xs sm:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0 px-2 py-1"
+                  />
+
+                  <button
+                    type="submit"
+                    disabled={!canSend || busy || (!draft.trim() && !image)}
+                    className="bg-brand-blue hover:bg-blue-600 disabled:opacity-50 text-white px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5 text-xs font-bold cursor-pointer shrink-0"
+                  >
+                    {busy ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <span>Send</span>
+                        <Send className="w-3.5 h-3.5 ml-0.5" />
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono mt-2 px-1">
+                  <span>Press Enter ↵ to send • Shift + Enter for new line</span>
+                  <span className="hidden sm:inline">100% Solo Aspirant Built &amp; Maintained • Zero Bots</span>
+                </div>
+              </footer>
+            </section>
+
           </div>
-        </form>
+        </main>
       </div>
     </Layout>
-  );
-}
-
-function Bubble({ m, perspective }: { m: SupportMessage; perspective: 'user' | 'admin' }) {
-  if (m.author_role === 'system') {
-    return <div className="text-center my-2 text-[11px] italic text-muted-foreground">{m.body}</div>;
-  }
-  const isMine = perspective === 'user' ? m.author_role === 'user' : m.author_role === 'admin';
-  return (
-    <div className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
-      <div className={`max-w-[80%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed shadow-sm ${
-        isMine ? 'bg-primary text-primary-foreground rounded-br-sm' : 'bg-background border border-border/50 rounded-bl-sm'
-      }`}>
-        {m.image_url && (
-          <a href={m.image_url} target="_blank" rel="noreferrer" className="block mb-1.5 rounded-lg overflow-hidden">
-            <img src={m.image_url} alt="" className="max-h-64 w-auto rounded-lg" />
-          </a>
-        )}
-        {m.body && <div className="whitespace-pre-wrap break-words">{m.body}</div>}
-        <div className={`text-[10px] mt-0.5 ${isMine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-          {format(new Date(m.created_at), 'h:mm a')}
-        </div>
-      </div>
-    </div>
   );
 }
