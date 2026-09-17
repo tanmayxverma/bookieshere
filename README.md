@@ -1,73 +1,144 @@
-# Welcome to your Lovable project
+# BOOKIE: Your PCM Study Hub
 
-## Project info
+Build a modern, clean, and student-focused educational website named **BOOKIE**.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+BOOKIE is a **study-material–only platform**. There must be NO video lectures, NO courses, NO mentorship, and NO coaching promotion. The platform exists only to provide **organized access to study materials** such as books, notes, PYQs, practice sheets, and modules for competitive exams.
 
-## How can I edit this code?
+The design should be simple, distraction-free, and beginner-friendly.
 
-There are several ways of editing your application.
+==================================================
 
-**Use Lovable**
+PROJECT NAME:
+BOOKIE – Your Study Material Companion
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+TAGLINE:
+Organized. Simple. Student-Focused.
 
-Changes made via Lovable will be committed automatically to this repo.
+==================================================
 
-**Use your preferred IDE**
+HOME PAGE:
+Create a clean landing page with:
+- Main heading: **BOOKIE – Your Study Material Companion**
+- Subheading: *All competitive exam PCM study materials in one place*
+- Three clear CTA buttons:
+  1. Browse Materials
+  2. How to Download
+  3. Chat Support
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+==================================================
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+MATERIALS LIBRARY (MOST IMPORTANT SECTION):
+Create a dedicated page called **Materials Library**.
 
-Follow these steps:
+The library must support proper organization with filters:
+- Competitive Exams:
+  - JEE
+  - Other PCM Competitive Exams
+- Subjects (ONLY PCM):
+  - Physics
+  - Chemistry
+  - Mathematics
+- Resource Type:
+  - Books
+  - Notes
+  - PYQs
+  - Practice Sheets
+
+Each material should be displayed as a **material card** with:
+- Material / Book Name
+- Exam + Subject tags
+- One-line description
+- Button: **Download / Open Link**
+
+IMPORTANT:
+- All download links are shortened links.
+- Do NOT auto-redirect users.
+- Always open links in a NEW TAB.
+
+==================================================
+
+HOW TO DOWNLOAD PAGE:
+Create a separate, clearly visible page titled:
+
+**How to Download Materials from BOOKIE**
+
+Explain the process in very simple steps:
+1. Click on the “Download / Open Link” button.
+2. A shortened link page will open in a new tab.
+3. Complete the required step (wait timer / skip button).
+4. Click “Continue” or “Get Link”.
+5. You will be redirected to the final material page.
+
+Add notes:
+- ⚠️ Do not use ad blockers while opening links.
+- ℹ️ If a link doesn’t open, refresh once and try again.
+
+==================================================
+
+CHAT SUPPORT PAGE:
+Create a page titled **Chat Support** or **Need Help?**
+
+Content:
+- Short text: “Facing issues with downloads or can’t find a material?”
+- Button: **Chat on Telegram**
+
+Telegram integration:
+- Clicking the button should open an external Telegram bot link.
+- Mention clearly: “All support is handled via Telegram for faster response.”
+
+==================================================
+
+NAVIGATION BAR:
+Sticky top navigation with:
+- Home
+- Materials
+- How to Download
+- Chat Support
+
+==================================================
+
+DESIGN STYLE:
+- Minimal and modern
+- Light background
+- Clean typography
+- Mobile-first responsive layout
+- No flashy animations
+- Focus on readability and usability
+
+==================================================
+
+TECH & UX REQUIREMENTS:
+- Fast loading
+- SEO-friendly structure
+- Accessible buttons
+- Clear spacing
+- No unnecessary popups
+
+==================================================
+
+FINAL GOAL:
+BOOKIE should feel like a **digital PCM competitive exam bookshelf**.
+Everything must be well-organized, beginner-friendly, and easy to use.
+
+This project was built with [Lovable](https://lovable.dev).
+
+**Live app**: https://bookieshere.lovable.app
+
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/b42f5dc8-ef78-444f-9b41-b1420a345b57).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+git clone <this-repository-url>
+cd <repository-name>
 npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
