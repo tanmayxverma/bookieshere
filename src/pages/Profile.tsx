@@ -18,8 +18,10 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { useProfile, TARGET_CATEGORIES, type TargetCategory } from "@/hooks/useProfile";
 import { useUserStreak } from "@/hooks/useUserStreak";
+import { useUserStudyStats, formatStudyTime } from "@/hooks/useUserStudyStats";
 import { AvatarUploader } from "@/components/Profile/AvatarUploader";
 import { validateName } from "@/types/ypt";
 import { UpgradeModal } from "@/components/Auth/UpgradeModal";
@@ -33,7 +35,9 @@ const GoogleIcon = () => (
 export default function Profile() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { profile, loading, isAuthenticated, isOnboarded, saveProfile, updateAvatar, signOut, deviceId, user } = useProfile();
+  const { profile, loading: profileLoading, isAuthenticated, isOnboarded, saveProfile, updateAvatar, signOut, deleteAccount, deviceId, user } = useProfile();
+  const { signInWithGoogle, linkGoogleIdentity, signUp } = useAuth();
+  const { todaySeconds, totalSeconds } = useUserStudyStats();
   const { streak, longestStreak } = useUserStreak();
 
   const [name, setName] = useState("");
@@ -166,6 +170,7 @@ export default function Profile() {
   const isGuest = profile.account_type === "guest" || !isAuthenticated;
   const isEmail = profile.account_type === "email" && isAuthenticated;
   const isGoogle = profile.account_type === "google" && isAuthenticated;
+  const accountLabel = profile.account_type === "guest" ? "Guest" : profile.account_type === "google" ? "Google" : "Email";
 
   const todayFormatted = formatStudyTime(todaySeconds);
   const totalFormatted = formatStudyTime(totalSeconds);

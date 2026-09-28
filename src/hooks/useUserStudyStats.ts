@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProfile } from './useProfile';
-import { calculateStreak } from './useUserStreak';
-import { getISTDateString } from '@/types/ypt';
+import { calculateStudyStreak, getISTDateString } from '@/types/ypt';
 
 export interface UserStudyStats {
   todaySeconds: number;
@@ -107,8 +106,14 @@ export function useUserStudyStats(): UserStudyStats {
       setTotalSeconds(totalSecs);
       setTodaySessionsCount(todayCount);
 
-      const computedStreak = calculateStreak(sessions.map((s: any) => s.started_at));
-      setStreak(computedStreak);
+      const dayMap: Record<string, number> = {};
+      for (const row of sessions) {
+        if (!row.started_at) continue;
+        const dayKey = getISTDateString(row.started_at);
+        dayMap[dayKey] = (dayMap[dayKey] || 0) + (Number(row.duration_seconds) || 0);
+      }
+      const streakResult = calculateStudyStreak(dayMap);
+      setStreak(streakResult.streak);
     } catch (err) {
       console.warn('[useUserStudyStats] error fetching stats:', err);
     } finally {

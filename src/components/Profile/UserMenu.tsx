@@ -16,7 +16,7 @@ function initials(name: string) {
 
 export function UserMenu({ compact = false }: { compact?: boolean }) {
   const navigate = useNavigate();
-  const { profile, loading, isAuthenticated, signOut } = useProfile();
+  const { profile, loading, isAuthenticated, signOut, user, googleAvatar } = useProfile();
   const { streak } = useUserStreak();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [lite, setLite] = useState<boolean>(() => {
