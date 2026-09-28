@@ -18,7 +18,7 @@ const Index = () => {
 
   return (
     <Layout>
-      <div ref={scrollRef} className="overflow-x-hidden selection:bg-brand-yellow selection:text-brand-dark dark:selection:bg-brand-blue dark:selection:text-white min-h-screen relative">
+      <div ref={scrollRef} className="w-full bg-background blueprint-grid text-on-surface overflow-x-hidden selection:bg-brand-yellow selection:text-brand-dark dark:selection:bg-brand-blue dark:selection:text-white min-h-screen relative">
         <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-16">
           
           {/* ───── HERO ───── */}
