@@ -33,6 +33,20 @@ export interface Profile {
 
 import { safeRandomUUID } from '@/lib/utils';
 
+export function extractGoogleAvatar(user: User | null | undefined): string | null {
+  if (!user) return null;
+  const meta = (user.user_metadata || {}) as Record<string, any>;
+  if (typeof meta.avatar_url === 'string' && meta.avatar_url.trim()) return meta.avatar_url.trim();
+  if (typeof meta.picture === 'string' && meta.picture.trim()) return meta.picture.trim();
+  if (Array.isArray(user.identities)) {
+    const googleId = user.identities.find((i) => i.provider === 'google');
+    const data = (googleId?.identity_data || {}) as Record<string, any>;
+    if (typeof data.avatar_url === 'string' && data.avatar_url.trim()) return data.avatar_url.trim();
+    if (typeof data.picture === 'string' && data.picture.trim()) return data.picture.trim();
+  }
+  return null;
+}
+
 function getOrCreateDeviceId(): string {
   let id = localStorage.getItem(DEVICE_ID_KEY);
   if (!id) {
