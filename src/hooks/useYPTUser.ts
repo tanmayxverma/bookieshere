@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { validateName, canChangeName, type YPTUser, type NameChangeEntry } from '@/types/ypt';
+import { safeRandomUUID } from '@/lib/utils';
 
 const DEVICE_ID_KEY = 'ypt_device_id';
 
 function getOrCreateDeviceId(): string {
   let id = localStorage.getItem(DEVICE_ID_KEY);
   if (!id) {
-    id = crypto.randomUUID();
+    id = safeRandomUUID();
     localStorage.setItem(DEVICE_ID_KEY, id);
   }
   return id;
@@ -20,13 +21,24 @@ export function useYPTUser() {
 
   const fetchUser = useCallback(async () => {
     setIsLoading(true);
-    const { data } = await (supabase as any)
+    let { data } = await (supabase as any)
       .from('ypt_users')
       .select('*')
       .eq('device_id', deviceId)
       .maybeSingle();
+
+    if (!data) {
+      try {
+        const { data: created } = await (supabase as any)
+          .from('ypt_users')
+          .insert({ device_id: deviceId, name: 'Aspirant', jee_focus_year: 'JEE 2026', name_change_history: [] })
+          .select()
+          .single();
+        if (created) data = created;
+      } catch {}
+    }
+
     if (data) {
-      // Ensure name_change_history is parsed
       data.name_change_history = Array.isArray(data.name_change_history) ? data.name_change_history : [];
     }
     setUser(data);

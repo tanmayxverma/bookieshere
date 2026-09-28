@@ -81,10 +81,18 @@ export function useRoomSession(
     const updateCounts = () => {
       const state = channel.presenceState();
       const counts: Record<string, number> = {};
+      const countedUsersPerRoom: Record<string, Set<string>> = {};
       Object.values(state).forEach((presences: any) => {
         presences.forEach((p: any) => {
           if (p.room_id) {
-            counts[p.room_id] = (counts[p.room_id] || 0) + 1;
+            const uid = p.user_id || 'anon';
+            if (!countedUsersPerRoom[p.room_id]) {
+              countedUsersPerRoom[p.room_id] = new Set();
+            }
+            if (!countedUsersPerRoom[p.room_id].has(uid)) {
+              countedUsersPerRoom[p.room_id].add(uid);
+              counts[p.room_id] = (counts[p.room_id] || 0) + 1;
+            }
           }
         });
       });
@@ -111,12 +119,69 @@ export function useRoomSession(
     };
   }, [currentUser?.id]);
 
+  // Re-track on global channel whenever activeRoomId changes
+  useEffect(() => {
+    if (!currentUser || !globalChannelRef.current) return;
+    try {
+      globalChannelRef.current.track({
+        user_id: currentUser.id,
+        name: currentUser.name,
+        room_id: activeRoomId || null,
+      });
+    } catch {}
+  }, [activeRoomId, currentUser?.id, currentUser?.name]);
+
   // Room-specific presence
   useEffect(() => {
     if (!activeRoomId || !currentUser) {
       setPresenceMembers([]);
       return;
     }
+
+    // Immediately ensure current user is listed in presence
+    setPresenceMembers(prev => {
+      if (prev.some(m => m.user_id === currentUser.id)) return prev;
+      return [{
+        user_id: currentUser.id,
+        name: currentUser.name,
+        jee_focus_year: currentUser.jee_focus_year || '2026',
+      }, ...prev];
+    });
+
+    // Query active members from DB to instantly populate room list while realtime presence syncs
+    (supabase as any)
+      .from('ypt_room_members')
+      .select('ypt_user_id, ypt_users(id, name, jee_focus_year)')
+      .eq('room_id', activeRoomId)
+      .then(({ data }: any) => {
+        if (data && data.length > 0) {
+          const dbMembers: PresenceMember[] = data
+            .filter((d: any) => d.ypt_users?.name)
+            .map((d: any) => ({
+              user_id: d.ypt_users.id || d.ypt_user_id,
+              name: d.ypt_users.name,
+              jee_focus_year: d.ypt_users.jee_focus_year || '2026',
+            }));
+          setPresenceMembers(prev => {
+            const seen = new Set<string>();
+            const merged: PresenceMember[] = [];
+            seen.add(currentUser.id);
+            merged.push({
+              user_id: currentUser.id,
+              name: currentUser.name,
+              jee_focus_year: currentUser.jee_focus_year || '2026',
+            });
+            [...prev, ...dbMembers].forEach(m => {
+              if (!seen.has(m.user_id)) {
+                seen.add(m.user_id);
+                merged.push(m);
+              }
+            });
+            return merged;
+          });
+        }
+      })
+      .catch(() => {});
 
     const channel = supabase.channel(`room_presence_${activeRoomId}`, {
       config: { presence: { key: currentUser.id } },
@@ -127,11 +192,24 @@ export function useRoomSession(
       const state = channel.presenceState();
       const members: PresenceMember[] = [];
       const seen = new Set<string>();
+
+      // Always guarantee currentUser is in room
+      seen.add(currentUser.id);
+      members.push({
+        user_id: currentUser.id,
+        name: currentUser.name,
+        jee_focus_year: currentUser.jee_focus_year || '2026',
+      });
+
       Object.values(state).forEach((presences: any) => {
         presences.forEach((p: any) => {
-          if (!seen.has(p.user_id)) {
+          if (p.user_id && !seen.has(p.user_id)) {
             seen.add(p.user_id);
-            members.push({ user_id: p.user_id, name: p.name, jee_focus_year: p.jee_focus_year });
+            members.push({
+              user_id: p.user_id,
+              name: p.name || 'Aspirant',
+              jee_focus_year: p.jee_focus_year || '2026',
+            });
           }
         });
       });
@@ -144,13 +222,15 @@ export function useRoomSession(
       .on('presence', { event: 'leave' }, syncMembers)
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
-          await channel.track({
-            user_id: currentUser.id,
-            name: currentUser.name,
-            jee_focus_year: currentUser.jee_focus_year,
-            room_id: activeRoomId,
-          });
-          // Also update global channel
+          try {
+            await channel.track({
+              user_id: currentUser.id,
+              name: currentUser.name,
+              jee_focus_year: currentUser.jee_focus_year,
+              room_id: activeRoomId,
+            });
+          } catch {}
+
           if (globalChannelRef.current) {
             try {
               await globalChannelRef.current.track({
@@ -163,10 +243,7 @@ export function useRoomSession(
         }
       });
 
-    // Don't remove channel on cleanup — leaveRoom handles untrack explicitly
-    // Only remove if activeRoomId changes (switching rooms) or unmount
     return () => {
-      // Channel removal triggers implicit untrack on server side
       supabase.removeChannel(channel);
       roomPresenceRef.current = null;
     };
@@ -177,7 +254,6 @@ export function useRoomSession(
     if (!currentUser) return;
 
     const handleBeforeUnload = () => {
-      // Use sendBeacon to remove from room_members
       if (activeRoomId) {
         const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/ypt_room_members?ypt_user_id=eq.${currentUser.id}`;
         navigator.sendBeacon(url, new Blob([], { type: 'application/json' }));
@@ -199,64 +275,83 @@ export function useRoomSession(
       .maybeSingle()
       .then(({ data }: any) => {
         if (!data) {
-          // Room was deleted
           setActiveRoomId(null);
           setActiveRoomName(null);
           setActiveRoomEmoji(null);
           localStorage.removeItem(ROOM_STORAGE_KEY);
         }
-      });
+      })
+      .catch(() => {});
   }, []);
 
   const joinRoom = useCallback(async (roomId: string, roomName: string, roomEmoji: string) => {
     if (!currentUser) return;
-    // DB record
-    await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
-    await (supabase as any).from('ypt_room_members').insert({ room_id: roomId, ypt_user_id: currentUser.id });
-    await (supabase as any).from('ypt_rooms').update({ last_activity_at: new Date().toISOString() }).eq('id', roomId);
-    
+
+    // 1. Optimistic immediate state update (0ms perceived latency)
     setActiveRoomId(roomId);
     setActiveRoomName(roomName);
     setActiveRoomEmoji(roomEmoji);
+    setPresenceMembers(prev => {
+      if (prev.some(m => m.user_id === currentUser.id)) return prev;
+      return [{
+        user_id: currentUser.id,
+        name: currentUser.name,
+        jee_focus_year: currentUser.jee_focus_year || '2026',
+      }, ...prev];
+    });
 
-    // Auto-start session if not active
-    if (!isTimerActive) {
+    // 2. Perform DB operations asynchronously in background
+    (async () => {
+      try {
+        await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
+        await (supabase as any).from('ypt_room_members').insert({ room_id: roomId, ypt_user_id: currentUser.id });
+        await (supabase as any).from('ypt_rooms').update({ last_activity_at: new Date().toISOString() }).eq('id', roomId);
+      } catch (err) {
+        console.warn('Room join background sync error:', err);
+      }
+    })();
+
+    // 3. Auto-start study session if not active
+    if (!isTimerActiveRef.current) {
       try { await startSession('Self Study'); } catch {}
     }
-  }, [currentUser?.id, isTimerActive, startSession]);
+  }, [currentUser?.id, currentUser?.name, currentUser?.jee_focus_year, startSession]);
 
   const leaveRoom = useCallback(async () => {
     if (!currentUser) return;
-    
-    // 1. Stop the study timer FIRST (use ref for fresh value)
-    if (isTimerActiveRef.current) {
-      try { await endSessionRef.current(); } catch {}
-    }
+    const leavingUserId = currentUser.id;
+    const leavingName = currentUser.name;
 
-    // 2. Untrack from room presence (triggers leave event for other users)
-    if (roomPresenceRef.current) {
-      try { await roomPresenceRef.current.untrack(); } catch {}
-    }
-    
-    // 3. Clear global room association
-    if (globalChannelRef.current) {
-      try {
-        await globalChannelRef.current.track({
-          user_id: currentUser.id,
-          name: currentUser.name,
-          room_id: null,
-        });
-      } catch {}
-    }
-    
-    // 4. Remove DB record
-    await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', currentUser.id);
-
-    // 5. Clear local state (this triggers the presence useEffect cleanup which removes the channel)
+    // 1. Optimistically clear local state immediately for instant navigation
     setActiveRoomId(null);
     setActiveRoomName(null);
     setActiveRoomEmoji(null);
     setPresenceMembers([]);
+
+    // 2. Teardown presence, timer, and DB records in parallel/background
+    (async () => {
+      if (isTimerActiveRef.current) {
+        try { await endSessionRef.current(); } catch {}
+      }
+
+      if (roomPresenceRef.current) {
+        try { await roomPresenceRef.current.untrack(); } catch {}
+      }
+
+      if (globalChannelRef.current) {
+        try {
+          await globalChannelRef.current.track({
+            user_id: leavingUserId,
+            name: leavingName,
+            room_id: null,
+          });
+        } catch {}
+      }
+
+      try {
+        await (supabase as any).from('ypt_room_members').delete().eq('ypt_user_id', leavingUserId);
+      } catch {}
+    })();
   }, [currentUser?.id, currentUser?.name]);
 
   return {

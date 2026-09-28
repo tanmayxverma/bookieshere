@@ -1,0 +1,125 @@
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useYPTUser } from './useYPTUser';
+import { calculateStudyStreak, getISTDateString, getISTStudyDayString } from '@/types/ypt';
+
+const CACHE_KEY = 'bookie_user_streak';
+
+export function useUserStreak() {
+  const { user } = useYPTUser();
+  const [streak, setStreak] = useState<number>(() => {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      return raw ? JSON.parse(raw).streak || 0 : 0;
+    } catch {
+      return 0;
+    }
+  });
+  const [longestStreak, setLongestStreak] = useState<number>(() => {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      return raw ? JSON.parse(raw).longestStreak || 0 : 0;
+    } catch {
+      return 0;
+    }
+  });
+  const [todaySeconds, setTodaySeconds] = useState(0);
+  const [isAliveToday, setIsAliveToday] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const refreshStreak = useCallback(async () => {
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
+    try {
+      const { data, error } = await (supabase as any)
+        .from('study_sessions')
+        .select('started_at, duration_seconds, status')
+        .eq('ypt_user_id', user.id)
+        .eq('status', 'completed');
+
+      if (error) throw error;
+
+      const dayMap: Record<string, number> = {};
+      const todayKey = getISTStudyDayString();
+      let todaySum = 0;
+
+      (data || []).forEach((row: any) => {
+        if (!row.started_at) return;
+        const dayKey = getISTDateString(row.started_at);
+        const dur = row.duration_seconds || 0;
+        dayMap[dayKey] = (dayMap[dayKey] || 0) + dur;
+        if (dayKey === todayKey) {
+          todaySum += dur;
+        }
+      });
+
+      // Also check if an active timer is running in localStorage
+      let liveElapsed = 0;
+      try {
+        const rawTimer = localStorage.getItem('ypt_active_timer');
+        if (rawTimer) {
+          const parsed = JSON.parse(rawTimer);
+          if (parsed && !parsed.pausedAt && parsed.startTime) {
+            liveElapsed = Math.floor((Date.now() - parsed.startTime) / 1000);
+          }
+        }
+      } catch {}
+
+      const calculated = calculateStudyStreak(dayMap, liveElapsed);
+      setStreak(calculated.streak);
+      setLongestStreak(calculated.longestStreak);
+      setTodaySeconds(todaySum + liveElapsed);
+      setIsAliveToday(calculated.isAliveToday);
+
+      try {
+        localStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({
+            streak: calculated.streak,
+            longestStreak: calculated.longestStreak,
+            updatedAt: Date.now(),
+          })
+        );
+      } catch {}
+    } catch (err) {
+      console.warn('Could not compute streak:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    refreshStreak();
+  }, [refreshStreak]);
+
+  // Subscribe to realtime study_sessions updates
+  useEffect(() => {
+    if (!user?.id) return;
+    const channelName = `streak-${user.id}-${Math.random().toString(36).substring(2, 7)}`;
+    const ch = supabase
+      .channel(channelName)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'study_sessions', filter: `ypt_user_id=eq.${user.id}` },
+        () => {
+          refreshStreak();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(ch);
+    };
+  }, [user?.id, refreshStreak]);
+
+  return {
+    streak,
+    longestStreak,
+    todaySeconds,
+    isAliveToday,
+    loading,
+    refetch: refreshStreak,
+  };
+}

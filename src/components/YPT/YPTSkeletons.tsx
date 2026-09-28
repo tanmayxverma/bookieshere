@@ -1,34 +1,75 @@
-import { Timer, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Sparkles, Activity, ShieldCheck } from 'lucide-react';
+import logo from '@/assets/logo.jfif';
 
 export function YPTLoadingSkeleton() {
-  return (
-    <div className="relative flex flex-col items-center justify-center min-h-[70vh] animate-fade-in overflow-hidden">
-      {/* Ambient aurora */}
-      <div className="absolute inset-0 aurora-bg opacity-60 pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-primary/10 blur-[100px] blob-a pointer-events-none" />
-      <div className="absolute top-1/3 right-1/3 w-[260px] h-[260px] rounded-full bg-[hsl(195_85%_55%_/_0.10)] blur-[90px] blob-b pointer-events-none" />
+  const [stepIndex, setStepIndex] = useState(0);
+  const steps = [
+    "Initializing Bookie Focus Engine...",
+    "Calibrating real-time study stopwatch...",
+    "Syncing live leaderboard & streaks...",
+    "Readying your study cockpit...",
+  ];
 
-      <div className="relative z-10 flex flex-col items-center">
-        <div className="relative w-24 h-24">
-          {/* Spinning conic ring */}
-          <div className="absolute inset-0 rounded-full loader-ring" />
-          <div className="absolute inset-[3px] rounded-full bg-background/95 backdrop-blur-md flex items-center justify-center">
-            <Timer className="h-9 w-9 text-primary" />
-          </div>
-          <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-primary/70 animate-pulse" />
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStepIndex((prev) => (prev + 1) % steps.length);
+    }, 1100);
+    return () => clearInterval(timer);
+  }, [steps.length]);
+
+  return (
+    <div className="relative flex flex-col items-center justify-center min-h-[75vh] px-4 py-12 animate-fade-in overflow-hidden">
+      {/* Engineering blueprint background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,102,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,102,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-primary/8 blur-[120px] pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col items-center max-w-sm w-full text-center">
+        {/* Top Status Pill */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/70 border border-blue-200 dark:border-blue-800/60 text-blue-700 dark:text-blue-300 font-mono text-[11px] font-bold uppercase tracking-wider mb-8 shadow-xs">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>YPT COCKPIT // SECURE BOOT</span>
         </div>
-        <p className="mt-7 text-lg font-display font-bold tracking-tight">
-          Loading <span className="text-gradient-glow">YPT</span>
-        </p>
-        <p className="mt-1 text-xs text-muted-foreground tracking-wider uppercase">Preparing your study space</p>
-        <div className="mt-5 flex gap-1.5">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="w-1.5 h-1.5 rounded-full bg-primary/60"
-              style={{ animation: `pulse 1.2s ease-in-out ${i * 0.18}s infinite` }}
-            />
-          ))}
+
+        {/* Central Logo & Orbital Rings */}
+        <div className="relative w-28 h-28 flex items-center justify-center mb-6">
+          {/* Outer pulsed ring */}
+          <div className="absolute inset-0 rounded-3xl border-2 border-dashed border-primary/40 animate-[spin_12s_linear_infinite]" />
+          {/* Inner glowing ring */}
+          <div className="absolute inset-2 rounded-2xl border-2 border-primary/60 animate-[spin_8s_linear_infinite_reverse]" />
+          
+          {/* Center Logo with shadow */}
+          <div className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] bg-white p-1">
+            <img src={logo} alt="Bookie" className="w-full h-full object-cover rounded-xl" />
+          </div>
+
+          <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-amber-500 animate-bounce" />
+        </div>
+
+        {/* Title */}
+        <h2 className="text-2xl font-black font-display tracking-tight text-on-surface">
+          Booting <span className="text-primary italic">YPT Cockpit</span>
+        </h2>
+
+        {/* Dynamic status ticker */}
+        <div className="h-6 mt-2 flex items-center justify-center">
+          <p className="text-xs font-mono font-medium text-on-surface-variant/90 transition-all duration-300 flex items-center gap-1.5">
+            <Activity className="w-3.5 h-3.5 text-primary animate-pulse" />
+            {steps[stepIndex]}
+          </p>
+        </div>
+
+        {/* Crisp Progress Bar */}
+        <div className="w-full mt-6 bg-surface-container-high rounded-full h-2 overflow-hidden border border-slate-300 dark:border-slate-700 p-0.5">
+          <div className="h-full bg-gradient-to-r from-blue-600 via-primary to-indigo-600 rounded-full animate-[progress_1.8s_ease-in-out_infinite] w-2/3" />
+        </div>
+
+        {/* Micro Footer Indicator */}
+        <div className="flex items-center justify-between w-full mt-4 text-[10px] font-mono text-on-surface-variant/60 uppercase">
+          <span className="flex items-center gap-1">
+            <ShieldCheck className="w-3 h-3 text-emerald-600" /> ANTI-CHEAT VERIFIED
+          </span>
+          <span>EST. LATENCY: &lt;18MS</span>
         </div>
       </div>
     </div>

@@ -92,7 +92,7 @@ export default function AdminMaterials() {
 
   const filtered = items.filter(m =>
     !q.trim() ||
-    m.name.toLowerCase().includes(q.toLowerCase()) ||
+    (m.name || '').toLowerCase().includes(q.toLowerCase()) ||
     (m.description ?? '').toLowerCase().includes(q.toLowerCase())
   );
 

@@ -1,46 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
-
 @layer base {
   :root {
-    /* LIGHT THEME — Premium Calm SaaS */
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    /* LIGHT THEME — Neo-Brutalism SaaS */
+    --background: 210 20% 98%;
+    --foreground: 0 0% 0%;
 
-    --surface-1: 210 33% 96%;
-    --surface-2: 0 0% 100%;
-    --surface-3: 214 30% 95%;
+    --surface-1: 0 0% 100%;
+    --surface-2: 0 0% 96%;
+    --surface-3: 0 0% 92%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 217 91% 60%;
+    --primary: 224 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 217 83% 53%;
+    --primary-hover: 224 100% 45%;
 
-    --secondary: 214 32% 91%;
-    --secondary-foreground: 222 47% 20%;
+    --secondary: 54 100% 50%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 214 25% 93%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 30%;
 
-    --accent: 214 95% 93%;
-    --accent-foreground: 217 83% 53%;
+    --accent: 54 100% 50%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 70% 55%;
+    --destructive: 0 100% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 217 91% 60%;
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 224 100% 50%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     --section: 210 33% 96%;
 
@@ -58,41 +58,78 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 214 32% 91%;
     --sidebar-ring: 217 91% 60%;
+
+    /* Blueprint Arcade Tokens - Light */
+    --surface-arcade: 250 100% 99%;
+    --surface-dim-arcade: 228 58% 89%;
+    --surface-bright-arcade: 250 100% 99%;
+    --surface-container-lowest: 0 0% 100%;
+    --surface-container-low: 236 100% 97%;
+    --surface-container: 231 100% 96%;
+    --surface-container-high: 229 100% 94%;
+    --surface-container-highest: 227 94% 93%;
+    --on-surface: 223 41% 13%;
+    --on-surface-variant: 230 13% 30%;
+    --inverse-surface: 223 26% 21%;
+    --inverse-on-surface: 233 100% 97%;
+    --inverse-primary: 226 100% 85%;
+    --outline-variant: 230 18% 80%;
+    --outline: 230 18% 65%;
+    --surface-tint: 217 100% 43%;
+    --primary-container: 217 100% 50%;
+    --on-primary-container: 240 100% 98%;
+    --secondary-container: 43 100% 58%;
+    --on-secondary-container: 44 100% 22%;
+    --secondary-fixed: 40 100% 81%;
+    --secondary-fixed-dim: 43 95% 55%;
+    --on-secondary-fixed: 40 100% 7%;
+    --on-secondary-fixed-variant: 44 100% 18%;
+    --tertiary: 160 100% 20%;
+    --on-tertiary: 0 0% 100%;
+    --tertiary-container: 161 100% 25%;
+    --on-tertiary-container: 146 100% 90%;
+    --tertiary-fixed: 153 96% 71%;
+    --tertiary-fixed-dim: 155 69% 59%;
+    --on-tertiary-fixed: 154 100% 6%;
+    --on-tertiary-fixed-variant: 160 100% 16%;
+    --error-container: 6 100% 92%;
+    --on-error-container: 356 100% 29%;
+    --surface-variant: 227 94% 93%;
   }
 
   .dark {
     /* DARK THEME — Deep Navy SaaS */
     --background: 218 50% 8%;
-    --foreground: 220 14% 91%;
+    --foreground: 220 14% 94%;
 
     --surface-1: 222 47% 11%;
     --surface-2: 218 50% 9%;
     --surface-3: 222 47% 14%;
 
     --card: 222 47% 11%;
-    --card-foreground: 220 14% 91%;
+    --card-foreground: 220 14% 94%;
 
     --popover: 222 47% 11%;
-    --popover-foreground: 220 14% 91%;
+    --popover-foreground: 220 14% 94%;
 
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 217 83% 53%;
 
     --secondary: 217 33% 17%;
-    --secondary-foreground: 218 11% 65%;
+    --secondary-foreground: 218 11% 85%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 218 11% 65%;
+    --muted: 217 33% 16%;
+    --muted-foreground: 218 14% 75%;
 
-    --accent: 217 33% 22%;
+    --accent: 217 33% 20%;
     --accent-foreground: 217 91% 70%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
     --ring: 217 91% 60%;
 
     --section: 218 50% 9%;
@@ -104,23 +141,81 @@
     --other-exam: 200 60% 55%;
 
     --sidebar-background: 218 50% 7%;
-    --sidebar-foreground: 220 14% 91%;
+    --sidebar-foreground: 220 14% 94%;
     --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 220 14% 91%;
-    --sidebar-border: 217 33% 17%;
+    --sidebar-accent-foreground: 220 14% 94%;
+    --sidebar-border: 217 33% 20%;
     --sidebar-ring: 217 91% 60%;
+
+    /* Blueprint Arcade Tokens - Dark (Deep Navy SaaS & High Contrast) */
+    --surface-arcade: 218 50% 8%;
+    --surface-dim-arcade: 218 50% 6%;
+    --surface-bright-arcade: 222 47% 14%;
+    --surface-container-lowest: 222 47% 10%;
+    --surface-container-low: 222 45% 12%;
+    --surface-container: 222 42% 14%;
+    --surface-container-high: 222 38% 18%;
+    --surface-container-highest: 222 35% 22%;
+    --on-surface: 220 20% 95%;
+    --on-surface-variant: 218 14% 75%;
+    --inverse-surface: 220 20% 95%;
+    --inverse-on-surface: 218 50% 8%;
+    --inverse-primary: 217 91% 60%;
+    --outline-variant: 217 33% 22%;
+    --outline: 217 33% 32%;
+    --surface-tint: 217 91% 60%;
+    --primary-container: 217 91% 60%;
+    --on-primary-container: 0 0% 100%;
+    --secondary-container: 43 90% 40%;
+    --on-secondary-container: 43 100% 95%;
+    --secondary-fixed: 43 90% 40%;
+    --secondary-fixed-dim: 43 95% 45%;
+    --on-secondary-fixed: 0 0% 100%;
+    --on-secondary-fixed-variant: 43 100% 90%;
+    --tertiary: 160 84% 50%;
+    --on-tertiary: 0 0% 100%;
+    --tertiary-container: 161 70% 20%;
+    --on-tertiary-container: 146 100% 90%;
+    --tertiary-fixed: 153 96% 71%;
+    --tertiary-fixed-dim: 155 69% 59%;
+    --on-tertiary-fixed: 154 100% 6%;
+    --on-tertiary-fixed-variant: 160 100% 16%;
+    --error-container: 356 60% 20%;
+    --on-error-container: 356 100% 90%;
+    --surface-variant: 222 35% 22%;
   }
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
   * {
-    @apply border-border transition-colors duration-200;
+    @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply text-brand-dark font-sans antialiased bg-background;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-color: #F8FAFD;
+    background-image: 
+      linear-gradient(to right, rgba(0, 102, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 102, 255, 0.05) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .dark body,
+  html.dark body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -128,13 +223,124 @@
   }
 }
 
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-page-enter {
+  animation: pageEnter 0.15s ease-out both;
+}
+
 @layer utilities {
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .blueprint-grid {
+    background-color: #faf8ff;
+    background-image: 
+      linear-gradient(to right, rgba(194, 198, 217, 0.3) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(194, 198, 217, 0.3) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .dark .blueprint-grid {
+    background-color: #0A0F1D;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
   .font-display {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Syne', sans-serif;
   }
   
   .font-sans {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .wavy-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .wavy-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 8px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M0,7 Q 25,0 50,7 T 100,7' fill='none' stroke='%23FACC15' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+
+  .sticker-tape {
+    position: absolute;
+    top: -12px;
+    left: 40%;
+    width: 55px;
+    height: 22px;
+    background-color: rgba(254, 240, 138, 0.75);
+    border: 1px dashed rgba(202, 138, 4, 0.5);
+    transform: rotate(-3deg);
+    backdrop-filter: blur(2px);
+  }
+
+  .dark .sticker-tape {
+    background-color: rgba(180, 83, 9, 0.35);
+    border: 1px dashed rgba(245, 158, 11, 0.4);
+  }
+
+  /* Neo-brutalist utilities (kept for fallback compatibility) */
+  .brutal-border {
+    @apply border-2 border-black dark:border-slate-700;
+  }
+  .brutal-shadow {
+    box-shadow: 4px 4px 0px 0px #000;
+  }
+  .dark .brutal-shadow {
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.7);
+  }
+  .brutal-shadow-sm {
+    box-shadow: 2px 2px 0px 0px #000;
+  }
+  .dark .brutal-shadow-sm {
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.7);
+  }
+  .brutal-shadow-lg {
+    box-shadow: 8px 8px 0px 0px #000;
+  }
+  .dark .brutal-shadow-lg {
+    box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.7);
+  }
+  .brutal-btn {
+    @apply border-2 border-black dark:border-slate-700 brutal-shadow font-bold transition-transform active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:-translate-y-[2px] hover:-translate-x-[2px] hover:shadow-[6px_6px_0px_0px_#000] dark:hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.7)];
+  }
+  .brutal-card {
+    @apply border-2 border-black dark:border-slate-700 brutal-shadow bg-card;
   }
 }
 

@@ -80,6 +80,7 @@ export const JEE_YEARS = ['JEE 2027', 'JEE 2028', 'Early Starter'] as const;
 export const TIMER_STORAGE_KEY = 'ypt_active_timer';
 
 export const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000; // +5:30
+export const STUDY_DAY_CUTOFF_HOUR = 3; // 3:00 AM IST daily reset
 
 /** Get current time in IST as a Date object */
 export function getISTDate(date?: Date): Date {
@@ -88,37 +89,142 @@ export function getISTDate(date?: Date): Date {
   return new Date(utc + IST_OFFSET_MS);
 }
 
-/** Get IST midnight (start of today in IST) as a UTC ISO string */
+/**
+ * Get the Start of the active "Study Day" in IST as a UTC ISO string.
+ * The daily reset is 3:00 AM IST.
+ * If the current IST time is before 3:00 AM, the study day started at 3:00 AM on the previous day.
+ */
 export function getISTTodayStartUTC(): string {
   const ist = getISTDate();
-  ist.setHours(0, 0, 0, 0);
-  // Convert back to UTC
+  if (ist.getHours() < STUDY_DAY_CUTOFF_HOUR) {
+    ist.setDate(ist.getDate() - 1);
+  }
+  ist.setHours(STUDY_DAY_CUTOFF_HOUR, 0, 0, 0);
   const utcMs = ist.getTime() - IST_OFFSET_MS;
   return new Date(utcMs).toISOString();
 }
 
-/** Check if a UTC timestamp falls on "today" in IST */
-/** Get IST midnight of the current week's Monday as a UTC ISO string */
+/** Get IST start of current study week (Monday 3:00 AM IST) as a UTC ISO string */
 export function getISTWeekStartUTC(): string {
   const ist = getISTDate();
+  if (ist.getHours() < STUDY_DAY_CUTOFF_HOUR) {
+    ist.setDate(ist.getDate() - 1);
+  }
   const day = ist.getDay(); // 0 = Sunday
   const diff = day === 0 ? 6 : day - 1; // days since Monday
   ist.setDate(ist.getDate() - diff);
-  ist.setHours(0, 0, 0, 0);
+  ist.setHours(STUDY_DAY_CUTOFF_HOUR, 0, 0, 0);
   return new Date(ist.getTime() - IST_OFFSET_MS).toISOString();
 }
 
-/** Check if a UTC timestamp falls on "today" in IST */
-export function isISTToday(utcTimestamp: string): boolean {
-  const istDate = getISTDate(new Date(utcTimestamp));
-  const istNow = getISTDate();
-  return istDate.toDateString() === istNow.toDateString();
+/**
+ * Get IST study day string (YYYY-MM-DD) for any timestamp based on 3:00 AM IST reset.
+ * For example:
+ * 2:30 AM IST on Sept 29 -> "2026-09-28" (yesterday's study day)
+ * 3:01 AM IST on Sept 29 -> "2026-09-29" (today's study day)
+ */
+export function getISTDateString(utcTimestamp?: string | Date | number): string {
+  const d = utcTimestamp ? (typeof utcTimestamp === 'string' || typeof utcTimestamp === 'number' ? new Date(utcTimestamp) : utcTimestamp) : new Date();
+  const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+  // Shift by IST (+5:30) minus 3 hours rollover (-3:00)
+  const studyDate = new Date(utc + IST_OFFSET_MS - STUDY_DAY_CUTOFF_HOUR * 3600 * 1000);
+  return studyDate.toISOString().split('T')[0];
 }
 
-/** Get the IST date string (YYYY-MM-DD) from a UTC timestamp */
-export function getISTDateString(utcTimestamp: string): string {
-  const ist = getISTDate(new Date(utcTimestamp));
-  return ist.toISOString().split('T')[0];
+/**
+ * Get IST date string for today's active study day (YYYY-MM-DD) based on 3:00 AM IST reset.
+ */
+export function getISTStudyDayString(): string {
+  return getISTDateString(new Date());
+}
+
+/** Check if a UTC timestamp falls on the current active study day in IST (based on 3:00 AM IST reset) */
+export function isISTToday(utcTimestamp: string): boolean {
+  return getISTDateString(utcTimestamp) === getISTStudyDayString();
+}
+
+/**
+ * Calculate study streak with 3:00 AM IST daily rollover:
+ * - If user studied on today's study day: streak includes today!
+ * - If user hasn't studied today yet, but studied yesterday (the previous 3 AM - 3 AM window):
+ *   the streak from yesterday is STILL ALIVE (grace period until 3:00 AM IST)!
+ * - Steps backwards consecutive days to count full streak length.
+ */
+export function calculateStudyStreak(dayMap: Record<string, number>, liveElapsedSeconds = 0): {
+  streak: number;
+  longestStreak: number;
+  isAliveToday: boolean;
+} {
+  const todayKey = getISTStudyDayString();
+  const todaySecs = (dayMap[todayKey] || 0) + liveElapsedSeconds;
+  const MIN_SECS = 300; // 5 minutes minimum to count a day
+
+  // Find yesterday's key relative to current study day
+  const istNow = getISTDate();
+  if (istNow.getHours() < STUDY_DAY_CUTOFF_HOUR) {
+    istNow.setDate(istNow.getDate() - 1);
+  }
+  
+  let currentStreak = 0;
+  const checkDate = new Date(istNow);
+
+  // Check if today qualifies
+  const todayQualifies = todaySecs >= MIN_SECS;
+
+  if (todayQualifies) {
+    currentStreak = 1;
+    checkDate.setDate(checkDate.getDate() - 1);
+  } else {
+    // Today hasn't qualified yet. Check if yesterday qualified
+    checkDate.setDate(checkDate.getDate() - 1);
+    const yesterdayKey = checkDate.toISOString().split('T')[0];
+    const yesterdaySecs = dayMap[yesterdayKey] || 0;
+    if (yesterdaySecs >= MIN_SECS) {
+      currentStreak = 1;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      return { streak: 0, longestStreak: calculateLongestStreak(dayMap), isAliveToday: false };
+    }
+  }
+
+  // Count backwards consecutive qualifying days
+  for (let i = 0; i < 365; i++) {
+    const key = checkDate.toISOString().split('T')[0];
+    const secs = dayMap[key] || 0;
+    if (secs >= MIN_SECS) {
+      currentStreak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  const longest = Math.max(currentStreak, calculateLongestStreak(dayMap));
+
+  return {
+    streak: currentStreak,
+    longestStreak: longest,
+    isAliveToday: todayQualifies,
+  };
+}
+
+function calculateLongestStreak(dayMap: Record<string, number>): number {
+  const keys = Object.keys(dayMap).filter(k => (dayMap[k] || 0) >= 300).sort();
+  if (keys.length === 0) return 0;
+  let max = 1;
+  let current = 1;
+  for (let i = 1; i < keys.length; i++) {
+    const prev = new Date(keys[i - 1]);
+    const curr = new Date(keys[i]);
+    const diffDays = Math.round((curr.getTime() - prev.getTime()) / 86400000);
+    if (diffDays === 1) {
+      current++;
+      if (current > max) max = current;
+    } else if (diffDays > 1) {
+      current = 1;
+    }
+  }
+  return max;
 }
 
 export function formatTime(seconds: number): string {

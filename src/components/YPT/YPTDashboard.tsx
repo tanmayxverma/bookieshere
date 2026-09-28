@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { formatHours, getISTDate, getISTDateString, getISTTodayStartUTC } from '@/types/ypt';
+import { formatHours, getISTDate, getISTDateString, getISTTodayStartUTC, calculateStudyStreak } from '@/types/ypt';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Clock, Flame, TrendingUp, Calendar } from 'lucide-react';
 import { YPTContentSkeleton } from './YPTSkeletons';
@@ -74,17 +74,8 @@ export function YPTDashboard({ userId, liveElapsed = 0 }: Props) {
     });
   }
 
-  // Streak (minimum 15 min / day)
-  let streak = 0;
-  for (let i = 0; i < 365; i++) {
-    const d = getISTDate();
-    d.setDate(d.getDate() - i);
-    const key = d.toISOString().split('T')[0];
-    let daySecs = dayMap[key] || 0;
-    if (i === 0) daySecs += liveElapsed;
-    if (daySecs >= 900) streak++;
-    else break;
-  }
+  // Streak calculation (3:00 AM IST daily rollover)
+  const { streak } = calculateStudyStreak(dayMap, liveElapsed);
 
   // Best day
   const allDayValues = Object.entries(dayMap).map(([k, v]) => {

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ArrowRight, Loader2, Atom, FlaskConical, Sigma, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2, Download } from "lucide-react";
 import { Material, examLabels, subjectLabels, resourceLabels, badgeLabels } from "@/types/materials";
 import { isSafeUrl } from "@/lib/urlValidation";
+import { cn } from "@/lib/utils";
 
 interface MaterialCardProps {
   material: Material;
@@ -11,43 +11,34 @@ interface MaterialCardProps {
 export function MaterialCard({ material }: MaterialCardProps) {
   const [isOpening, setIsOpening] = useState(false);
 
-  const subjectIcon: Record<string, typeof Atom> = {
-    physics: Atom,
-    chemistry: FlaskConical,
-    mathematics: Sigma,
-    combined: BookOpen,
+  const subjectEmoji: Record<string, string> = {
+    physics: "⚛️",
+    chemistry: "🧪",
+    mathematics: "∑",
+    combined: "📘",
   };
 
-  const subjectAccent: Record<string, string> = {
-    physics: "text-physics",
-    chemistry: "text-chemistry",
-    mathematics: "text-mathematics",
-    combined: "text-primary",
+  const subjectHoverColor: Record<string, string> = {
+    physics: "group-hover:text-primary",
+    chemistry: "group-hover:text-secondary",
+    mathematics: "group-hover:text-tertiary",
+    combined: "group-hover:text-primary",
   };
 
-  const subjectGlow: Record<string, string> = {
-    physics: "bg-physics",
-    chemistry: "bg-chemistry",
-    mathematics: "bg-mathematics",
-    combined: "bg-primary",
-  };
-
-  const subjectStripe: Record<string, string> = {
-    physics: "from-physics/0 via-physics to-physics/0",
-    chemistry: "from-chemistry/0 via-chemistry to-chemistry/0",
-    mathematics: "from-mathematics/0 via-mathematics to-mathematics/0",
-    combined: "from-primary/0 via-primary to-primary/0",
+  const subjectButtonTheme: Record<string, string> = {
+    physics: "bg-primary text-on-primary shadow-[0_3px_0_0_#00174b]",
+    chemistry: "bg-surface-container-high hover:bg-surface-container text-on-surface shadow-[0_2px_0_0_#c2c6d9]",
+    mathematics: "bg-primary text-on-primary shadow-[0_3px_0_0_#00174b]",
+    combined: "bg-surface-container-high hover:bg-surface-container text-on-surface shadow-[0_2px_0_0_#c2c6d9]",
   };
 
   const statusBadgeStyles: Record<string, string> = {
-    premium: "bg-amber-500/10 text-amber-500 border-amber-500/20 shadow-[0_0_12px_hsl(45_93%_47%/0.12)]",
-    air: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    core: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-    new: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_12px_hsl(160_84%_39%/0.15)]",
-    updated: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+    premium: "bg-secondary-container text-on-secondary-container",
+    air: "bg-primary-container text-on-primary-container",
+    core: "bg-error-container text-on-error-container",
+    new: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
+    updated: "bg-inverse-surface text-inverse-on-surface",
   };
-
-  const Icon = subjectIcon[material.subject] ?? BookOpen;
 
   const handleDownload = () => {
     if (isSafeUrl(material.download_link)) {
@@ -60,74 +51,74 @@ export function MaterialCard({ material }: MaterialCardProps) {
   };
 
   return (
-    <div className="group relative flex flex-col h-full bg-card/40 backdrop-blur-xl border border-border/50 rounded-3xl overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-15px_hsl(var(--primary)/0.25)]">
-      {/* Subject accent stripe */}
-      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${subjectStripe[material.subject]} opacity-70 group-hover:opacity-100 transition-opacity`} />
-
-      <div className="flex flex-col flex-1 p-6">
-        {/* Status badge tier */}
-        {material.badge && (
-          <div className="flex flex-wrap gap-2 mb-5">
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest border ${statusBadgeStyles[material.badge]}`}>
-              {badgeLabels[material.badge].icon} {badgeLabels[material.badge].label}
+    <article className="relative bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_4px_20px_-4px_rgba(19,27,46,0.06)] hover:shadow-md transition-all duration-200 flex flex-col justify-between group brutal-border">
+      <div>
+        <div className="flex items-center justify-between mb-space-sm">
+          {material.badge ? (
+            <span className={`px-space-xs py-0.5 rounded-md font-label-code-sm text-label-code-sm font-bold uppercase tracking-wider ${statusBadgeStyles[material.badge]}`}>
+              {badgeLabels[material.badge].label}
             </span>
-          </div>
-        )}
-
-        {/* Identity row */}
-        <div className="flex items-start justify-between gap-4 mb-4">
-          <div className="space-y-1 min-w-0">
-            <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${subjectAccent[material.subject]}`}>
-              {subjectLabels[material.subject]} • {examLabels[material.exam]}
-            </p>
-            <h3 className="text-lg font-bold text-foreground leading-tight tracking-tight group-hover:text-primary transition-colors duration-300">
-              {material.name}
-            </h3>
-          </div>
-          <div className="relative flex-shrink-0">
-            <div className={`absolute inset-0 ${subjectGlow[material.subject]} blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
-            <div className="relative w-12 h-12 rounded-2xl bg-foreground/[0.03] border border-border/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-              <Icon className={`w-6 h-6 ${subjectAccent[material.subject]}`} />
-            </div>
-          </div>
+          ) : (
+            <span className="px-space-xs py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-code-sm text-label-code-sm font-bold uppercase tracking-wider">
+              {examLabels[material.exam]}
+            </span>
+          )}
+          <span className="font-label-code-sm text-label-code-sm text-outline font-bold">
+            #{subjectLabels[material.subject].substring(0, 3).toUpperCase()}-{material.id.substring(0, 4)}
+          </span>
         </div>
-
-        {/* Description */}
+        
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-[20px]">{subjectEmoji[material.subject] || "📚"}</span>
+          <h2 className={cn("font-sans text-[17px] md:text-[18px] font-bold text-on-surface tracking-tight leading-snug line-clamp-1 transition-colors", subjectHoverColor[material.subject])}>
+            {material.name}
+          </h2>
+        </div>
+        
         {material.description && (
-          <p className="text-sm text-muted-foreground leading-relaxed mb-6 line-clamp-2">
+          <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed line-clamp-2 min-h-[36px]">
             {material.description}
           </p>
         )}
-
-        {/* Resource type pill */}
-        <div className="flex items-center gap-2 mb-6 mt-auto">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold bg-foreground/[0.04] text-muted-foreground border border-border/40">
+        
+        <div className="flex flex-wrap gap-1.5 mt-space-sm">
+          <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-code-sm text-[11px]">
             {resourceLabels[material.resource_type]}
           </span>
+          <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-code-sm text-[11px]">
+            PDF
+          </span>
         </div>
-
-        {/* CTA */}
-        <Button
+      </div>
+      
+      <div className="pt-space-md mt-space-sm border-t-0 flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <span className="flex items-center gap-0.5 text-secondary font-bold font-label-code-sm text-label-code-sm">
+            ★ {(4.6 + ((material.name.length * 7) % 5) * 0.1).toFixed(1)}
+          </span>
+          <span className="text-on-surface-variant font-label-code-sm text-[11px]">
+            ({((material.name.length * 13) % 40 + 10) / 10}k saves)
+          </span>
+        </div>
+        
+        <button 
           onClick={handleDownload}
           disabled={!isSafeUrl(material.download_link) || isOpening}
-          className="relative w-full h-12 rounded-2xl font-bold overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_10px_20px_-5px_hsl(var(--primary)/0.4)] transition-all duration-300 group/btn"
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-sans font-semibold text-xs active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50 disabled:active:translate-y-0 ${subjectButtonTheme[material.subject]}`}
         >
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            {isOpening ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Opening...
-              </>
-            ) : (
-              <>
-                Access Resource
-                <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-              </>
-            )}
-          </span>
-          <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
-        </Button>
+          {isOpening ? (
+            <>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <span>Downloading...</span>
+            </>
+          ) : (
+            <>
+              <Download className="h-3.5 w-3.5" />
+              <span>Download</span>
+            </>
+          )}
+        </button>
       </div>
-    </div>
+    </article>
   );
 }

@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowUpRight, Info, Rocket } from "lucide-react";
 import { PORTALS } from "@/data/portals";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
+import { InstituteLogo } from "@/components/common/InstituteLogo";
 
 export default function PortalDetail() {
   const { id } = useParams();
@@ -50,13 +51,13 @@ export default function PortalDetail() {
         <header className={`relative mt-5 overflow-hidden rounded-[28px] border border-border/50 bg-gradient-to-br ${portal.accent} p-8 md:p-14`}>
           <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
           <div className="relative flex flex-col md:flex-row md:items-center gap-6">
-            {portal.logo ? (
-              <img src={portal.logo} alt={`${portal.name} logo`} className="h-24 w-24 rounded-3xl object-cover ring-1 ring-border/60 bg-background" />
-            ) : (
-              <div className="h-24 w-24 rounded-3xl bg-background/80 ring-1 ring-border/60 flex items-center justify-center font-display text-4xl font-black">
-                {portal.name.charAt(0)}
-              </div>
-            )}
+            <InstituteLogo
+              id={portal.id}
+              name={portal.name}
+              logo={portal.logo}
+              accent={portal.accent}
+              className="h-24 w-24 rounded-3xl text-3xl ring-1 ring-border/60 shadow-lg"
+            />
             <div className="min-w-0">
               <Badge variant="secondary" className="mb-3 text-[10px] uppercase tracking-[0.2em]">
                 {portal.links.length} link{portal.links.length > 1 ? "s" : ""}

@@ -47,7 +47,8 @@ export function useTickets() {
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    const ch = supabase.channel('tickets-feed')
+    const chName = `tickets-feed-${Math.random().toString(36).substring(2, 9)}`;
+    const ch = supabase.channel(chName)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
@@ -104,7 +105,8 @@ export function useTicket(ticketId: string | null) {
 
   useEffect(() => {
     if (!ticketId) return;
-    const ch = supabase.channel(`ticket-${ticketId}`)
+    const chName = `ticket-${ticketId}-${Math.random().toString(36).substring(2, 9)}`;
+    const ch = supabase.channel(chName)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ticket_messages', filter: `ticket_id=eq.${ticketId}` }, () => load())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets', filter: `id=eq.${ticketId}` }, () => load())
       .subscribe();

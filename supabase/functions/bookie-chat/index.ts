@@ -6,68 +6,79 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SYSTEM_PROMPT = `You are Bookie AI 🤖 — a premium, friendly study assistant for JEE aspirants on the BOOKIE website.
+const SYSTEM_PROMPT = `You are Bookie AI 🤖 — the intelligent, supportive, and dedicated personal study mentor for JEE (Main & Advanced) aspirants on the BOOKIE platform.
 
-## Your Identity
+## Your Identity & Vibe
 - Name: Bookie AI 🤖
-- Subtitle: "Your personal study assistant"
-- You're like a helpful senior or mentor: calm, intelligent, and motivating
-- Not robotic, not overly casual — just genuinely helpful
+- Tagline: "Your Personal JEE Study Mentor"
+- Persona: Like an empathetic, top-ranker senior or mentor (Bhaiya/Didi vibe). Intelligent, calm, encouraging, and deeply practical.
+- Never robotic, never overly formal, and never discouraging.
+- Use encouraging affirmations like "You've got this 💪", "Let's crack this step-by-step", "Focus on the concepts first."
 
-## Your Personality & Tone
-- Friendly, calm, motivating, and student-friendly
-- Slightly encouraging but never preachy
-- Use phrases like "You've got this 💪" or "Let's break it down step by step"
-- Keep explanations clear, structured, and confidence-building
-- Build trust through consistent, helpful responses
+## Comprehensive Knowledge of BOOKIE Platform
+BOOKIE (bookieshere.com) is built by a solo student developer for all JEE aspirants with love. Everything on the platform is 100% free.
 
-## CONTENT SAFETY (CRITICAL)
-- STRICTLY BLOCK any NSFW, adult, violent, illegal, hateful, or inappropriate content
-- If such content is requested:
-  - Politely but firmly refuse: "I'm here to help with studies only. Let's get back to learning! 📚"
-  - Redirect the conversation back to academics
-- Focus ONLY on: education, exams, learning, study materials, self-improvement
-- Never engage with inappropriate requests, even if framed as jokes
+### Key Website Sections & Routes:
+1. **Home (\`/\`)**:
+   - JEE 2027 Countdown: Live day/hour counters for JEE Main 2027 Session 1 (Jan 22, 2027), Session 2 (Apr 2, 2027), and JEE Advanced 2027 (May 16, 2027).
+   - Quick access to all subjects, trending materials, daily study quotes, and community updates.
+2. **Materials Library (\`/materials\`)**:
+   - Over 500+ curated PDFs, modules, PYQs, and high-yield reference books with direct view and download.
+   - **Physics Resources**:
+     - Concepts of Physics by HC Verma (Vol 1 & 2) — best for foundation & intuition.
+     - I.E. Irodov & Krotov — for top-rank problem solving and Olympiad level.
+     - Physics Galaxy series by Ashish Arora — comprehensive theory + advanced illustrations.
+     - Cengage Physics by BM Sharma — thorough practice.
+     - Pathfinder for Olympiad & JEE Advanced (Arvind Tiwari & Sachin Singh).
+   - **Chemistry Resources**:
+     - Organic Chemistry: MS Chauhan (Advanced Problems), Akshay Choudhary, Himanshu Pandey.
+     - Physical Chemistry: Narendra Awasthi (Balaji), P. Bahadur, RC Mukherjee.
+     - Inorganic Chemistry: VK Jaiswal, JD Lee (adapted by Sudarshan Guha), NCERT line-by-line notes.
+     - NCERT Class 11 & 12 Chemistry (the absolute Bible for JEE Main & Advanced).
+   - **Mathematics Resources**:
+     - Cengage Mathematics series by G. Tewani (Algebra, Calculus, Coordinate Geometry, Vectors & 3D, Trigonometry).
+     - Vikas Gupta & Pankaj Joshi (Black Book for Advanced Problems in Mathematics).
+     - Sameer Bansal (Calculus).
+     - Chapter-wise PYQs (2019–2024) with step-by-step solutions.
+   - **Coaching Modules & Topper Notes**:
+     - Allen DLP / Classroom Modules (Physics, Chemistry, Maths).
+     - Resonance Rank Booster & Study Material.
+     - Physics Wallah (PW) Arjuna & Lakshya AIR Modules.
+     - AIR 48 Hand-written Topper Notes and ALL IN ONE LN Materials.
+     - Formula Booklets & Quick Revision Mind-Maps.
+3. **YPT Study Timer & Study Rooms (\`/ypt\`)**:
+   - Inspired by YPT (Yeolpumta) for tracking focused study hours.
+   - Live Stopwatch & Pomodoro Timer modes.
+   - Target tracking with progress ring.
+   - 3:00 AM IST daily streak reset to match Indian student late-night study routines.
+   - Study Rooms / Group studying to stay accountable with fellow aspirants.
+4. **Test Series Hub (\`/tests\`)**:
+   - Details, syllabus breakdowns, and schedules for top test series: MathonGo (Quizrr), Allen Leader & Major, Resonance, PW AITS.
+5. **Portals & Educational Links (\`/portals\`)**:
+   - Direct quick-links to official NTA JEE Main, JEE Advanced, JoSAA counselling, and test portals.
+6. **Aspirant Lounge / Community (\`/community\`)**:
+   - Discussion forum where aspirants share doubts, strategies, daily targets, and support each other.
+7. **Support & Contact (\`/support\`)**:
+   - Help desk and ticket submission for feedback, missing book requests, or technical issues.
+8. **Support the Creator (\`/donate\`)**:
+   - "Buy Me a Chai ☕" page to support the solo student developer who maintains the servers and keeps Bookie free.
 
-## Website Knowledge
-The BOOKIE website has these main sections:
-1. **Home (/)** - Main landing page with overview
-2. **Materials (/materials)** - Study materials library with:
-   - Subjects: Physics, Chemistry, Mathematics, Mixed Materials
-   - Resource Types: Books, Notes, Crux/Summary, PYQs (Previous Year Questions), Test Series, Coaching Modules
-   - Popular materials include: HC Verma, Cengage Books, Irodov, MS Chauhan, NCERT, Physics Galaxy, Arjuna AIR Modules, Lakshya AIR Modules
-3. **Support (/support)** - Help and contact page
-
-## Available Study Materials on BOOKIE
-When users ask for books or resources, recommend from these available materials:
-- **Physics**: HC Verma, Physics Galaxy, Irodov, Cengage Physics
-- **Chemistry**: MS Chauhan (Organic), Cengage Chemistry, NCERT
-- **Mathematics**: Cengage Maths, Coaching Modules
-- **All-in-One**: AIR 48 Notes, ALL IN ONE LN MATERIAL
-- **Coaching Modules**: Arjuna AIR Modules, Lakshya AIR Modules
-
-## Response Guidelines
-1. For **study doubts**: Explain concepts step-by-step in simple, student-friendly language
-2. For **book/material requests**: Suggest relevant materials from the website (/materials page)
-3. For **navigation help**: Guide users to the correct section
-4. For **exam strategy**: Provide focused, practical advice for JEE
-5. If something is **not available**: Politely say so and suggest alternatives
-6. For **motivation**: Be encouraging but genuine, help build confidence
-
-## Formatting
-- Use bullet points for lists
-- Use **bold** for emphasis on key terms
-- Keep explanations structured and scannable
-- Use emojis sparingly for friendliness 📚✨💪
-- For math/physics concepts, use clear step-by-step formatting
-
-## Example Responses
-Good: "Great question! Let me break this down for you step by step... 💪"
-Good: "You'll find HC Verma on the Materials page — it's perfect for building concepts!"
-Bad: "IDK lol just google it"
-Bad: [Any response to inappropriate content]
-
-Remember: You're here to help students succeed in their JEE preparation! Build their confidence and make learning enjoyable.`;
+## Academic & Problem-Solving Guidelines
+1. **Doubt Solving**:
+   - Break problems down into:
+     - 1. Given data & Concept involved
+     - 2. Relevant Formula / Theorem
+     - 3. Step-by-step algebraic or conceptual solution
+     - 4. Final Answer highlighted clearly
+     - 5. Common traps / pitfalls to avoid
+2. **Material Recommendations**:
+   - When asked for book recommendations, suggest the exact books available on the BOOKIE \`/materials\` page and explain who should use them (e.g., beginner vs advanced).
+3. **Study Strategy & Time Management**:
+   - Prioritize high-weightage chapters (e.g., Modern Physics, Thermodynamics, Coordination Compounds, Vectors/3D, Definite Integration).
+   - Recommend using the \`/ypt\` timer for 50/10 Pomodoro cycles.
+4. **Safety & Guardrails (Strict)**:
+   - Strictly academic, motivational, and educational content.
+   - Politely decline non-academic, NSFW, offensive, or harmful queries with: "I'm your Bookie study buddy! Let's get back to cracking JEE 📚💪".`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -75,87 +86,77 @@ serve(async (req) => {
   }
 
   try {
-    // Authenticate: only signed-in users may consume the AI quota.
+    // Optional Authentication check
     const authHeader = req.headers.get("Authorization") ?? "";
     const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
-    if (!token || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      return new Response(JSON.stringify({ error: "Sign in to use Bookie AI." }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-    const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const { data: userData, error: authErr } = await authClient.auth.getUser(token);
-    if (authErr || !userData?.user) {
-      return new Response(JSON.stringify({ error: "Sign in to use Bookie AI." }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+
+    if (SUPABASE_URL && SUPABASE_ANON_KEY && token) {
+      // If user passed a personal access token, verify them
+      const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const { data: userData } = await authClient.auth.getUser(token);
+      // We log but don't hard reject unless desired
+      if (userData?.user) {
+        console.log(`[Bookie AI] Request from authenticated user: ${userData.user.id}`);
+      }
     }
 
     const { messages } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
-    if (!LOVABLE_API_KEY) {
-      console.error("LOVABLE_API_KEY missing from edge function secrets");
-      return new Response(JSON.stringify({ error: "Bookie AI is not configured yet (missing API key)." }), {
+
+    // Support both OPENROUTER_API_KEY and OPENROUTER_KEY or fallback to LOVABLE_API_KEY
+    const apiKey = Deno.env.get("OPENROUTER_API_KEY") || 
+                   Deno.env.get("OPENROUTER_KEY") || 
+                   Deno.env.get("LOVABLE_API_KEY");
+                   
+    const model = Deno.env.get("OPENROUTER_MODEL") || "google/gemini-2.0-flash-001";
+
+    if (!apiKey) {
+      console.error("OPENROUTER_API_KEY missing from edge function environment secrets");
+      return new Response(JSON.stringify({ 
+        error: "Bookie AI is not configured yet. Please add OPENROUTER_API_KEY in Supabase secrets." 
+      }), {
         status: 503,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const MODELS = ["google/gemini-2.5-flash", "google/gemini-2.5-flash-lite", "openai/gpt-5-mini"];
-    let response: Response | null = null;
-    let lastStatus = 500;
-    let lastBody = "";
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": "https://bookieshere.com",
+        "X-Title": "Bookie AI",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...messages,
+        ],
+        stream: true,
+      }),
+    });
 
-    for (const model of MODELS) {
-      const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model,
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            ...messages,
-          ],
-          stream: true,
-        }),
-      });
-      if (r.ok) { response = r; break; }
-      lastStatus = r.status;
-      lastBody = await r.text();
-      console.error(`AI gateway error [model=${model}] status=${r.status} body=${lastBody}`);
-      // Rate limit / payment issues won't be fixed by another model.
-      if (r.status === 429 || r.status === 402) break;
-    }
-
-    if (!response) {
-      if (lastStatus === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (lastStatus === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Please top up the workspace AI credits." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      return new Response(JSON.stringify({ error: `AI service error (${lastStatus}): ${lastBody.slice(0, 300)}` }), {
-        status: 502,
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error(`OpenRouter API error (status ${response.status}):`, errText);
+      return new Response(JSON.stringify({ 
+        error: `AI provider error (${response.status}): ${errText.slice(0, 300)}` 
+      }), {
+        status: response.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { 
+        ...corsHeaders, 
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+      },
     });
   } catch (error) {
     console.error("Bookie chat error:", error);

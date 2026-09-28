@@ -18,8 +18,8 @@ const PRIORITY_MATERIALS = [
   "LAKSHYA AIR MODULES",
 ];
 
-function getPriorityRank(materialName: string): number {
-  const upperName = materialName.toUpperCase();
+function getPriorityRank(materialName?: string | null): number {
+  const upperName = (materialName || "").toUpperCase();
   for (let i = 0; i < PRIORITY_MATERIALS.length; i++) {
     if (upperName.includes(PRIORITY_MATERIALS[i])) {
       return i + 1;
@@ -31,13 +31,17 @@ function getPriorityRank(materialName: string): number {
 export function useMaterials() {
   const qc = useQueryClient();
   useEffect(() => {
+    const channelId = `materials-live-${Math.random().toString(36).substring(2, 9)}`;
     const ch = supabase
-      .channel('materials-live')
+      .channel(channelId)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'materials' }, () => {
         qc.invalidateQueries({ queryKey: ['materials'] });
       })
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+
+    return () => {
+      supabase.removeChannel(ch);
+    };
   }, [qc]);
 
   return useQuery({

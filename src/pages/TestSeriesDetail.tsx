@@ -7,6 +7,8 @@ import { TEST_SERIES } from "@/data/testSeries";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
 
+import { InstituteLogo } from "@/components/common/InstituteLogo";
+
 export default function TestSeriesDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -42,13 +44,13 @@ export default function TestSeriesDetail() {
         <header className={`relative mt-5 overflow-hidden rounded-[28px] border border-border/50 bg-gradient-to-br ${provider.accent} p-8 md:p-12`}>
           <div aria-hidden className="pointer-events-none absolute -top-28 -right-16 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
           <div className="relative flex flex-col md:flex-row md:items-end gap-6">
-            <div className="h-24 w-24 shrink-0 rounded-3xl overflow-hidden bg-background/85 backdrop-blur ring-1 ring-border/60 flex items-center justify-center">
-              {provider.logo ? (
-                <img src={provider.logo} alt={`${provider.name} logo`} className="h-full w-full object-cover" />
-              ) : (
-                <span className="font-display text-4xl font-black text-foreground/80">{provider.name.charAt(0)}</span>
-              )}
-            </div>
+            <InstituteLogo
+              id={provider.id}
+              name={provider.name}
+              logo={provider.logo}
+              accent={provider.accent}
+              className="h-24 w-24 shrink-0 rounded-3xl text-2xl ring-1 ring-border/60 shadow-lg"
+            />
             <div className="min-w-0">
               <Badge variant="secondary" className="mb-3 text-[10px] uppercase tracking-[0.2em]">
                 <Library className="mr-1 h-3 w-3" /> {provider.resources.length} resources

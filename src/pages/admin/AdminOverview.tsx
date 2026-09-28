@@ -2,13 +2,45 @@ import { useEffect, useState } from 'react';
 import { AdminGuard } from '@/components/Admin/AdminGuard';
 import { AdminShell } from '@/components/Admin/AdminShell';
 import { useAdminSession } from '@/hooks/useAdminSession';
-import { Loader2, Users, Bell, MessagesSquare, CheckCircle2, Activity } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { Loader2, Users, Bell, MessagesSquare, BookOpen, Activity } from 'lucide-react';
 
 export default function AdminOverview() {
   const { call } = useAdminSession();
   const [stats, setStats] = useState<any>(null);
 
-  useEffect(() => { call('stats.overview').then(setStats).catch(() => {}); }, [call]);
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const [overviewRes, matCountRes, ticketListRes] = await Promise.all([
+          call('stats.overview').catch(() => null),
+          supabase.from('materials').select('id', { count: 'exact', head: true }),
+          call('ticket.list', { status: 'all' }).catch(() => ({ items: [] })),
+        ]);
+
+        const base = overviewRes || {};
+
+        // Accurate live count of materials
+        const materialsCount = matCountRes?.count ?? base.materials ?? 0;
+
+        // Accurate open tickets (exclude resolved, closed, rejected)
+        const allTickets = ticketListRes?.items ?? [];
+        const openTicketsCount = allTickets.length > 0
+          ? allTickets.filter((t: any) => !['resolved', 'closed', 'rejected'].includes(t.status)).length
+          : (base.openTickets ?? 0);
+
+        setStats({
+          ...base,
+          materials: materialsCount,
+          openTickets: openTicketsCount,
+        });
+      } catch (err) {
+        console.error('Failed to load admin stats', err);
+      }
+    }
+
+    loadStats();
+  }, [call]);
 
   return (
     <AdminGuard>
@@ -20,7 +52,7 @@ export default function AdminOverview() {
               <Stat icon={Activity} label="Active 7d" value={stats.activeUsers ?? 0} />
               <Stat icon={Bell} label="Notifications" value={stats.notifs ?? 0} />
               <Stat icon={MessagesSquare} label="Open tickets" value={stats.openTickets ?? 0} />
-              <Stat icon={CheckCircle2} label="Resolved" value={stats.resolvedTickets ?? 0} />
+              <Stat icon={BookOpen} label="Materials" value={stats.materials ?? 0} />
             </div>
             <div className="mt-8 rounded-2xl border border-border/40 bg-card/40">
               <div className="px-4 py-3 border-b border-border/40 text-sm font-semibold">Recent admin activity</div>

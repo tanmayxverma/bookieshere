@@ -30,10 +30,12 @@ export interface Profile {
   updated_at: string;
 }
 
+import { safeRandomUUID } from '@/lib/utils';
+
 function getOrCreateDeviceId(): string {
   let id = localStorage.getItem(DEVICE_ID_KEY);
   if (!id) {
-    id = crypto.randomUUID();
+    id = safeRandomUUID();
     localStorage.setItem(DEVICE_ID_KEY, id);
   }
   return id;
@@ -55,18 +57,34 @@ function writeCache(p: Profile | null) {
 type ProfileContextValue = ReturnType<typeof useProfileInternal>;
 const ProfileContext = createContext<ProfileContextValue | null>(null);
 
+function defaultGuestProfile(deviceId: string): Profile {
+  return {
+    id: `guest_${deviceId.replace(/-/g, '').substring(0, 16)}`,
+    user_id: null,
+    device_id: deviceId,
+    account_type: 'guest',
+    display_name: 'Aspirant',
+    avatar_url: null,
+    target_category: 'JEE 2027',
+    onboarded_at: new Date().toISOString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+}
+
 function useProfileInternal() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const cached = readCache();
-  const [profile, setProfileState] = useState<Profile | null>(cached);
-  const [loading, setLoading] = useState(!cached);
   const deviceId = getOrCreateDeviceId();
+  const cached = readCache();
+  const [profile, setProfileState] = useState<Profile>(() => cached || defaultGuestProfile(deviceId));
+  const [loading, setLoading] = useState(false);
 
   const setProfile = useCallback((p: Profile | null) => {
-    setProfileState(p);
-    writeCache(p);
-  }, []);
+    const next = p || defaultGuestProfile(deviceId);
+    setProfileState(next);
+    writeCache(next);
+  }, [deviceId]);
 
   const loadProfile = useCallback(async (sess: Session | null) => {
     try {
@@ -76,11 +94,23 @@ function useProfileInternal() {
           .select('*')
           .eq('user_id', sess.user.id)
           .maybeSingle();
-        setProfile((data as Profile) ?? null);
+        if (data) setProfile(data as Profile);
       } else {
         const { data } = await (supabase as any).rpc('get_guest_profile', { _device_id: deviceId });
         const row = Array.isArray(data) ? data[0] : data;
-        setProfile((row as Profile) ?? null);
+        if (row) {
+          setProfile(row as Profile);
+        } else {
+          // Sync guest to Supabase quietly
+          try {
+            await (supabase as any).rpc('upsert_guest_profile', {
+              _device_id: deviceId,
+              _display_name: 'Aspirant',
+              _target_category: 'JEE 2027',
+              _avatar_url: null,
+            });
+          } catch {}
+        }
       }
     } catch {
       /* keep cached profile on transient errors */

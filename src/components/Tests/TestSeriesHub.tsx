@@ -1,21 +1,21 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Search, ChevronDown, Library, Sparkles, ArrowUpRight, ArrowRight,
-} from "lucide-react";
+import { Search, Sparkles, Target, Settings, ChevronDown, CheckCircle, ExternalLink, Activity, Plus } from "lucide-react";
 import { TEST_SERIES, type TestSeriesProvider, type TestSeriesResource } from "@/data/testSeries";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { InstituteLogo } from "@/components/common/InstituteLogo";
 
 function ProviderCard({
-  provider, expanded, onToggle,
+  provider,
+  expanded,
+  onToggle,
+  query,
 }: { provider: TestSeriesProvider; expanded: boolean; onToggle: () => void; query: string }) {
   const navigate = useNavigate();
-  const open = (r: TestSeriesResource) => {
+  const open = (r: TestSeriesResource, e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!isSafeUrl(r.url)) {
       toast({ title: "Link blocked", description: "This URL isn't on the allowed list.", variant: "destructive" });
       return;
@@ -23,100 +23,99 @@ function ProviderCard({
     window.open(r.url, "_blank", "noopener,noreferrer");
   };
 
-  const initial = provider.name.charAt(0);
-
   return (
-    <Card className="overflow-hidden border-border/60 transition-all duration-300 hover:border-primary/40 hover:shadow-[0_20px_60px_-30px_hsl(var(--primary)/0.45)]">
-      <div className={`relative bg-gradient-to-br ${provider.accent}`}>
-        <button
-          onClick={onToggle}
-          className="relative w-full flex items-center gap-4 p-4 md:p-5 text-left group"
-          aria-expanded={expanded}
-        >
-          {/* Logo */}
-          <div className="relative shrink-0 h-14 w-14 rounded-2xl overflow-hidden bg-background/80 backdrop-blur ring-1 ring-border/60 flex items-center justify-center shadow-[inset_0_1px_0_hsl(var(--background)/0.5)]">
-            {provider.logo ? (
-              <img
-                src={provider.logo}
-                alt={provider.name}
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span className="font-display text-2xl font-black text-foreground/80">{initial}</span>
-            )}
-          </div>
-
-          {/* Meta */}
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="font-display text-base md:text-lg font-bold tracking-tight truncate">
-                {provider.name}
-              </h3>
-              <Badge variant="secondary" className="text-[10px] shrink-0">
-                {provider.resources.length} {provider.resources.length === 1 ? "resource" : "resources"}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground line-clamp-1">{provider.description}</p>
-          </div>
-
-          <ChevronDown
-            className={`h-5 w-5 text-muted-foreground transition-transform duration-300 ${expanded ? "rotate-180 text-foreground" : ""}`}
-          />
-        </button>
-      </div>
-
-      {/* Expanded resources */}
-      <div
-        className={`grid transition-all duration-300 ease-out ${
-          expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-        }`}
+    <div className="test-card group relative flex flex-col bg-surface-container-lowest rounded-2xl shadow-[0_4px_16px_-2px_rgba(19,27,46,0.06)] hover:shadow-[0_8px_24px_-4px_rgba(19,27,46,0.12)] transition-all duration-200 brutal-border overflow-hidden">
+      <div 
+        className="p-space-md space-y-space-sm cursor-pointer"
+        onClick={onToggle}
       >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <InstituteLogo
+              id={provider.id}
+              name={provider.name}
+              logo={provider.logo}
+              accent={provider.accent}
+              className="w-12 h-12 text-base rounded-xl border-2 border-slate-900 shadow-sm"
+            />
+            <div>
+              <span className="font-headline-md text-[16px] font-bold text-on-surface leading-tight block truncate max-w-[200px] sm:max-w-[250px]">
+                {provider.name}
+              </span>
+              <span className="font-label-code-sm text-label-code-sm text-on-surface-variant font-medium">
+                {provider.resources.length} {provider.resources.length === 1 ? "Resource" : "Resources"}
+              </span>
+            </div>
+          </div>
+          <ChevronDown className={cn("text-on-surface-variant transition-transform duration-300", expanded ? "rotate-180" : "")} size={20} />
+        </div>
+
+        <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-2 mt-2">
+          {provider.description}
+        </p>
+
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          <span className="px-2 py-0.5 rounded bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold">Mains + Adv</span>
+          <span className="px-2 py-0.5 rounded bg-tertiary/10 font-label-code-sm text-label-code-sm text-tertiary font-bold">Verified</span>
+        </div>
+      </div>
+      
+      {/* Expanded resources inline */}
+      <div className={cn("grid transition-all duration-300 ease-out border-t border-outline-variant/30", expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
         <div className="overflow-hidden">
-          <div className="border-t border-border/50 bg-background/40 p-3 md:p-4 grid gap-2 sm:grid-cols-2">
-            {provider.resources.map((r) => (
+          <div className="bg-surface-container-low/50 p-space-xs grid gap-1">
+            {provider.resources.map((r, i) => (
               <button
-                key={r.name + r.url}
-                onClick={() => open(r)}
-                className="group flex items-center justify-between gap-3 rounded-xl border border-border/40 bg-card/60 hover:bg-card hover:border-primary/40 px-3.5 py-2.5 text-left transition-colors"
+                key={i}
+                onClick={(e) => open(r, e)}
+                className="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-lowest hover:shadow-sm transition-colors text-left group/res"
               >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-semibold text-foreground truncate">{r.name}</span>
-                    {r.badge && (
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-primary/15 border border-primary/30 text-[9px] font-bold uppercase tracking-wider text-primary">
-                        <Sparkles className="h-2 w-2" /> {r.badge}
-                      </span>
-                    )}
+                <div className="min-w-0 pr-2">
+                  <div className="font-label-ui text-label-ui text-on-surface font-bold truncate">
+                    {r.name}
                   </div>
-                  <span className="text-[10px] text-muted-foreground truncate block">
-                    {(() => { try { return new URL(r.url).hostname.replace(/^www\./, ""); } catch { return ""; } })()}
-                  </span>
+                  <div className="font-label-code-sm text-[10px] text-on-surface-variant truncate">
+                    {(() => { try { return new URL(r.url).hostname.replace(/^www\./, ""); } catch { return "External Link"; } })()}
+                  </div>
                 </div>
-                <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all shrink-0" />
+                <ExternalLink className="w-4 h-4 text-on-surface-variant group-hover/res:text-primary transition-colors flex-shrink-0" />
               </button>
             ))}
           </div>
-          <div className="border-t border-border/40 bg-background/40 px-3 pb-3 md:px-4 md:pb-4">
-            <Button
-              variant="secondary"
-              size="sm"
-              className="w-full group"
-              onClick={() => navigate(`/test-series/${provider.id}`)}
-            >
-              View full page
-              <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-            </Button>
-          </div>
         </div>
       </div>
-    </Card>
+
+      <div className="px-space-md py-space-sm border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/30">
+        <div className="flex items-center gap-1 font-label-code-sm text-[11px] text-on-surface-variant">
+          <CheckCircle className="w-[15px] h-[15px] text-tertiary" />
+          <span>Active</span>
+        </div>
+        <button 
+          onClick={(e) => { e.stopPropagation(); navigate(`/test-series/${provider.id}`); }}
+          className="px-3.5 py-1.5 rounded-lg bg-primary text-on-primary font-headline-md text-label-ui shadow-[0_3px_0_0_#131b2e] hover:bg-primary-container active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1"
+        >
+          <span>Enter Portal</span>
+          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+        </button>
+      </div>
+    </div>
   );
 }
 
 export function TestSeriesHub() {
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setTime(now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'Asia/Kolkata' }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -124,10 +123,10 @@ export function TestSeriesHub() {
     return TEST_SERIES
       .map((p) => {
         const nameMatch =
-          p.name.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q) ||
-          p.id.toLowerCase().includes(q);
-        const matchedResources = p.resources.filter((r) => r.name.toLowerCase().includes(q));
+          (p.name || '').toLowerCase().includes(q) ||
+          (p.description || '').toLowerCase().includes(q) ||
+          (p.id || '').toLowerCase().includes(q);
+        const matchedResources = (p.resources || []).filter((r) => (r.name || '').toLowerCase().includes(q));
         if (nameMatch) return p;
         if (matchedResources.length > 0) return { ...p, resources: matchedResources };
         return null;
@@ -135,72 +134,247 @@ export function TestSeriesHub() {
       .filter(Boolean) as TestSeriesProvider[];
   }, [query]);
 
-  // Auto-expand cards when searching so matches are visible.
   const isSearching = query.trim().length > 0;
-
   const totalResources = TEST_SERIES.reduce((sum, p) => sum + p.resources.length, 0);
 
   return (
-    <section className="container mx-auto px-4 pb-20 pt-4">
-      {/* Header */}
-      <div className="relative mb-8 overflow-hidden rounded-3xl border border-border/50 bg-gradient-to-br from-card/60 via-card/30 to-surface-2/30 backdrop-blur-xl p-7 md:p-9">
-        <div aria-hidden className="pointer-events-none absolute -top-24 -right-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-20 h-64 w-64 rounded-full bg-jee/10 blur-3xl" />
-
-        <div className="relative flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-surface-2/60 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground backdrop-blur">
-              <Library className="h-3 w-3 text-primary" /> Resource Hub
-            </span>
-            <h2 className="mt-3 font-display text-3xl md:text-4xl font-black tracking-tight text-foreground">
-              Test Series Hub
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground leading-relaxed">
-              Access curated coaching test series, PYQs, mock tests, full syllabus examinations
-              and practice resources from across the JEE ecosystem.
-            </p>
+    <div className="w-full pt-16 flex-1 max-w-7xl mx-auto px-margin lg:px-margin-desktop bg-background blueprint-grid text-on-surface">
+      <div className="flex flex-col w-full pb-space-xl">
+        
+        {/* Hero Header Section */}
+        <section className="relative w-full rounded-2xl bg-surface-container-lowest p-space-md lg:p-space-lg shadow-[0_4px_20px_-2px_rgba(19,27,46,0.06)] mt-space-md mb-space-lg overflow-hidden brutal-border">
+          <div className="absolute -right-8 -bottom-10 pointer-events-none select-none text-surface-container-highest/60 font-headline-xl text-[120px] font-black opacity-30 leading-none">
+            TESTS
           </div>
-          <div className="flex items-center gap-2 text-xs">
-            <Badge variant="secondary">{TEST_SERIES.length} providers</Badge>
-            <Badge variant="secondary">{totalResources} resources</Badge>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+            <div className="lg:col-span-8 flex flex-col items-start gap-space-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container/50 text-primary font-label-code-sm text-label-code-sm tracking-wider uppercase font-bold">
+                <Target className="w-[15px] h-[15px] text-primary" />
+                <span>TEST SERIES & MOCK ARENA</span>
+              </div>
+              <div className="relative mt-1">
+                <h1 className="font-headline-xl text-headline-xl lg:text-[44px] lg:leading-[50px] tracking-tight font-extrabold text-on-surface italic">
+                  Test Series <span className="relative inline-block text-primary not-italic">Hub.
+                    <span className="absolute -bottom-1 left-0 right-0 h-2.5 bg-secondary-container/70 -z-10 transform -rotate-1 rounded-full"></span>
+                  </span>
+                </h1>
+              </div>
+              <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl pt-1">
+                Access curated coaching test series, chapterwise mocks, NTA-style 1v1 battle arena, and full syllabus papers from across the entire JEE ecosystem — zero gaslighting, honest percentile curves.
+              </p>
+              <div className="flex flex-wrap items-center gap-space-sm pt-2">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-tertiary"></span>
+                  <span>{TEST_SERIES.length} Providers</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
+                  <span className="material-symbols-outlined text-primary text-[15px]">inventory_2</span>
+                  <span>{totalResources} Live Resources</span>
+                </div>
+                <div className="hidden sm:inline-flex items-center gap-1 text-on-surface-variant font-label-code-sm text-label-code-sm">
+                  <span className="material-symbols-outlined text-[14px] text-tertiary">verified</span>
+                  <span>100% NTA Scoring Engine</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Test Reality Widget */}
+            <div className="lg:col-span-4 w-full">
+              <div className="relative w-full bg-secondary-fixed dark:bg-amber-950/40 text-on-secondary-fixed-variant dark:text-amber-100 rounded-xl p-space-md shadow-[0_8px_18px_-3px_rgba(113,63,18,0.18)] transform rotate-1 hover:rotate-0 transition-transform duration-200 brutal-border border-secondary-fixed dark:border-amber-700/60">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/80 backdrop-blur-sm rounded-sm shadow-sm transform -rotate-1 border-t border-b border-dashed border-secondary/40 sticker-tape"></div>
+                <div className="flex items-center justify-between pb-2 mb-2">
+                  <div className="flex items-center gap-1.5 font-label-code-sm text-label-code-sm font-extrabold uppercase tracking-wider text-on-secondary-fixed-variant dark:text-amber-200">
+                    <span className="material-symbols-outlined text-[16px]">psychology_alt</span>
+                    <span>TEST REALITY CHECK</span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-[10px] font-bold">JAN 2027</span>
+                </div>
+                <div className="space-y-2 font-body-sm text-body-sm">
+                  <div className="flex items-center justify-between font-label-code-sm">
+                    <span className="text-secondary dark:text-amber-300">Average Aspirant Score</span>
+                    <span className="font-extrabold text-on-secondary-container bg-secondary-container px-2 py-0.5 rounded">142 / 300</span>
+                  </div>
+                  <div className="flex items-center justify-between font-label-code-sm">
+                    <span className="text-secondary dark:text-amber-300">Safe 99%ile Benchmark</span>
+                    <span className="font-extrabold text-tertiary bg-tertiary-container/30 px-2 py-0.5 rounded">210+ Marks</span>
+                  </div>
+                  <div className="w-full bg-secondary-container/50 h-2 rounded-full overflow-hidden my-1">
+                    <div className="bg-primary h-full rounded-full" style={{ width: '67%' }}></div>
+                  </div>
+                  <div className="pt-2 text-center italic font-headline-md text-[13px] leading-tight text-on-secondary-fixed-variant dark:text-amber-200">
+                    “Mock se darr nahi lagta sahab, analysis se lagta hai.”
+                  </div>
+                  <div className="text-right font-label-code-sm text-[10px] text-secondary dark:text-amber-300/80 font-semibold">
+                    — Kota Hostel Bathroom Wisdom
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search test series, institutes, AYJR, Allen, FIITJEE..."
-            className="pl-11 h-12 rounded-xl bg-background/70 backdrop-blur border-border/60 text-sm"
-          />
-        </div>
-      </div>
-
-      {/* Disclaimer */}
-      <p className="text-[11px] text-muted-foreground/80 mb-5 text-center px-2">
-        Bookie does not own or host any content. All resources belong to their respective owners.
-      </p>
-
-      {/* Cards */}
-      {filtered.length === 0 ? (
-        <Card className="p-10 text-center text-sm text-muted-foreground">
-          No test series match <span className="text-foreground font-semibold">"{query}"</span>.
-        </Card>
-      ) : (
-        <div className="grid gap-3 md:grid-cols-2">
-          {filtered.map((p) => (
-            <ProviderCard
-              key={p.id}
-              provider={p}
-              query={query}
-              expanded={isSearching ? true : !!expanded[p.id]}
-              onToggle={() => setExpanded((s) => ({ ...s, [p.id]: !s[p.id] }))}
+        {/* Interactive Search & Instant Filter Bar */}
+        <section className="w-full flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md mb-space-lg">
+          <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+              <Search className="w-5 h-5 text-on-surface-variant" />
+            </div>
+            <input 
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full pl-10 pr-24 py-3 bg-surface-container-lowest text-on-surface rounded-xl font-body-md text-body-md shadow-sm placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all brutal-border" 
+              placeholder="Search test series, institutes, MathonGo, Narayana..." 
+              type="text" 
             />
-          ))}
+            <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1">
+              <kbd className="hidden sm:inline-block px-2 py-1 rounded bg-surface-container text-on-surface-variant font-label-code-sm text-[10px]">CTRL + K</kbd>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+            <button className="px-3.5 py-2 rounded-xl bg-primary text-on-primary font-label-ui text-label-ui shadow-[0_3px_0_0_#131b2e] active:translate-y-0.5 active:shadow-none transition-all duration-100 flex items-center gap-1 whitespace-nowrap">
+              <span>All Tests</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-surface-container-lowest/20 font-label-code-sm text-[10px]">{TEST_SERIES.length}</span>
+            </button>
+            <button className="px-3.5 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-ui text-label-ui shadow-sm active:translate-y-0.5 transition-all duration-100 flex items-center gap-1 whitespace-nowrap brutal-border">
+              <span className="text-error">🔥</span>
+              <span>Full Mocks</span>
+            </button>
+            <button className="px-3.5 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-ui text-label-ui shadow-sm active:translate-y-0.5 transition-all duration-100 flex items-center gap-1 whitespace-nowrap brutal-border">
+              <span>⚔️</span>
+              <span>1v1 Battle</span>
+            </button>
+          </div>
+        </section>
+
+        {/* Featured 1v1 Mock Battle Arena Card */}
+        <section className="relative w-full rounded-2xl bg-gradient-to-r from-primary-fixed to-primary-container/20 dark:from-slate-900 dark:via-blue-950/40 dark:to-slate-900 p-space-md lg:p-space-lg shadow-sm mb-space-xl overflow-hidden brutal-border border-primary-fixed dark:border-slate-800">
+          <div className="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-primary/20 blur-3xl pointer-events-none"></div>
+          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
+            <div className="flex-1 space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-code-sm text-label-code-sm uppercase font-bold tracking-wider flex items-center gap-1">
+                  <Activity className="w-[13px] h-[13px]" />
+                  <span>MULTIPLAYER ARENA • LIVE CONFLICT</span>
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-label-code-sm text-label-code-sm font-bold">
+                  <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                  <span>348 aspirants queuing</span>
+                </span>
+              </div>
+              <h2 className="font-headline-lg text-headline-lg font-black text-on-surface tracking-tight flex items-center gap-2">
+                <span>1v1 Mock Test Battle</span>
+                <span className="px-2 py-0.5 text-[11px] rounded bg-secondary-container text-on-secondary-container font-label-code-sm uppercase font-extrabold">Instant Match</span>
+              </h2>
+              <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                NTA-style real-time 1v1 mock test battles — challenge batchmates head-to-head in a 15-minute speed drill. Winner takes rank bragging rights and +50 Bookie Karma Points.
+              </p>
+              <div className="flex flex-wrap items-center gap-space-md pt-2 text-on-surface-variant font-label-code-sm text-label-code-sm">
+                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-primary text-[16px]">timer</span> 15 Mins / 12 MCQs</span>
+                <span>•</span>
+                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-error text-[16px]">balance</span> +4 / -1 Marking</span>
+              </div>
+            </div>
+            
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-space-md">
+              <div className="flex items-center gap-3 bg-surface-container-lowest/90 px-4 py-2.5 rounded-xl shadow-sm brutal-border border-surface-container-lowest">
+                <div className="flex items-center -space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-primary text-on-primary font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">TK</div>
+                  <div className="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">VS</div>
+                  <div className="w-8 h-8 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">AG</div>
+                </div>
+                <div className="flex flex-col text-left font-label-code-sm text-[11px]">
+                  <span className="font-bold text-on-surface">Last Match Just Concluded</span>
+                  <span className="text-tertiary font-bold">Tanmay (+36) beat Aniket (+28)</span>
+                </div>
+              </div>
+              <button onClick={() => window.open("https://www.ovibattle.in/", "_blank", "noopener,noreferrer")} className="px-space-lg py-3.5 rounded-xl bg-primary text-on-primary font-headline-md text-body-md font-bold shadow-[0_4px_0_0_#131b2e] hover:bg-primary-container active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+                <span className="material-symbols-outlined text-[20px]">sports_martial_arts</span>
+                <span>Challenge an Aspirant Now →</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Section Title & Grid Counter */}
+        <div className="flex items-center justify-between mb-space-md">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-primary"></div>
+            <h3 className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Verified Test Portals & Series</h3>
+            <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-label-code-sm font-semibold">{TEST_SERIES.length} Master Providers</span>
+          </div>
         </div>
-      )}
-    </section>
+
+        {/* Test Series Provider Cards Grid */}
+        {filtered.length === 0 ? (
+          <div className="text-center py-20 px-6 bg-surface-container-lowest rounded-2xl brutal-border">
+            <Search className="w-12 h-12 text-outline-variant mx-auto mb-4" />
+            <h3 className="font-headline-md text-headline-md font-bold text-on-surface mb-2">No test series found</h3>
+            <p className="font-body-sm text-body-sm text-on-surface-variant">Try a different search term.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md mb-space-xl">
+            {filtered.map((p) => (
+              <ProviderCard
+                key={p.id}
+                provider={p}
+                query={query}
+                expanded={isSearching ? true : !!expanded[p.id]}
+                onToggle={() => setExpanded((s) => ({ ...s, [p.id]: !s[p.id] }))}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Real Exam Schedule & AYJR Countdown Mini Banner */}
+        <section className="w-full bg-surface-container-high rounded-2xl p-space-md lg:p-space-lg mb-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md brutal-border">
+          <div className="flex items-center gap-space-md">
+            <div className="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center font-headline-md text-headline-md shadow-[0_3px_0_0_#5c4300] brutal-border border-secondary-container">
+              ⚡
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-headline-md text-body-lg font-bold text-on-surface">Next Synchronized All-India Mock: AYJR Jan Shift 1</span>
+                <span className="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-code-sm text-[10px] font-extrabold uppercase">Live in 3 Days</span>
+              </div>
+              <p className="font-body-sm text-body-sm text-on-surface-variant">Simulating shift timings: Morning 09:00 AM - 12:00 PM. Registered aspirants: 68,400+.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-space-sm w-full md:w-auto justify-end">
+            <button className="px-space-md py-2 rounded-xl bg-primary text-on-primary font-headline-md text-label-ui shadow-[0_3px_0_0_#131b2e] hover:bg-primary-container active:translate-y-0.5 active:shadow-none transition-all">
+              Book Free Slot
+            </button>
+          </div>
+        </section>
+
+        {/* Relatable Bottom Punchline / Reality Callout */}
+        <section className="relative w-full rounded-2xl bg-secondary-fixed dark:bg-amber-950/40 text-on-secondary-fixed-variant dark:text-amber-100 p-space-lg lg:p-space-xl shadow-[0_8px_24px_-4px_rgba(69,26,3,0.08)] mb-space-xl overflow-hidden brutal-border border-secondary-fixed dark:border-amber-700/60">
+          <div className="absolute -top-3 left-8 w-28 h-6 bg-secondary-container transform -rotate-2 rounded shadow-sm opacity-80 sticker-tape"></div>
+          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
+            <div className="space-y-space-xs max-w-3xl">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-code-sm text-label-code-sm font-extrabold tracking-wider uppercase">
+                <span className="material-symbols-outlined text-[15px]">psychology</span>
+                <span>PLOT TWIST // REAL TALK</span>
+              </div>
+              <h3 className="font-headline-lg text-headline-lg font-black text-on-secondary-fixed-variant dark:text-amber-100 tracking-tight pt-1">
+                “Itna test series collect kar liya? Ab ek mock test de bhi do.”
+              </h3>
+              <p className="font-body-lg text-body-lg text-secondary dark:text-amber-200/90 leading-relaxed">
+                Drive folder mein 400 GB test papers hoard karne se AIR 1 nahi aati. Give one honest 45-minute timed mock right now without checking answers midway.
+              </p>
+            </div>
+            <div className="w-full lg:w-auto flex flex-col items-stretch sm:items-end">
+              <button className="px-space-lg py-4 rounded-xl bg-inverse-surface dark:bg-slate-800 text-inverse-on-surface dark:text-white font-headline-md text-body-md font-extrabold shadow-[0_4px_0_0_#000000] hover:opacity-90 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+                <span className="material-symbols-outlined text-secondary-container text-[20px]">bolt</span>
+                <span>Start Immediate 45-Min Physics Mock →</span>
+              </button>
+              <span className="font-label-code-sm text-[11px] text-secondary dark:text-amber-300 text-center sm:text-right mt-1.5 font-bold">
+                Includes Rotational Motion + Thermodynamics MCQs
+              </span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
   );
 }

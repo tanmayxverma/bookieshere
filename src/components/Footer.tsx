@@ -1,173 +1,147 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { MessageSquare, BookOpen, ArrowUpRight, Sparkles, Coffee, Heart, LifeBuoy, Send } from "lucide-react";
-import logo from "@/assets/logo.jfif";
-import { Button } from "@/components/ui/button";
 import { AdminLoginModal } from "@/components/Admin/AdminLoginModal";
+import logo from "@/assets/logo.jfif";
 
 export function Footer() {
   const year = new Date().getFullYear();
   const [adminOpen, setAdminOpen] = useState(false);
+
   return (
-    <footer className="relative overflow-hidden border-t border-border/40 bg-surface-1">
-      {/* Ambient glows — editorial glass premium */}
-      <div aria-hidden className="pointer-events-none absolute -top-40 -left-32 h-[420px] w-[420px] rounded-full bg-primary/10 blur-[120px]" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-40 right-0 h-[380px] w-[380px] rounded-full bg-jee/10 blur-[120px]" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/0.06),transparent_60%)]" />
+    <div className="w-full relative mt-space-xl">
+      {/* Telegram Drop Channel CTA Card (Matching Brand References) */}
+      <section className="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop py-space-sm">
+        <div className="relative bg-slate-900 dark:bg-slate-900 border-2 border-slate-800 text-white rounded-3xl p-space-lg lg:p-space-xl overflow-hidden shadow-xl">
+          {/* Subtle Engineering Graph Accent Overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+          {/* Playful Blueprint Tape on Edge */}
+          <div className="absolute -top-3 right-12 w-32 h-6 bg-secondary-container/90 -rotate-3 backdrop-blur-sm hidden sm:block"></div>
+          
+          <div className="relative z-10 max-w-3xl flex flex-col items-start gap-space-sm">
+            <div className="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-primary text-white font-label-code-sm text-label-code-sm font-bold uppercase tracking-wider">
+              <span className="material-symbols-outlined text-[15px]">bolt</span>
+              STAY IN THE LOOP // ZERO DELAY
+            </div>
 
-      {/* CTA Block */}
-      <section className="relative">
-        <div className="container mx-auto px-4 py-20 lg:py-24">
-          <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl shadow-[0_30px_80px_-30px_hsl(var(--primary)/0.25)]">
-            <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-jee/5" />
-            <div aria-hidden className="absolute -top-20 -right-10 h-60 w-60 rounded-full bg-primary/20 blur-3xl" />
+            <h2 className="font-headline-xl text-headline-xl lg:text-[38px] lg:leading-[44px] text-white font-extrabold tracking-tight">
+              New material drops. Straight to your channel.
+            </h2>
 
-            <div className="relative grid lg:grid-cols-12 gap-10 p-10 lg:p-14 items-center">
-              <div className="lg:col-span-7 space-y-6">
-                <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface-2/60 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-muted-foreground backdrop-blur">
-                  <Sparkles className="h-3 w-3 text-primary" />
-                  Stay in the loop
-                </span>
-                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground leading-[0.95]">
-                  New material drops.{" "}
-                  <span className="italic font-medium text-muted-foreground">Straight to your channel.</span>
-                </h2>
-                <p className="max-w-xl text-base text-muted-foreground leading-relaxed">
-                  Be the first to know when we add fresh modules, PYQs, test series and Cengage releases — no spam, just signal.
-                </p>
-              </div>
+            <p className="font-body-lg text-body-lg text-slate-300 max-w-2xl leading-relaxed">
+              Be the first to know when we index fresh Kota test series, PYQ video link updates, Allen milestone modules, and secret classroom notes — no spam, just pure signal.
+            </p>
 
-              <div className="lg:col-span-5 flex flex-col gap-3">
-                <Button
-                  asChild
-                  size="lg"
-                  className="group h-14 gap-3 rounded-2xl bg-foreground text-background hover:bg-foreground/90 shadow-lg shadow-foreground/10 text-base font-semibold"
-                >
-                  <a
-                    href="https://t.me/bookieshere"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Send className="h-5 w-5" />
-                    Join Telegram Channel
-                    <ArrowUpRight className="h-4 w-4 ml-auto transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="group h-14 gap-3 rounded-2xl border-border/60 bg-surface-2/40 backdrop-blur hover:bg-surface-2/80 text-base"
-                >
-                  <Link to="/materials">
-                    <BookOpen className="h-5 w-5" />
-                    Browse Materials
-                    <ArrowUpRight className="h-4 w-4 ml-auto transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center gap-space-md mt-space-sm pt-space-xs">
+              <a
+                href="https://t.me/bookieshere"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-space-xs px-space-lg py-3 rounded-full bg-primary text-white font-headline-md text-label-ui uppercase tracking-wide shadow-[0_4px_0_0_#00174b] active:translate-y-1 active:shadow-none transition-all hover:bg-primary/90"
+              >
+                <span className="material-symbols-outlined text-[18px]">send</span>
+                <span>Join Telegram Channel ↗</span>
+              </a>
+              <Link
+                to="/support"
+                className="inline-flex items-center gap-space-xs px-space-lg py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-headline-md text-label-ui uppercase tracking-wide transition-colors"
+              >
+                <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                <span>Request a Resource ↗</span>
+              </Link>
+            </div>
+
+            {/* Mini Channel Metrics */}
+            <div className="flex items-center gap-space-md mt-space-sm font-label-code-sm text-label-code-sm text-slate-400">
+              <span className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                24.8K ASPIRANTS ACTIVE
+              </span>
+              <span>•</span>
+              <span>AVG UPDATE RATE: 2 DROPS / WEEK</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Bottom Editorial Strip */}
-      <div className="relative border-t border-border/40 bg-surface-2/30 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-            {/* Brand block */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="flex items-center gap-3">
-                <img src={logo} alt="BOOKIE Logo" className="h-10 w-10 rounded-xl object-cover ring-1 ring-border/60 shadow-sm" />
-                <div className="leading-tight">
-                  <div className="font-display text-xl font-black tracking-tight text-foreground">BOOKIE<span className="text-primary">®</span></div>
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Serious JEE Prep</div>
-                </div>
-              </div>
-              <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-                A curated, distraction-free library of premium JEE resources — built for aspirants who mean it.
-              </p>
-
-              {/* Buy Me a Chai — micro card */}
-              <Link
-                to="/donate"
-                className="group relative mt-4 flex items-center gap-3 max-w-sm overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-3 pr-4 transition-all hover:border-primary/40 hover:bg-card/70 hover:shadow-[0_15px_40px_-15px_hsl(var(--primary)/0.45)]"
-              >
-                <div aria-hidden className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/15 blur-2xl opacity-60 group-hover:opacity-100 transition-opacity" />
-                <div className="relative shrink-0 h-11 w-11 rounded-xl border border-primary/30 bg-gradient-to-br from-primary/20 to-amber-500/10 flex items-center justify-center">
-                  <Coffee className="h-5 w-5 text-primary group-hover:rotate-[-8deg] transition-transform duration-500" />
-                </div>
-                <div className="relative min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] uppercase tracking-[0.18em] font-bold text-primary">Support</span>
-                    <Heart className="h-2.5 w-2.5 text-primary fill-primary" />
-                  </div>
-                  <div className="text-sm font-semibold text-foreground leading-tight">Buy me a Chai</div>
-                  <div className="text-[11px] text-muted-foreground truncate">Keep BOOKIE running ☕</div>
-                </div>
-                <ArrowUpRight className="relative h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-              </Link>
+      {/* Footer Strip */}
+      <footer className="w-full bg-surface-container-low dark:bg-slate-950 mt-space-xl border-t border-outline-variant/20 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-margin lg:px-margin-desktop py-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md">
+          <div className="flex flex-col items-center md:items-start gap-space-xs">
+            <div className="flex items-center gap-2">
+              <img src={logo} alt="Bookie" className="w-7 h-7 rounded-lg object-cover ring-1 ring-border/50 shadow-xs" />
+              <span className="font-headline-md text-label-ui font-extrabold text-on-surface tracking-wide">BOOKIE®</span>
             </div>
-
-            {/* Explore */}
-            <div className="lg:col-span-3 space-y-4">
-              <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground/80">Explore</div>
-              <ul className="space-y-2.5 text-sm">
-                <li><Link to="/materials" className="text-foreground/80 hover:text-foreground transition-colors">Materials</Link></li>
-                <li><Link to="/tests" className="text-foreground/80 hover:text-foreground transition-colors">Tests</Link></li>
-                <li><Link to="/ypt" className="text-foreground/80 hover:text-foreground transition-colors">Study Tracker</Link></li>
-                <li><Link to="/portals" className="text-foreground/80 hover:text-foreground transition-colors">Portals</Link></li>
-                <li><Link to="/support" className="text-foreground/80 hover:text-foreground transition-colors">Support</Link></li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div className="lg:col-span-4 space-y-4">
-              <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground/80">Legal</div>
-              <ul className="space-y-2.5 text-sm">
-                <li><Link to="/copyright-terms" className="text-foreground/80 hover:text-foreground transition-colors">Copyright & Terms</Link></li>
-                <li><Link to="/dmca" className="text-foreground/80 hover:text-foreground transition-colors">DMCA Policy</Link></li>
-                <li><Link to="/privacy-policy" className="text-foreground/80 hover:text-foreground transition-colors">Privacy Policy</Link></li>
-                <li><Link to="/donate" className="text-foreground/80 hover:text-foreground transition-colors">Support / Donate</Link></li>
-                <li>
-                  <Link to="/support" className="inline-flex items-center gap-1 text-foreground/80 hover:text-foreground transition-colors">
-                    Contact via Chat <ArrowUpRight className="h-3 w-3" />
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="mt-12 pt-6 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-muted-foreground/70">
-              © {year} BOOKIE. All rights reserved.
+            <p className="font-body-sm text-body-sm text-on-surface-variant text-center md:text-left">
+              © {year} | Engineered for Ambitious Aspirants
             </p>
-            <div className="flex items-center gap-3">
-              <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground/60">
-                Crafted for aspirants · Made with discipline
-              </p>
-              {/* Hidden admin entry */}
-              <button
-                onClick={() => setAdminOpen(true)}
-                aria-label="Admin"
-                title="·"
-                className="text-muted-foreground/20 hover:text-muted-foreground transition-colors text-[10px] tracking-widest px-1"
-              >
-                ·
-              </button>
+          </div>
+          
+          <div className="flex flex-wrap items-center justify-center gap-space-md sm:gap-space-lg">
+            <div className="flex items-center gap-space-md font-label-code-sm text-label-code-sm tracking-wider text-on-surface-variant">
+              <Link to="/materials" className="hover:text-primary transition-colors">PRACTICE</Link>
+              <span className="text-outline-variant">•</span>
+              <Link to="/tests" className="hover:text-primary transition-colors">PROGRESS</Link>
+              <span className="text-outline-variant">•</span>
+              <Link to="/ypt" className="hover:text-primary transition-colors">PERFORM</Link>
+              <span className="text-outline-variant">•</span>
+              <Link to="/donate" className="hover:text-primary transition-colors">CHAI ☕</Link>
+              <span className="text-outline-variant">•</span>
+              <Link to="/dmca" className="hover:text-primary transition-colors">DMCA</Link>
+            </div>
+            <div className="hidden sm:flex items-center gap-space-xs font-label-code-sm text-label-code-sm px-space-sm py-1 rounded-full bg-surface-container text-tertiary font-bold">
+              <span className="w-2 h-2 rounded-full bg-tertiary"></span>
+              AIR TARGET 2027
             </div>
           </div>
         </div>
 
-        {/* Oversized brand watermark */}
-        <div aria-hidden className="pointer-events-none select-none overflow-hidden">
-          <div className="font-display text-[22vw] lg:text-[16vw] font-black leading-none text-foreground/[0.025] text-center -mt-4 -mb-4 tracking-tighter">
-            BOOKIE
+        {/* Legal & Verification Sub-Footer (Restored) */}
+        <div className="border-t border-outline-variant/15 dark:border-slate-800 bg-surface-container-lowest/60 dark:bg-slate-900/40 py-4 mt-space-md">
+          <div className="max-w-7xl mx-auto px-margin lg:px-margin-desktop space-y-3">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-on-surface">
+                <Link to="/copyright-terms" className="font-bold underline hover:text-primary transition-colors">
+                  Terms of Service
+                </Link>
+                <span className="text-outline-variant">•</span>
+                <Link to="/privacy-policy" className="font-bold underline hover:text-primary transition-colors">
+                  Privacy Policy
+                </Link>
+                <span className="text-outline-variant">•</span>
+                <Link to="/dmca" className="text-on-surface-variant hover:text-primary transition-colors">
+                  DMCA &amp; Copyright
+                </Link>
+                <span className="text-outline-variant">•</span>
+                <Link to="/support" className="text-on-surface-variant hover:text-primary transition-colors">
+                  Support Desk
+                </Link>
+                {/* Secret admin gateway dot, styled identically to all other separator dots */}
+                <button
+                  type="button"
+                  onClick={() => setAdminOpen(true)}
+                  aria-label="•"
+                  className="text-outline-variant hover:text-primary transition-colors cursor-pointer select-none px-0.5 focus:outline-none"
+                >
+                  •
+                </button>
+              </div>
+
+              <div className="text-on-surface-variant text-[11px] font-mono text-center sm:text-right">
+                Legal &amp; Verification Enquiries:{' '}
+                <Link to="/support" className="font-bold text-primary hover:underline">
+                  Support Desk
+                </Link>
+              </div>
+            </div>
+
+            <p className="text-[11px] font-mono leading-relaxed text-on-surface-variant/75 text-center sm:text-left">
+              BOOKIE is an educational workspace and study tracker. Google OAuth is used solely for secure sign-in and profile synchronization in adherence to the Google API Services User Data Policy Limited Use requirements. We never sell user data.
+            </p>
           </div>
         </div>
-      </div>
+      </footer>
+
       <AdminLoginModal open={adminOpen} onOpenChange={setAdminOpen} />
-    </footer>
+    </div>
   );
 }

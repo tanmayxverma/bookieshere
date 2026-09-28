@@ -196,21 +196,21 @@ export function BookieAIChat() {
       <button
         onClick={() => setIsOpen(true)}
         className={cn(
-          "fixed bottom-5 right-5 z-50 p-4 rounded-2xl",
+          "fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-40 p-3 sm:p-4 rounded-full sm:rounded-2xl",
           "bg-gradient-to-br from-primary via-blue-500 to-violet-500",
-          "text-white shadow-xl",
+          "text-white shadow-lg sm:shadow-xl",
           "transition-all duration-300 ease-out",
           "hover:scale-105 hover:shadow-2xl hover:shadow-primary/30",
-          "active:scale-95",
+          "active:scale-95 cursor-pointer",
           "group",
           isOpen && "opacity-0 pointer-events-none scale-0"
         )}
         aria-label="Open Bookie AI Chat"
       >
         <div className="relative">
-          <Sparkles className="h-6 w-6 transition-transform group-hover:rotate-12" />
+          <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:rotate-12" />
         </div>
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white" />
+        <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 rounded-full border-2 border-white" />
       </button>
 
       {/* Chat Window */}
@@ -221,10 +221,11 @@ export function BookieAIChat() {
           "border border-border/50",
           "shadow-2xl shadow-primary/10",
           "transition-all duration-300 ease-out",
-          // Docked mode
-          !isFullscreen && "bottom-5 right-5 w-[420px] max-w-[calc(100vw-40px)] h-[620px] max-h-[calc(100vh-100px)] rounded-2xl origin-bottom-right",
-          // Fullscreen mode
-          isFullscreen && "inset-4 md:inset-8 rounded-2xl max-w-none max-h-none",
+          // Mobile: Fullscreen native app view
+          "max-sm:inset-0 max-sm:w-full max-sm:h-full max-sm:max-w-none max-sm:max-h-none max-sm:rounded-none max-sm:border-0",
+          // Desktop: Docked mode vs Fullscreen mode
+          !isFullscreen && "sm:bottom-5 sm:right-5 sm:w-[420px] sm:max-w-[calc(100vw-40px)] sm:h-[620px] sm:max-h-[calc(100vh-100px)] sm:rounded-2xl sm:origin-bottom-right",
+          isFullscreen && "sm:inset-4 md:sm:inset-8 sm:rounded-2xl sm:max-w-none sm:max-h-none",
           // Open/close state
           isOpen
             ? "opacity-100 scale-100 translate-y-0"
@@ -232,7 +233,7 @@ export function BookieAIChat() {
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-surface-1 rounded-t-2xl">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-surface-1 max-sm:rounded-none rounded-t-2xl">
           <div className="flex items-center gap-3">
             {/* AI Logo */}
             <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-blue-500 to-violet-500 flex items-center justify-center shadow-md">

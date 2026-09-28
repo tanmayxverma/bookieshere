@@ -17,7 +17,7 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
 
     const updateCount = () => {
       const state = presenceChannel.presenceState();
-      setOnlineCount(Object.keys(state).length);
+      setOnlineCount(Math.max(Object.keys(state).length, 1));
     };
 
     presenceChannel
@@ -85,8 +85,9 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
 
     fetchActive();
 
+    const sessionsChannelName = `ypt_sessions_${Math.random().toString(36).substring(2, 9)}`;
     const sessionsChannel = supabase
-      .channel('ypt_sessions_realtime')
+      .channel(sessionsChannelName)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'study_sessions' },
@@ -102,5 +103,6 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
     };
   }, [userId, userName, jeeYear]);
 
-  return { onlineCount, activeUsers };
+  const displayOnlineCount = Math.max(onlineCount, activeUsers.length, 1);
+  return { onlineCount: displayOnlineCount, activeUsers };
 }

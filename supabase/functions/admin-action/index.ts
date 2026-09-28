@@ -37,16 +37,16 @@ Deno.serve(async (req) => {
 
     switch (op) {
       case 'stats.overview': {
-        const [{ count: users }, { count: notifs }, { count: openTickets }, { count: resolvedTickets }] = await Promise.all([
+        const [{ count: users }, { count: notifs }, { count: openTickets }, { count: materialsCount }] = await Promise.all([
           supabase.from('profiles').select('id', { count: 'exact', head: true }),
           supabase.from('notifications').select('id', { count: 'exact', head: true }),
-          supabase.from('tickets').select('id', { count: 'exact', head: true }).in('status', ['open','under_review','accepted','in_progress','reopened']),
-          supabase.from('tickets').select('id', { count: 'exact', head: true }).in('status', ['resolved','closed']),
+          supabase.from('tickets').select('id', { count: 'exact', head: true }).not('status', 'in', '("resolved","closed","rejected")'),
+          supabase.from('materials').select('id', { count: 'exact', head: true }),
         ]);
         const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
         const { count: activeUsers } = await supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('updated_at', since);
         const { data: recent } = await supabase.from('admin_logs').select('*').order('created_at', { ascending: false }).limit(15);
-        return jr({ users, activeUsers, notifs, openTickets, resolvedTickets, recent }, 200);
+        return jr({ users, activeUsers, notifs, openTickets: openTickets ?? 0, materials: materialsCount ?? 0, recent }, 200);
       }
 
       case 'notification.list': {

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Camera, X, Loader2 } from "lucide-react";
+import { Camera, X, Loader2, Flame } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -9,6 +9,7 @@ interface Props {
   onChange: (url: string | null) => void;
   /** Owner folder prefix in storage. Defaults to auth.uid() (signed-in). For guests, pass `guest/<deviceId>`. */
   ownerId?: string;
+  streak?: number;
 }
 
 function initials(name: string) {
@@ -17,7 +18,7 @@ function initials(name: string) {
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 
-export function AvatarUploader({ avatarUrl, displayName, onChange, ownerId }: Props) {
+export function AvatarUploader({ avatarUrl, displayName, onChange, ownerId, streak }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const [busy, setBusy] = useState(false);
@@ -81,12 +82,23 @@ export function AvatarUploader({ avatarUrl, displayName, onChange, ownerId }: Pr
           type="button"
           onClick={handlePick}
           disabled={busy}
-          className="absolute -bottom-1 -right-1 h-9 w-9 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+          className="absolute -bottom-1 -right-1 h-9 w-9 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg hover:scale-105 transition-transform cursor-pointer"
           aria-label="Upload photo"
         >
           <Camera className="h-4 w-4" />
         </button>
       </div>
+
+      {/* Streak counter under profile logo */}
+      <div
+        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-700/80 text-amber-800 dark:text-amber-200 text-xs font-mono font-black shadow-xs select-none"
+        title="Streak updates based on 3:00 AM IST daily rollover"
+      >
+        <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+        <span>{streak ?? 0}d streak</span>
+        <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80 font-normal">· 3AM IST</span>
+      </div>
+
       <div className="flex items-center gap-2">
         <button type="button" onClick={handlePick} disabled={busy}
           className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">

@@ -56,7 +56,8 @@ export default function AdminSupport() {
   };
 
   useEffect(() => {
-    const ch = supabase.channel('admin-support')
+    const chName = `admin-support-${Math.random().toString(36).substring(2, 9)}`;
+    const ch = supabase.channel(chName)
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'support_chats' }, ({ new: row }) => patchChat(row))
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_chats' }, () => load())
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_messages' }, ({ new: row }) => patchLastMessage(row))
@@ -151,7 +152,8 @@ function ChatView({ id, onChange, onFlag, onDeleted }: { id: string; onChange: (
       if (!m?.id || m.chat_id !== id) return;
       setMsgs(prev => (prev.some(x => x.id === m.id) ? prev : [...prev, m].sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))));
     };
-    const ch = supabase.channel(`admin-support-${id}`)
+    const chName = `admin-support-${id}-${Math.random().toString(36).substring(2, 9)}`;
+    const ch = supabase.channel(chName)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${id}` },
         ({ new: row }) => mergeMsg(row))
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'support_chats', filter: `id=eq.${id}` },

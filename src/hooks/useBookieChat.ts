@@ -1,24 +1,25 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { BOOKIE_AI_SYSTEM_PROMPT } from "@/lib/bookieAiPrompt";
 
 type MessageContent = 
   | string 
   | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>;
 
 export type Message = { 
-  role: "user" | "assistant"; 
+  role: "user" | "assistant" | "system"; 
   content: MessageContent;
-  // For UI display purposes
   displayContent?: string;
   imageUrl?: string;
 };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bookie-chat`;
+const SUPABASE_CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bookie-chat`;
+const OPENROUTER_DIRECT_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 const INITIAL_MESSAGE: Message = {
   role: "assistant",
-  content: "Hi 👋 I'm Bookie AI — your personal study assistant. Ask me doubts or find the right study material 📚",
-  displayContent: "Hi 👋 I'm Bookie AI — your personal study assistant. Ask me doubts or find the right study material 📚",
+  content: "Hi 👋 I'm Bookie AI — your personal JEE study mentor. Ask me concept doubts, exam strategy, or find any study material 📚💪",
+  displayContent: "Hi 👋 I'm Bookie AI — your personal JEE study mentor. Ask me concept doubts, exam strategy, or find any study material 📚💪",
 };
 
 export function useBookieChat() {
@@ -34,17 +35,14 @@ export function useBookieChat() {
     let displayContent = input.trim();
     
     if (imageBase64) {
-      // Multimodal message with image
       const contentParts: Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }> = [];
       
-      // Add image first
       contentParts.push({
         type: "image_url",
         image_url: { url: imageBase64 }
       });
       
-      // Add text (or default prompt if no text)
-      const textContent = input.trim() || "Please analyze this image and help me understand it.";
+      const textContent = input.trim() || "Please analyze this image, identify the question or concept, and solve it step-by-step.";
       contentParts.push({
         type: "text",
         text: textContent
@@ -83,41 +81,77 @@ export function useBookieChat() {
     };
 
     try {
-      // Prepare messages for API - convert to proper format
-      const apiMessages = [...messages, userMsg]
+      // Filter out greeting message
+      const conversationHistory = [...messages, userMsg]
         .filter(m => m !== INITIAL_MESSAGE)
         .map(m => ({
           role: m.role,
           content: m.content
         }));
 
-      const { data: sessionData } = await supabase.auth.getSession();
-      const accessToken = sessionData.session?.access_token;
-      if (!accessToken) {
-        throw new Error("Sign in with Google to use Bookie AI.");
-      }
+      // Check if direct OpenRouter API key is configured in client environment
+      const clientOpenRouterKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+      const clientOpenRouterModel = import.meta.env.VITE_OPENROUTER_MODEL || "google/gemini-2.0-flash-001";
 
-      const response = await fetch(CHAT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ messages: apiMessages }),
-      });
+      let response: Response;
+
+      if (clientOpenRouterKey && clientOpenRouterKey.trim() !== "") {
+        // Direct OpenRouter Client Mode
+        response = await fetch(OPENROUTER_DIRECT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${clientOpenRouterKey.trim()}`,
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "Bookie AI",
+          },
+          body: JSON.stringify({
+            model: clientOpenRouterModel.trim(),
+            messages: [
+              { role: "system", content: BOOKIE_AI_SYSTEM_PROMPT },
+              ...conversationHistory,
+            ],
+            stream: true,
+          }),
+        });
+      } else {
+        // Edge Function Backend Mode
+        const { data: sessionData } = await supabase.auth.getSession();
+        const accessToken = sessionData.session?.access_token;
+        const authHeader = accessToken 
+          ? `Bearer ${accessToken}` 
+          : `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`;
+
+        response = await fetch(SUPABASE_CHAT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: authHeader,
+          },
+          body: JSON.stringify({ messages: conversationHistory }),
+        });
+      }
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error("Bookie AI gateway failure", response.status, errorData);
-        if (response.status === 401) throw new Error("Sign in with Google to use Bookie AI.");
-        if (response.status === 429) throw new Error("Too many requests — wait a moment and try again.");
-        if (response.status === 402) throw new Error("AI credits are exhausted. Try again later.");
-        if (response.status === 503) throw new Error("Bookie AI isn't configured yet (missing API key).");
-        throw new Error(errorData.error || `Bookie AI failed (status ${response.status}).`);
+        console.error("Bookie AI failure", response.status, errorData);
+        if (response.status === 401) {
+          throw new Error("Invalid API key or authentication required.");
+        }
+        if (response.status === 429) {
+          throw new Error("Rate limit exceeded — please wait a few seconds and try again.");
+        }
+        if (response.status === 402) {
+          throw new Error("OpenRouter credit balance is zero. Please top up your OpenRouter account.");
+        }
+        if (response.status === 503) {
+          throw new Error("Bookie AI is not configured yet (missing OpenRouter API key).");
+        }
+        throw new Error(errorData.error?.message || errorData.error || `Bookie AI request failed (${response.status})`);
       }
 
-      if (!response.body) throw new Error("No response body");
+      if (!response.body) throw new Error("No response body received");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -154,7 +188,7 @@ export function useBookieChat() {
 
       // Flush remaining buffer
       if (buffer.trim()) {
-        for (let raw of buffer.split("\n")) {
+        for (const raw of buffer.split("\n")) {
           if (!raw || raw.startsWith(":") || raw.trim() === "" || !raw.startsWith("data: ")) continue;
           const jsonStr = raw.slice(6).trim();
           if (jsonStr === "[DONE]") continue;
@@ -167,8 +201,9 @@ export function useBookieChat() {
       }
     } catch (err) {
       console.error("Bookie chat error:", err);
-      setError(err instanceof Error ? err.message : "Something went wrong");
-      // Remove the pending assistant message if there was an error
+      const errMsg = err instanceof Error ? err.message : "Something went wrong";
+      setError(errMsg);
+      // Remove placeholder message if nothing was streamed
       setMessages((prev) => {
         const last = prev[prev.length - 1];
         if (last?.role === "assistant" && !last.displayContent) {

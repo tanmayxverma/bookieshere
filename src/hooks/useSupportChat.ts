@@ -93,7 +93,8 @@ export function useSupportChat() {
   useEffect(() => {
     const chatId = chat?.id;
     if (!chatId) return;
-    const ch = supabase.channel(`support-${chatId}`)
+    const chName = `support-${chatId}-${Math.random().toString(36).substring(2, 9)}`;
+    const ch = supabase.channel(chName)
       // Targeted: append the new message only.
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_messages', filter: `chat_id=eq.${chatId}` },
         ({ new: row }) => mergeMessage(row as SupportMessage))

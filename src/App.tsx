@@ -5,8 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { ScrollToTop } from "./components/ScrollToTop";
+import { NavigationProgressBar } from "./components/NavigationProgressBar";
 import { BookieLoader, useInitialLoad } from "./components/BookieLoader";
 import { useProfile, ProfileProvider } from "./hooks/useProfile";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import Materials from "./pages/Materials";
 import Tests from "./pages/Tests";
@@ -37,7 +39,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
-const OPEN_PATHS = new Set(["/welcome", "/onboarding", "/reset-password", "/privacy-policy", "/copyright-terms", "/dmca"]);
+const OPEN_PATHS = new Set(["/welcome", "/onboarding", "/auth", "/reset-password", "/privacy-policy", "/copyright-terms", "/dmca", "/donate"]);
 
 function ProfileGate() {
   const { profile, loading, isOnboarded } = useProfile();
@@ -59,56 +61,70 @@ function ProfileGate() {
   return null;
 }
 
+function AppRoutes() {
+  const location = useLocation();
+  return (
+    <ErrorBoundary resetKey={location.pathname}>
+      <div className="flex-1 flex flex-col w-full">
+        <Routes location={location}>
+          <Route path="/" element={<Index />} />
+          <Route path="/materials" element={<Materials />} />
+          <Route path="/tests" element={<Tests />} />
+          <Route path="/test-series/:id" element={<TestSeriesDetail />} />
+          <Route path="/ypt" element={<YPT />} />
+          <Route path="/portals" element={<Portals />} />
+          <Route path="/portals/:id" element={<PortalDetail />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/admin" element={<AdminOverview />} />
+          <Route path="/admin/notifications" element={<AdminNotifications />} />
+          <Route path="/admin/tickets" element={<AdminTickets />} />
+          <Route path="/admin/support" element={<AdminSupport />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/materials" element={<AdminMaterials />} />
+          <Route path="/admin/community" element={<AdminCommunity />} />
+          <Route path="/copyright-terms" element={<CopyrightTerms />} />
+          <Route path="/dmca" element={<DMCA />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/donate" element={<Donate />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    </ErrorBoundary>
+  );
+}
+
 const AppInner = () => {
   const loading = useInitialLoad(1100);
   if (loading) return <BookieLoader label="Welcome back" />;
   return (
     <BrowserRouter>
+      <NavigationProgressBar />
       <ScrollToTop />
       <ProfileGate />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/materials" element={<Materials />} />
-        <Route path="/tests" element={<Tests />} />
-        <Route path="/test-series/:id" element={<TestSeriesDetail />} />
-        <Route path="/ypt" element={<YPT />} />
-        <Route path="/portals" element={<Portals />} />
-        <Route path="/portals/:id" element={<PortalDetail />} />
-        <Route path="/support" element={<Support />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="/admin" element={<AdminOverview />} />
-        <Route path="/admin/notifications" element={<AdminNotifications />} />
-        <Route path="/admin/tickets" element={<AdminTickets />} />
-        <Route path="/admin/support" element={<AdminSupport />} />
-        <Route path="/admin/users" element={<AdminUsers />} />
-        <Route path="/admin/materials" element={<AdminMaterials />} />
-        <Route path="/admin/community" element={<AdminCommunity />} />
-        <Route path="/copyright-terms" element={<CopyrightTerms />} />
-        <Route path="/dmca" element={<DMCA />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/donate" element={<Donate />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 };
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <ProfileProvider>
-        <AppInner />
-      </ProfileProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <ProfileProvider>
+          <AppInner />
+        </ProfileProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;
