@@ -20,6 +20,7 @@ import Support from "./pages/Support";
 import Auth from "./pages/Auth";
 import AdminOverview from "./pages/admin/AdminOverview";
 import AdminNotifications from "./pages/admin/AdminNotifications";
+import AdminTickets from "./pages/admin/AdminTickets";
 import AdminSupport from "./pages/admin/AdminSupport";
 import AdminCommunity from "./pages/admin/AdminCommunity";
 import AdminUsers from "./pages/admin/AdminUsers";
@@ -39,7 +40,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
-const OPEN_PATHS = new Set(["/welcome", "/onboarding", "/auth", "/reset-password", "/privacy-policy", "/copyright-terms", "/dmca", "/donate"]);
+const OPEN_PATHS = new Set(["/welcome", "/onboarding", "/auth", "/reset-password", "/privacy-policy", "/copyright-terms", "/terms", "/terms-of-service", "/dmca", "/donate"]);
 
 function ProfileGate() {
   const { profile, loading, isOnboarded } = useProfile();
@@ -90,6 +91,8 @@ function AppRoutes() {
           <Route path="/admin/materials" element={<AdminMaterials />} />
           <Route path="/admin/community" element={<AdminCommunity />} />
           <Route path="/copyright-terms" element={<CopyrightTerms />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/dmca" element={<DMCA />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/donate" element={<Donate />} />

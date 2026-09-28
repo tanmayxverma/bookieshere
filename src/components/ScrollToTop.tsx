@@ -19,16 +19,12 @@ export function scrollToTop() {
 }
 
 export function ScrollToTop() {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const navType = useNavigationType();
 
-  // Scroll to top on every route, path, search or hash change
+  // Scroll to top on every route, path change
   useEffect(() => {
-    try {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
-    } catch {
-      window.scrollTo(0, 0);
-    }
+    scrollToTop();
   }, [pathname]);
 
   return null;
