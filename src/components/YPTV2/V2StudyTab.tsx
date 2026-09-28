@@ -246,6 +246,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
       // 7-day breakdown
       const week: { day: string; secs: number; isToday: boolean }[] = [];
       const subjMap: Record<string, number> = {};
+      const todayKey = getISTDateString();
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);

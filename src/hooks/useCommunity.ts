@@ -157,7 +157,7 @@ export function useCommunity(sort: Sort = 'recent') {
       body = inputOrTitle.body || inputOrTitle.content || '';
       image_url = inputOrTitle.image_url ?? null;
     } else {
-      subject = inputOrTitle || '';
+      subject = typeof inputOrTitle === 'string' ? inputOrTitle : '';
       body = bodyArg || '';
       image_url = imageUrlArg ?? null;
     }

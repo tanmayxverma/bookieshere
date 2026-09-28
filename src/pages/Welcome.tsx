@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sparkles, Loader2, ArrowRight, UserCircle2, Mail, Lock, ChevronLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";

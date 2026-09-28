@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home, BookOpen, FileText, Timer, LayoutGrid, MessageSquare, Headphones,
   Menu, X

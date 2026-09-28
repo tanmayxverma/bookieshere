@@ -14,6 +14,7 @@ dist-ssr
 *.local
 .env.local
 *.timestamp-*.mjs
+*.tsbuildinfo
 stitch_typography_and_design_analysis/
 
 # Environment variables

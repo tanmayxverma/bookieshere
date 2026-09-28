@@ -20,7 +20,7 @@ function initials(name: string) {
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 
-export function AvatarUploader({ avatarUrl, displayName, onChange, ownerId, streak }: Props) {
+export function AvatarUploader({ avatarUrl, displayName, onChange, ownerId, streak, googleAvatar, onResetGoogle }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const [busy, setBusy] = useState(false);

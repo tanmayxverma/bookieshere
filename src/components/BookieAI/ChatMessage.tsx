@@ -6,7 +6,7 @@ import { Sparkles, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ChatMessageProps {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
   imageUrl?: string;
   isLatest?: boolean;

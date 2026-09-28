@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1188,7 +1188,6 @@ function CommentsSection({
           {comments.map(c => {
             const isCommentOwner = Boolean(
               (profile?.id && c.profile_id === profile.id) ||
-              (myId && c.user_id === myId) ||
               (user?.id && c.user_id === user.id) ||
               (profile?.user_id && c.user_id === profile.user_id)
             );

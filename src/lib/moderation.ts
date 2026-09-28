@@ -26,19 +26,20 @@ function normalize(input: string) {
 
 export interface ModResult {
   ok: boolean;
+  flagged: boolean;
   reason?: string;
 }
 
 export function moderate(text: string, opts: { allowLinks?: boolean } = {}): ModResult {
   const raw = text.trim();
-  if (!raw) return { ok: false, reason: 'Message is empty.' };
+  if (!raw) return { ok: false, flagged: true, reason: 'Message is empty.' };
   if (!opts.allowLinks && URL_RE.test(raw)) {
-    return { ok: false, reason: 'Links are not allowed here.' };
+    return { ok: false, flagged: true, reason: 'Links are not allowed here.' };
   }
   const normalized = normalize(raw);
   const tokens = new Set(normalized.split(/\s+/).filter(Boolean));
   for (const w of BLOCKED_WORDS) {
-    if (tokens.has(w)) return { ok: false, reason: 'Please keep it respectful — that word isn\'t allowed.' };
+    if (tokens.has(w)) return { ok: false, flagged: true, reason: 'Please keep it respectful — that word isn\'t allowed.' };
   }
-  return { ok: true };
+  return { ok: true, flagged: false };
 }
