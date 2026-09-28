@@ -13,6 +13,7 @@ const Materials = () => {
   const [search, setSearch] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState<SubjectType[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<ResourceType[]>([]);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   useEffect(() => {
     const subjectParam = searchParams.get('subject');

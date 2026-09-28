@@ -1,0 +1,1496 @@
+﻿-- Create enum for exam types
+CREATE TYPE public.exam_type AS ENUM ('jee', 'other_pcm');
+
+-- Create enum for subjects
+CREATE TYPE public.subject_type AS ENUM ('physics', 'chemistry', 'mathematics');
+
+-- Create enum for resource types
+CREATE TYPE public.resource_type AS ENUM ('books', 'notes', 'pyqs', 'practice_sheets');
+
+-- Create enum for user roles
+CREATE TYPE public.app_role AS ENUM ('admin', 'user');
+
+-- Create materials table
+CREATE TABLE public.materials (
+  id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  exam exam_type NOT NULL,
+  subject subject_type NOT NULL,
+  resource_type resource_type NOT NULL,
+  download_link TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+);
+
+-- Create user_roles table
+CREATE TABLE public.user_roles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  role app_role NOT NULL DEFAULT 'user',
+  UNIQUE (user_id, role)
+);
+
+-- Enable RLS
+ALTER TABLE public.materials ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+
+-- Create security definer function to check roles
+CREATE OR REPLACE FUNCTION public.has_role(_user_id UUID, _role app_role)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.user_roles
+    WHERE user_id = _user_id
+      AND role = _role
+  )
+$$;
+
+-- Materials: Everyone can read
+CREATE POLICY "Anyone can view materials"
+ON public.materials
+FOR SELECT
+USING (true);
+
+-- Materials: Only admins can insert
+CREATE POLICY "Admins can insert materials"
+ON public.materials
+FOR INSERT
+TO authenticated
+WITH CHECK (public.has_role(auth.uid(), 'admin'));
+
+-- Materials: Only admins can update
+CREATE POLICY "Admins can update materials"
+ON public.materials
+FOR UPDATE
+TO authenticated
+USING (public.has_role(auth.uid(), 'admin'));
+
+-- Materials: Only admins can delete
+CREATE POLICY "Admins can delete materials"
+ON public.materials
+FOR DELETE
+TO authenticated
+USING (public.has_role(auth.uid(), 'admin'));
+
+-- User roles: Users can see their own roles
+CREATE POLICY "Users can view own roles"
+ON public.user_roles
+FOR SELECT
+TO authenticated
+USING (auth.uid() = user_id);
+
+-- User roles: Only admins can manage roles
+CREATE POLICY "Admins can manage all roles"
+ON public.user_roles
+FOR ALL
+TO authenticated
+USING (public.has_role(auth.uid(), 'admin'));
+
+-- Create function to update timestamps
+CREATE OR REPLACE FUNCTION public.update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SET search_path = public;
+
+-- Create trigger for automatic timestamp updates
+CREATE TRIGGER update_materials_updated_at
+BEFORE UPDATE ON public.materials
+FOR EACH ROW
+EXECUTE FUNCTION public.update_updated_at_column();
+-- Add new resource types to the enum
+ALTER TYPE public.resource_type ADD VALUE IF NOT EXISTS 'test_series';
+ALTER TYPE public.resource_type ADD VALUE IF NOT EXISTS 'modules';
+ALTER TYPE public.resource_type ADD VALUE IF NOT EXISTS 'crux';
+
+-- Add combined subject type for materials that span all subjects
+ALTER TYPE public.subject_type ADD VALUE IF NOT EXISTS 'combined';
+-- Add popularity column for sorting
+ALTER TABLE public.materials ADD COLUMN IF NOT EXISTS popularity INTEGER NOT NULL DEFAULT 0;
+-- Add badge column to materials table
+ALTER TABLE public.materials 
+ADD COLUMN badge TEXT CHECK (badge IN ('premium', 'air', 'core') OR badge IS NULL);
+-- Create enum for exam type (JEE Main vs JEE Advanced)
+CREATE TYPE public.jee_exam_type AS ENUM ('jee_main', 'jee_advanced');
+
+-- Create enum for test status
+CREATE TYPE public.test_status AS ENUM ('draft', 'in_progress', 'completed', 'abandoned');
+
+-- Create enum for question type
+CREATE TYPE public.question_type AS ENUM (
+  'single_correct',      -- JEE Main & Advanced
+  'multi_correct',       -- JEE Advanced
+  'numerical',           -- Both exams
+  'integer',             -- JEE Advanced
+  'matrix_match',        -- JEE Advanced
+  'paragraph'            -- JEE Advanced
+);
+
+-- Create tests table to store generated tests
+CREATE TABLE public.tests (
+  id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  exam_type jee_exam_type NOT NULL,
+  syllabus JSONB NOT NULL DEFAULT '{}',
+  status test_status NOT NULL DEFAULT 'draft',
+  total_questions INTEGER NOT NULL DEFAULT 0,
+  total_marks INTEGER NOT NULL DEFAULT 0,
+  duration_minutes INTEGER NOT NULL DEFAULT 180,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  started_at TIMESTAMP WITH TIME ZONE,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  score INTEGER,
+  correct_count INTEGER,
+  incorrect_count INTEGER,
+  unattempted_count INTEGER
+);
+
+-- Create questions table for generated questions
+CREATE TABLE public.test_questions (
+  id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  test_id UUID NOT NULL REFERENCES public.tests(id) ON DELETE CASCADE,
+  question_number INTEGER NOT NULL,
+  subject subject_type NOT NULL,
+  chapter TEXT,
+  question_type question_type NOT NULL,
+  question_text TEXT NOT NULL,
+  options JSONB,
+  correct_answer JSONB NOT NULL,
+  user_answer JSONB,
+  is_marked_for_review BOOLEAN DEFAULT false,
+  is_answered BOOLEAN DEFAULT false,
+  marks_positive INTEGER NOT NULL DEFAULT 4,
+  marks_negative NUMERIC(3,2) NOT NULL DEFAULT 1,
+  partial_marking BOOLEAN DEFAULT false,
+  solution TEXT,
+  diagram_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+);
+
+-- Create index for faster queries
+CREATE INDEX idx_test_questions_test_id ON public.test_questions(test_id);
+CREATE INDEX idx_tests_user_id ON public.tests(user_id);
+CREATE INDEX idx_tests_status ON public.tests(status);
+
+-- Enable RLS
+ALTER TABLE public.tests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.test_questions ENABLE ROW LEVEL SECURITY;
+
+-- Tests policies: Anyone can create tests (for anonymous users)
+-- Users can only see their own tests if logged in, or see tests they created
+CREATE POLICY "Anyone can create tests"
+ON public.tests
+FOR INSERT
+WITH CHECK (true);
+
+CREATE POLICY "Users can view own tests"
+ON public.tests
+FOR SELECT
+USING (user_id = auth.uid() OR user_id IS NULL);
+
+CREATE POLICY "Users can update own tests"
+ON public.tests
+FOR UPDATE
+USING (user_id = auth.uid() OR user_id IS NULL);
+
+CREATE POLICY "Users can delete own tests"
+ON public.tests
+FOR DELETE
+USING (user_id = auth.uid() OR user_id IS NULL);
+
+-- Questions policies
+CREATE POLICY "Anyone can insert questions"
+ON public.test_questions
+FOR INSERT
+WITH CHECK (true);
+
+CREATE POLICY "Anyone can view questions for their tests"
+ON public.test_questions
+FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM public.tests 
+    WHERE tests.id = test_questions.test_id 
+    AND (tests.user_id = auth.uid() OR tests.user_id IS NULL)
+  )
+);
+
+CREATE POLICY "Anyone can update questions for their tests"
+ON public.test_questions
+FOR UPDATE
+USING (
+  EXISTS (
+    SELECT 1 FROM public.tests 
+    WHERE tests.id = test_questions.test_id 
+    AND (tests.user_id = auth.uid() OR tests.user_id IS NULL)
+  )
+);
+
+CREATE POLICY "Anyone can delete questions for their tests"
+ON public.test_questions
+FOR DELETE
+USING (
+  EXISTS (
+    SELECT 1 FROM public.tests 
+    WHERE tests.id = test_questions.test_id 
+    AND (tests.user_id = auth.uid() OR tests.user_id IS NULL)
+  )
+);
+
+-- YPT Users (device-based identity, no auth required)
+CREATE TABLE public.ypt_users (
+  id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  device_id TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  jee_focus_year TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_active_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.ypt_users ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read ypt_users" ON public.ypt_users FOR SELECT USING (true);
+CREATE POLICY "Public insert ypt_users" ON public.ypt_users FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public update ypt_users" ON public.ypt_users FOR UPDATE USING (true);
+
+-- Study Sessions
+CREATE TABLE public.study_sessions (
+  id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  ypt_user_id UUID NOT NULL REFERENCES public.ypt_users(id) ON DELETE CASCADE,
+  subject TEXT NOT NULL,
+  started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ended_at TIMESTAMPTZ,
+  duration_seconds INTEGER,
+  status TEXT NOT NULL DEFAULT 'active',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.study_sessions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read study_sessions" ON public.study_sessions FOR SELECT USING (true);
+CREATE POLICY "Public insert study_sessions" ON public.study_sessions FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public update study_sessions" ON public.study_sessions FOR UPDATE USING (true);
+
+-- YPT Todos (session-based checklist)
+CREATE TABLE public.ypt_todos (
+  id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  ypt_user_id UUID NOT NULL REFERENCES public.ypt_users(id) ON DELETE CASCADE,
+  text TEXT NOT NULL,
+  completed BOOLEAN NOT NULL DEFAULT false,
+  created_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.ypt_todos ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read ypt_todos" ON public.ypt_todos FOR SELECT USING (true);
+CREATE POLICY "Public insert ypt_todos" ON public.ypt_todos FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public update ypt_todos" ON public.ypt_todos FOR UPDATE USING (true);
+CREATE POLICY "Public delete ypt_todos" ON public.ypt_todos FOR DELETE USING (true);
+
+-- Enable realtime for live presence
+ALTER PUBLICATION supabase_realtime ADD TABLE public.study_sessions;
+
+-- Add name change tracking to ypt_users
+ALTER TABLE public.ypt_users
+ADD COLUMN IF NOT EXISTS name_change_history jsonb NOT NULL DEFAULT '[]'::jsonb;
+
+-- Add heartbeat column to study_sessions for anti-cheat
+ALTER TABLE public.study_sessions
+ADD COLUMN IF NOT EXISTS last_heartbeat timestamp with time zone DEFAULT now();
+
+-- Create a function to clean up stale sessions (no heartbeat for 60 seconds)
+CREATE OR REPLACE FUNCTION public.cleanup_stale_sessions()
+RETURNS void
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  UPDATE public.study_sessions
+  SET status = 'completed',
+      ended_at = last_heartbeat,
+      duration_seconds = EXTRACT(EPOCH FROM (last_heartbeat - started_at))::integer
+  WHERE status = 'active'
+    AND last_heartbeat < now() - interval '60 seconds';
+$$;
+
+-- Delete old session history (older than 7 days)
+CREATE OR REPLACE FUNCTION public.cleanup_old_sessions()
+RETURNS void
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  DELETE FROM public.study_sessions
+  WHERE status = 'completed'
+    AND started_at < now() - interval '7 days';
+$$;
+
+-- Rooms table
+CREATE TABLE public.ypt_rooms (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  emoji TEXT DEFAULT 'ðŸ“–',
+  is_permanent BOOLEAN NOT NULL DEFAULT false,
+  max_participants INTEGER,
+  created_by UUID REFERENCES public.ypt_users(id) ON DELETE CASCADE,
+  last_activity_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Room members table
+CREATE TABLE public.ypt_room_members (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  room_id UUID NOT NULL REFERENCES public.ypt_rooms(id) ON DELETE CASCADE,
+  ypt_user_id UUID NOT NULL REFERENCES public.ypt_users(id) ON DELETE CASCADE,
+  joined_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(room_id, ypt_user_id)
+);
+
+-- Enable RLS
+ALTER TABLE public.ypt_rooms ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ypt_room_members ENABLE ROW LEVEL SECURITY;
+
+-- RLS policies for rooms
+CREATE POLICY "Public read rooms" ON public.ypt_rooms FOR SELECT TO public USING (true);
+CREATE POLICY "Public insert rooms" ON public.ypt_rooms FOR INSERT TO public WITH CHECK (true);
+CREATE POLICY "Public update rooms" ON public.ypt_rooms FOR UPDATE TO public USING (true);
+CREATE POLICY "Public delete rooms" ON public.ypt_rooms FOR DELETE TO public USING (true);
+
+-- RLS policies for room members
+CREATE POLICY "Public read room_members" ON public.ypt_room_members FOR SELECT TO public USING (true);
+CREATE POLICY "Public insert room_members" ON public.ypt_room_members FOR INSERT TO public WITH CHECK (true);
+CREATE POLICY "Public delete room_members" ON public.ypt_room_members FOR DELETE TO public USING (true);
+
+-- Enable realtime for rooms
+ALTER PUBLICATION supabase_realtime ADD TABLE public.ypt_rooms;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.ypt_room_members;
+
+-- Insert permanent rooms
+INSERT INTO public.ypt_rooms (name, description, emoji, is_permanent) VALUES
+  ('JEE 2027', 'Study room for JEE 2027 aspirants', 'ðŸŽ¯', true),
+  ('JEE 2028', 'Study room for JEE 2028 aspirants', 'ðŸš€', true);
+
+-- Add priority column to ypt_todos
+ALTER TABLE public.ypt_todos ADD COLUMN IF NOT EXISTS priority TEXT DEFAULT 'normal';
+
+-- Function to clean up inactive custom rooms (1 hour inactivity)
+CREATE OR REPLACE FUNCTION public.cleanup_inactive_rooms()
+RETURNS void
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path TO 'public'
+AS $$
+  DELETE FROM public.ypt_rooms
+  WHERE is_permanent = false
+    AND last_activity_at < now() - interval '1 hour';
+$$;
+
+ALTER TABLE public.ypt_todos
+ADD COLUMN IF NOT EXISTS subject text DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS time_allotted integer DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS sort_order integer DEFAULT 0;
+
+CREATE TABLE public.room_messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  room_id uuid NOT NULL REFERENCES public.ypt_rooms(id) ON DELETE CASCADE,
+  ypt_user_id uuid NOT NULL REFERENCES public.ypt_users(id) ON DELETE CASCADE,
+  message text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.room_messages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read room_messages" ON public.room_messages FOR SELECT TO public USING (true);
+CREATE POLICY "Public insert room_messages" ON public.room_messages FOR INSERT TO public WITH CHECK (true);
+CREATE POLICY "Public delete room_messages" ON public.room_messages FOR DELETE TO public USING (true);
+
+ALTER PUBLICATION supabase_realtime ADD TABLE public.room_messages;
+
+CREATE OR REPLACE FUNCTION public.cleanup_old_messages()
+RETURNS void
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path TO 'public'
+AS $$
+  DELETE FROM public.room_messages
+  WHERE created_at < now() - interval '1 hour';
+$$;
+ALTER TABLE public.materials DROP CONSTRAINT IF EXISTS materials_badge_check;
+ALTER TABLE public.materials ADD CONSTRAINT materials_badge_check CHECK (badge IS NULL OR badge IN ('premium','air','core','new','updated'));
+
+-- Tests: tighten policies
+DROP POLICY IF EXISTS "Anyone can create tests" ON public.tests;
+DROP POLICY IF EXISTS "Users can delete own tests" ON public.tests;
+DROP POLICY IF EXISTS "Users can update own tests" ON public.tests;
+DROP POLICY IF EXISTS "Users can view own tests" ON public.tests;
+
+CREATE POLICY "Users can view own tests"
+  ON public.tests FOR SELECT
+  TO authenticated
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can update own tests"
+  ON public.tests FOR UPDATE
+  TO authenticated
+  USING (user_id = auth.uid())
+  WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can delete own tests"
+  ON public.tests FOR DELETE
+  TO authenticated
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can create own tests"
+  ON public.tests FOR INSERT
+  TO authenticated
+  WITH CHECK (user_id = auth.uid());
+
+-- Test questions: drop all public access; service role (edge functions) bypasses RLS
+DROP POLICY IF EXISTS "Anyone can delete questions for their tests" ON public.test_questions;
+DROP POLICY IF EXISTS "Anyone can insert questions" ON public.test_questions;
+DROP POLICY IF EXISTS "Anyone can update questions for their tests" ON public.test_questions;
+DROP POLICY IF EXISTS "Anyone can view questions for their tests" ON public.test_questions;
+
+-- Allow authenticated users to view ONLY questions of their own COMPLETED tests
+-- (so answers/solutions are revealed only after grading). Edge functions still use
+-- service_role and bypass RLS for in-test fetches and grading.
+CREATE POLICY "Users can view questions of completed own tests"
+  ON public.test_questions FOR SELECT
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.tests t
+      WHERE t.id = test_questions.test_id
+        AND t.user_id = auth.uid()
+        AND t.status = 'completed'
+    )
+  );
+CREATE OR REPLACE FUNCTION public.cleanup_old_messages()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  DELETE FROM public.room_messages
+  WHERE created_at < now() - interval '24 hours';
+END;
+$$;
+
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES ('room-images', 'room-images', true, 5242880, ARRAY['image/png','image/jpeg','image/jpg','image/webp','image/gif'])
+ON CONFLICT (id) DO UPDATE SET public = true, file_size_limit = 5242880, allowed_mime_types = ARRAY['image/png','image/jpeg','image/jpg','image/webp','image/gif'];
+
+CREATE POLICY "Public read room images"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'room-images');
+
+CREATE POLICY "Public upload room images"
+ON storage.objects FOR INSERT
+WITH CHECK (bucket_id = 'room-images');
+
+CREATE POLICY "Public delete room images"
+ON storage.objects FOR DELETE
+USING (bucket_id = 'room-images');
+UPDATE public.materials SET name = regexp_replace(name, 'mathongo|mathango', 'M@th@ngo', 'gi') WHERE name ~* 'mathongo|mathango';
+UPDATE public.materials SET description = regexp_replace(description, 'mathongo|mathango', 'M@th@ngo', 'gi') WHERE description ~* 'mathongo|mathango';
+
+-- ============ profiles table ============
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
+  device_id text UNIQUE,
+  account_type text NOT NULL DEFAULT 'guest' CHECK (account_type IN ('guest','google','email')),
+  display_name text NOT NULL DEFAULT 'Aspirant',
+  avatar_url text,
+  target_category text NOT NULL DEFAULT 'JEE 2027',
+  onboarded_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT profiles_owner_present CHECK (user_id IS NOT NULL OR device_id IS NOT NULL)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.profiles TO authenticated;
+GRANT SELECT ON public.profiles TO anon;
+GRANT ALL ON public.profiles TO service_role;
+
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- Public can read all profiles (display name + avatar are public on leaderboards etc.)
+CREATE POLICY "Profiles are publicly readable"
+  ON public.profiles FOR SELECT
+  USING (true);
+
+-- Authenticated users manage their own profile
+CREATE POLICY "Users insert own profile"
+  ON public.profiles FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users update own profile"
+  ON public.profiles FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users delete own profile"
+  ON public.profiles FOR DELETE
+  TO authenticated
+  USING (auth.uid() = user_id);
+
+-- updated_at trigger
+CREATE TRIGGER update_profiles_updated_at
+  BEFORE UPDATE ON public.profiles
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+-- ============ guest profile RPCs ============
+CREATE OR REPLACE FUNCTION public.get_guest_profile(_device_id text)
+RETURNS SETOF public.profiles
+LANGUAGE sql
+STABLE SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT * FROM public.profiles WHERE device_id = _device_id AND user_id IS NULL LIMIT 1;
+$$;
+
+CREATE OR REPLACE FUNCTION public.upsert_guest_profile(
+  _device_id text,
+  _display_name text,
+  _target_category text,
+  _avatar_url text DEFAULT NULL
+)
+RETURNS public.profiles
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  result public.profiles;
+BEGIN
+  IF _device_id IS NULL OR length(_device_id) < 8 THEN
+    RAISE EXCEPTION 'invalid device id';
+  END IF;
+
+  INSERT INTO public.profiles (device_id, account_type, display_name, avatar_url, target_category, onboarded_at)
+  VALUES (_device_id, 'guest', COALESCE(NULLIF(trim(_display_name), ''), 'Aspirant'),
+          _avatar_url, COALESCE(NULLIF(trim(_target_category), ''), 'JEE 2027'), now())
+  ON CONFLICT (device_id) DO UPDATE
+    SET display_name = EXCLUDED.display_name,
+        avatar_url = EXCLUDED.avatar_url,
+        target_category = EXCLUDED.target_category,
+        onboarded_at = COALESCE(public.profiles.onboarded_at, now()),
+        updated_at = now()
+  RETURNING * INTO result;
+  RETURN result;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_guest_profile(text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.upsert_guest_profile(text, text, text, text) TO anon, authenticated;
+
+-- ============ auto-create profile on signup ============
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  meta jsonb := COALESCE(NEW.raw_user_meta_data, '{}'::jsonb);
+  is_google boolean := COALESCE(NEW.raw_app_meta_data->>'provider', '') = 'google';
+  display text := COALESCE(
+    meta->>'full_name',
+    meta->>'name',
+    split_part(NEW.email, '@', 1),
+    'Aspirant'
+  );
+  avatar text := COALESCE(meta->>'avatar_url', meta->>'picture');
+BEGIN
+  INSERT INTO public.profiles (user_id, account_type, display_name, avatar_url)
+  VALUES (
+    NEW.id,
+    CASE WHEN is_google THEN 'google' ELSE 'email' END,
+    display,
+    avatar
+  )
+  ON CONFLICT (user_id) DO NOTHING;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ============ storage policies for avatars bucket ============
+-- Bucket itself created via storage_create_bucket tool. Policies below.
+CREATE POLICY "Avatars are publicly readable"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'avatars');
+
+CREATE POLICY "Authenticated users can upload own avatar"
+  ON storage.objects FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    bucket_id = 'avatars'
+    AND (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+CREATE POLICY "Authenticated users can update own avatar"
+  ON storage.objects FOR UPDATE
+  TO authenticated
+  USING (
+    bucket_id = 'avatars'
+    AND (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+CREATE POLICY "Authenticated users can delete own avatar"
+  ON storage.objects FOR DELETE
+  TO authenticated
+  USING (
+    bucket_id = 'avatars'
+    AND (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+CREATE POLICY "Guests can upload guest avatars"
+  ON storage.objects FOR INSERT
+  TO anon
+  WITH CHECK (
+    bucket_id = 'avatars'
+    AND (storage.foldername(name))[1] = 'guest'
+  );
+
+CREATE POLICY "Guests can update guest avatars"
+  ON storage.objects FOR UPDATE
+  TO anon
+  USING (
+    bucket_id = 'avatars'
+    AND (storage.foldername(name))[1] = 'guest'
+  );
+
+-- Extensions
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- =========================================================
+-- NOTIFICATIONS
+-- =========================================================
+CREATE TABLE public.notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  title text NOT NULL,
+  body text NOT NULL,
+  type text NOT NULL DEFAULT 'announcement' CHECK (type IN ('announcement','update','material','maintenance','feature','alert')),
+  priority text NOT NULL DEFAULT 'normal' CHECK (priority IN ('low','normal','high','critical')),
+  is_pinned boolean NOT NULL DEFAULT false,
+  is_active boolean NOT NULL DEFAULT true,
+  publish_at timestamptz NOT NULL DEFAULT now(),
+  expires_at timestamptz,
+  created_by text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT SELECT ON public.notifications TO anon, authenticated;
+GRANT ALL ON public.notifications TO service_role;
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "active notifications visible to all"
+  ON public.notifications FOR SELECT
+  TO anon, authenticated
+  USING (is_active = true AND publish_at <= now() AND (expires_at IS NULL OR expires_at > now()));
+
+CREATE INDEX notifications_active_idx ON public.notifications (is_active, publish_at DESC);
+CREATE TRIGGER trg_notifications_updated_at BEFORE UPDATE ON public.notifications
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+-- =========================================================
+-- NOTIFICATION READS
+-- =========================================================
+CREATE TABLE public.notification_reads (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  notification_id uuid NOT NULL REFERENCES public.notifications(id) ON DELETE CASCADE,
+  profile_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  read_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (notification_id, profile_id)
+);
+GRANT SELECT, INSERT, DELETE ON public.notification_reads TO authenticated;
+GRANT ALL ON public.notification_reads TO service_role;
+ALTER TABLE public.notification_reads ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users read own notification reads"
+  ON public.notification_reads FOR SELECT
+  TO authenticated
+  USING (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+
+CREATE POLICY "users insert own notification reads"
+  ON public.notification_reads FOR INSERT
+  TO authenticated
+  WITH CHECK (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+
+CREATE INDEX notification_reads_profile_idx ON public.notification_reads (profile_id);
+
+-- =========================================================
+-- TICKETS
+-- =========================================================
+CREATE TABLE public.tickets (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  subject text NOT NULL,
+  category text NOT NULL CHECK (category IN ('bug','help','feature','feedback','content_report','technical')),
+  description text NOT NULL,
+  priority text NOT NULL DEFAULT 'normal' CHECK (priority IN ('low','normal','high','urgent')),
+  status text NOT NULL DEFAULT 'open' CHECK (status IN ('open','under_review','accepted','rejected','in_progress','resolved','closed','reopened')),
+  rejection_reason text,
+  assigned_admin text,
+  last_message_at timestamptz NOT NULL DEFAULT now(),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT SELECT, INSERT, UPDATE ON public.tickets TO authenticated;
+GRANT ALL ON public.tickets TO service_role;
+ALTER TABLE public.tickets ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users read own tickets"
+  ON public.tickets FOR SELECT
+  TO authenticated
+  USING (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+
+CREATE POLICY "users create own tickets"
+  ON public.tickets FOR INSERT
+  TO authenticated
+  WITH CHECK (profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+
+CREATE INDEX tickets_profile_idx ON public.tickets (profile_id, last_message_at DESC);
+CREATE INDEX tickets_status_idx ON public.tickets (status, last_message_at DESC);
+CREATE TRIGGER trg_tickets_updated_at BEFORE UPDATE ON public.tickets
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+-- =========================================================
+-- TICKET MESSAGES
+-- =========================================================
+CREATE TABLE public.ticket_messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  ticket_id uuid NOT NULL REFERENCES public.tickets(id) ON DELETE CASCADE,
+  author_role text NOT NULL CHECK (author_role IN ('user','admin','system')),
+  author_profile_id uuid REFERENCES public.profiles(id) ON DELETE SET NULL,
+  body text NOT NULL,
+  read_by_user_at timestamptz,
+  read_by_admin_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT SELECT, INSERT ON public.ticket_messages TO authenticated;
+GRANT ALL ON public.ticket_messages TO service_role;
+ALTER TABLE public.ticket_messages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users read messages of own tickets"
+  ON public.ticket_messages FOR SELECT
+  TO authenticated
+  USING (
+    ticket_id IN (
+      SELECT id FROM public.tickets
+      WHERE profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid())
+    )
+  );
+
+CREATE POLICY "users send messages on own tickets"
+  ON public.ticket_messages FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    author_role = 'user'
+    AND ticket_id IN (
+      SELECT id FROM public.tickets
+      WHERE profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid())
+        AND status NOT IN ('closed','rejected')
+    )
+  );
+
+CREATE INDEX ticket_messages_ticket_idx ON public.ticket_messages (ticket_id, created_at);
+
+-- Bump tickets.last_message_at on new message
+CREATE OR REPLACE FUNCTION public.touch_ticket_last_message()
+RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$
+BEGIN
+  UPDATE public.tickets SET last_message_at = NEW.created_at, updated_at = now()
+    WHERE id = NEW.ticket_id;
+  RETURN NEW;
+END;
+$$;
+CREATE TRIGGER trg_ticket_messages_touch AFTER INSERT ON public.ticket_messages
+  FOR EACH ROW EXECUTE FUNCTION public.touch_ticket_last_message();
+
+-- =========================================================
+-- GUEST HELPER RPCs (security-definer for ticket/notification access)
+-- =========================================================
+CREATE OR REPLACE FUNCTION public.guest_list_tickets(_device_id text)
+RETURNS SETOF public.tickets
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT t.* FROM public.tickets t
+  JOIN public.profiles p ON p.id = t.profile_id
+  WHERE p.device_id = _device_id AND p.user_id IS NULL
+  ORDER BY t.last_message_at DESC;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_get_ticket(_device_id text, _ticket_id uuid)
+RETURNS SETOF public.tickets
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT t.* FROM public.tickets t
+  JOIN public.profiles p ON p.id = t.profile_id
+  WHERE p.device_id = _device_id AND p.user_id IS NULL AND t.id = _ticket_id;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_create_ticket(
+  _device_id text, _subject text, _category text, _description text, _priority text
+) RETURNS public.tickets
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE
+  _profile_id uuid;
+  _row public.tickets;
+BEGIN
+  SELECT id INTO _profile_id FROM public.profiles
+    WHERE device_id = _device_id AND user_id IS NULL LIMIT 1;
+  IF _profile_id IS NULL THEN RAISE EXCEPTION 'guest profile not found'; END IF;
+  INSERT INTO public.tickets (profile_id, subject, category, description, priority)
+    VALUES (_profile_id, _subject, _category, _description, COALESCE(_priority,'normal'))
+    RETURNING * INTO _row;
+  RETURN _row;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_list_messages(_device_id text, _ticket_id uuid)
+RETURNS SETOF public.ticket_messages
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT m.* FROM public.ticket_messages m
+  JOIN public.tickets t ON t.id = m.ticket_id
+  JOIN public.profiles p ON p.id = t.profile_id
+  WHERE p.device_id = _device_id AND p.user_id IS NULL AND m.ticket_id = _ticket_id
+  ORDER BY m.created_at;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_send_message(_device_id text, _ticket_id uuid, _body text)
+RETURNS public.ticket_messages
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE
+  _profile_id uuid;
+  _row public.ticket_messages;
+BEGIN
+  SELECT p.id INTO _profile_id FROM public.profiles p
+    JOIN public.tickets t ON t.profile_id = p.id
+    WHERE p.device_id = _device_id AND p.user_id IS NULL
+      AND t.id = _ticket_id AND t.status NOT IN ('closed','rejected') LIMIT 1;
+  IF _profile_id IS NULL THEN RAISE EXCEPTION 'ticket not found or closed'; END IF;
+  INSERT INTO public.ticket_messages (ticket_id, author_role, author_profile_id, body)
+    VALUES (_ticket_id, 'user', _profile_id, _body)
+    RETURNING * INTO _row;
+  RETURN _row;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_mark_notification_read(_device_id text, _notification_id uuid)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE _pid uuid;
+BEGIN
+  SELECT id INTO _pid FROM public.profiles WHERE device_id = _device_id AND user_id IS NULL LIMIT 1;
+  IF _pid IS NULL THEN RETURN; END IF;
+  INSERT INTO public.notification_reads (notification_id, profile_id)
+    VALUES (_notification_id, _pid)
+    ON CONFLICT DO NOTHING;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_list_notification_reads(_device_id text)
+RETURNS SETOF public.notification_reads
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT r.* FROM public.notification_reads r
+  JOIN public.profiles p ON p.id = r.profile_id
+  WHERE p.device_id = _device_id AND p.user_id IS NULL;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.guest_list_tickets(text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.guest_get_ticket(text, uuid) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.guest_create_ticket(text, text, text, text, text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.guest_list_messages(text, uuid) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.guest_send_message(text, uuid, text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.guest_mark_notification_read(text, uuid) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.guest_list_notification_reads(text) TO anon, authenticated;
+
+-- =========================================================
+-- ADMIN TABLES (no client access)
+-- =========================================================
+CREATE TABLE public.admin_credentials (
+  id int PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  password_hash_1 text NOT NULL,
+  password_hash_2 text NOT NULL,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT ALL ON public.admin_credentials TO service_role;
+ALTER TABLE public.admin_credentials ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE public.admin_sessions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  token text NOT NULL UNIQUE,
+  device_id text,
+  expires_at timestamptz NOT NULL,
+  last_seen_at timestamptz NOT NULL DEFAULT now(),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT ALL ON public.admin_sessions TO service_role;
+ALTER TABLE public.admin_sessions ENABLE ROW LEVEL SECURITY;
+CREATE INDEX admin_sessions_token_idx ON public.admin_sessions (token);
+
+CREATE TABLE public.admin_login_attempts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  device_id text,
+  ip_hash text,
+  success boolean NOT NULL DEFAULT false,
+  attempted_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT ALL ON public.admin_login_attempts TO service_role;
+ALTER TABLE public.admin_login_attempts ENABLE ROW LEVEL SECURITY;
+CREATE INDEX admin_login_attempts_recent_idx ON public.admin_login_attempts (device_id, attempted_at DESC);
+
+CREATE TABLE public.admin_logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  action text NOT NULL,
+  target_table text,
+  target_id text,
+  session_id uuid REFERENCES public.admin_sessions(id) ON DELETE SET NULL,
+  metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT ALL ON public.admin_logs TO service_role;
+ALTER TABLE public.admin_logs ENABLE ROW LEVEL SECURITY;
+CREATE INDEX admin_logs_recent_idx ON public.admin_logs (created_at DESC);
+
+-- =========================================================
+-- REALTIME PUBLICATION
+-- =========================================================
+ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.notification_reads;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.tickets;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.ticket_messages;
+
+CREATE TABLE public.syllabus_progress (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  chapter_key text NOT NULL,
+  stars smallint NOT NULL DEFAULT 0 CHECK (stars >= 0 AND stars <= 3),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (profile_id, chapter_key)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.syllabus_progress TO authenticated;
+GRANT ALL ON public.syllabus_progress TO service_role;
+
+ALTER TABLE public.syllabus_progress ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users manage own syllabus progress"
+ON public.syllabus_progress
+FOR ALL
+TO authenticated
+USING (
+  profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid())
+)
+WITH CHECK (
+  profile_id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid())
+);
+
+CREATE TRIGGER update_syllabus_progress_updated_at
+BEFORE UPDATE ON public.syllabus_progress
+FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+CREATE INDEX idx_syllabus_progress_profile ON public.syllabus_progress(profile_id);
+
+-- Guest RPCs (device-based access)
+CREATE OR REPLACE FUNCTION public.guest_list_syllabus_progress(_device_id text)
+RETURNS SETOF public.syllabus_progress
+LANGUAGE sql
+STABLE SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT s.* FROM public.syllabus_progress s
+  JOIN public.profiles p ON p.id = s.profile_id
+  WHERE p.device_id = _device_id AND p.user_id IS NULL;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_upsert_syllabus_progress(_device_id text, _chapter_key text, _stars smallint)
+RETURNS public.syllabus_progress
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  _pid uuid;
+  _row public.syllabus_progress;
+BEGIN
+  SELECT id INTO _pid FROM public.profiles WHERE device_id = _device_id AND user_id IS NULL LIMIT 1;
+  IF _pid IS NULL THEN RAISE EXCEPTION 'guest profile not found'; END IF;
+  INSERT INTO public.syllabus_progress (profile_id, chapter_key, stars)
+    VALUES (_pid, _chapter_key, GREATEST(0, LEAST(3, _stars)))
+    ON CONFLICT (profile_id, chapter_key) DO UPDATE
+      SET stars = EXCLUDED.stars, updated_at = now()
+    RETURNING * INTO _row;
+  RETURN _row;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_reset_syllabus_progress(_device_id text)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE _pid uuid;
+BEGIN
+  SELECT id INTO _pid FROM public.profiles WHERE device_id = _device_id AND user_id IS NULL LIMIT 1;
+  IF _pid IS NULL THEN RETURN; END IF;
+  DELETE FROM public.syllabus_progress WHERE profile_id = _pid;
+END;
+$$;
+
+ALTER TABLE public.ypt_rooms
+  ADD COLUMN IF NOT EXISTS is_locked boolean NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS pin_hash text;
+
+CREATE OR REPLACE FUNCTION public.verify_room_pin(_room_id uuid, _pin text)
+RETURNS boolean
+LANGUAGE sql
+STABLE SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.ypt_rooms
+    WHERE id = _room_id
+      AND (pin_hash IS NULL OR pin_hash = encode(extensions.digest(_pin, 'sha256'), 'hex'))
+  );
+$$;
+
+CREATE OR REPLACE FUNCTION public.set_room_lock(_room_id uuid, _creator uuid, _is_locked boolean, _pin text, _max integer)
+RETURNS public.ypt_rooms
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE
+  _row public.ypt_rooms;
+BEGIN
+  UPDATE public.ypt_rooms
+    SET is_locked = _is_locked,
+        pin_hash = CASE
+          WHEN _pin IS NULL OR length(_pin) = 0 THEN NULL
+          ELSE encode(extensions.digest(_pin, 'sha256'), 'hex')
+        END,
+        max_participants = _max
+    WHERE id = _room_id AND created_by = _creator AND is_permanent = false
+    RETURNING * INTO _row;
+  IF _row.id IS NULL THEN RAISE EXCEPTION 'not authorized or room not found'; END IF;
+  RETURN _row;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.verify_room_pin(uuid, text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.set_room_lock(uuid, uuid, boolean, text, integer) TO anon, authenticated;
+
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables WHERE pubname='supabase_realtime' AND schemaname='public' AND tablename='materials'
+  ) THEN
+    EXECUTE 'ALTER PUBLICATION supabase_realtime ADD TABLE public.materials';
+  END IF;
+END $$;
+
+-- COMMUNITY
+CREATE TABLE public.community_posts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  profile_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  subject text NOT NULL CHECK (char_length(subject) BETWEEN 1 AND 120),
+  body text NOT NULL CHECK (char_length(body) BETWEEN 1 AND 300),
+  image_url text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX community_posts_created_idx ON public.community_posts(created_at DESC);
+CREATE INDEX community_posts_user_idx ON public.community_posts(user_id, created_at DESC);
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.community_posts TO authenticated;
+GRANT SELECT ON public.community_posts TO anon;
+GRANT ALL ON public.community_posts TO service_role;
+ALTER TABLE public.community_posts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "posts readable" ON public.community_posts FOR SELECT USING (true);
+CREATE POLICY "posts insert own" ON public.community_posts FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "posts delete own or admin" ON public.community_posts FOR DELETE TO authenticated USING (auth.uid() = user_id OR public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "posts update own" ON public.community_posts FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE OR REPLACE FUNCTION public.enforce_community_post_rate()
+RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$
+DECLARE _c int;
+BEGIN
+  SELECT count(*) INTO _c FROM public.community_posts
+    WHERE user_id = NEW.user_id AND created_at > now() - interval '24 hours';
+  IF _c >= 10 THEN RAISE EXCEPTION 'Post limit reached: 10 posts per 24 hours'; END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER community_posts_rate BEFORE INSERT ON public.community_posts
+  FOR EACH ROW EXECUTE FUNCTION public.enforce_community_post_rate();
+CREATE TRIGGER community_posts_touch BEFORE UPDATE ON public.community_posts
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+CREATE TABLE public.community_comments (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_id uuid NOT NULL REFERENCES public.community_posts(id) ON DELETE CASCADE,
+  user_id uuid NOT NULL,
+  profile_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  body text NOT NULL CHECK (char_length(body) BETWEEN 1 AND 500),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX community_comments_post_idx ON public.community_comments(post_id, created_at);
+GRANT SELECT, INSERT, DELETE ON public.community_comments TO authenticated;
+GRANT SELECT ON public.community_comments TO anon;
+GRANT ALL ON public.community_comments TO service_role;
+ALTER TABLE public.community_comments ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "comments readable" ON public.community_comments FOR SELECT USING (true);
+CREATE POLICY "comments insert" ON public.community_comments FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "comments delete" ON public.community_comments FOR DELETE TO authenticated USING (auth.uid() = user_id OR public.has_role(auth.uid(), 'admin'));
+
+CREATE TABLE public.community_reactions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_id uuid NOT NULL REFERENCES public.community_posts(id) ON DELETE CASCADE,
+  user_id uuid NOT NULL,
+  emoji text NOT NULL CHECK (emoji IN ('heart','laugh','like','fire','rocket','hundred','celeb')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE(post_id, user_id)
+);
+CREATE INDEX community_reactions_post_idx ON public.community_reactions(post_id);
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.community_reactions TO authenticated;
+GRANT SELECT ON public.community_reactions TO anon;
+GRANT ALL ON public.community_reactions TO service_role;
+ALTER TABLE public.community_reactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "reactions readable" ON public.community_reactions FOR SELECT USING (true);
+CREATE POLICY "reactions insert" ON public.community_reactions FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "reactions update" ON public.community_reactions FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "reactions delete" ON public.community_reactions FOR DELETE TO authenticated USING (auth.uid() = user_id);
+
+ALTER PUBLICATION supabase_realtime ADD TABLE public.community_posts;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.community_comments;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.community_reactions;
+
+-- SUPPORT V2
+CREATE TABLE public.support_chats (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id uuid NOT NULL UNIQUE REFERENCES public.profiles(id) ON DELETE CASCADE,
+  status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','accepted','rejected')),
+  last_message_at timestamptz NOT NULL DEFAULT now(),
+  last_user_read_at timestamptz,
+  last_admin_read_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX support_chats_last_msg_idx ON public.support_chats(last_message_at DESC);
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.support_chats TO authenticated;
+GRANT ALL ON public.support_chats TO service_role;
+ALTER TABLE public.support_chats ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "chats owner select" ON public.support_chats FOR SELECT TO authenticated USING (
+  EXISTS(SELECT 1 FROM public.profiles p WHERE p.id = profile_id AND p.user_id = auth.uid())
+);
+CREATE POLICY "chats owner update" ON public.support_chats FOR UPDATE TO authenticated USING (
+  EXISTS(SELECT 1 FROM public.profiles p WHERE p.id = profile_id AND p.user_id = auth.uid())
+) WITH CHECK (
+  EXISTS(SELECT 1 FROM public.profiles p WHERE p.id = profile_id AND p.user_id = auth.uid())
+);
+CREATE TRIGGER support_chats_touch BEFORE UPDATE ON public.support_chats
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+CREATE OR REPLACE FUNCTION public.touch_support_chat()
+RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$
+BEGIN
+  UPDATE public.support_chats SET last_message_at = NEW.created_at, updated_at = now()
+    WHERE id = NEW.chat_id;
+  RETURN NEW;
+END $$;
+
+CREATE TABLE public.support_messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  chat_id uuid NOT NULL REFERENCES public.support_chats(id) ON DELETE CASCADE,
+  author_role text NOT NULL CHECK (author_role IN ('user','admin','system')),
+  body text,
+  image_url text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CHECK (body IS NOT NULL OR image_url IS NOT NULL)
+);
+CREATE INDEX support_messages_chat_idx ON public.support_messages(chat_id, created_at);
+GRANT SELECT, INSERT, DELETE ON public.support_messages TO authenticated;
+GRANT ALL ON public.support_messages TO service_role;
+ALTER TABLE public.support_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "msgs owner select" ON public.support_messages FOR SELECT TO authenticated USING (
+  EXISTS(SELECT 1 FROM public.support_chats c JOIN public.profiles p ON p.id = c.profile_id
+         WHERE c.id = chat_id AND p.user_id = auth.uid())
+);
+CREATE POLICY "msgs owner insert" ON public.support_messages FOR INSERT TO authenticated WITH CHECK (
+  author_role = 'user' AND EXISTS(
+    SELECT 1 FROM public.support_chats c JOIN public.profiles p ON p.id = c.profile_id
+    WHERE c.id = chat_id AND p.user_id = auth.uid() AND c.status = 'accepted'
+  )
+);
+CREATE TRIGGER support_touch_chat AFTER INSERT ON public.support_messages
+  FOR EACH ROW EXECUTE FUNCTION public.touch_support_chat();
+
+ALTER PUBLICATION supabase_realtime ADD TABLE public.support_chats;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.support_messages;
+
+-- Guest RPCs
+CREATE OR REPLACE FUNCTION public.guest_get_or_create_support_chat(_device_id text)
+RETURNS public.support_chats LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE _pid uuid; _row public.support_chats;
+BEGIN
+  SELECT id INTO _pid FROM public.profiles WHERE device_id = _device_id AND user_id IS NULL LIMIT 1;
+  IF _pid IS NULL THEN RAISE EXCEPTION 'guest profile not found'; END IF;
+  SELECT * INTO _row FROM public.support_chats WHERE profile_id = _pid;
+  IF _row.id IS NULL THEN INSERT INTO public.support_chats(profile_id) VALUES(_pid) RETURNING * INTO _row; END IF;
+  RETURN _row;
+END $$;
+
+CREATE OR REPLACE FUNCTION public.auth_get_or_create_support_chat()
+RETURNS public.support_chats LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE _pid uuid; _row public.support_chats;
+BEGIN
+  IF auth.uid() IS NULL THEN RAISE EXCEPTION 'not authenticated'; END IF;
+  SELECT id INTO _pid FROM public.profiles WHERE user_id = auth.uid() LIMIT 1;
+  IF _pid IS NULL THEN RAISE EXCEPTION 'profile not found'; END IF;
+  SELECT * INTO _row FROM public.support_chats WHERE profile_id = _pid;
+  IF _row.id IS NULL THEN INSERT INTO public.support_chats(profile_id) VALUES(_pid) RETURNING * INTO _row; END IF;
+  RETURN _row;
+END $$;
+
+CREATE OR REPLACE FUNCTION public.guest_send_support_message(_device_id text, _body text, _image_url text DEFAULT NULL)
+RETURNS public.support_messages LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE _pid uuid; _cid uuid; _status text; _row public.support_messages;
+BEGIN
+  SELECT id INTO _pid FROM public.profiles WHERE device_id = _device_id AND user_id IS NULL LIMIT 1;
+  IF _pid IS NULL THEN RAISE EXCEPTION 'guest profile not found'; END IF;
+  SELECT id, status INTO _cid, _status FROM public.support_chats WHERE profile_id = _pid;
+  IF _cid IS NULL THEN
+    INSERT INTO public.support_chats(profile_id) VALUES(_pid) RETURNING id, status INTO _cid, _status;
+  END IF;
+  IF _status <> 'accepted' THEN RAISE EXCEPTION 'chat not accepted yet'; END IF;
+  INSERT INTO public.support_messages(chat_id, author_role, body, image_url)
+    VALUES (_cid, 'user', _body, _image_url) RETURNING * INTO _row;
+  RETURN _row;
+END $$;
+
+CREATE OR REPLACE FUNCTION public.guest_list_support_messages(_device_id text)
+RETURNS SETOF public.support_messages LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT m.* FROM public.support_messages m
+  JOIN public.support_chats c ON c.id = m.chat_id
+  JOIN public.profiles p ON p.id = c.profile_id
+  WHERE p.device_id = _device_id AND p.user_id IS NULL
+  ORDER BY m.created_at;
+$$;
+
+CREATE OR REPLACE FUNCTION public.guest_get_support_chat(_device_id text)
+RETURNS SETOF public.support_chats LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT c.* FROM public.support_chats c
+  JOIN public.profiles p ON p.id = c.profile_id
+  WHERE p.device_id = _device_id AND p.user_id IS NULL;
+$$;
+
+-- Migrate old tickets into one chat per profile
+DO $$
+DECLARE _p record; _chat_id uuid;
+BEGIN
+  FOR _p IN SELECT DISTINCT profile_id FROM public.tickets LOOP
+    INSERT INTO public.support_chats(profile_id, status)
+      VALUES (_p.profile_id, 'accepted')
+      ON CONFLICT (profile_id) DO UPDATE SET status = 'accepted'
+      RETURNING id INTO _chat_id;
+    INSERT INTO public.support_messages(chat_id, author_role, body, created_at)
+    SELECT _chat_id, 'system', '#'||substr(t.id::text,1,8)||' â€” '||t.subject, t.created_at
+    FROM public.tickets t WHERE t.profile_id = _p.profile_id;
+    INSERT INTO public.support_messages(chat_id, author_role, body, created_at)
+    SELECT _chat_id, m.author_role, m.body, m.created_at
+    FROM public.ticket_messages m
+    JOIN public.tickets t ON t.id = m.ticket_id
+    WHERE t.profile_id = _p.profile_id AND m.author_role IN ('user','admin');
+  END LOOP;
+END $$;
+
+DROP POLICY IF EXISTS "msgs owner insert" ON public.support_messages;
+CREATE POLICY "msgs owner insert" ON public.support_messages FOR INSERT TO authenticated WITH CHECK (
+  author_role = 'user' AND EXISTS(
+    SELECT 1 FROM public.support_chats c JOIN public.profiles p ON p.id = c.profile_id
+    WHERE c.id = chat_id AND p.user_id = auth.uid() AND c.status <> 'rejected'
+  )
+);
+
+CREATE OR REPLACE FUNCTION public.guest_send_support_message(_device_id text, _body text, _image_url text DEFAULT NULL)
+RETURNS public.support_messages LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE _pid uuid; _cid uuid; _status text; _row public.support_messages;
+BEGIN
+  SELECT id INTO _pid FROM public.profiles WHERE device_id = _device_id AND user_id IS NULL LIMIT 1;
+  IF _pid IS NULL THEN RAISE EXCEPTION 'guest profile not found'; END IF;
+  SELECT id, status INTO _cid, _status FROM public.support_chats WHERE profile_id = _pid;
+  IF _cid IS NULL THEN
+    INSERT INTO public.support_chats(profile_id) VALUES(_pid) RETURNING id, status INTO _cid, _status;
+  END IF;
+  IF _status = 'rejected' THEN RAISE EXCEPTION 'chat rejected'; END IF;
+  INSERT INTO public.support_messages(chat_id, author_role, body, image_url)
+    VALUES (_cid, 'user', _body, _image_url) RETURNING * INTO _row;
+  RETURN _row;
+END $$;
+
+-- 1. Profiles: keep public reads for display fields, hide user_id + device_id from anon.
+REVOKE SELECT ON public.profiles FROM anon;
+GRANT SELECT (id, account_type, display_name, avatar_url, target_category, onboarded_at, created_at, updated_at)
+  ON public.profiles TO anon;
+
+-- 2. YPT rooms: hide pin_hash from clients entirely (verify_room_pin RPC still checks it).
+REVOKE SELECT ON public.ypt_rooms FROM anon, authenticated;
+GRANT SELECT (id, name, description, emoji, is_permanent, max_participants, created_by, last_activity_at, created_at, is_locked)
+  ON public.ypt_rooms TO anon, authenticated;
+GRANT SELECT ON public.ypt_rooms TO service_role;
+
+-- 3. Replace overly-permissive USING/WITH CHECK (true) on ypt_rooms.
+DROP POLICY IF EXISTS "Public insert rooms" ON public.ypt_rooms;
+DROP POLICY IF EXISTS "Public update rooms" ON public.ypt_rooms;
+DROP POLICY IF EXISTS "Public delete rooms" ON public.ypt_rooms;
+
+CREATE POLICY "Insert non-permanent rooms" ON public.ypt_rooms
+  FOR INSERT WITH CHECK (is_permanent = false AND created_by IS NOT NULL);
+CREATE POLICY "Update non-permanent rooms" ON public.ypt_rooms
+  FOR UPDATE USING (is_permanent = false) WITH CHECK (is_permanent = false);
+CREATE POLICY "Delete non-permanent rooms" ON public.ypt_rooms
+  FOR DELETE USING (is_permanent = false);
+
+-- 4. Storage: room-images bucket hardening.
+DROP POLICY IF EXISTS "Public read room images" ON storage.objects;
+DROP POLICY IF EXISTS "Public upload room images" ON storage.objects;
+DROP POLICY IF EXISTS "Public delete room images" ON storage.objects;
+
+-- Uploads restricted to known folder prefixes and to real image MIME types <= 5 MB.
+CREATE POLICY "Room images scoped insert" ON storage.objects
+  FOR INSERT
+  WITH CHECK (
+    bucket_id = 'room-images'
+    AND (name LIKE 'community/%' OR name LIKE 'support/%' OR name LIKE 'rooms/%')
+    AND COALESCE((metadata->>'size')::bigint, 0) <= 5242880
+    AND COALESCE(metadata->>'mimetype','') IN ('image/jpeg','image/png','image/webp','image/gif')
+  );
+
+-- Only authenticated owners may delete files they uploaded.
+CREATE POLICY "Room images owner delete" ON storage.objects
+  FOR DELETE TO authenticated
+  USING (bucket_id = 'room-images' AND owner = auth.uid());
+
+-- No SELECT policy for room-images: the bucket stays public for direct URL fetches,
+-- but list()/enumeration through the Data API is disabled.
+
+-- 5. Revoke EXECUTE on internal SECURITY DEFINER helpers (triggers / cron only).
+REVOKE EXECUTE ON FUNCTION public.handle_new_user()               FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.touch_ticket_last_message()     FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.touch_support_chat()            FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.update_updated_at_column()      FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.enforce_community_post_rate()   FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.cleanup_inactive_rooms()        FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.cleanup_old_messages()          FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.cleanup_old_sessions()          FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.cleanup_stale_sessions()        FROM anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION public.cleanup_inactive_rooms() TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.cleanup_old_messages()   TO anon, authenticated;
+
+DROP POLICY IF EXISTS "Update non-permanent rooms" ON public.ypt_rooms;
+CREATE POLICY "Update rooms activity" ON public.ypt_rooms
+  FOR UPDATE USING (true) WITH CHECK (true);
+
+REVOKE SELECT ON public.ypt_rooms FROM anon, authenticated;
+GRANT SELECT (id, name, description, emoji, is_permanent, max_participants, created_by, last_activity_at, created_at, is_locked)
+  ON public.ypt_rooms TO anon, authenticated;
+
+DROP POLICY IF EXISTS "Users can delete their own comments" ON public.community_comments;
+CREATE POLICY "Users can delete their own comments" ON public.community_comments
+  FOR DELETE TO authenticated USING (auth.uid() = user_id);
+
+GRANT SELECT (id, name, description, emoji, is_permanent, max_participants, created_by, created_at, last_activity_at, is_locked)
+  ON public.ypt_rooms TO anon, authenticated;
+
+ALTER TABLE public.study_sessions
+  ADD COLUMN IF NOT EXISTS flagged boolean NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS flag_reason text;
+
+CREATE INDEX IF NOT EXISTS idx_study_sessions_user_started
+  ON public.study_sessions (ypt_user_id, started_at DESC);
+
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS is_banned boolean NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS is_muted boolean NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS muted_until timestamptz,
+  ADD COLUMN IF NOT EXISTS moderation_note text;
+
+CREATE OR REPLACE FUNCTION public.is_user_banned(_user_id uuid)
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT COALESCE((SELECT is_banned FROM public.profiles WHERE user_id = _user_id LIMIT 1), false);
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_user_muted(_user_id uuid)
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT COALESCE((
+    SELECT is_banned OR (is_muted AND (muted_until IS NULL OR muted_until > now()))
+    FROM public.profiles WHERE user_id = _user_id LIMIT 1
+  ), false);
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.is_user_banned(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.is_user_muted(uuid) FROM anon;
+
+CREATE OR REPLACE FUNCTION public.block_muted_authors()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF public.is_user_muted(NEW.user_id) THEN
+    RAISE EXCEPTION 'You are currently restricted from posting in the community.';
+  END IF;
+  RETURN NEW;
+END $$;
+
+CREATE OR REPLACE FUNCTION public.block_banned_authors()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF public.is_user_banned(NEW.user_id) THEN
+    RAISE EXCEPTION 'Your account is banned from the community.';
+  END IF;
+  RETURN NEW;
+END $$;
+
+DROP TRIGGER IF EXISTS community_posts_block_muted ON public.community_posts;
+CREATE TRIGGER community_posts_block_muted BEFORE INSERT ON public.community_posts
+  FOR EACH ROW EXECUTE FUNCTION public.block_muted_authors();
+
+DROP TRIGGER IF EXISTS community_comments_block_muted ON public.community_comments;
+CREATE TRIGGER community_comments_block_muted BEFORE INSERT ON public.community_comments
+  FOR EACH ROW EXECUTE FUNCTION public.block_muted_authors();
+
+DROP TRIGGER IF EXISTS community_reactions_block_banned ON public.community_reactions;
+CREATE TRIGGER community_reactions_block_banned BEFORE INSERT ON public.community_reactions
+  FOR EACH ROW EXECUTE FUNCTION public.block_banned_authors();
+
+CREATE OR REPLACE FUNCTION public.support_reopen_on_user_message()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF NEW.author_role = 'user' THEN
+    UPDATE public.support_chats
+      SET status = 'pending', updated_at = now()
+      WHERE id = NEW.chat_id AND status <> 'pending';
+  END IF;
+  RETURN NEW;
+END $$;
+
+DROP TRIGGER IF EXISTS support_messages_reopen ON public.support_messages;
+CREATE TRIGGER support_messages_reopen AFTER INSERT ON public.support_messages
+  FOR EACH ROW EXECUTE FUNCTION public.support_reopen_on_user_message();
+ALTER TABLE public.support_chats ADD COLUMN IF NOT EXISTS is_flagged boolean NOT NULL DEFAULT false;

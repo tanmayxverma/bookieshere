@@ -196,6 +196,8 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
 
   // Aggregate stats + weekly + subject mix
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchStats = async () => {
       const todayStartUTC = getISTTodayStartUTC();
       const weekStart = new Date(new Date(todayStartUTC).getTime() - 6 * 86400000).toISOString();
@@ -259,7 +261,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         week.push({
           day: d.toLocaleDateString('en', { weekday: 'short' }),
           secs,
-          isToday: i === 0,
+          isToday: dayStr === todayKey,
         });
       }
       setWeeklyData(week);
@@ -300,7 +302,15 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
     };
 
     fetchStats();
-  }, [user.id, timer.isActive, timer.elapsedSeconds]);
+
+    const onSessionEnded = () => fetchStats();
+    window.addEventListener('study-session-ended', onSessionEnded);
+
+    return () => {
+      isCancelled = true;
+      window.removeEventListener('study-session-ended', onSessionEnded);
+    };
+  }, [user.id, timer.isActive]);
 
   // Tasks
   const fetchTodos = async () => {

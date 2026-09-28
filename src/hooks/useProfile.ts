@@ -24,6 +24,7 @@ export interface Profile {
   account_type: 'guest' | 'google' | 'email';
   display_name: string;
   avatar_url: string | null;
+  avatar_customized?: boolean;
   target_category: string;
   onboarded_at: string | null;
   created_at: string;
@@ -89,7 +90,16 @@ function useProfileInternal() {
   const loadProfile = useCallback(async (sess: Session | null) => {
     try {
       if (sess?.user) {
-        const { data } = await supabase
+        if (deviceId) {
+          try {
+            await (supabase as any).rpc('migrate_guest_data_to_user', {
+              _device_id: deviceId,
+              _user_id: sess.user.id,
+            });
+          } catch {}
+        }
+        const googleAvatar = extractGoogleAvatar(sess.user);
+        const { data } = await (supabase as any)
           .from('profiles')
           .select('*')
           .eq('user_id', sess.user.id)
@@ -144,22 +154,41 @@ function useProfileInternal() {
     display_name: string;
     target_category: string;
     avatar_url?: string | null;
+    avatar_customized?: boolean;
   }) => {
     if (session?.user) {
+      const googleAvatar = extractGoogleAvatar(session.user);
+      const isGoogle = session.user.app_metadata?.provider === 'google' || !!googleAvatar;
+
+      let customized = profile?.avatar_customized ?? false;
+      if (input.avatar_customized !== undefined) {
+        customized = input.avatar_customized;
+      } else if (input.avatar_url !== undefined && input.avatar_url !== googleAvatar) {
+        customized = true;
+      }
+
+      const avatar = input.avatar_url !== undefined
+        ? input.avatar_url
+        : (profile?.avatar_url ?? (!customized ? googleAvatar : null));
+
       const payload = {
         user_id: session.user.id,
         display_name: input.display_name,
         target_category: input.target_category,
-        avatar_url: input.avatar_url ?? null,
-        account_type: (session.user.app_metadata?.provider === 'google' ? 'google' : 'email'),
+        avatar_url: avatar,
+        account_type: isGoogle ? 'google' : 'email',
         onboarded_at: new Date().toISOString(),
       };
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('profiles')
-        .upsert(payload as any, { onConflict: 'user_id' })
+        .upsert(payload, { onConflict: 'user_id' })
         .select()
         .single();
-      if (!error && data) setProfile(data as Profile);
+      if (!error && data) {
+        const p = data as Profile;
+        p.avatar_customized = customized;
+        setProfile(p);
+      }
       return { data: data as Profile | null, error };
     } else {
       const { data, error } = await (supabase as any).rpc('upsert_guest_profile', {
@@ -171,32 +200,74 @@ function useProfileInternal() {
       if (!error && data) setProfile(data as Profile);
       return { data: data as Profile | null, error };
     }
-  }, [session, deviceId, setProfile]);
+  }, [session, profile, deviceId, setProfile]);
 
   const updateAvatar = useCallback(async (avatar_url: string | null) => {
     if (!profile) return { error: new Error('no profile') } as any;
     if (session?.user) {
-      const { data, error } = await supabase
+      const googleAvatar = extractGoogleAvatar(session.user);
+      const isCustomized = avatar_url !== googleAvatar;
+      const { data, error } = await (supabase as any)
         .from('profiles')
         .update({ avatar_url })
         .eq('user_id', session.user.id)
         .select()
         .single();
-      if (!error && data) setProfile(data as Profile);
+      if (!error && data) {
+        const p = data as Profile;
+        p.avatar_customized = isCustomized;
+        setProfile(p);
+      }
       return { data, error };
     } else {
       return saveProfile({
         display_name: profile.display_name,
         target_category: profile.target_category,
         avatar_url,
+        avatar_customized: true,
       });
     }
   }, [profile, session, saveProfile, setProfile]);
+
+  const resetToGoogleAvatar = useCallback(async () => {
+    if (!session?.user) return { error: new Error('Not signed in') };
+    const googleAvatar = extractGoogleAvatar(session.user);
+    if (!googleAvatar) return { error: new Error('No Google avatar available') };
+    const { data, error } = await (supabase as any)
+      .from('profiles')
+      .update({ avatar_url: googleAvatar })
+      .eq('user_id', session.user.id)
+      .select()
+      .single();
+    if (!error && data) {
+      const p = data as Profile;
+      p.avatar_customized = false;
+      setProfile(p);
+    }
+    return { data, error };
+  }, [session, setProfile]);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     setProfile(null);
   }, [setProfile]);
+
+  const deleteAccount = useCallback(async () => {
+    try {
+      await (supabase as any).rpc('delete_my_account_and_data', { _device_id: deviceId });
+    } catch (err) {
+      console.warn('Error deleting account data:', err);
+    }
+    try {
+      await supabase.auth.signOut();
+    } catch {}
+    try {
+      localStorage.clear();
+    } catch {}
+    setProfile(null);
+  }, [deviceId, setProfile]);
+
+  const googleAvatar = useMemo(() => extractGoogleAvatar(user || session?.user), [user, session]);
 
   return {
     user,
@@ -204,11 +275,14 @@ function useProfileInternal() {
     profile,
     loading,
     deviceId,
+    googleAvatar,
     isOnboarded: !!profile?.onboarded_at,
     isAuthenticated: !!session,
     saveProfile,
     updateAvatar,
+    resetToGoogleAvatar,
     signOut,
+    deleteAccount,
     refetch,
   };
 }

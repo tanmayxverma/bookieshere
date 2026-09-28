@@ -35,6 +35,10 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
   const displayName = profile?.display_name || "Tanmay";
   const avatarInitial = initials(displayName);
 
+  const displayName = profile?.display_name || (isAuthenticated ? (user?.email?.split("@")[0] || "Aspirant") : "Guest");
+  const avatarInitial = initials(displayName);
+  const avatarUrl = profile?.avatar_url || (isAuthenticated ? googleAvatar : null);
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/welcome");
@@ -61,15 +65,21 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex items-center gap-3 py-2">
-          <span className="h-9 w-9 rounded-full overflow-hidden ring-1 ring-border/60 bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center text-xs font-bold text-foreground/80">
-            {profile.avatar_url
-              ? <img src={profile.avatar_url} alt={profile.display_name} className="h-full w-full object-cover" />
-              : <span>{initials(profile.display_name)}</span>}
+          <span className="h-9 w-9 rounded-full overflow-hidden ring-1 ring-border/60 bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center text-xs font-bold text-foreground/80 shrink-0">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={displayName} referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+            ) : (
+              <span>{avatarInitial}</span>
+            )}
           </span>
           <span className="min-w-0">
-            <span className="block text-sm font-semibold truncate">{profile.display_name}</span>
+            <span className="block text-sm font-semibold truncate">{displayName}</span>
             <span className="block text-[10px] uppercase tracking-wider text-muted-foreground">
-              {profile.account_type === "guest" ? "Guest" : profile.account_type === "google" ? "Google" : "Email"} · {profile.target_category}
+              {profile ? (
+                `${profile.account_type === "guest" ? "Guest" : profile.account_type === "google" ? "Google" : "Email"} · ${profile.target_category || "JEE 2027"} · ${streak}d streak`
+              ) : (
+                isAuthenticated ? "Aspirant · Syncing..." : "Guest · Not signed in"
+              )}
             </span>
           </span>
         </DropdownMenuLabel>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { useSupportChat, type SupportMessage } from '@/hooks/useSupportChat';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,7 +15,6 @@ import { cn, safeRandomUUID } from '@/lib/utils';
 const MATH_SYMBOLS = ['θ', 'π', 'μ', 'λ', 'α', 'β', 'Δ', '∫', 'Σ', '→', '∞', '≈'];
 
 export default function SupportPage() {
-  const navigate = useNavigate();
   const { chat, messages, loading, error, send, refetch } = useSupportChat();
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);

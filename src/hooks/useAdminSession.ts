@@ -12,7 +12,17 @@ function setToken(t: string | null) {
 
 async function invoke<T = any>(fn: string, body: any): Promise<T> {
   const { data, error } = await supabase.functions.invoke(fn, { body });
-  if (error) throw error;
+  if (error) {
+    try {
+      if ((error as any)?.context && typeof (error as any).context.json === 'function') {
+        const bodyJson = await (error as any).context.json();
+        if (bodyJson?.error) throw new Error(bodyJson.error);
+      }
+    } catch (inner) {
+      if (inner instanceof Error && inner !== error) throw inner;
+    }
+    throw error;
+  }
   return data as T;
 }
 

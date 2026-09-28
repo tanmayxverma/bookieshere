@@ -716,6 +716,9 @@ export default function Community() {
                     <h3 className="text-sm font-bold text-slate-900 dark:text-white">About the Lounge</h3>
                     <p className="text-[11px] text-slate-500">Aspirant Community Hub</p>
                   </div>
+                  <p className="text-[11px] font-mono text-slate-500 font-bold">
+                    ⚡ Aspirants Only • Zero Fluff
+                  </p>
                 </div>
 
                 <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">

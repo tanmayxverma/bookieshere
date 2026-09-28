@@ -52,6 +52,10 @@ export interface TimerState {
   phase?: 'work' | 'break';
   /** Break length in seconds to offer once a work countdown completes */
   breakSeconds?: number;
+  /** Strict anti-cheat: last timestamp when site was actively ticking/running */
+  lastActiveAt?: number;
+  /** Strict anti-cheat: exact verified seconds accumulated while site was open */
+  accumulatedSeconds?: number;
 }
 
 export interface PomodoroPreset {
@@ -61,9 +65,9 @@ export interface PomodoroPreset {
 }
 
 export const POMODORO_PRESETS: PomodoroPreset[] = [
-  { label: 'Classic', work: 25, break: 5 },
-  { label: 'Deep', work: 50, break: 10 },
-  { label: 'Marathon', work: 90, break: 15 },
+  { label: 'Standard 25/5', work: 25, break: 5 },
+  { label: 'Long Block 50/10', work: 50, break: 10 },
+  { label: 'JEE Shift 90/15', work: 90, break: 15 },
 ];
 
 export interface ActiveStudyUser {
@@ -73,7 +77,14 @@ export interface ActiveStudyUser {
   started_at?: string;
 }
 
-export const SUBJECTS = ['Physics', 'Chemistry', 'Mathematics', 'Self Study'] as const;
+export const SUBJECTS = [
+  'Physics',
+  'Chemistry',
+  'Mathematics',
+  'Self Study',
+  'Mock Test',
+  'Revision',
+] as const;
 
 export const JEE_YEARS = ['JEE 2027', 'JEE 2028', 'Early Starter'] as const;
 

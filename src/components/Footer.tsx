@@ -92,8 +92,6 @@ export function Footer() {
               <span className="w-2 h-2 rounded-full bg-tertiary"></span>
               AIR TARGET 2027
             </div>
-          </div>
-        </div>
 
         {/* Legal & Verification Sub-Footer (Restored) */}
         <div className="border-t border-outline-variant/15 dark:border-slate-800 bg-surface-container-lowest/60 dark:bg-slate-900/40 py-4 mt-space-md">

@@ -7,6 +7,8 @@ import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserMenu } from "@/components/Profile/UserMenu";
 import { NotificationBell } from "@/components/Notifications/NotificationBell";
+import { useProfile } from "@/hooks/useProfile";
+import { useUserStreak } from "@/hooks/useUserStreak";
 import logo from "@/assets/logo.jfif";
 import { cn } from "@/lib/utils";
 
@@ -27,9 +29,16 @@ const navLinks: NavLinkItem[] = [
   { path: "/support", label: "Support", icon: Headphones },
 ];
 
+function initials(name: string) {
+  return name.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() || "").join("") || "A";
+}
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { profile, isAuthenticated, user, signOut, googleAvatar } = useProfile();
+  const { streak } = useUserStreak();
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
