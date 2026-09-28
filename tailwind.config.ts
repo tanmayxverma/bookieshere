@@ -211,6 +211,9 @@ export default {
         "pulse-soft": "pulse-soft 2s ease-in-out infinite",
         "float": "float 8s ease-in-out infinite",
       },
+      transitionTimingFunction: {
+        "spring": "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

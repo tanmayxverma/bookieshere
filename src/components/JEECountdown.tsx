@@ -146,7 +146,6 @@ export function JEECountdown() {
               })}
             </div>
           </div>
-        </div>
 
           <div>
             <h2 className="text-2xl sm:text-4xl font-display font-black text-brand-dark dark:text-white tracking-tight">

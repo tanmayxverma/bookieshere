@@ -32,9 +32,6 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
 
   if (loading) return null;
 
-  const displayName = profile?.display_name || "Tanmay";
-  const avatarInitial = initials(displayName);
-
   const displayName = profile?.display_name || (isAuthenticated ? (user?.email?.split("@")[0] || "Aspirant") : "Guest");
   const avatarInitial = initials(displayName);
   const avatarUrl = profile?.avatar_url || (isAuthenticated ? googleAvatar : null);

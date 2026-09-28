@@ -178,8 +178,11 @@ export default function Profile() {
     <Layout>
       <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen py-8 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto space-y-6">
+          <Card className="relative overflow-hidden border-border/60 p-7 md:p-8 mb-6">
+            <div aria-hidden className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-primary/15 blur-3xl" />
+            <div aria-hidden className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
 
-          <div className="relative flex flex-col md:flex-row gap-6 md:items-center">
+            <div className="relative flex flex-col md:flex-row gap-6 md:items-center">
             <AvatarUploader
               avatarUrl={avatarUrl}
               displayName={name || profile.display_name}
@@ -313,8 +316,9 @@ export default function Profile() {
             />
             <StatCard icon={Trophy} title="Leaderboards" desc="See where you rank today." cta="View board" onClick={() => navigate("/ypt")} />
           </div>
+        </div>
 
-          {/* ───── 5. DANGER ZONE: PERMANENT DATA DELETION ───── */}
+        {/* ───── 5. DANGER ZONE: PERMANENT DATA DELETION ───── */}
           <Card className="border-2 border-red-500 bg-red-50/50 dark:bg-red-950/20 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(239,68,68,0.5)] rounded-3xl space-y-4">
             <div className="flex items-start gap-3">
               <div className="h-10 w-10 rounded-2xl bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 border-2 border-red-500 flex items-center justify-center shrink-0 shadow-xs">
