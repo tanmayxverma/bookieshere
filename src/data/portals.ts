@@ -28,6 +28,32 @@ export const PORTALS: Portal[] = [
       { label: "PW4Free Lite", url: "https://lite.pw4free.in/" },
       { label: "SStudy", url: "https://www.sstudy.site/" },
       { label: "SquidStudy", url: "https://www.squidstudy.eu.org/login" },
+      { label: "SamfyGros CDN", url: "https://s4-cdn.samfygros.com/" },
+      { label: "TheDevCoderz PW", url: "https://thedevcoderz-pw.pages.dev/" },
+      { label: "LearnX PW Study", url: "https://www.learnxpw.site/study" },
+      { label: "LearnX PW Pi", url: "https://www.learnxpw.site/study/pi" },
+      { label: "PrimeStudy Mtaiirus", url: "https://pw-mtaiirus.primestudy.site/" },
+      { label: "StudyPanda PW", url: "https://pw.studypanda.live/" },
+      { label: "DeltaStudy Batches", url: "https://deltastudy.fun/study-v2/batches" },
+      { label: "PiPro DeltaStudy", url: "https://pipro.deltastudy.fun/" },
+      { label: "RareStudy PW", url: "https://rarestudy.site/" },
+      { label: "PrimeStudy PW Batches", url: "https://pw.primestudy.site/study/batches" },
+      { label: "StudyBee Pro PW", url: "https://studybeepro.in/pw/#" },
+      { label: "ModGalaxy PW", url: "https://pw.modgalaxy.in/" },
+    ],
+  },
+  {
+    id: "next-toppers",
+    name: "Next Toppers",
+    tagline: "Quality lectures & batch mirrors",
+    logo: "https://i.pinimg.com/736x/8c/18/fd/8c18fdf05a69fcafe789f6d2db1d4d33.jpg",
+    accent: "from-blue-600/25 to-indigo-900/40",
+    links: [
+      { label: "NT StreamFiles", url: "https://nt.streamfiles.eu.org/" },
+      { label: "Backbencherz NT", url: "https://backbencherz.netlify.app/" },
+      { label: "DeltaStudy Next Toppers", url: "https://deltastudy.fun/nexttoppers" },
+      { label: "LearnX Next Toppers", url: "https://www.learnxpw.site/study/nexttoppers" },
+      { label: "EduVibe NT", url: "https://eduvibe-nt.pages.dev/" },
     ],
   },
   {
@@ -40,6 +66,10 @@ export const PORTALS: Portal[] = [
       { label: "Vibrant Prep4Free", url: "https://vibrant.prep4free.com/" },
       { label: "SquidStudy Vibrant", url: "https://www.squidstudy.eu.org/vibrant/dashboard" },
       { label: "Vibrunway", url: "https://vibrunway.lovable.app/" },
+      { label: "DeltaStudy Vibrant", url: "https://deltastudy.fun/vibrant" },
+      { label: "SquidStudy Vercel", url: "https://squidstudy.vercel.app/vibrant" },
+      { label: "Vibrunway Vercel", url: "https://vibrunway.vercel.app/" },
+      { label: "LearnX Vibrant", url: "https://www.learnxpw.site/study/vibrant" },
     ],
   },
   {
@@ -50,6 +80,9 @@ export const PORTALS: Portal[] = [
     accent: "from-red-500/25 to-zinc-900/40",
     links: [
       { label: "Mission JEET Portal", url: "https://missionjeet.thescholarverse.site" },
+      { label: "StreamFiles Mission JEET", url: "https://mj.streamfiles.eu.org" },
+      { label: "DeltaStudy Mission JEET", url: "https://deltastudy.fun/missionjeet" },
+      { label: "LearnX Mission JEET", url: "https://www.learnxpw.site/study/missionjeet" },
     ],
   },
   {
@@ -63,7 +96,8 @@ export const PORTALS: Portal[] = [
       { label: "It's Pikachu", url: "https://itspikachu.netlify.app/" },
       { label: "Study UK", url: "https://studyuk.online/" },
       { label: "UC Web", url: "https://uc-web.uc27.workers.dev" },
-      { label: "Unacademy Scholarverse", url: "https://unacademy.thescholarverse.site" },
+      { label: "Unacademy Scholarverse", url: "https://unacademy.thescholarverse.site/dashboard" },
+      { label: "Unacademy Vercel Mirror", url: "https://unacademyy.vercel.app/" },
     ],
   },
   {
@@ -108,6 +142,7 @@ export const PORTALS: Portal[] = [
     links: [
       { label: "ALLEN Study Materials Bot", url: "https://t.me/StudyMaterials223_bot" },
       { label: "Allen Portal Mirror", url: "https://aliens-op.pages.dev/" },
+      { label: "Allen Online Mirror", url: "https://allen-online.onrender.com/" },
     ],
   },
   {

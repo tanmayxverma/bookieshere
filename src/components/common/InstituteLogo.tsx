@@ -35,6 +35,7 @@ const INSTITUTE_BRANDS: Record<
   careerwill: { acronym: "CW", bg: "from-cyan-600 to-rose-950 border-cyan-400", text: "text-white", sub: "JINDAL" },
   "apni-kaksha": { acronym: "AK", bg: "from-zinc-900 to-black border-zinc-700", text: "text-amber-400", sub: "KAKSHA" },
   "mission-jeet": { acronym: "JEET", bg: "from-red-600 to-black border-red-500", text: "text-white", sub: "MISSION" },
+  "next-toppers": { acronym: "NT", bg: "from-blue-600 to-indigo-950 border-blue-500", text: "text-amber-400", sub: "TOPPERS" },
 };
 
 function getBrandKey(id?: string, name?: string): string {
