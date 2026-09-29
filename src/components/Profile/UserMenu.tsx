@@ -82,7 +82,7 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer font-semibold text-sm">
-          <User className="h-4 w-4 mr-2 text-primary" /> Cockpit Profile
+          <User className="h-4 w-4 mr-2 text-primary" /> My Profile & Stats
         </DropdownMenuItem>
         {!isAuthenticated && (
           <DropdownMenuItem

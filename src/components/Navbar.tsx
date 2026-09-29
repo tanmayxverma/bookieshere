@@ -149,14 +149,14 @@ export function Navbar() {
 
           {/* Mobile Navigation Dropdown */}
           <div className="relative z-50 lg:hidden mt-2 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl p-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
-            {/* Mobile Cockpit Profile Header Card */}
-            <div className="p-3 mb-2 rounded-xl bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 flex items-center justify-between gap-3">
-              <Link
-                to="/profile"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 min-w-0 flex-1 group"
-              >
-                <div className="w-10 h-10 rounded-full bg-slate-900 text-white font-mono font-bold text-sm flex items-center justify-center ring-2 ring-primary/40 overflow-hidden shrink-0">
+            {/* Mobile Profile Header Card (Click to open profile) */}
+            <Link
+              to="/profile"
+              onClick={() => setIsOpen(false)}
+              className="p-3 mb-2 rounded-2xl bg-slate-100/90 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 border-2 border-slate-900/10 dark:border-slate-700/80 flex items-center justify-between gap-3 group transition-all cursor-pointer shadow-xs active:scale-[0.99]"
+            >
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="w-11 h-11 rounded-full bg-slate-900 text-white font-mono font-bold text-sm flex items-center justify-center ring-2 ring-primary/50 overflow-hidden shrink-0 group-hover:ring-primary transition-all">
                   {avatarUrl ? (
                     <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
                   ) : (
@@ -176,36 +176,13 @@ export function Navbar() {
                     {profile?.target_category || "JEE 2027"} · 🔥 {streak}d streak
                   </p>
                 </div>
-              </Link>
-              <Link
-                to="/profile"
-                onClick={() => setIsOpen(false)}
-                className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs shadow-xs transition-all shrink-0 active:scale-95"
-              >
-                Profile
-              </Link>
-            </div>
+              </div>
+              <span className="px-3 py-1.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs shadow-xs transition-all shrink-0">
+                Profile →
+              </span>
+            </Link>
 
             <div className="flex flex-col gap-1">
-              {/* Direct Cockpit Profile Navigation Item */}
-              <Link
-                to="/profile"
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-150 active:scale-[0.98] min-h-[48px]",
-                  isActive("/profile")
-                    ? "bg-blue-50 dark:bg-blue-950/70 text-brand-blue dark:text-blue-400 font-bold"
-                    : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <User className={cn("w-4 h-4", isActive("/profile") ? "text-brand-blue dark:text-blue-400" : "text-slate-500 dark:text-slate-400")} />
-                  <span>Cockpit Profile</span>
-                </div>
-                <span className="text-[11px] font-mono font-medium text-muted-foreground">
-                  Name, Photo &amp; Stats
-                </span>
-              </Link>
 
               {navLinks.map((link) => {
                 const active = isActive(link.path);
