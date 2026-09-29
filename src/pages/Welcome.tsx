@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sparkles, Loader2, ArrowRight, UserCircle2, Mail, Lock, ChevronLeft } from "lucide-react";
+import { Sparkles, Loader2, UserCircle2, Mail, Lock, ChevronLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
@@ -129,28 +129,17 @@ export default function Welcome() {
                   <div className="relative py-1">
                     <div className="absolute inset-0 flex items-center"><span className="w-full border-t-2 border-on-surface border-dashed" /></div>
                     <div className="relative flex justify-center text-[10px] font-label-code-sm font-bold uppercase tracking-wider text-on-surface-variant">
-                      <span className="px-3 bg-surface-container-lowest">or quick test</span>
+                      <span className="px-3 bg-surface-container-lowest">or</span>
                     </div>
                   </div>
 
-                  <div>
-                    <button
-                      onClick={handleGuest}
-                      className="w-full inline-flex items-center justify-between px-4 h-13 rounded-xl border-2 border-on-surface bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-on-surface font-headline-md font-bold text-sm transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <UserCircle2 className="h-5 w-5 text-primary" />
-                        <div className="text-left">
-                          <span className="block leading-tight font-bold">Continue as Guest</span>
-                          <span className="block text-[11px] font-normal text-muted-foreground leading-tight">Instant setup · Name, photo &amp; target</span>
-                        </div>
-                      </div>
-                      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    </button>
-                    <p className="text-[10px] text-on-surface-variant/80 font-mono text-center mt-1.5 leading-snug">
-                      🔒 Local-first: Streaks &amp; sessions saved safely. Google/Email sync is optional.
-                    </p>
-                  </div>
+                  <button
+                    onClick={handleGuest}
+                    className="w-full inline-flex items-center justify-center gap-3 h-12 rounded-xl border-2 border-on-surface bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md font-bold text-sm transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] cursor-pointer"
+                  >
+                    <UserCircle2 className="h-4 w-4" />
+                    Continue with guest
+                  </button>
 
                   <p className="text-[11px] font-body-sm font-medium text-on-surface-variant text-center pt-1 leading-relaxed">
                     By continuing you agree to Bookie's <Link to="/privacy-policy" className="underline hover:text-on-surface font-bold">Privacy</Link> & <Link to="/copyright-terms" className="underline hover:text-on-surface font-bold">Terms</Link>.
