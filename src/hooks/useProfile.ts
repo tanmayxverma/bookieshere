@@ -395,7 +395,12 @@ function useProfileInternal() {
   }, [session, setProfile]);
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.warn("Sign out transient error:", err);
+    }
+    writeCache(null);
     setProfile(null);
   }, [setProfile]);
 

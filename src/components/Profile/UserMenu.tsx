@@ -1,17 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
-import { LogOut, User, Settings, Sparkles, Zap } from "lucide-react";
+import { LogOut, Sparkles, Zap, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserStreak } from "@/hooks/useUserStreak";
 import { UpgradeModal } from "@/components/Auth/UpgradeModal";
 
-function initials(name: string) {
-  return name.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() || "").join("") || "A";
+function initials(name?: string | null): string {
+  if (!name || typeof name !== "string") return "A";
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "A";
+  return parts.slice(0, 2).map((p) => p[0]?.toUpperCase() || "").join("") || "A";
 }
 
 export function UserMenu({ compact = false }: { compact?: boolean }) {
@@ -32,13 +35,29 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
 
   if (loading) return null;
 
-  const displayName = profile?.display_name || (isAuthenticated ? (user?.email?.split("@")[0] || "Aspirant") : "Guest");
+  const displayName = profile?.display_name || user?.user_metadata?.full_name || user?.user_metadata?.name || (user?.email ? user.email.split("@")[0] : null) || (isAuthenticated ? "Aspirant" : "Guest");
   const avatarInitial = initials(displayName);
-  const avatarUrl = profile?.avatar_url || (isAuthenticated ? googleAvatar : null);
+  const avatarUrl = profile?.avatar_url || googleAvatar || null;
+
+  const accountTypeLabel = profile?.account_type === "guest" || !isAuthenticated
+    ? "Guest"
+    : profile?.account_type === "google"
+    ? "Google"
+    : profile?.account_type === "email"
+    ? "Email"
+    : "Account";
+
+  const targetCategoryLabel = profile?.target_category || "JEE 2027";
+  const streakCount = typeof streak === "number" && !isNaN(streak) ? streak : 0;
+  const subtitle = `${accountTypeLabel} · ${targetCategoryLabel} · ${streakCount}d streak`;
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/welcome");
+    try {
+      await signOut();
+    } catch (err) {
+      console.error("Sign out error:", err);
+    }
+    navigate("/welcome", { replace: true });
   };
 
   return (
@@ -56,46 +75,53 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
             )}
           </div>
           <span className="text-[9px] font-mono font-extrabold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/90 px-1 py-0 rounded-full border border-amber-300/80 dark:border-amber-700 leading-tight -mt-1.5 shadow-xs z-10 whitespace-nowrap select-none">
-            🔥 {streak}d
+            🔥 {streakCount}d
           </span>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="flex items-center gap-3 py-2">
-          <span className="h-9 w-9 rounded-full overflow-hidden ring-1 ring-border/60 bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center text-xs font-bold text-foreground/80 shrink-0">
+      <DropdownMenuContent align="end" className="w-60 p-1.5 shadow-lg border-2 border-slate-900/10 dark:border-slate-800">
+        {/* Clickable Profile & Stats Header Button */}
+        <DropdownMenuItem
+          onClick={() => navigate("/profile")}
+          className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all hover:bg-slate-100 dark:hover:bg-slate-800/80 focus:bg-slate-100 dark:focus:bg-slate-800/80 group"
+        >
+          <div className="h-10 w-10 rounded-full overflow-hidden ring-2 ring-primary/40 group-hover:ring-primary bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center text-xs font-bold text-foreground/80 shrink-0 transition-all shadow-xs">
             {avatarUrl ? (
               <img src={avatarUrl} alt={displayName} referrerPolicy="no-referrer" className="h-full w-full object-cover" />
             ) : (
               <span>{avatarInitial}</span>
             )}
-          </span>
-          <span className="min-w-0">
-            <span className="block text-sm font-semibold truncate">{displayName}</span>
-            <span className="block text-[10px] uppercase tracking-wider text-muted-foreground">
-              {profile ? (
-                `${profile.account_type === "guest" ? "Guest" : profile.account_type === "google" ? "Google" : "Email"} · ${profile.target_category || "JEE 2027"} · ${streak}d streak`
-              ) : (
-                isAuthenticated ? "Aspirant · Syncing..." : "Guest · Not signed in"
-              )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-1">
+              <span className="block text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-primary transition-colors">
+                {displayName}
+              </span>
+              <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+            </div>
+            <span className="block text-[10px] uppercase tracking-wider text-muted-foreground font-mono truncate mt-0.5">
+              {subtitle}
             </span>
-          </span>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer font-semibold text-sm">
-          <User className="h-4 w-4 mr-2 text-primary" /> My Profile & Stats
+          </div>
         </DropdownMenuItem>
+
+        <DropdownMenuSeparator className="my-1.5" />
+
         {!isAuthenticated && (
-          <DropdownMenuItem
-            onClick={() => setUpgradeOpen(true)}
-            className="cursor-pointer text-slate-700 dark:text-slate-300 font-medium"
-          >
-            <Sparkles className="h-4 w-4 mr-2 text-primary" />
-            <span>Link Google / Email</span>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem
+              onClick={() => setUpgradeOpen(true)}
+              className="cursor-pointer font-semibold text-primary focus:text-primary focus:bg-primary/10 rounded-lg py-2"
+            >
+              <Sparkles className="h-4 w-4 mr-2 text-primary" />
+              <span>Upgrade account</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="my-1.5" />
+          </>
         )}
-        <DropdownMenuSeparator />
+
         <div
-          className="flex items-center justify-between gap-3 px-2 py-1.5 text-sm cursor-pointer rounded-sm hover:bg-accent"
+          className="flex items-center justify-between gap-3 px-2 py-2 text-sm cursor-pointer rounded-lg hover:bg-accent"
           onClick={(e) => { e.preventDefault(); setLite(v => !v); }}
         >
           <span className="flex items-center gap-2">
@@ -107,16 +133,16 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
           </span>
           <Switch checked={lite} onCheckedChange={setLite} onClick={(e) => e.stopPropagation()} />
         </div>
-        <DropdownMenuSeparator />
-        {isAuthenticated ? (
-          <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
-            <LogOut className="h-4 w-4 mr-2" /> Sign out
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem onClick={() => setUpgradeOpen(true)} className="cursor-pointer">
-            <Settings className="h-4 w-4 mr-2" /> Switch account
-          </DropdownMenuItem>
-        )}
+
+        <DropdownMenuSeparator className="my-1.5" />
+
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 rounded-lg py-2 font-medium"
+        >
+          <LogOut className="h-4 w-4 mr-2" />
+          <span>{isAuthenticated ? "Sign out" : "Log out"}</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
       <UpgradeModal
         isOpen={upgradeOpen}
