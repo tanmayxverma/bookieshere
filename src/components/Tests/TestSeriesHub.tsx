@@ -1,7 +1,8 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Sparkles, Target, Settings, ChevronDown, CheckCircle, ExternalLink, Activity, Plus } from "lucide-react";
-import { TEST_SERIES, type TestSeriesProvider, type TestSeriesResource } from "@/data/testSeries";
+import type { TestSeriesProvider, TestSeriesResource } from "@/data/testSeries";
+import { useTestSeries } from "@/hooks/useTestSeries";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -103,6 +104,7 @@ function ProviderCard({
 }
 
 export function TestSeriesHub() {
+  const { testSeries } = useTestSeries();
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [time, setTime] = useState("");
@@ -118,9 +120,10 @@ export function TestSeriesHub() {
   }, []);
 
   const filtered = useMemo(() => {
+    const list = testSeries || [];
     const q = query.trim().toLowerCase();
-    if (!q) return TEST_SERIES;
-    return TEST_SERIES
+    if (!q) return list;
+    return list
       .map((p) => {
         const nameMatch =
           (p.name || '').toLowerCase().includes(q) ||
@@ -132,10 +135,10 @@ export function TestSeriesHub() {
         return null;
       })
       .filter(Boolean) as TestSeriesProvider[];
-  }, [query]);
+  }, [testSeries, query]);
 
   const isSearching = query.trim().length > 0;
-  const totalResources = TEST_SERIES.reduce((sum, p) => sum + p.resources.length, 0);
+  const totalResources = (testSeries || []).reduce((sum, p) => sum + (p.resources?.length || 0), 0);
 
   return (
     <div className="w-full pt-16 flex-1 max-w-7xl mx-auto px-margin lg:px-margin-desktop bg-background blueprint-grid text-on-surface">

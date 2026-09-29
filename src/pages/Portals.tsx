@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
-import { PORTALS, Portal } from "@/data/portals";
+import type { Portal } from "@/data/portals";
+import { usePortals } from "@/hooks/usePortals";
 import { BookieLoader } from "@/components/BookieLoader";
 import { Heart, ArrowUpRight, Sparkles, Info, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -46,18 +47,23 @@ function PortalLogo({ portal, size = 56, className }: { portal: Portal; size?: n
 export default function Portals() {
   const navigate = useNavigate();
   const { favs, toggle, isFav } = useFavorites();
+  const { portals } = usePortals();
   const [launching, setLaunching] = useState<{ portal: Portal; url: string } | null>(null);
 
   const orderedPortals = useMemo(() => {
+    const list = portals || [];
     const favSet = new Set(favs);
-    return [...PORTALS].sort((a, b) => {
+    return [...list].sort((a, b) => {
       const af = favSet.has(a.id) ? 0 : 1;
       const bf = favSet.has(b.id) ? 0 : 1;
       return af - bf;
     });
-  }, [favs]);
+  }, [portals, favs]);
 
-  const favPortals = PORTALS.filter((p) => favs.includes(p.id));
+  const favPortals = useMemo(() => {
+    const list = portals || [];
+    return list.filter((p) => favs.includes(p.id));
+  }, [portals, favs]);
 
   const launch = (portal: Portal, url: string) => {
     if (!isSafeUrl(url)) {

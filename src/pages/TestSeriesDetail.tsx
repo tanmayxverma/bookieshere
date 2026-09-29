@@ -3,16 +3,16 @@ import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowUpRight, Sparkles, Library } from "lucide-react";
-import { TEST_SERIES } from "@/data/testSeries";
+import { useTestSeries } from "@/hooks/useTestSeries";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
-
 import { InstituteLogo } from "@/components/common/InstituteLogo";
 
 export default function TestSeriesDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const provider = TEST_SERIES.find((p) => p.id === id);
+  const { getTestSeries } = useTestSeries();
+  const provider = id ? getTestSeries(id) : undefined;
 
   if (!provider) {
     return (

@@ -50,6 +50,9 @@ Deno.serve(async (req) => {
       }
 
       case 'notification.list': {
+        try {
+          await supabase.from('notifications').delete().not('expires_at', 'is', null).lte('expires_at', new Date().toISOString());
+        } catch { /* ignore if cleanup fails */ }
         const { data } = await supabase.from('notifications').select('*').order('created_at', { ascending: false }).limit(200);
         return jr({ items: data ?? [] }, 200);
       }
@@ -138,6 +141,86 @@ Deno.serve(async (req) => {
         await supabase.from('materials').delete().eq('id', payload.id);
         await log(sessionId, 'material.delete', { id: payload.id });
         return jr({ ok: true }, 200);
+      }
+
+      case 'portal.list': {
+        try {
+          const { data, error } = await supabase.from('portals').select('*').order('created_at', { ascending: false }).limit(200);
+          if (error) return jr({ items: [] }, 200);
+          return jr({ items: data ?? [] }, 200);
+        } catch {
+          return jr({ items: [] }, 200);
+        }
+      }
+      case 'portal.create': {
+        try {
+          const { data, error } = await supabase.from('portals').insert(payload).select().single();
+          if (error) return jr({ error: error.message }, 400);
+          await log(sessionId, 'portal.create', { id: data.id, name: data.name });
+          return jr({ item: data }, 200);
+        } catch (e: unknown) {
+          return jr({ error: e instanceof Error ? e.message : 'Failed to create portal' }, 400);
+        }
+      }
+      case 'portal.update': {
+        try {
+          const { id, ...patch } = payload;
+          const { data, error } = await supabase.from('portals').update(patch).eq('id', id).select().single();
+          if (error) return jr({ error: error.message }, 400);
+          await log(sessionId, 'portal.update', { id });
+          return jr({ item: data }, 200);
+        } catch (e: unknown) {
+          return jr({ error: e instanceof Error ? e.message : 'Failed to update portal' }, 400);
+        }
+      }
+      case 'portal.delete': {
+        try {
+          await supabase.from('portals').delete().eq('id', payload.id);
+          await log(sessionId, 'portal.delete', { id: payload.id });
+          return jr({ ok: true }, 200);
+        } catch (e: unknown) {
+          return jr({ error: e instanceof Error ? e.message : 'Failed to delete portal' }, 400);
+        }
+      }
+
+      case 'test.list': {
+        try {
+          const { data, error } = await supabase.from('test_series').select('*').order('created_at', { ascending: false }).limit(200);
+          if (error) return jr({ items: [] }, 200);
+          return jr({ items: data ?? [] }, 200);
+        } catch {
+          return jr({ items: [] }, 200);
+        }
+      }
+      case 'test.create': {
+        try {
+          const { data, error } = await supabase.from('test_series').insert(payload).select().single();
+          if (error) return jr({ error: error.message }, 400);
+          await log(sessionId, 'test.create', { id: data.id, name: data.name });
+          return jr({ item: data }, 200);
+        } catch (e: unknown) {
+          return jr({ error: e instanceof Error ? e.message : 'Failed to create test series' }, 400);
+        }
+      }
+      case 'test.update': {
+        try {
+          const { id, ...patch } = payload;
+          const { data, error } = await supabase.from('test_series').update(patch).eq('id', id).select().single();
+          if (error) return jr({ error: error.message }, 400);
+          await log(sessionId, 'test.update', { id });
+          return jr({ item: data }, 200);
+        } catch (e: unknown) {
+          return jr({ error: e instanceof Error ? e.message : 'Failed to update test series' }, 400);
+        }
+      }
+      case 'test.delete': {
+        try {
+          await supabase.from('test_series').delete().eq('id', payload.id);
+          await log(sessionId, 'test.delete', { id: payload.id });
+          return jr({ ok: true }, 200);
+        } catch (e: unknown) {
+          return jr({ error: e instanceof Error ? e.message : 'Failed to delete test series' }, 400);
+        }
       }
 
       case 'support.list': {

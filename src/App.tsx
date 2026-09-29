@@ -25,6 +25,8 @@ import AdminSupport from "./pages/admin/AdminSupport";
 import AdminCommunity from "./pages/admin/AdminCommunity";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminMaterials from "./pages/admin/AdminMaterials";
+import AdminPortals from "./pages/admin/AdminPortals";
+import AdminTests from "./pages/admin/AdminTests";
 import NotificationsPage from "./pages/Notifications";
 import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
@@ -106,6 +108,8 @@ function AppRoutes() {
           <Route path="/admin/support" element={<AdminSupport />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/materials" element={<AdminMaterials />} />
+          <Route path="/admin/portals" element={<AdminPortals />} />
+          <Route path="/admin/tests" element={<AdminTests />} />
           <Route path="/admin/community" element={<AdminCommunity />} />
           <Route path="/copyright-terms" element={<CopyrightTerms />} />
           <Route path="/terms" element={<TermsOfService />} />

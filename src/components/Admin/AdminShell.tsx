@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Bell, MessagesSquare, Users, LogOut, ShieldCheck, Library, Megaphone } from 'lucide-react';
+import { LayoutDashboard, Bell, MessagesSquare, Users, LogOut, ShieldCheck, Library, Megaphone, LayoutGrid, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAdminSession } from '@/hooks/useAdminSession';
 
@@ -8,6 +8,8 @@ const NAV = [
   { to: '/admin', label: 'Overview', icon: LayoutDashboard, exact: true },
   { to: '/admin/notifications', label: 'Notifications', icon: Bell },
   { to: '/admin/materials', label: 'Materials', icon: Library },
+  { to: '/admin/portals', label: 'Portals', icon: LayoutGrid },
+  { to: '/admin/tests', label: 'Tests', icon: FileText },
   { to: '/admin/community', label: 'Community', icon: Megaphone },
   { to: '/admin/support', label: 'Support', icon: MessagesSquare },
   { to: '/admin/users', label: 'Users', icon: Users },

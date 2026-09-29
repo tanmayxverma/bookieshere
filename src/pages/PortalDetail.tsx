@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookieLoader } from "@/components/BookieLoader";
 import { ArrowLeft, ArrowUpRight, Info, Rocket } from "lucide-react";
-import { PORTALS } from "@/data/portals";
+import { usePortals } from "@/hooks/usePortals";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
 import { InstituteLogo } from "@/components/common/InstituteLogo";
@@ -13,8 +13,9 @@ import { InstituteLogo } from "@/components/common/InstituteLogo";
 export default function PortalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getPortal } = usePortals();
   const [launching, setLaunching] = useState<string | null>(null);
-  const portal = PORTALS.find((p) => p.id === id);
+  const portal = id ? getPortal(id) : undefined;
 
   if (!portal) {
     return (

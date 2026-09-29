@@ -190,7 +190,14 @@ export default function NotificationsPage() {
                           "text-[10px] font-label-code-sm font-bold uppercase tracking-wider mt-3",
                           unread ? "text-primary" : "text-on-surface-variant"
                         )}>
-                          {formatDistanceToNow(new Date(n.publish_at), { addSuffix: true })}
+                          {(() => {
+                            try {
+                              const d = n?.publish_at ? new Date(n.publish_at) : new Date();
+                              return isNaN(d.getTime()) ? 'Recently' : formatDistanceToNow(d, { addSuffix: true });
+                            } catch {
+                              return 'Recently';
+                            }
+                          })()}
                         </p>
                       </div>
                     </div>

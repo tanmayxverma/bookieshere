@@ -51,7 +51,19 @@ export function useNotifications() {
       .order('is_pinned', { ascending: false })
       .order('publish_at', { ascending: false })
       .limit(100);
-    setItems((notifs as Notification[]) ?? []);
+    const list = (notifs as Notification[]) ?? [];
+    const validNotifs = list.filter((n) => {
+      if (!n || !n.is_active) return false;
+      if (n.expires_at) {
+        try {
+          if (new Date(n.expires_at).getTime() <= Date.now()) return false;
+        } catch {
+          // ignore parsing error
+        }
+      }
+      return true;
+    });
+    setItems(validNotifs);
 
     const localReads = getLocalReadIds();
     let serverReadIds: string[] = [];
