@@ -12,6 +12,7 @@ import {
   BookOpen,
   ArrowRight,
   Clock,
+  ExternalLink,
 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useNotifications, type Notification } from '@/hooks/useNotifications';
@@ -242,8 +243,26 @@ export function NotificationBell() {
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mt-1 leading-relaxed">
-                      {n.body}
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                      {n.body.split(/(https?:\/\/[^\s]+|t\.me\/[^\s]+)/g).map((part, i) => {
+                        if (part.match(/(https?:\/\/[^\s]+|t\.me\/[^\s]+)/g)) {
+                          const href = part.startsWith('http') ? part : `https://${part}`;
+                          return (
+                            <a
+                              key={i}
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="underline font-bold text-primary dark:text-blue-400 hover:opacity-80 inline-flex items-center gap-0.5 break-all cursor-pointer"
+                            >
+                              {part}
+                              <ExternalLink className="h-2.5 w-2.5 inline shrink-0 ml-0.5" />
+                            </a>
+                          );
+                        }
+                        return part;
+                      })}
                     </p>
 
                     <div className="flex items-center gap-1.5 text-[10px] font-medium text-slate-400 mt-1.5">

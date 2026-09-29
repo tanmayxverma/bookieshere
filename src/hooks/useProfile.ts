@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback, createContext, useContext, useMemo, type ReactNode, createElement } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
+import { safeRandomUUID } from '@/lib/utils';
 
 const DEVICE_ID_KEY = 'ypt_device_id';
 const PROFILE_CACHE_KEY = 'bookie_profile_cache_v1';
 
 export const TARGET_CATEGORIES = [
+  'JEE 2026',
   'JEE 2027',
   'JEE 2028',
   'JEE 2029',
@@ -30,8 +32,6 @@ export interface Profile {
   created_at: string;
   updated_at: string;
 }
-
-import { safeRandomUUID } from '@/lib/utils';
 
 export function extractGoogleAvatar(user: User | null | undefined): string | null {
   if (!user) return null;
@@ -62,6 +62,7 @@ function readCache(): Profile | null {
     return raw ? (JSON.parse(raw) as Profile) : null;
   } catch { return null; }
 }
+
 function writeCache(p: Profile | null) {
   try {
     if (p) localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(p));
@@ -72,19 +73,25 @@ function writeCache(p: Profile | null) {
 type ProfileContextValue = ReturnType<typeof useProfileInternal>;
 const ProfileContext = createContext<ProfileContextValue | null>(null);
 
-function defaultGuestProfile(deviceId: string): Profile {
+function defaultGuestProfile(deviceId: string, displayName = 'Aspirant', target = 'JEE 2027'): Profile {
   return {
     id: `guest_${deviceId.replace(/-/g, '').substring(0, 16)}`,
     user_id: null,
     device_id: deviceId,
     account_type: 'guest',
-    display_name: 'Aspirant',
+    display_name: displayName,
     avatar_url: null,
-    target_category: 'JEE 2027',
-    onboarded_at: new Date().toISOString(),
+    target_category: target,
+    onboarded_at: displayName !== 'Aspirant' ? new Date().toISOString() : null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
+}
+
+function isPlaceholderName(name?: string | null): boolean {
+  if (!name) return true;
+  const n = name.trim().toLowerCase();
+  return n === '' || n === 'aspirant' || n === 'anonymous aspirant';
 }
 
 function useProfileInternal() {
@@ -94,6 +101,7 @@ function useProfileInternal() {
   const cached = readCache();
   const [profile, setProfileState] = useState<Profile>(() => cached || defaultGuestProfile(deviceId));
   const [loading, setLoading] = useState(false);
+  const [identityModalOpen, setIdentityModalOpen] = useState(false);
 
   const setProfile = useCallback((p: Profile | null) => {
     const next = p || defaultGuestProfile(deviceId);
@@ -118,26 +126,95 @@ function useProfileInternal() {
           .select('*')
           .eq('user_id', sess.user.id)
           .maybeSingle();
-        if (data) setProfile(data as Profile);
+
+        if (data) {
+          const prof = data as Profile;
+          // If Google avatar is available and no avatar set, auto-attach
+          if (!prof.avatar_url && googleAvatar) {
+            prof.avatar_url = googleAvatar;
+          }
+          setProfile(prof);
+        } else {
+          // If no profile found for auth user, check trigger or create
+          const isGoogle = sess.user.app_metadata?.provider === 'google' || !!googleAvatar;
+          const meta = (sess.user.user_metadata || {}) as Record<string, any>;
+          const dName = meta.full_name || meta.name || sess.user.email?.split('@')[0] || 'Aspirant';
+          const { data: created } = await (supabase as any)
+            .from('profiles')
+            .upsert({
+              user_id: sess.user.id,
+              account_type: isGoogle ? 'google' : 'email',
+              display_name: dName,
+              avatar_url: googleAvatar,
+              target_category: 'JEE 2027',
+              onboarded_at: dName !== 'Aspirant' ? new Date().toISOString() : null,
+            }, { onConflict: 'user_id' })
+            .select()
+            .single();
+          if (created) setProfile(created as Profile);
+        }
       } else {
+        // GUEST USER FLOW:
+        // 1. First check if ypt_users table has a real saved name for this deviceId
+        let yptName: string | null = null;
+        let yptYear: string | null = null;
+        try {
+          const { data: yptRow } = await (supabase as any)
+            .from('ypt_users')
+            .select('name, jee_focus_year')
+            .eq('device_id', deviceId)
+            .maybeSingle();
+          if (yptRow?.name && !isPlaceholderName(yptRow.name)) {
+            yptName = yptRow.name.trim();
+          }
+          if (yptRow?.jee_focus_year) {
+            yptYear = yptRow.jee_focus_year.trim();
+          }
+        } catch {}
+
+        // 2. Query profiles table for guest device
         const { data } = await (supabase as any).rpc('get_guest_profile', { _device_id: deviceId });
-        const row = Array.isArray(data) ? data[0] : data;
+        let row = Array.isArray(data) ? data[0] : data;
+
         if (row) {
+          // If profile display_name is placeholder but ypt_users had a real name, recover it!
+          if (isPlaceholderName(row.display_name) && yptName) {
+            try {
+              const { data: recovered } = await (supabase as any).rpc('upsert_guest_profile', {
+                _device_id: deviceId,
+                _display_name: yptName,
+                _target_category: yptYear || row.target_category || 'JEE 2027',
+                _avatar_url: row.avatar_url || null,
+              });
+              if (recovered) row = recovered;
+            } catch {}
+          }
           setProfile(row as Profile);
         } else {
-          // Sync guest to Supabase quietly
-          try {
-            await (supabase as any).rpc('upsert_guest_profile', {
-              _device_id: deviceId,
-              _display_name: 'Aspirant',
-              _target_category: 'JEE 2027',
-              _avatar_url: null,
-            });
-          } catch {}
+          // If no profile row in DB yet:
+          if (yptName) {
+            // Recover from ypt_users immediately!
+            try {
+              const { data: created } = await (supabase as any).rpc('upsert_guest_profile', {
+                _device_id: deviceId,
+                _display_name: yptName,
+                _target_category: yptYear || 'JEE 2027',
+                _avatar_url: null,
+              });
+              if (created) {
+                setProfile(created as Profile);
+                return;
+              }
+            } catch {}
+            setProfile(defaultGuestProfile(deviceId, yptName, yptYear || 'JEE 2027'));
+          } else {
+            // Brand new guest: don't force 'Aspirant' as final onboarded name
+            setProfile(defaultGuestProfile(deviceId));
+          }
         }
       }
-    } catch {
-      /* keep cached profile on transient errors */
+    } catch (e) {
+      console.warn('Profile load transient error:', e);
     } finally {
       setLoading(false);
     }
@@ -170,6 +247,9 @@ function useProfileInternal() {
     avatar_url?: string | null;
     avatar_customized?: boolean;
   }) => {
+    const trimmedName = input.display_name.trim();
+    const cleanYear = input.target_category.trim() || 'JEE 2027';
+
     if (session?.user) {
       const googleAvatar = extractGoogleAvatar(session.user);
       const isGoogle = session.user.app_metadata?.provider === 'google' || !!googleAvatar;
@@ -187,8 +267,8 @@ function useProfileInternal() {
 
       const payload = {
         user_id: session.user.id,
-        display_name: input.display_name,
-        target_category: input.target_category,
+        display_name: trimmedName,
+        target_category: cleanYear,
         avatar_url: avatar,
         account_type: isGoogle ? 'google' : 'email',
         onboarded_at: new Date().toISOString(),
@@ -203,16 +283,69 @@ function useProfileInternal() {
         p.avatar_customized = customized;
         setProfile(p);
       }
+
+      // Synchronize to ypt_users table
+      try {
+        await (supabase as any)
+          .from('ypt_users')
+          .upsert({
+            user_id: session.user.id,
+            device_id: deviceId,
+            name: trimmedName,
+            jee_focus_year: cleanYear,
+          }, { onConflict: 'device_id' });
+      } catch (err) {
+        console.warn('ypt_users sync error:', err);
+      }
+
       return { data: data as Profile | null, error };
     } else {
+      // GUEST USER SAVE
+      const avatar = input.avatar_url !== undefined ? input.avatar_url : (profile?.avatar_url ?? null);
+
       const { data, error } = await (supabase as any).rpc('upsert_guest_profile', {
         _device_id: deviceId,
-        _display_name: input.display_name,
-        _target_category: input.target_category,
-        _avatar_url: input.avatar_url ?? null,
+        _display_name: trimmedName,
+        _target_category: cleanYear,
+        _avatar_url: avatar,
       });
-      if (!error && data) setProfile(data as Profile);
-      return { data: data as Profile | null, error };
+
+      if (!error && data) {
+        const p = data as Profile;
+        p.avatar_customized = true;
+        setProfile(p);
+      } else {
+        // Local-first fallback if RPC temporarily fails
+        const fallback: Profile = {
+          id: profile?.id || `guest_${deviceId.replace(/-/g, '').substring(0, 16)}`,
+          user_id: null,
+          device_id: deviceId,
+          account_type: 'guest',
+          display_name: trimmedName,
+          avatar_url: avatar,
+          avatar_customized: true,
+          target_category: cleanYear,
+          onboarded_at: new Date().toISOString(),
+          created_at: profile?.created_at || new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        setProfile(fallback);
+      }
+
+      // Synchronize to ypt_users table for guest as well
+      try {
+        await (supabase as any)
+          .from('ypt_users')
+          .upsert({
+            device_id: deviceId,
+            name: trimmedName,
+            jee_focus_year: cleanYear,
+          }, { onConflict: 'device_id' });
+      } catch (err) {
+        console.warn('Guest ypt_users sync error:', err);
+      }
+
+      return { data: (data as Profile) || profile, error: null };
     }
   }, [session, profile, deviceId, setProfile]);
 
@@ -283,6 +416,17 @@ function useProfileInternal() {
 
   const googleAvatar = useMemo(() => extractGoogleAvatar(user || session?.user), [user, session]);
 
+  const isNamePlaceholder = useMemo(() => isPlaceholderName(profile?.display_name), [profile?.display_name]);
+
+  // Needs identity setup if display_name is placeholder Aspirant or un-onboarded
+  const needsIdentitySetup = useMemo(() => {
+    return isNamePlaceholder || !profile?.onboarded_at;
+  }, [isNamePlaceholder, profile?.onboarded_at]);
+
+  const openIdentityModal = useCallback(() => {
+    setIdentityModalOpen(true);
+  }, []);
+
   return {
     user,
     session,
@@ -290,8 +434,13 @@ function useProfileInternal() {
     loading,
     deviceId,
     googleAvatar,
-    isOnboarded: !!profile?.onboarded_at,
+    isOnboarded: !needsIdentitySetup,
     isAuthenticated: !!session,
+    isNamePlaceholder,
+    needsIdentitySetup,
+    identityModalOpen,
+    setIdentityModalOpen,
+    openIdentityModal,
     saveProfile,
     updateAvatar,
     resetToGoogleAvatar,

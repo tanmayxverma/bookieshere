@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Pin, AlertTriangle, Sparkles, Wrench, Megaphone, BookOpen, Check, CheckCheck } from 'lucide-react';
+import { Pin, AlertTriangle, Sparkles, Wrench, Megaphone, BookOpen, Check, CheckCheck, Zap, ExternalLink, Send } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -38,6 +38,17 @@ export default function NotificationsPage() {
     toast({ description: "All notifications marked as read." });
   };
 
+  const handleOpenTelegram = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    try {
+      const win = window.open("https://t.me/bookieshere", "_blank", "noopener,noreferrer");
+      if (!win) {
+        window.location.assign("https://t.me/bookieshere");
+      }
+    } catch {
+      window.location.assign("https://t.me/bookieshere");
+    }
+  };
+
   return (
     <Layout>
       <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen pb-20">
@@ -59,10 +70,10 @@ export default function NotificationsPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5">
                 <div className="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 border-2 border-on-surface shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]">
-                  <span className="material-symbols-outlined text-[20px]">bolt</span>
+                  <Zap className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-headline-md font-extrabold text-on-surface">Emergency Backup Telegram Channel</span>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-fixed text-on-secondary-fixed-variant">FAILSAFE</span>
                   </div>
@@ -74,11 +85,13 @@ export default function NotificationsPage() {
               <a
                 href="https://t.me/bookieshere"
                 target="_blank"
-                rel="noreferrer noopener"
-                className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary font-headline-md font-bold text-xs shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] hover:bg-primary-hover active:translate-y-[2px] active:shadow-none transition-all"
+                rel="noopener noreferrer"
+                onClick={handleOpenTelegram}
+                className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-headline-md font-bold text-xs shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] hover:bg-primary/90 active:translate-y-[2px] active:shadow-none transition-all cursor-pointer select-none"
               >
+                <Send className="h-3.5 w-3.5" />
                 <span>Join Channel</span>
-                <span className="material-symbols-outlined text-[14px]">arrow_outward</span>
+                <ExternalLink className="h-3.5 w-3.5 opacity-80" />
               </a>
             </div>
           </div>
@@ -118,9 +131,14 @@ export default function NotificationsPage() {
                   const Icon = TYPE_ICON[n.type] ?? Megaphone;
                   const unread = !readIds.has(n.id);
                   return (
-                    <button key={n.id} onClick={() => markRead(n.id)}
+                    <div 
+                      key={n.id} 
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => markRead(n.id)}
+                      onKeyDown={(e) => e.key === 'Enter' && markRead(n.id)}
                       className={cn(
-                        "w-full text-left flex gap-4 rounded-2xl border-2 p-5 transition-all duration-200 group text-on-surface",
+                        "w-full text-left flex gap-4 rounded-2xl border-2 p-5 transition-all duration-200 group text-on-surface cursor-pointer select-none",
                         "shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] hover:shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] hover:-translate-y-0.5",
                         unread 
                           ? "border-primary bg-primary-container text-on-primary-container" 
@@ -148,7 +166,25 @@ export default function NotificationsPage() {
                           "text-sm font-body-md mt-1.5 whitespace-pre-wrap leading-relaxed",
                           unread ? "text-on-primary-container/90 font-medium" : "text-on-surface/80"
                         )}>
-                          {n.body}
+                          {n.body.split(/(https?:\/\/[^\s]+|t\.me\/[^\s]+)/g).map((part, i) => {
+                            if (part.match(/(https?:\/\/[^\s]+|t\.me\/[^\s]+)/g)) {
+                              const href = part.startsWith('http') ? part : `https://${part}`;
+                              return (
+                                <a
+                                  key={i}
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="underline font-bold text-primary hover:opacity-80 inline-flex items-center gap-0.5 break-all cursor-pointer"
+                                >
+                                  {part}
+                                  <ExternalLink className="h-3 w-3 inline shrink-0 ml-0.5" />
+                                </a>
+                              );
+                            }
+                            return part;
+                          })}
                         </p>
                         <p className={cn(
                           "text-[10px] font-label-code-sm font-bold uppercase tracking-wider mt-3",
@@ -157,7 +193,7 @@ export default function NotificationsPage() {
                           {formatDistanceToNow(new Date(n.publish_at), { addSuffix: true })}
                         </p>
                       </div>
-                    </button>
+                    </div>
                   );
                 })
               )}

@@ -81,16 +81,16 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer">
-          <User className="h-4 w-4 mr-2" /> Profile
+        <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer font-semibold text-sm">
+          <User className="h-4 w-4 mr-2 text-primary" /> Cockpit Profile
         </DropdownMenuItem>
         {!isAuthenticated && (
           <DropdownMenuItem
             onClick={() => setUpgradeOpen(true)}
-            className="cursor-pointer bg-gradient-to-r from-blue-500/15 via-indigo-500/15 to-primary/15 text-primary font-bold focus:bg-primary/20"
+            className="cursor-pointer text-slate-700 dark:text-slate-300 font-medium"
           >
-            <Sparkles className="h-4 w-4 mr-2 text-amber-500 animate-pulse" />
-            <span>Upgrade to Google</span>
+            <Sparkles className="h-4 w-4 mr-2 text-primary" />
+            <span>Link Google / Email</span>
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />

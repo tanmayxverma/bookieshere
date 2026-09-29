@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useProfile, TARGET_CATEGORIES, type TargetCategory } from "@/hooks/useProfile";
 import { AvatarUploader } from "@/components/Profile/AvatarUploader";
 import { validateName } from "@/types/ypt";
-import logo from "@/assets/logo.jfif";
+import logo from "@/assets/logo.png";
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -72,7 +72,14 @@ export default function Onboarding() {
 
       <div className="relative w-full max-w-lg">
         <div className="flex items-center justify-center gap-2.5 mb-7">
-          <img src={logo} alt="BOOKIE" className="h-9 w-9 rounded-xl ring-1 ring-border/60" />
+          <img
+            src={logo}
+            alt="BOOKIE"
+            className="h-9 w-9 rounded-xl ring-1 ring-border/60 object-cover"
+            onError={(e) => {
+              e.currentTarget.src = "/logo.png";
+            }}
+          />
           <span className="font-display text-xl font-black tracking-tight">BOOKIE<span className="text-primary">.</span></span>
         </div>
 
@@ -144,6 +151,7 @@ export default function Onboarding() {
                     setAvatarCustomized(false);
                   }}
                   ownerId={isAuthenticated ? undefined : `guest/${deviceId}`}
+                  showPresets={true}
                 />
               </div>
               <div className="flex gap-2">

@@ -91,10 +91,10 @@ export function UpgradeModal({
     : "Sign in with Google";
 
   const description = isCommunity
-    ? "Sign in with Google to post replies, ask doubts, and share solutions with fellow aspirants."
+    ? "Link Google or Email to post replies, ask doubts, and share solutions with fellow aspirants."
     : isProfile
-    ? "Link Google to customize your profile, sync timers, and back up all study data in the cloud."
-    : "Link your Google account to unlock community discussions and multi-device cloud backup.";
+    ? "Link Google or Email to sync timers, back up study data, and access your cockpit across all devices."
+    : "Link your Google or Email account to unlock community discussions and multi-device cloud backup.";
 
   const Icon = isCommunity ? MessageSquare : Sparkles;
 

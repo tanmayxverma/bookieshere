@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Sparkles, Activity, ShieldCheck } from 'lucide-react';
-import logo from '@/assets/logo.jfif';
+import logo from '@/assets/logo.png';
 
 export function YPTLoadingSkeleton() {
   const [stepIndex, setStepIndex] = useState(0);
@@ -40,7 +40,14 @@ export function YPTLoadingSkeleton() {
           
           {/* Center Logo with shadow */}
           <div className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] bg-white p-1">
-            <img src={logo} alt="Bookie" className="w-full h-full object-cover rounded-xl" />
+            <img
+              src={logo}
+              alt="Bookie"
+              className="w-full h-full object-cover rounded-xl"
+              onError={(e) => {
+                e.currentTarget.src = "/logo.png";
+              }}
+            />
           </div>
 
           <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-amber-500 animate-bounce" />

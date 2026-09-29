@@ -40,10 +40,22 @@ import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
-const OPEN_PATHS = new Set(["/welcome", "/onboarding", "/auth", "/reset-password", "/privacy-policy", "/copyright-terms", "/terms", "/terms-of-service", "/dmca", "/donate"]);
+const OPEN_PATHS = new Set([
+  "/welcome",
+  "/onboarding",
+  "/auth",
+  "/reset-password",
+  "/privacy-policy",
+  "/copyright-terms",
+  "/terms",
+  "/terms-of-service",
+  "/dmca",
+  "/donate",
+  "/profile",
+]);
 
 function ProfileGate() {
-  const { profile, loading, isOnboarded } = useProfile();
+  const { profile, loading, isOnboarded, isAuthenticated } = useProfile();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -52,12 +64,17 @@ function ProfileGate() {
     const path = location.pathname;
     if (OPEN_PATHS.has(path)) return;
     if (path.startsWith("/admin")) return;
-    if (!profile) {
-      navigate("/welcome", { replace: true });
-    } else if (!isOnboarded) {
-      navigate("/onboarding", { replace: true });
+
+    // For non-registered / un-onboarded users opening the site:
+    // Route them to /welcome so they choose auth method (Google, Email, or Guest)
+    if (!isOnboarded) {
+      if (isAuthenticated) {
+        navigate("/onboarding", { replace: true });
+      } else {
+        navigate("/welcome", { replace: true });
+      }
     }
-  }, [loading, profile, isOnboarded, location.pathname, navigate]);
+  }, [loading, profile, isOnboarded, isAuthenticated, location.pathname, navigate]);
 
   return null;
 }

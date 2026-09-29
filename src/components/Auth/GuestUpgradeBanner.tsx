@@ -27,8 +27,8 @@ export function GuestUpgradeBanner({
 
   const message =
     feature === "community"
-      ? "Guest accounts can read & react, but discussions and replies are locked to full accounts."
-      : "Guest data lives on this browser only. Cloud sync, custom avatars, and community posts are locked.";
+      ? "Guest accounts can browse & react. Connect Google or Email to post doubts & solutions."
+      : "Guest data lives in this browser. Link Google or Email for multi-device cloud backup & community posting.";
 
   if (compact) {
     return (
@@ -47,7 +47,7 @@ export function GuestUpgradeBanner({
             </span>
           </div>
           <span className="font-bold text-primary shrink-0 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform font-mono text-[11px]">
-            <span>Unlock</span>
+            <span>Link Account</span>
             <ArrowRight className="w-3 h-3" />
           </span>
         </div>
@@ -78,11 +78,11 @@ export function GuestUpgradeBanner({
                 Guest Mode Active
               </span>
               <span className="text-[11px] text-muted-foreground font-mono">
-                · UI &amp; Community Locked
+                · 100% Free · Saved Data Safe
               </span>
             </div>
             <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white mt-1">
-              Upgrade to Google to unlock discussions, replies, and cloud sync across all devices.
+              Optionally link Google or Email to unlock discussions, replies, and cloud sync across all devices.
             </p>
           </div>
         </div>
@@ -94,7 +94,7 @@ export function GuestUpgradeBanner({
             className="w-full sm:w-auto h-9 text-xs font-bold rounded-xl border border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
           >
             <Sparkles className="w-3.5 h-3.5 mr-1 text-amber-300" />
-            <span>Upgrade to Google</span>
+            <span>Link Account</span>
           </Button>
         </div>
       </div>

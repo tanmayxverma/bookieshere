@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Send, PlusCircle } from "lucide-react";
 import { AdminLoginModal } from "@/components/Admin/AdminLoginModal";
-import logo from "@/assets/logo.jfif";
+import logo from "@/assets/logo.png";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -36,16 +37,16 @@ export function Footer() {
                 href="https://t.me/bookieshere"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-space-xs px-space-lg py-3 rounded-full bg-primary text-white font-headline-md text-label-ui uppercase tracking-wide shadow-[0_4px_0_0_#00174b] active:translate-y-1 active:shadow-none transition-all hover:bg-primary/90"
+                className="inline-flex items-center gap-2 px-space-lg py-3 rounded-full bg-primary text-white font-headline-md text-label-ui uppercase tracking-wide shadow-[0_4px_0_0_#00174b] active:translate-y-1 active:shadow-none transition-all hover:bg-primary/90 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[18px]">send</span>
+                <Send className="w-4 h-4" />
                 <span>Join Telegram Channel ↗</span>
               </a>
               <Link
                 to="/support"
-                className="inline-flex items-center gap-space-xs px-space-lg py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-headline-md text-label-ui uppercase tracking-wide transition-colors"
+                className="inline-flex items-center gap-2 px-space-lg py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-headline-md text-label-ui uppercase tracking-wide transition-colors"
               >
-                <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                <PlusCircle className="w-4 h-4" />
                 <span>Request a Resource ↗</span>
               </Link>
             </div>
@@ -68,7 +69,14 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-margin lg:px-margin-desktop py-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md">
           <div className="flex flex-col items-center md:items-start gap-space-xs">
             <div className="flex items-center gap-2">
-              <img src={logo} alt="Bookie" className="w-7 h-7 rounded-lg object-cover ring-1 ring-border/50 shadow-xs" />
+              <img
+                src={logo}
+                alt="Bookie"
+                className="w-7 h-7 rounded-lg object-cover ring-1 ring-border/50 shadow-xs"
+                onError={(e) => {
+                  e.currentTarget.src = "/logo.png";
+                }}
+              />
               <span className="font-headline-md text-label-ui font-extrabold text-on-surface tracking-wide">BOOKIE®</span>
             </div>
             <p className="font-body-sm text-body-sm text-on-surface-variant text-center md:text-left">

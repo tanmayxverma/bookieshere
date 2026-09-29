@@ -4,7 +4,7 @@ import { Sparkles, Loader2, ArrowRight, UserCircle2, Mail, Lock, ChevronLeft } f
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
-import logo from "@/assets/logo.jfif";
+import logo from "@/assets/logo.png";
 import { cn } from "@/lib/utils";
 
 const GoogleIcon = () => (
@@ -78,7 +78,14 @@ export default function Welcome() {
       <div className="relative w-full max-w-md z-10">
         {/* Brand */}
         <Link to="/" className="flex items-center justify-center gap-3 mb-8">
-          <img src={logo} alt="BOOKIE" className="h-12 w-12 rounded-xl border-2 border-on-surface shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]" />
+          <img
+            src={logo}
+            alt="BOOKIE"
+            className="h-12 w-12 rounded-xl border-2 border-on-surface shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] object-cover"
+            onError={(e) => {
+              e.currentTarget.src = "/logo.png";
+            }}
+          />
           <span className="font-headline-xl text-3xl font-black tracking-tight text-on-surface">
             BOOKIE<span className="text-primary">.</span>
           </span>
@@ -129,14 +136,19 @@ export default function Welcome() {
                   <div>
                     <button
                       onClick={handleGuest}
-                      className="w-full inline-flex items-center justify-center gap-3 h-12 rounded-xl border-2 border-on-surface bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-on-surface font-headline-md font-bold text-sm transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]"
+                      className="w-full inline-flex items-center justify-between px-4 h-13 rounded-xl border-2 border-on-surface bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-on-surface font-headline-md font-bold text-sm transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] cursor-pointer"
                     >
-                      <UserCircle2 className="h-4 w-4" />
-                      Continue as Guest (Local Only)
-                      <ArrowRight className="h-4 w-4 ml-auto" />
+                      <div className="flex items-center gap-3">
+                        <UserCircle2 className="h-5 w-5 text-primary" />
+                        <div className="text-left">
+                          <span className="block leading-tight font-bold">Continue as Guest</span>
+                          <span className="block text-[11px] font-normal text-muted-foreground leading-tight">Instant setup · Name, photo &amp; target</span>
+                        </div>
+                      </div>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                     </button>
                     <p className="text-[10px] text-on-surface-variant/80 font-mono text-center mt-1.5 leading-snug">
-                      🔒 Guest: Local browser data only. Community posting &amp; multi-device sync require Google.
+                      🔒 Local-first: Streaks &amp; sessions saved safely. Google/Email sync is optional.
                     </p>
                   </div>
 

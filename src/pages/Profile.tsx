@@ -62,13 +62,12 @@ export default function Profile() {
 
   useEffect(() => {
     if (!profileLoading && !profile) navigate("/welcome", { replace: true });
-    if (!profileLoading && profile && !isOnboarded) navigate("/onboarding", { replace: true });
     if (profile) {
-      setName(profile.display_name);
+      setName(profile.display_name && profile.display_name !== "Aspirant" ? profile.display_name : (profile.display_name || ""));
       setTarget((profile.target_category as TargetCategory) || "JEE 2027");
       setAvatarUrl(profile.avatar_url ?? null);
     }
-  }, [profileLoading, profile, isOnboarded, navigate]);
+  }, [profileLoading, profile, navigate]);
 
   if (profileLoading || !profile) {
     return (
@@ -181,160 +180,191 @@ export default function Profile() {
 
   return (
     <Layout>
-      <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen py-8 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto space-y-6">
-          <Card className="relative overflow-hidden border-border/60 p-7 md:p-8 mb-6">
-            <div aria-hidden className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-primary/15 blur-3xl" />
-            <div aria-hidden className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
+      <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen py-4 sm:py-8 px-3 sm:px-6">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+          <Card className="relative overflow-hidden border-border/60 p-4 sm:p-7 md:p-8 mb-4 sm:mb-6 rounded-2xl sm:rounded-3xl">
+            <div aria-hidden className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
+            <div aria-hidden className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
 
-            <div className="relative flex flex-col md:flex-row gap-6 md:items-center">
-            <AvatarUploader
-              avatarUrl={avatarUrl}
-              displayName={name || profile.display_name}
-              onChange={async (url) => { setAvatarUrl(url); await updateAvatar(url); }}
-              ownerId={isAuthenticated ? undefined : `guest/${deviceId}`}
-              streak={streak}
-            />
-            <div className="min-w-0 flex-1">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-border/60 bg-surface-2/60 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                <Sparkles className="h-3 w-3 text-primary" /> {accountLabel} account
-              </span>
-              <h1 className="mt-2 font-display text-3xl md:text-4xl font-black tracking-tight truncate">{profile.display_name}</h1>
-              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5"><Target className="h-3 w-3 text-primary" /> {profile.target_category}</span>
-                <span className="inline-flex items-center gap-1.5"><Calendar className="h-3 w-3 text-primary" /> Joined {joinDate}</span>
-                {user?.email && <span className="inline-flex items-center gap-1.5"><Mail className="h-3 w-3 text-primary" /> {user.email}</span>}
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Guest Account Upgrade Box */}
-        {!isAuthenticated && (
-          <Card className="relative overflow-hidden border-2 border-slate-900 dark:border-slate-700 bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-primary/10 p-6 md:p-7 mb-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="space-y-2 max-w-xl">
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 text-[10px] font-mono font-black uppercase tracking-wider">
-                    ⚡ Guest Mode Active
-                  </span>
-                  <span className="text-xs font-mono text-muted-foreground">· Local Browser Storage Only</span>
-                </div>
-                <h3 className="text-lg font-black font-display text-slate-900 dark:text-white">
-                  Upgrade to Google to Unlock Full Aspirant Features
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs text-slate-600 dark:text-slate-300">
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-500 font-bold">✓</span>
-                    <span><strong>UI Unlocked:</strong> Custom avatar &amp; profile stats</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-500 font-bold">✓</span>
-                    <span><strong>Community:</strong> Post doubts, strategies &amp; memes</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-500 font-bold">✓</span>
-                    <span><strong>Cloud Backup:</strong> Never lose progress on cache clear</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-500 font-bold">✓</span>
-                    <span><strong>Multi-device:</strong> Sync across phone, tab &amp; PC</span>
-                  </div>
+            <div className="relative flex flex-col md:flex-row gap-5 sm:gap-6 items-center md:items-center text-center md:text-left">
+              <AvatarUploader
+                avatarUrl={avatarUrl}
+                displayName={name || profile.display_name}
+                onChange={async (url) => { setAvatarUrl(url); await updateAvatar(url); }}
+                ownerId={isAuthenticated ? undefined : `guest/${deviceId}`}
+                streak={streak}
+                showPresets={true}
+              />
+              <div className="min-w-0 flex-1 w-full">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-border/60 bg-surface-2/60 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  <Sparkles className="h-3 w-3 text-primary" /> {accountLabel} account
+                </span>
+                <h1 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl font-black tracking-tight break-words">{profile.display_name}</h1>
+                <div className="mt-2 flex flex-wrap justify-center md:justify-start gap-x-3 sm:gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5"><Target className="h-3 w-3 text-primary" /> {profile.target_category}</span>
+                  <span className="inline-flex items-center gap-1.5"><Calendar className="h-3 w-3 text-primary" /> Joined {joinDate}</span>
+                  {user?.email && <span className="inline-flex items-center gap-1.5 break-all"><Mail className="h-3 w-3 text-primary shrink-0" /> {user.email}</span>}
                 </div>
               </div>
-
-              <Button
-                onClick={() => setUpgradeModalOpen(true)}
-                className="rounded-2xl h-12 px-6 font-display font-bold text-sm bg-primary text-primary-foreground border-2 border-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none shrink-0"
-              >
-                <Sparkles className="w-4 h-4 mr-2 text-amber-300" />
-                Upgrade with Google
-              </Button>
             </div>
           </Card>
-        )}
 
-        {/* Email Account Pro-Tip Banner */}
-        {isAuthenticated && profile.account_type === "email" && (
-          <div className="flex items-center justify-between gap-3 p-4 mb-6 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
-            <div className="flex items-center gap-2.5">
-              <span className="text-base">💡</span>
-              <div>
-                <span className="font-bold text-slate-800 dark:text-slate-200 block">Signed in with Email Account</span>
-                <span>You can also sign in using Google anytime with this email for instant 1-tap login across all your devices without passwords.</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Edit form */}
-          <Card className="md:col-span-2 border-border/60 p-6">
-            <h2 className="font-display text-lg font-bold mb-4">Edit profile</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Display name</label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} maxLength={30} className="mt-1.5 h-11" />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Target category</label>
-                <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {TARGET_CATEGORIES.map((c) => (
-                    <button key={c} onClick={() => setTarget(c)}
-                      className={`h-10 px-2 rounded-lg border text-xs font-semibold transition-all ${target === c ? "border-primary bg-primary/10 text-foreground" : "border-border/60 bg-background hover:border-primary/40 text-muted-foreground"}`}>
-                      {c}
-                    </button>
-                  ))}
+          {/* Guest Mode Notice & Cloud Backup Option */}
+          {!isAuthenticated && (
+            <Card className="relative overflow-hidden border-2 border-slate-900 dark:border-slate-700 bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-primary/10 p-4 sm:p-6 md:p-7 mb-4 sm:mb-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rounded-2xl sm:rounded-3xl">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="space-y-2 max-w-xl w-full">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 text-[10px] font-mono font-black uppercase tracking-wider">
+                      ⚡ Guest Mode Active
+                    </span>
+                    <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5" /> 100% Free · Saved Data is Safe
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-black font-display text-slate-900 dark:text-white">
+                    Your Guest Profile &amp; Stats Are Fully Functional
+                  </h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    You can set your custom name, avatar photo, and JEE target year for free. Optionally link Google or Email for multi-device sync and community posting.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs text-slate-600 dark:text-slate-300">
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span><strong>100% Free:</strong> Timers, tests, notes &amp; stats</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span><strong>Custom Identity:</strong> Free avatar photo &amp; name</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span><strong>Zero Data Loss:</strong> Streaks &amp; sessions saved</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span><strong>Optional Cloud:</strong> Sync phone, tab &amp; PC</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-wrap gap-2 pt-2">
-                <Button onClick={handleSave} disabled={saving}>
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Save className="h-4 w-4 mr-2" /> Save changes</>}
-                </Button>
-                {!isAuthenticated && (
-                  <Button variant="outline" onClick={() => setUpgradeModalOpen(true)}>
-                    <Sparkles className="h-4 w-4 mr-2 text-primary" /> Upgrade with Google
+
+                <div className="flex flex-col sm:flex-row gap-2 shrink-0 w-full md:w-auto">
+                  <Button
+                    onClick={() => setUpgradeModalOpen(true)}
+                    className="w-full sm:w-auto rounded-xl sm:rounded-2xl h-11 px-5 font-display font-bold text-xs bg-primary text-primary-foreground border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none justify-center"
+                  >
+                    <Sparkles className="w-4 h-4 mr-1.5 text-amber-300" />
+                    Link Google
                   </Button>
-                )}
-                {isAuthenticated && (
                   <Button
                     variant="outline"
-                    onClick={() => setShowSignOutModal(true)}
-                    className="border-2 border-slate-900 text-slate-700 dark:text-slate-300 hover:text-red-600 font-bold text-xs h-10 shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-0.5"
+                    onClick={() => setShowEmailUpgrade(true)}
+                    className="w-full sm:w-auto rounded-xl sm:rounded-2xl h-11 px-4 font-display font-bold text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none justify-center"
                   >
-                    <LogOut className="h-3.5 w-3.5 mr-1.5" /> Sign Out
+                    <Mail className="w-4 h-4 mr-1.5 text-primary" />
+                    Link Email
                   </Button>
-                )}
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Email Account Pro-Tip Banner */}
+          {isAuthenticated && profile.account_type === "email" && (
+            <div className="flex items-start sm:items-center justify-between gap-3 p-3.5 sm:p-4 mb-4 sm:mb-6 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
+              <div className="flex items-start sm:items-center gap-2.5">
+                <span className="text-base shrink-0 mt-0.5 sm:mt-0">💡</span>
+                <div>
+                  <span className="font-bold text-slate-800 dark:text-slate-200 block">Signed in with Email Account</span>
+                  <span>You can also sign in using Google anytime with this email for instant 1-tap login across all your devices without passwords.</span>
+                </div>
               </div>
             </div>
-          </Card>
+          )}
 
-          {/* Right cards */}
-          <div className="space-y-4">
-            <StatCard icon={BookOpen} title="Saved progress" desc="Your study activity and bookmarks live in YPT." cta="Open YPT" onClick={() => navigate("/ypt")} />
-            <StatCard
-              icon={BarChart3}
-              title="Study stats"
-              desc={`Active streak: ${streak} day${streak === 1 ? '' : 's'} (Best: ${longestStreak}d). Resets daily at 3:00 AM IST.`}
-              cta="View stats"
-              onClick={() => navigate("/ypt")}
-            />
-            <StatCard icon={Trophy} title="Leaderboards" desc="See where you rank today." cta="View board" onClick={() => navigate("/ypt")} />
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+            {/* Edit form */}
+            <Card className="md:col-span-2 border-border/60 p-4 sm:p-6 rounded-2xl sm:rounded-3xl">
+              <h2 className="font-display text-base sm:text-lg font-bold mb-3 sm:mb-4">Edit profile</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Display name</label>
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    maxLength={30}
+                    placeholder="Enter your name"
+                    className="mt-1.5 h-11 text-base sm:text-sm rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Target category</label>
+                  <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {TARGET_CATEGORIES.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setTarget(c)}
+                        className={`h-11 sm:h-10 px-2 rounded-xl border text-xs font-semibold transition-all min-h-[44px] sm:min-h-0 flex items-center justify-center cursor-pointer ${
+                          target === c
+                            ? "border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                            : "border-border/60 bg-background hover:border-primary/40 text-muted-foreground"
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
+                  <Button onClick={handleSave} disabled={saving} className="h-11 w-full sm:w-auto font-bold justify-center rounded-xl">
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                    Save changes
+                  </Button>
+                  {!isAuthenticated && (
+                    <Button variant="outline" onClick={() => setUpgradeModalOpen(true)} className="h-11 w-full sm:w-auto font-bold justify-center rounded-xl">
+                      <Sparkles className="h-4 w-4 mr-2 text-primary" /> Upgrade with Google
+                    </Button>
+                  )}
+                  {isAuthenticated && (
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowSignOutModal(true)}
+                      className="border-2 border-slate-900 text-slate-700 dark:text-slate-300 hover:text-red-600 font-bold text-xs h-11 w-full sm:w-auto rounded-xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-0.5 justify-center"
+                    >
+                      <LogOut className="h-3.5 w-3.5 mr-1.5" /> Sign Out
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </Card>
+
+            {/* Right cards */}
+            <div className="space-y-3 sm:space-y-4">
+              <StatCard icon={BookOpen} title="Saved progress" desc="Your study activity and bookmarks live in YPT." cta="Open YPT" onClick={() => navigate("/ypt")} />
+              <StatCard
+                icon={BarChart3}
+                title="Study stats"
+                desc={`Active streak: ${streak} day${streak === 1 ? '' : 's'} (Best: ${longestStreak}d). Resets daily at 3:00 AM IST.`}
+                cta="View stats"
+                onClick={() => navigate("/ypt")}
+              />
+              <StatCard icon={Trophy} title="Leaderboards" desc="See where you rank today." cta="View board" onClick={() => navigate("/ypt")} />
+            </div>
           </div>
-        </div>
 
-        {/* ───── 5. DANGER ZONE: PERMANENT DATA DELETION ───── */}
-          <Card className="border-2 border-red-500 bg-red-50/50 dark:bg-red-950/20 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(239,68,68,0.5)] rounded-3xl space-y-4">
+          {/* ───── 5. DANGER ZONE: PERMANENT DATA DELETION ───── */}
+          <Card className="border-2 border-red-500 bg-red-50/50 dark:bg-red-950/20 p-4 sm:p-6 md:p-7 shadow-[4px_4px_0px_0px_rgba(239,68,68,0.5)] rounded-2xl sm:rounded-3xl space-y-3 sm:space-y-4">
             <div className="flex items-start gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 border-2 border-red-500 flex items-center justify-center shrink-0 shadow-xs">
+              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-2xl bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 border-2 border-red-500 flex items-center justify-center shrink-0 shadow-xs">
                 <AlertTriangle className="h-5 w-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-display text-lg font-bold text-red-950 dark:text-red-100">
-                  Danger Zone: Permanent Account & Data Deletion
+                <h3 className="font-display text-base sm:text-lg font-bold text-red-950 dark:text-red-100">
+                  Danger Zone: Permanent Account &amp; Data Deletion
                 </h3>
                 <p className="text-xs sm:text-sm text-red-800/90 dark:text-red-300/90 leading-relaxed">
-                  Permanently purge all data regarding your account from our database. This immediately wipes your <strong>study sessions</strong>, <strong>study streak</strong>, <strong>profile details</strong>, <strong>community questions & comments</strong>, and <strong>support conversations</strong>. This action is irreversible.
+                  Permanently purge all data regarding your account from our database. This immediately wipes your <strong>study sessions</strong>, <strong>study streak</strong>, <strong>profile details</strong>, <strong>community questions &amp; comments</strong>, and <strong>support conversations</strong>. This action is irreversible.
                 </p>
               </div>
             </div>
@@ -346,14 +376,13 @@ export default function Profile() {
                   setDeleteConfirmText("");
                   setShowDeleteModal(true);
                 }}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs border-2 border-red-900 shadow-[2px_2px_0px_0px_rgba(153,27,27,1)] active:translate-y-0.5 h-10 px-4"
+                className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold text-xs border-2 border-red-900 shadow-[2px_2px_0px_0px_rgba(153,27,27,1)] active:translate-y-0.5 h-11 sm:h-10 px-4 rounded-xl justify-center"
               >
                 <Trash2 className="h-3.5 w-3.5 mr-1.5" />
                 Permanently Delete All My Data
               </Button>
             </div>
           </Card>
-
         </div>
 
         <UpgradeModal

@@ -27,14 +27,44 @@ export function useYPTUser() {
       .eq('device_id', deviceId)
       .maybeSingle();
 
+    // Check profiles table for display_name or target_category to avoid overwriting real names
+    let profName: string | null = null;
+    let profYear: string | null = null;
+    try {
+      const { data: prof } = await (supabase as any)
+        .from('profiles')
+        .select('display_name, target_category')
+        .eq('device_id', deviceId)
+        .maybeSingle();
+      if (prof?.display_name && prof.display_name.trim().toLowerCase() !== 'aspirant') {
+        profName = prof.display_name.trim();
+      }
+      if (prof?.target_category) {
+        profYear = prof.target_category.trim();
+      }
+    } catch {}
+
     if (!data) {
       try {
+        const initialName = profName || 'Aspirant';
+        const initialYear = profYear || 'JEE 2027';
         const { data: created } = await (supabase as any)
           .from('ypt_users')
-          .insert({ device_id: deviceId, name: 'Aspirant', jee_focus_year: 'JEE 2026', name_change_history: [] })
+          .insert({ device_id: deviceId, name: initialName, jee_focus_year: initialYear, name_change_history: [] })
           .select()
           .single();
         if (created) data = created;
+      } catch {}
+    } else if (profName && (!data.name || data.name.trim().toLowerCase() === 'aspirant')) {
+      // Recover real name from profiles if ypt_users had placeholder
+      try {
+        const updatedYear = profYear || data.jee_focus_year || 'JEE 2027';
+        await (supabase as any)
+          .from('ypt_users')
+          .update({ name: profName, jee_focus_year: updatedYear })
+          .eq('id', data.id);
+        data.name = profName;
+        data.jee_focus_year = updatedYear;
       } catch {}
     }
 
@@ -50,14 +80,25 @@ export function useYPTUser() {
   }, [fetchUser]);
 
   const createUser = async (name: string, jeeYear: string) => {
+    const trimmed = name.trim();
+    const cleanYear = jeeYear.trim() || 'JEE 2027';
     const { data, error } = await (supabase as any)
       .from('ypt_users')
-      .insert({ device_id: deviceId, name, jee_focus_year: jeeYear, name_change_history: [] })
+      .insert({ device_id: deviceId, name: trimmed, jee_focus_year: cleanYear, name_change_history: [] })
       .select()
       .single();
     if (!error && data) {
       data.name_change_history = [];
       setUser(data);
+      // Sync to profiles
+      try {
+        await (supabase as any).rpc('upsert_guest_profile', {
+          _device_id: deviceId,
+          _display_name: trimmed,
+          _target_category: cleanYear,
+          _avatar_url: null,
+        });
+      } catch {}
     }
     return { data, error };
   };
@@ -75,9 +116,10 @@ export function useYPTUser() {
       return { success: false, error: `Name change limit reached. Try again after ${nextAvailableDate}` };
     }
 
+    const trimmed = newName.trim();
     const newEntry: NameChangeEntry = {
       oldName: user.name,
-      newName: newName.trim(),
+      newName: trimmed,
       changedAt: new Date().toISOString(),
     };
 
@@ -85,12 +127,22 @@ export function useYPTUser() {
 
     const { error } = await (supabase as any)
       .from('ypt_users')
-      .update({ name: newName.trim(), name_change_history: updatedHistory })
+      .update({ name: trimmed, name_change_history: updatedHistory })
       .eq('id', user.id);
 
     if (error) return { success: false, error: 'Failed to update name' };
 
-    setUser({ ...user, name: newName.trim(), name_change_history: updatedHistory });
+    // Sync to profiles table as well
+    try {
+      await (supabase as any).rpc('upsert_guest_profile', {
+        _device_id: deviceId,
+        _display_name: trimmed,
+        _target_category: user.jee_focus_year || 'JEE 2027',
+        _avatar_url: null,
+      });
+    } catch {}
+
+    setUser({ ...user, name: trimmed, name_change_history: updatedHistory });
     return { success: true };
   };
 
@@ -107,9 +159,19 @@ export function useYPTUser() {
 
     if (error) return { success: false, error: 'Failed to update target year' };
 
+    // Sync to profiles table
+    try {
+      await (supabase as any).rpc('upsert_guest_profile', {
+        _device_id: deviceId,
+        _display_name: user.name || 'Aspirant',
+        _target_category: year,
+        _avatar_url: null,
+      });
+    } catch {}
+
     setUser({ ...user, jee_focus_year: year });
     return { success: true };
   };
 
-  return { user, isLoading, isOnboarded: !!user, createUser, changeName, changeJeeYear, deviceId, refetch: fetchUser };
+  return { user, isLoading, isOnboarded: !!user && user.name !== 'Aspirant', createUser, changeName, changeJeeYear, deviceId, refetch: fetchUser };
 }

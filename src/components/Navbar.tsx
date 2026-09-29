@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home, BookOpen, FileText, Timer, LayoutGrid, MessageSquare, Headphones,
-  Menu, X
+  Menu, X, Sparkles, User, ShieldCheck
 } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -9,7 +9,7 @@ import { UserMenu } from "@/components/Profile/UserMenu";
 import { NotificationBell } from "@/components/Notifications/NotificationBell";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserStreak } from "@/hooks/useUserStreak";
-import logo from "@/assets/logo.jfif";
+import logo from "@/assets/logo.png";
 import { cn } from "@/lib/utils";
 
 interface NavLinkItem {
@@ -40,6 +40,10 @@ export function Navbar() {
   const { profile, isAuthenticated, user, signOut, googleAvatar } = useProfile();
   const { streak } = useUserStreak();
 
+  const displayName = profile?.display_name || (isAuthenticated ? (user?.email?.split("@")[0] || "Aspirant") : "Guest Aspirant");
+  const avatarUrl = profile?.avatar_url || (isAuthenticated ? googleAvatar : null);
+  const accountBadge = profile?.account_type === "guest" || !isAuthenticated ? "Guest" : profile?.account_type === "google" ? "Google" : "Email";
+
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
@@ -57,6 +61,9 @@ export function Navbar() {
                 src={logo}
                 alt="BOOKIE Logo"
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "/logo.png";
+                }}
               />
             </div>
             <div className="flex items-baseline">
@@ -141,8 +148,65 @@ export function Navbar() {
           />
 
           {/* Mobile Navigation Dropdown */}
-          <div className="relative z-50 lg:hidden mt-2 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl p-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="relative z-50 lg:hidden mt-2 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl p-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
+            {/* Mobile Cockpit Profile Header Card */}
+            <div className="p-3 mb-2 rounded-xl bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 flex items-center justify-between gap-3">
+              <Link
+                to="/profile"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 min-w-0 flex-1 group"
+              >
+                <div className="w-10 h-10 rounded-full bg-slate-900 text-white font-mono font-bold text-sm flex items-center justify-center ring-2 ring-primary/40 overflow-hidden shrink-0">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
+                  ) : (
+                    <span>{initials(displayName)}</span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="font-bold text-sm text-slate-900 dark:text-white truncate group-hover:text-primary transition-colors">
+                      {displayName}
+                    </span>
+                    <span className="text-[10px] font-mono font-black px-1.5 py-0.2 rounded-full bg-primary/10 text-primary uppercase shrink-0">
+                      {accountBadge}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground truncate">
+                    {profile?.target_category || "JEE 2027"} · 🔥 {streak}d streak
+                  </p>
+                </div>
+              </Link>
+              <Link
+                to="/profile"
+                onClick={() => setIsOpen(false)}
+                className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs shadow-xs transition-all shrink-0 active:scale-95"
+              >
+                Profile
+              </Link>
+            </div>
+
             <div className="flex flex-col gap-1">
+              {/* Direct Cockpit Profile Navigation Item */}
+              <Link
+                to="/profile"
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-150 active:scale-[0.98] min-h-[48px]",
+                  isActive("/profile")
+                    ? "bg-blue-50 dark:bg-blue-950/70 text-brand-blue dark:text-blue-400 font-bold"
+                    : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <User className={cn("w-4 h-4", isActive("/profile") ? "text-brand-blue dark:text-blue-400" : "text-slate-500 dark:text-slate-400")} />
+                  <span>Cockpit Profile</span>
+                </div>
+                <span className="text-[11px] font-mono font-medium text-muted-foreground">
+                  Name, Photo &amp; Stats
+                </span>
+              </Link>
+
               {navLinks.map((link) => {
                 const active = isActive(link.path);
                 const Icon = link.icon;

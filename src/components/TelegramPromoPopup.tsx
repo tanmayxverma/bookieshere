@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { X, Send } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { X, Send, ShieldCheck, ExternalLink } from 'lucide-react';
 
 const SESSION_KEY = 'bookie_tg_promo_shown';
+const JOINED_KEY = 'bookie_tg_promo_joined';
 const DELAY_MS = 5000;
 const TELEGRAM_URL = 'https://t.me/bookieshere';
 
@@ -15,6 +15,7 @@ export function TelegramPromoPopup() {
 
   useEffect(() => {
     try {
+      if (localStorage.getItem(JOINED_KEY)) return;
       if (sessionStorage.getItem(SESSION_KEY)) return;
     } catch { /* private mode — just show once per mount */ }
 
@@ -28,7 +29,33 @@ export function TelegramPromoPopup() {
 
   if (!open) return null;
 
-  const close = () => setOpen(false);
+  const close = () => {
+    try { sessionStorage.setItem(SESSION_KEY, '1'); } catch {}
+    setOpen(false);
+  };
+
+  const handleJoin = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    try {
+      localStorage.setItem(JOINED_KEY, '1');
+      sessionStorage.setItem(SESSION_KEY, '1');
+    } catch {}
+
+    // Open Telegram URL reliably without getting aborted by immediate unmount
+    try {
+      const win = window.open(TELEGRAM_URL, '_blank', 'noopener,noreferrer');
+      if (!win) {
+        window.location.assign(TELEGRAM_URL);
+      }
+    } catch {
+      window.location.assign(TELEGRAM_URL);
+    }
+
+    // Dismiss dialog smoothly after navigation starts
+    setTimeout(() => {
+      setOpen(false);
+    }, 250);
+  };
 
   return (
     <div
@@ -69,7 +96,7 @@ export function TelegramPromoPopup() {
             <button 
               onClick={close}
               aria-label="Close" 
-              className="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors border border-outline-variant"
+              className="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors border border-outline-variant cursor-pointer active:scale-95"
             >
               <X className="w-4 h-4" />
             </button>
@@ -89,7 +116,7 @@ export function TelegramPromoPopup() {
           <div className="bg-surface-container-low rounded-2xl p-4 border border-outline-variant/60 mb-5 text-left">
             <div className="flex items-start gap-3">
               <div className="p-1.5 bg-primary text-on-primary rounded-lg mt-0.5 shrink-0">
-                <span className="material-symbols-outlined text-[16px]">verified_user</span>
+                <ShieldCheck className="w-4 h-4" />
               </div>
               <div>
                 <span className="text-xs font-headline-md font-bold text-on-surface block">Zero Downtime Guarantee</span>
@@ -105,17 +132,18 @@ export function TelegramPromoPopup() {
             <a
               href={TELEGRAM_URL}
               target="_blank"
-              rel="noreferrer noopener"
-              onClick={close}
-              className="w-full sm:flex-1 h-12 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-on-primary font-headline-md font-bold text-sm shadow-[0_4px_0_0_#131b2e] hover:bg-primary-hover active:translate-y-1 active:shadow-none transition-all"
+              rel="noopener noreferrer"
+              onClick={handleJoin}
+              className="w-full sm:flex-1 h-12 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-on-primary font-headline-md font-bold text-sm shadow-[0_4px_0_0_#131b2e] hover:bg-primary-hover active:translate-y-1 active:shadow-none transition-all cursor-pointer select-none"
             >
               <Send className="h-4 w-4" />
               <span>Join Official Telegram</span>
+              <ExternalLink className="h-3.5 w-3.5 ml-1 opacity-80" />
             </a>
             <button
               onClick={close}
               type="button"
-              className="w-full sm:w-auto px-4 h-12 rounded-xl text-xs font-label-code-sm font-bold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+              className="w-full sm:w-auto px-4 h-12 rounded-xl text-xs font-label-code-sm font-bold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer active:scale-95"
             >
               Remind Later
             </button>
