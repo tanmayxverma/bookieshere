@@ -104,7 +104,7 @@ export default function Portals() {
               
               <div className="flex flex-wrap items-center gap-3 pt-3">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-label-code-sm font-semibold bg-tertiary-container/30 border border-tertiary-container text-tertiary rounded-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-tertiary"></span> {PORTALS.length} Systems Operational
+                  <span className="w-1.5 h-1.5 rounded-full bg-tertiary"></span> {(portals || []).length} Systems Operational
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-label-code-sm font-semibold bg-secondary-container/50 border border-secondary text-on-secondary-container rounded-full">
                   ⚡ Direct Mirror CDN
@@ -176,7 +176,7 @@ export default function Portals() {
                 <div className="mt-3 pt-2 border-t border-outline-variant/30 flex items-center justify-between text-xs font-label-code-sm">
                   <div className="flex items-center gap-1.5 font-bold text-on-surface">
                     <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
-                    <span>COCKPIT HUB // {PORTALS.length} PORTALS</span>
+                    <span>COCKPIT HUB // {(portals || []).length} PORTALS</span>
                   </div>
                   <span className="text-[10px] text-on-surface-variant uppercase tracking-wider font-mono">
                     {favPortals.length > 0 ? `${favPortals.length} PINNED` : 'ZERO CLUTTER'}
@@ -203,7 +203,7 @@ export default function Portals() {
                 <span className="text-lg">⚡</span>
                 <h2 className="font-headline-md text-headline-md font-bold text-on-surface uppercase tracking-tight">Active Coaching Portals</h2>
                 <span className="text-[11px] font-label-code-sm font-bold bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full border border-outline-variant/50">
-                  {PORTALS.length} available
+                  {(portals || []).length} available
                 </span>
               </div>
             </div>

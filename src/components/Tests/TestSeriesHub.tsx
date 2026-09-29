@@ -168,7 +168,7 @@ export function TestSeriesHub() {
               <div className="flex flex-wrap items-center gap-space-sm pt-2">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
                   <span className="w-2 h-2 rounded-full bg-tertiary"></span>
-                  <span>{TEST_SERIES.length} Providers</span>
+                  <span>{(testSeries || []).length} Providers</span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
                   <span className="material-symbols-outlined text-primary text-[15px]">inventory_2</span>
@@ -236,7 +236,7 @@ export function TestSeriesHub() {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
             <button className="px-3.5 py-2 rounded-xl bg-primary text-on-primary font-label-ui text-label-ui shadow-[0_3px_0_0_#131b2e] active:translate-y-0.5 active:shadow-none transition-all duration-100 flex items-center gap-1 whitespace-nowrap">
               <span>All Tests</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-surface-container-lowest/20 font-label-code-sm text-[10px]">{TEST_SERIES.length}</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-surface-container-lowest/20 font-label-code-sm text-[10px]">{(testSeries || []).length}</span>
             </button>
             <button className="px-3.5 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-ui text-label-ui shadow-sm active:translate-y-0.5 transition-all duration-100 flex items-center gap-1 whitespace-nowrap brutal-border">
               <span className="text-error">🔥</span>
@@ -303,7 +303,7 @@ export function TestSeriesHub() {
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-primary"></div>
             <h3 className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Verified Test Portals & Series</h3>
-            <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-label-code-sm font-semibold">{TEST_SERIES.length} Master Providers</span>
+            <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-label-code-sm font-semibold">{(testSeries || []).length} Master Providers</span>
           </div>
         </div>
 
