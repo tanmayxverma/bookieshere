@@ -1,10 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { Analytics } from "@vercel/analytics/react";
-<<<<<<< HEAD
 import { SpeedInsights } from "@vercel/speed-insights/react";
-=======
-import { SpeedInsights } from "@vercel/speed-insights/react"
->>>>>>> e023794 (Update site branding metadata)
 import App from "./App.tsx";
 import "./index.css";
 
@@ -13,9 +9,10 @@ try {
   if (localStorage.getItem("bookie_lite_mode") === "true") {
     document.documentElement.classList.add("lite-mode");
   }
-} catch { /* ignore */ }
+} catch {
+  /* ignore */
+}
 
-<<<<<<< HEAD
 createRoot(document.getElementById("root")!).render(
   <>
     <App />
@@ -23,11 +20,3 @@ createRoot(document.getElementById("root")!).render(
     <SpeedInsights />
   </>
 );
-=======
-createRoot(document.getElementById("root")!).render(<App />);
-<>
-  <App />
-  <Analytics />
-  <SpeedInsights />
-</>
->>>>>>> e023794 (Update site branding metadata)
