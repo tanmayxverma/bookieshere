@@ -1,6 +1,12 @@
 <div align="center">
 
-<img src="[https://bookieshere.vercel.app/logo.png]" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,14,18,24&height=140&section=header" alt="" width="100%" />
+
+<img src="https://bookieshere.vercel.app/logo.png" alt="BOOKIE logo" width="130" />
+
+# BOOKIE
+
+**The Study & Resource Hub for Competitive Exam Aspirants**
 
 <br/>
 
