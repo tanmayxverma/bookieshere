@@ -1,268 +1,324 @@
-# BOOKIE
+<div align="center">
 
-### The Study & Resource Hub for Competitive Exam Aspirants
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,14,18,24&height=230&section=header&text=BOOKIE&fontSize=84&fontColor=ffffff&fontAlignY=38&desc=The%20Study%20%26%20Resource%20Hub%20for%20Competitive%20Exam%20Aspirants&descSize=18&descAlignY=60&animation=fadeIn" alt="BOOKIE banner" width="100%" />
 
-BOOKIE is an independent, student-focused platform built to make competitive-exam resources easier to discover, organize, and use.
+<br/>
 
-The platform brings together study resources, organized material libraries, useful student tools, support features, and an AI-powered assistant in one place.
+<a href="https://bookieshere.vercel.app">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1200&color=8B5CF6&center=true&vCenter=true&width=640&lines=Find+resources+faster.;Organize+them+smarter.;Study+without+the+chaos." alt="Typing animation" />
+</a>
 
-**Live Website:** https://bookieshere.vercel.app
+<br/><br/>
+
+[![Live Site](https://img.shields.io/badge/🌐_Live_Website-bookieshere.vercel.app-8B5CF6?style=for-the-badge&labelColor=1e1b4b)](https://bookieshere.vercel.app)
+&nbsp;
+[![Status](https://img.shields.io/badge/Status-Actively_Developed-22c55e?style=for-the-badge&labelColor=052e16)](https://bookieshere.vercel.app)
+
+![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)
+![Supabase](https://img.shields.io/badge/Backend-Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
+![OpenRouter](https://img.shields.io/badge/AI-OpenRouter-6366F1?style=flat-square&logo=openai&logoColor=white)
+![Node](https://img.shields.io/badge/Node.js-npm-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![Independent](https://img.shields.io/badge/Built-Independently-f59e0b?style=flat-square)
+
+<br/>
+
+**[✨ Visit BOOKIE](https://bookieshere.vercel.app)** &nbsp;·&nbsp; **[🚀 Quick Start](#-quick-start)** &nbsp;·&nbsp; **[🏗️ Architecture](#️-architecture)** &nbsp;·&nbsp; **[🤝 Contribute](#-contributing)**
+
+</div>
+
+<br/>
 
 ---
 
-## What is BOOKIE?
+<br/>
 
-BOOKIE started as a simple study-material project and has evolved into a broader platform for competitive-exam aspirants.
+## 📖 &nbsp;What is BOOKIE?
 
-The goal is simple:
+BOOKIE began as a simple study-material project and grew into a full platform for competitive-exam aspirants — a single place for **study resources, organized libraries, student tools, support, and an AI assistant**.
 
-> **Make useful study resources easier to find, easier to organize, and easier to access.**
+<div align="center">
 
-The platform is designed around a clean interface, fast navigation, organized resources, and student-oriented tools rather than unnecessary complexity.
+> ### *Make useful study resources easier to find, easier to organize, and easier to access.*
+
+</div>
+
+Clean interface. Fast navigation. Organized material. No unnecessary complexity.
+
+<br/>
 
 ---
 
-## Core Features
+<br/>
+
+## ✨ &nbsp;Core Features
+
+<table>
+<tr>
+<td width="50%" valign="top">
 
 ### 📚 Resource Library
+A structured collection of study resources, filterable by:
 
-BOOKIE provides an organized collection of study resources for competitive examinations.
+- 🎯 **Exam**
+- 📘 **Subject**
+- 🗃️ **Resource type**
+- 🔖 **Topic / chapter**
+- 🧩 **Other metadata & filters**
 
-Resources can be categorized by areas such as:
+Searchable and manageable — not an endless pile of links.
 
-* Exam
-* Subject
-* Resource type
-* Topic / chapter
-* Other relevant filters and metadata
-
-The goal is to make large collections of resources searchable and manageable instead of turning them into an endless pile of links.
-
----
+</td>
+<td width="50%" valign="top">
 
 ### 🤖 AI Assistant
+A built-in, study-focused assistant that helps users get around the platform and get useful answers.
 
-BOOKIE includes an AI-powered assistant designed to help users interact with the platform and get useful study-related assistance.
+- Powered by **OpenRouter**
+- One unified API for multiple supported models
+- Integrated directly into BOOKIE, not a bolted-on external service
 
-The AI layer uses **OpenRouter** for model access, allowing the application to work with supported AI models through a unified API interface.
-
-The AI functionality is integrated into the BOOKIE platform rather than being a separate external service.
-
----
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
 
 ### 👤 User Accounts
+Personalized experiences through **Supabase** authentication.
 
-BOOKIE supports user accounts and personalized functionality.
+- 🪪 User profiles
+- 🎛️ Personalized platform features
+- 💾 Saved / associated user data
+- 🔐 Account-based functionality
 
-Depending on the enabled features, registered users can access things such as:
+</td>
+<td width="50%" valign="top">
 
-* User profiles
-* Personalized platform features
-* Saved or associated user data
-* Account-based functionality
+### 🗂️ Organized Portal
+More than a download page. Resources, tools, and educational content live in **dedicated sections**, so the whole ecosystem is navigable from one place.
 
-Authentication and application data are handled through **Supabase**.
-
----
-
-### 🗂️ Organized Portal & Resources
-
-BOOKIE is not limited to a single material-download page.
-
-The platform can organize different types of useful resources, tools, and educational content into dedicated sections so that users can navigate the ecosystem from one place.
-
----
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
 
 ### 💬 Support
+Having trouble with a resource, a broken link, your account, or the platform itself? BOOKIE has dedicated support functionality, with external channels such as **Telegram** where applicable.
 
-BOOKIE provides dedicated support functionality for users who face issues with resources, links, accounts, or the platform itself.
+</td>
+</tr>
+</table>
 
-Support channels may include external communication such as Telegram where applicable.
-
----
-
-## Technology Stack
-
-BOOKIE is independently developed and deployed.
-
-### Frontend / Application
-
-The application is served through **Vercel** and runs as an independent web application.
-
-### Database & Backend Services
-
-**Supabase** is used for application data and backend functionality, including database-driven features and account-related functionality.
-
-### AI
-
-AI functionality is powered through **OpenRouter**, providing access to supported language models through its API.
-
-### Deployment
-
-**Vercel** is used for production deployment.
-
-### Previous Development Platform
-
-BOOKIE was originally prototyped and developed using Lovable.
-
-The current version is **no longer dependent on Lovable** and is deployed and maintained independently.
+<br/>
 
 ---
 
-## Architecture Overview
+<br/>
 
-At a high level, BOOKIE consists of:
+## 🧭 &nbsp;Design Principles
 
-```text
-                    ┌─────────────────────┐
-                    │     BOOKIE Web App  │
-                    │   bookieshere.vercel.app
-                    └──────────┬──────────┘
-                               │
-               ┌───────────────┼────────────────┐
-               │               │                │
-               ▼               ▼                ▼
-        ┌────────────┐  ┌────────────┐  ┌──────────────┐
-        │  Supabase  │  │ OpenRouter │  │   External   │
-        │ Database & │  │ AI Gateway │  │ Resources /  │
-        │ Backend    │  │            │  │ Integrations │
-        └────────────┘  └────────────┘  └──────────────┘
+<div align="center">
+
+| | Principle | What it means |
+|:-:|:-:|:--|
+| 🪶 | **Simple** | The interface stays easy to understand. |
+| 🗄️ | **Organized** | Resources are structured, never dumped. |
+| 🎓 | **Student-Focused** | Every feature solves a real aspirant problem. |
+| ⚡ | **Fast** | Pages and resources stay quick to open. |
+| 🔧 | **Maintainable** | New resources and features slot in without a rebuild. |
+
+</div>
+
+<br/>
+
+---
+
+<br/>
+
+## 🛠️ &nbsp;Technology Stack
+
+<div align="center">
+
+<a href="https://vercel.com"><img src="https://img.shields.io/badge/Vercel-Hosting_&_Deployment-000000?style=for-the-badge&logo=vercel&logoColor=white" /></a>
+<a href="https://supabase.com"><img src="https://img.shields.io/badge/Supabase-Database_&_Auth-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" /></a>
+<a href="https://openrouter.ai"><img src="https://img.shields.io/badge/OpenRouter-AI_Gateway-6366F1?style=for-the-badge" /></a>
+
+</div>
+
+| Layer | Technology | Role |
+|:--|:--|:--|
+| 🖥️ **Application** | Vercel | Serves the app as an independent web application |
+| 🗃️ **Data & Backend** | Supabase | Database-driven features, accounts, authentication |
+| 🧠 **AI** | OpenRouter | Access to supported language models via one API |
+| 🚀 **Deployment** | Vercel | Production hosting |
+
+> 💡 **Origin story:** BOOKIE was first prototyped on **Lovable**. It has since moved on — the current version is **fully independent**, deployed and maintained on its own.
+
+<br/>
+
+---
+
+<br/>
+
+## 🏗️ &nbsp;Architecture
+
+The main app stays cleanly separated from its database, AI provider, and external integrations.
+
+```mermaid
+flowchart TD
+    U([👩‍🎓 Student]) --> W["🌐 <b>BOOKIE Web App</b><br/>bookieshere.vercel.app"]
+    W --> S[("🗃️ <b>Supabase</b><br/>Database · Auth · Backend")]
+    W --> O["🤖 <b>OpenRouter</b><br/>AI Gateway"]
+    W --> E["🔗 <b>External Resources</b><br/>& Integrations"]
+
+    style U fill:#1e1b4b,stroke:#8B5CF6,color:#fff
+    style W fill:#4c1d95,stroke:#a78bfa,color:#fff,stroke-width:2px
+    style S fill:#064e3b,stroke:#3ECF8E,color:#fff
+    style O fill:#312e81,stroke:#6366F1,color:#fff
+    style E fill:#78350f,stroke:#f59e0b,color:#fff
 ```
 
-This keeps the main application separate from its database, AI provider, and external resource integrations.
+<br/>
 
 ---
 
-## Project Goals
+<br/>
 
-BOOKIE is built with a few principles in mind:
+## 🚀 &nbsp;Quick Start
 
-**Simple**
-The interface should remain easy to understand.
-
-**Organized**
-Resources should be structured instead of dumped into an unmanageable collection of links.
-
-**Student-Focused**
-Features should solve actual problems faced by students and aspirants.
-
-**Fast**
-Pages and resources should remain quick to access.
-
-**Maintainable**
-The project should be structured so that new resources and features can be added without rebuilding everything from scratch.
-
----
-
-## Development
-
-Clone the repository and install the project dependencies:
+**1 · Clone & install**
 
 ```bash
 git clone <repository-url>
 cd <repository-name>
 npm install
+```
+
+**2 · Configure your environment** *(see below)*
+
+**3 · Run the dev server**
+
+```bash
 npm run dev
 ```
 
-The development server will start locally and provide the application URL.
+The dev server starts locally and prints the URL to open. ✅
+
+<br/>
 
 ---
 
-## Environment Configuration
+<br/>
 
-The application uses external services such as Supabase and OpenRouter.
+## 🔐 &nbsp;Environment Configuration
 
-Required configuration values should be added through environment variables rather than hard-coded into the source code.
-
-Typical configuration includes:
+BOOKIE connects to **Supabase** and **OpenRouter**. Keep all configuration in environment variables — never hard-code it.
 
 ```env
-# Supabase
+# ── Supabase ─────────────────────────────
 SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
 
-# OpenRouter
+# ── OpenRouter ───────────────────────────
 OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
-Use the exact variable names expected by the current application when configuring the local environment or Vercel deployment.
+> [!NOTE]
+> Use the **exact variable names** expected by the current application when setting up your local environment or Vercel project.
 
-**Never commit private API keys, service-role keys, passwords, or other secrets to the repository.**
+> [!CAUTION]
+> **Never commit** private API keys, service-role keys, passwords, or any other secrets to the repository.
 
----
-
-## Production Deployment
-
-The production application is deployed through Vercel.
-
-### Production URL
-
-https://bookieshere.vercel.app
-
-For production deployments, make sure the required environment variables are configured in the Vercel project settings.
+<br/>
 
 ---
 
-## Data & Privacy
+<br/>
 
-BOOKIE uses Supabase for application data and account-related functionality.
+## ☁️ &nbsp;Production Deployment
 
-Sensitive credentials and private API keys should never be stored directly in frontend source code or committed to Git.
+BOOKIE is deployed on **Vercel**.
 
-Only the minimum data required for platform functionality should be stored.
+<div align="center">
 
----
+[![Open Production](https://img.shields.io/badge/Production-bookieshere.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://bookieshere.vercel.app)
 
-## Resource & Copyright Disclaimer
+</div>
 
-BOOKIE is intended to help students discover and organize educational resources.
+Before deploying, make sure every required environment variable is added in your **Vercel project settings**.
 
-The availability of a resource on the platform does not automatically imply ownership of that resource by BOOKIE.
-
-Users are responsible for respecting applicable copyright, licensing, and intellectual-property laws.
-
-Where appropriate, resources should be removed or updated in response to valid rights-holder requests.
+<br/>
 
 ---
 
-## Contributing
+<br/>
 
-Contributions, bug reports, feature suggestions, and improvements are welcome.
+## 🛡️ &nbsp;Data & Privacy
 
-Before submitting changes:
+- 🗃️ Application and account data is handled through **Supabase**.
+- 🔑 Sensitive credentials and private keys never belong in frontend source code or Git.
+- 🪙 Only the **minimum data required** for platform functionality is stored.
 
-1. Keep the existing design and usability principles in mind.
-2. Avoid exposing credentials or sensitive configuration.
-3. Test changes locally before deployment.
-4. Keep new features focused on genuine student needs.
-
----
-
-## Current Project Status
-
-BOOKIE is an actively developed project.
-
-Features, resource categories, AI functionality, backend systems, and the overall platform may continue to evolve as the project grows.
-
-For the latest version, visit:
-
-**https://bookieshere.vercel.app**
+<br/>
 
 ---
 
-## Built Independently
+<br/>
 
-BOOKIE is independently maintained and deployed.
+## ⚖️ &nbsp;Resource & Copyright Disclaimer
 
-The current production application is **not hosted on or dependent on Lovable**.
+BOOKIE exists to help students **discover and organize** educational resources.
 
-The project has evolved from its original prototype into its own independently deployed platform using modern web infrastructure including **Vercel, Supabase, and OpenRouter**.
+- A resource appearing on the platform does **not** imply BOOKIE owns it.
+- Users are responsible for respecting applicable copyright, licensing, and intellectual-property laws.
+- Where appropriate, resources are removed or updated in response to **valid rights-holder requests**.
+
+<br/>
 
 ---
 
-### BOOKIE
+<br/>
 
-**Organized. Simple. Student-Focused.**
+## 🤝 &nbsp;Contributing
 
-Made for students who would rather spend time studying than searching through seventeen different Telegram chats for one PDF.
+Bug reports, feature ideas, and improvements are all welcome. Before submitting changes:
+
+1. 🎨 Keep the existing design and usability principles in mind.
+2. 🔒 Don't expose credentials or sensitive configuration.
+3. 🧪 Test your changes locally before deployment.
+4. 🎯 Keep new features focused on genuine student needs.
+
+<br/>
+
+---
+
+<br/>
+
+## 📍 &nbsp;Project Status
+
+BOOKIE is **actively developed**. Features, resource categories, AI functionality, and backend systems will keep evolving as the project grows.
+
+For the latest version, always visit **[bookieshere.vercel.app](https://bookieshere.vercel.app)**.
+
+<br/>
+
+---
+
+<div align="center">
+
+<br/>
+
+### 📚 **BOOKIE**
+
+**Organized. &nbsp;Simple. &nbsp;Student-Focused.**
+
+<sub>Made for students who would rather spend time studying<br/>than searching through seventeen different Telegram chats for one PDF.</sub>
+
+<br/>
+
+[![Visit BOOKIE](https://img.shields.io/badge/Visit-BOOKIE_→-8B5CF6?style=for-the-badge&labelColor=1e1b4b)](https://bookieshere.vercel.app)
+
+<br/>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,14,18,24&height=120&section=footer" alt="footer" width="100%" />
+
+</div>
