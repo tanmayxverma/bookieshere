@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,14,18,24&height=230&section=header&text=BOOKIE&fontSize=84&fontColor=ffffff&fontAlignY=38&desc=The%20Study%20%26%20Resource%20Hub%20for%20Competitive%20Exam%20Aspirants&descSize=18&descAlignY=60&animation=fadeIn" alt="BOOKIE banner" width="100%" />
+<img src="[https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,14,18,24&height=230&section=header&text=BOOKIE&fontSize=84&fontColor=ffffff&fontAlignY=38&desc=The%20Study%20%26%20Resource%20Hub%20for%20Competitive%20Exam%20Aspirants&descSize=18&descAlignY=60&animation=fadeIn" alt="BOOKIE banner](https://bookieshere.vercel.app/logo.png)" width="100%" />
 
 <br/>
 
