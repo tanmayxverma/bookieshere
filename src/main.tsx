@@ -10,8 +10,9 @@ try {
   }
 } catch { /* ignore */ }
 
-createRoot(document.getElementById("root")!).render(<App />);
-<>
-  <App />
-  <Analytics />
-</>
+createRoot(document.getElementById("root")!).render(
+  <>
+    <App />
+    <Analytics />
+  </>
+);
