@@ -443,12 +443,13 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     }
   }, [messages]);
 
-  // Auto-cleanup interval
+  // Periodic messages refresh interval
   useEffect(() => {
     if (!activeRoomId) return;
     const interval = setInterval(() => {
-      (supabase as any).rpc('cleanup_old_messages');
-      fetchMessages(activeRoomId);
+      if (document.visibilityState === 'visible') {
+        fetchMessages(activeRoomId);
+      }
     }, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, [activeRoomId, fetchMessages]);

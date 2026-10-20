@@ -2,6 +2,7 @@
 -- Description: Indexes for unindexed foreign keys and hot queries.
 -- Per amendment 5: Plain CREATE INDEX IF NOT EXISTS (no CONCURRENTLY so it succeeds in transactions).
 -- Does NOT index the high-churn heartbeat column.
+-- Verified: All table and column names validated against live PostgreSQL information_schema.
 
 -- 1. Study sessions hot queries (streak, stats, leaderboard, user sessions)
 CREATE INDEX IF NOT EXISTS idx_study_sessions_user_status_started 
@@ -38,8 +39,8 @@ CREATE INDEX IF NOT EXISTS idx_community_comments_profile_id
 CREATE INDEX IF NOT EXISTS idx_community_reactions_post_id 
   ON public.community_reactions (post_id);
 
-CREATE INDEX IF NOT EXISTS idx_community_reactions_profile_id 
-  ON public.community_reactions (profile_id);
+CREATE INDEX IF NOT EXISTS idx_community_reactions_user_id 
+  ON public.community_reactions (user_id);
 
 -- 6. Notifications reads
 CREATE INDEX IF NOT EXISTS idx_notification_reads_notification_id 
@@ -52,9 +53,16 @@ CREATE INDEX IF NOT EXISTS idx_notification_reads_profile_id
 CREATE INDEX IF NOT EXISTS idx_syllabus_progress_profile_id 
   ON public.syllabus_progress (profile_id);
 
--- 8. Ticket messages
+-- 8. Tickets and Ticket messages
+CREATE INDEX IF NOT EXISTS idx_tickets_profile_id 
+  ON public.tickets (profile_id);
+
 CREATE INDEX IF NOT EXISTS idx_ticket_messages_ticket_id 
   ON public.ticket_messages (ticket_id);
 
-CREATE INDEX IF NOT EXISTS idx_ticket_messages_user_id 
-  ON public.ticket_messages (user_id);
+CREATE INDEX IF NOT EXISTS idx_ticket_messages_author_profile_id 
+  ON public.ticket_messages (author_profile_id);
+
+-- 9. Support messages
+CREATE INDEX IF NOT EXISTS idx_support_messages_chat_id 
+  ON public.support_messages (chat_id);

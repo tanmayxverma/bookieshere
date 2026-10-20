@@ -2,6 +2,8 @@
 -- Description: Server-side aggregated RPCs for leaderboard rankings.
 -- Replaces fetching raw unaggregated study_sessions rows over PostgREST.
 -- Computes aggregated study seconds grouped by user in IST timezone.
+-- User amendment 5: Active sessions compute elapsed time since started_at,
+-- capped at last_heartbeat + 300s (and now()), so active users never show 0.
 
 CREATE OR REPLACE FUNCTION public.get_leaderboard_today(top_n int DEFAULT 50)
 RETURNS TABLE (
@@ -19,7 +21,21 @@ AS $$
     s.ypt_user_id AS user_id,
     COALESCE(u.name, 'Aspirant') AS name,
     COALESCE(u.jee_focus_year, 'JEE') AS jee_year,
-    SUM(COALESCE(s.duration_seconds, 0))::bigint AS total_seconds
+    SUM(
+      CASE 
+        WHEN s.status = 'completed' THEN COALESCE(s.duration_seconds, 0)
+        WHEN s.status = 'active' THEN GREATEST(
+          0,
+          EXTRACT(EPOCH FROM (
+            LEAST(
+              now(),
+              COALESCE(s.last_heartbeat, s.started_at) + interval '300 seconds'
+            ) - s.started_at
+          ))::bigint
+        )
+        ELSE 0
+      END
+    )::bigint AS total_seconds
   FROM public.study_sessions s
   LEFT JOIN public.ypt_users u ON u.id = s.ypt_user_id
   WHERE s.status IN ('completed', 'active')
@@ -45,7 +61,21 @@ AS $$
     s.ypt_user_id AS user_id,
     COALESCE(u.name, 'Aspirant') AS name,
     COALESCE(u.jee_focus_year, 'JEE') AS jee_year,
-    SUM(COALESCE(s.duration_seconds, 0))::bigint AS total_seconds
+    SUM(
+      CASE 
+        WHEN s.status = 'completed' THEN COALESCE(s.duration_seconds, 0)
+        WHEN s.status = 'active' THEN GREATEST(
+          0,
+          EXTRACT(EPOCH FROM (
+            LEAST(
+              now(),
+              COALESCE(s.last_heartbeat, s.started_at) + interval '300 seconds'
+            ) - s.started_at
+          ))::bigint
+        )
+        ELSE 0
+      END
+    )::bigint AS total_seconds
   FROM public.study_sessions s
   LEFT JOIN public.ypt_users u ON u.id = s.ypt_user_id
   WHERE s.status IN ('completed', 'active')

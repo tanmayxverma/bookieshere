@@ -5,7 +5,6 @@ import { TIMER_STORAGE_KEY, type TimerState, type TimerMode } from '@/types/ypt'
 const THREE_HOURS = 3 * 60 * 60;
 const HEARTBEAT_INTERVAL = 120_000; // 120s (2 min)
 const INACTIVITY_COUNTDOWN = 15; // seconds
-const STALE_CLEANUP_INTERVAL = 15 * 60_000; // 15 min
 /** Wall-clock vs monotonic-clock divergence (ms) treated as impossible */
 const CLOCK_JUMP_TOLERANCE_MS = 120_000;
 
@@ -143,10 +142,9 @@ export function useStudyTimer(yptUserId: string | undefined) {
     } catch {}
   }, [calcElapsed]);
 
-  // Cleanly finalize session on tab close using keepalive
+  // Cleanly finalize session on tab close / pagehide using sendBeacon or keepalive fetch
   useEffect(() => {
-    const handlePageHide = (e: PageTransitionEvent) => {
-      if (e.persisted) return;
+    const handleClose = () => {
       const state = getTimerState();
       if (!state || state.pausedAt || !state.sessionId) return;
       const clientDuration = calcElapsed(state);
@@ -160,22 +158,32 @@ export function useStudyTimer(yptUserId: string | undefined) {
         clientFlagged: flaggedRef.current,
       });
 
-      try {
-        fetch(`${supabaseUrl}/functions/v1/end-study-session`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-          },
-          body: payload,
-          keepalive: true,
-        }).catch(() => {});
-      } catch {}
+      const url = `${supabaseUrl}/functions/v1/end-study-session`;
+      if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon(url, blob);
+      } else {
+        try {
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': supabaseKey,
+              'Authorization': `Bearer ${supabaseKey}`,
+            },
+            body: payload,
+            keepalive: true,
+          }).catch(() => {});
+        } catch {}
+      }
     };
 
-    window.addEventListener('pagehide', handlePageHide);
-    return () => window.removeEventListener('pagehide', handlePageHide);
+    window.addEventListener('pagehide', handleClose);
+    window.addEventListener('beforeunload', handleClose);
+    return () => {
+      window.removeEventListener('pagehide', handleClose);
+      window.removeEventListener('beforeunload', handleClose);
+    };
   }, [calcElapsed]);
 
   // Heartbeat: last_heartbeat is the server's source of truth for real duration
@@ -201,15 +209,6 @@ export function useStudyTimer(yptUserId: string | undefined) {
 
   // Re-anchor the monotonic guard on every state transition
   useEffect(() => { resetAnchor(timerState); }, [timerState, resetAnchor]);
-
-  // Periodically finalise stale sessions so totals never include dangling rows
-  useEffect(() => {
-    if (!yptUserId) return;
-    const run = () => { (supabase as any).rpc('cleanup_stale_sessions'); };
-    run();
-    const id = window.setInterval(run, STALE_CLEANUP_INTERVAL);
-    return () => clearInterval(id);
-  }, [yptUserId]);
 
   // Strict Anti-Cheat Timer tick:
   // ONLY collects time while the site is actively ON or working in background tab.
@@ -391,7 +390,6 @@ export function useStudyTimer(yptUserId: string | undefined) {
     opts?: { mode?: TimerMode; targetSeconds?: number; breakSeconds?: number; phase?: 'work' | 'break' },
   ) => {
     if (!yptUserId) return;
-    await (supabase as any).rpc('cleanup_stale_sessions');
     if ('Notification' in window && Notification.permission === 'default') {
       try { Notification.requestPermission(); } catch {}
     }
