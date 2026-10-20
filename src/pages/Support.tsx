@@ -26,7 +26,7 @@ export default function SupportPage() {
   const [isDragging, setIsDragging] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -131,197 +131,185 @@ export default function SupportPage() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-background text-foreground flex flex-col pb-24">
-        {/* Status Banner Ticker */}
-        <aside className="bg-muted text-foreground border-b-2 border-border py-1.5 px-4 sm:px-8 shrink-0">
-          <div className="max-w-7xl mx-auto flex items-center justify-between font-mono text-xs">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-              </span>
-              <span className="font-bold tracking-wider uppercase">DIRECT CREATOR DESK</span>
-              <span className="text-muted-foreground hidden sm:inline">• Direct 1v1 dispatch with site maintainer</span>
+      <div className="min-h-screen bg-academic-grid text-foreground flex flex-col pb-24">
+        {/* Contextual Candidate Sub-header Bar (Stitch Screen 11) */}
+        <div className="w-full border-b border-border/80 bg-background/60 py-2.5 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto flex items-center justify-between text-xs font-mono text-muted-foreground">
+            <div className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+              <span className="uppercase tracking-wider font-semibold text-foreground">Direct Dispatch</span>
+              <span className="text-muted-foreground/40">/</span>
+              <span className="text-muted-foreground">JEE Target Line</span>
             </div>
-            <div className="hidden md:flex items-center gap-4 text-muted-foreground text-[10px] font-mono tracking-wider">
-              <span>ZERO BOTS</span>
-              <span>·</span>
-              <span>100% PRIVATE</span>
-              <span>·</span>
-              <span className="text-foreground font-bold">REPLIES IN FREE TIME</span>
+            <div className="flex items-center gap-3 text-[11px]">
+              <span className="hidden sm:inline">Encrypted P2P Line</span>
+              <span className="hidden sm:inline text-muted-foreground/40">•</span>
+              <span className="text-foreground font-semibold">Solo Architect Desk</span>
             </div>
           </div>
-        </aside>
+        </div>
 
         {/* Main Content Area */}
-        <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 flex-1 items-stretch bg-card border-2 border-border rounded-2xl shadow-[6px_6px_0px_var(--desk-border)] overflow-hidden min-h-[640px]">
-            {/* ───── LEFT SIDEBAR: INBOX & DIRECT LINE INFO ───── */}
-            <aside className="lg:col-span-4 border-b lg:border-b-0 lg:border-r-2 border-border flex flex-col bg-muted/30">
-              {/* Header: SLA Status & Direct Line Tag */}
-              <div className="p-4 border-b border-border bg-card space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-foreground font-mono">
-                      DIRECT INBOX
+        <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+          {/* Hero Dossier Intro (Stitch Screen 11) */}
+          <div className="max-w-3xl mb-8 pt-2">
+            <div className="font-mono text-xs uppercase tracking-widest text-primary font-semibold mb-2">
+              Direct Correspondence • Archival 1v1
+            </div>
+            <h1 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight text-foreground leading-tight">
+              Aspirant Direct <span className="font-serif italic font-normal text-primary">Desk.</span>
+            </h1>
+            <p className="font-sans text-sm sm:text-base text-muted-foreground mt-3 leading-relaxed max-w-2xl">
+              A direct, private line with the site architect. Flag broken mirrors, submit missing chapter notes, challenge key discrepancies, or request specialized academic tooling without ticketing friction.
+            </p>
+          </div>
+
+          {/* Two-Column Disciplined Layout Frame (Stitch Screen 11) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* ───── LEFT COLUMN: SIDEBAR DOSSIER (4 Cols) ───── */}
+            <aside className="lg:col-span-4 space-y-5">
+              {/* Card 1: Private Channel & Search */}
+              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs">
+                <div className="flex items-center justify-between pb-4 border-b border-border/80">
+                  <div>
+                    <span className="font-mono text-[10px] uppercase font-semibold tracking-wider text-primary block mb-0.5">
+                      Private Channel
                     </span>
-                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded border border-primary/30 font-mono">
-                      1v1
-                    </span>
+                    <h2 className="font-serif text-base font-bold text-foreground">Aspirant Dispatch</h2>
                   </div>
-                  <span className="text-[10px] font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded border border-border font-bold flex items-center gap-1.5">
-                    <Clock className="w-3 h-3 text-primary" />
-                    Replies in Free Time
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono text-muted-foreground bg-muted/60 border border-border/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    Recess Active
                   </span>
                 </div>
-
-                {/* Search Bar */}
-                <div className="relative flex items-center bg-background rounded-lg px-3 py-1.5 border-2 border-border focus-within:border-primary transition-all">
-                  <Search className="w-3.5 h-3.5 text-muted-foreground mr-2 shrink-0" />
+                <div className="mt-4 relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search className="h-4 w-4 text-muted-foreground" />
+                  </div>
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search thread messages..."
-                    className="bg-transparent border-none text-xs text-foreground placeholder:text-muted-foreground focus:outline-none w-full p-0 font-sans"
+                    placeholder="Search past correspondence..."
+                    className="w-full text-xs font-sans pl-9 pr-14 py-2.5 bg-background rounded-xl border border-border/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
                   />
-                  {searchQuery && (
-                    <button onClick={() => setSearchQuery('')} className="text-muted-foreground hover:text-foreground text-xs">
-                      <X className="w-3 h-3" />
+                  {searchQuery ? (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-3.5 w-3.5" />
                     </button>
+                  ) : (
+                    <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
+                      <kbd className="font-mono text-[10px] text-muted-foreground bg-muted border border-border/80 px-1.5 py-0.5 rounded shadow-2xs">⌘K</kbd>
+                    </div>
                   )}
                 </div>
               </div>
 
-              {/* Sidebar Cards Area */}
-              <div className="p-3.5 flex-1 overflow-y-auto space-y-3">
-                {/* Card 1: Solo Dev & Fellow Aspirant */}
-                <div className="p-3.5 bg-card border-2 border-border rounded-xl shadow-[2px_2px_0px_var(--desk-border)] space-y-2">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg border border-border bg-muted text-primary flex items-center justify-center font-bold text-xs shrink-0">
-                      <Terminal className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="text-xs font-bold text-foreground truncate font-display">
-                        Solo Dev & Fellow Aspirant
-                      </h4>
-                      <p className="text-[10px] text-muted-foreground font-mono truncate">
-                        Aspirant-built platform
-                      </p>
-                    </div>
+              {/* Card 2: Solo Dev & Aspirant Manifesto */}
+              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs">
+                <div className="flex items-center gap-3 mb-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-muted border border-border/80 flex items-center justify-center text-foreground font-serif font-bold text-xs">
+                    BA
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed font-sans">
-                    I build and run BOOKIE alone alongside studies. I read every message and reply during study breaks. Feel free to leave doubts or notes requests!
-                  </p>
+                  <div>
+                    <h3 className="font-serif font-bold text-sm text-foreground leading-tight">
+                      Solo Dev & Aspirant
+                    </h3>
+                    <p className="font-mono text-[11px] text-muted-foreground">
+                      Non-corporate • Personal Terminal
+                    </p>
+                  </div>
                 </div>
-
-                {/* Card 2: Buy Me a Chai */}
-                <div className="p-3.5 bg-muted/50 border-2 border-border rounded-xl shadow-[2px_2px_0px_var(--desk-border)] space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <Coffee className="w-3.5 h-3.5 text-primary" />
-                      <h4 className="text-xs font-bold text-foreground font-display">
-                        Server Support Fund
-                      </h4>
-                    </div>
-                    <span className="text-[9px] font-mono font-bold tracking-wider uppercase px-1.5 py-0.2 rounded border border-border bg-card text-muted-foreground">
-                      UPI
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed font-sans">
-                    BOOKIE is 100% free with zero ads. Buying a chai helps offset server hosting and API costs.
-                  </p>
+                <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+                  Built independently alongside daily mock routines. Messages land directly in my study terminal and are replied to during recess. Zero automated bot filtering.
+                </p>
+                <div className="mt-4 pt-3.5 border-t border-border/80 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+                  <span>TLS 1.3 Verified</span>
                   <button
-                    type="button"
                     onClick={() => navigate('/donate')}
-                    className="w-full py-2 px-3 bg-primary text-primary-foreground font-sans font-bold text-xs rounded-lg border-2 border-border shadow-[2px_2px_0px_var(--desk-border)] flex items-center justify-center gap-1.5 hover:bg-primary/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                    className="text-foreground hover:text-primary transition-colors flex items-center gap-1 font-semibold cursor-pointer"
                   >
-                    <Coffee className="w-3.5 h-3.5" />
-                    <span>Support with a Chai</span>
+                    <span>Archival Sustenance</span>
+                    <span className="text-xs">☕</span>
                   </button>
                 </div>
+              </div>
 
-                {/* Card 3: Quick Topic Starters */}
-                <div className="p-3.5 bg-card border-2 border-border rounded-xl shadow-[2px_2px_0px_var(--desk-border)] space-y-2">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
-                    QUICK TOPIC STARTERS
-                  </span>
-                  <div className="grid grid-cols-2 gap-1.5">
+              {/* Card 3: Dispatch Categories */}
+              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs">
+                <div className="font-mono text-[10px] uppercase font-semibold tracking-wider text-muted-foreground mb-3.5">
+                  Dispatch Categories
+                </div>
+                <div className="space-y-1.5">
+                  {[
+                    { num: "01", label: "Broken Mirror or Link Error", prefix: "[Broken Link]: " },
+                    { num: "02", label: "Curated Coaching Material", prefix: "[Material Request]: " },
+                    { num: "03", label: "Key Discrepancy & Doubt", prefix: "[Doubt / Key Issue]: " },
+                    { num: "04", label: "Tool & Platform Proposal", prefix: "[Platform Suggestion]: " },
+                  ].map((cat) => (
                     <button
+                      key={cat.num}
                       type="button"
-                      onClick={() => handleQuickTopic('[Broken Link]: ')}
-                      className="text-xs font-sans p-2 rounded-lg bg-muted/50 hover:bg-muted text-foreground border border-border transition-all text-left flex items-center gap-1.5"
+                      onClick={() => handleQuickTopic(cat.prefix)}
+                      className="w-full text-left py-2.5 px-3 rounded-xl border border-transparent hover:border-border/80 hover:bg-muted/40 transition-all flex items-center justify-between group cursor-pointer"
                     >
-                      <Bug className="w-3.5 h-3.5 text-primary shrink-0" />
-                      <span className="truncate">Broken Link</span>
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-xs text-muted-foreground font-mono">{cat.num}</span>
+                        <span className="font-sans text-xs font-medium text-foreground group-hover:text-primary transition-colors">
+                          {cat.label}
+                        </span>
+                      </div>
+                      <span className="font-mono text-[11px] text-muted-foreground/60 group-hover:text-primary transition-colors">
+                        →
+                      </span>
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => handleQuickTopic('[Book Request]: ')}
-                      className="text-xs font-sans p-2 rounded-lg bg-muted/50 hover:bg-muted text-foreground border border-border transition-all text-left flex items-center gap-1.5"
-                    >
-                      <BookOpen className="w-3.5 h-3.5 text-primary shrink-0" />
-                      <span className="truncate">Book Request</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleQuickTopic('[Study Doubt]: ')}
-                      className="text-xs font-sans p-2 rounded-lg bg-muted/50 hover:bg-muted text-foreground border border-border transition-all text-left flex items-center gap-1.5"
-                    >
-                      <HelpCircle className="w-3.5 h-3.5 text-primary shrink-0" />
-                      <span className="truncate">Study Doubt</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleQuickTopic('[Suggest Idea]: ')}
-                      className="text-xs font-sans p-2 rounded-lg bg-muted/50 hover:bg-muted text-foreground border border-border transition-all text-left flex items-center gap-1.5"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" />
-                      <span className="truncate">Suggest Idea</span>
-                    </button>
-                  </div>
+                  ))}
                 </div>
               </div>
             </aside>
 
-            {/* ───── RIGHT MAIN CHAT CONVERSATION CANVAS ───── */}
+            {/* ───── RIGHT COLUMN: 1v1 DIRECT DISPATCH TERMINAL (8 Cols) ───── */}
             <section
-              className={cn("lg:col-span-8 flex flex-col h-full bg-card relative transition-all", isDragging && "border-2 border-dashed border-primary")}
+              className={cn(
+                "lg:col-span-8 bg-card rounded-2xl border border-border/80 shadow-xs flex flex-col h-[740px] overflow-hidden relative transition-all",
+                isDragging && "border-primary ring-2 ring-primary/20"
+              )}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
               {isDragging && (
-                <div className="absolute inset-0 z-50 bg-background/80 flex flex-col items-center justify-center pointer-events-none border-2 border-dashed border-primary m-3 rounded-xl">
-                  <div className="p-4 bg-card text-foreground rounded-xl flex items-center gap-3 shadow-xl border-2 border-border">
-                    <Paperclip className="w-6 h-6 text-primary animate-bounce" />
-                    <div>
-                      <p className="text-sm font-bold font-display">Drop image to attach</p>
-                      <p className="text-[11px] text-muted-foreground font-mono">Will be sent directly to maintainer</p>
-                    </div>
-                  </div>
+                <div className="absolute inset-0 z-50 bg-background/85 backdrop-blur-xs flex flex-col items-center justify-center pointer-events-none border-2 border-dashed border-primary m-3 rounded-xl">
+                  <Paperclip className="w-8 h-8 text-primary animate-bounce mb-2" />
+                  <p className="text-sm font-serif font-bold text-foreground">Drop image to attach</p>
+                  <p className="text-[11px] text-muted-foreground font-mono mt-0.5">Will be uploaded to secure support thread</p>
                 </div>
               )}
 
-              {/* Chat Canvas Header */}
-              <div className="bg-card text-foreground px-5 py-3 flex items-center justify-between border-b-2 border-border shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg border-2 border-border bg-muted flex items-center justify-center font-bold text-primary shadow-[1px_1px_0px_var(--desk-border)]">
-                    <Terminal className="w-4 h-4" />
+              {/* Terminal Header (Stitch Screen 11) */}
+              <div className="px-6 py-4 border-b border-border/80 bg-background/50 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="relative">
+                    <div className="w-9 h-9 rounded-full bg-muted border border-border/80 flex items-center justify-center text-foreground font-serif font-bold text-sm">
+                      BK
+                    </div>
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-card"></span>
                   </div>
-                  <div className="flex flex-col">
+                  <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-sm tracking-tight text-foreground font-display">
-                        Site Maintainer Desk
-                      </h3>
-                      <span className="bg-muted text-foreground font-mono font-bold text-[9px] px-1.5 py-0.2 rounded border border-border uppercase tracking-wide flex items-center gap-1">
-                        <Clock className="w-2.5 h-2.5 text-primary" />
-                        <span>BREAK REPLIES</span>
+                      <span className="font-serif font-bold text-sm text-foreground">Lead Architect Desk</span>
+                      <span className="hidden sm:inline-flex px-2 py-0.5 text-[10px] font-mono font-semibold rounded bg-muted text-muted-foreground border border-border/80">
+                        SECURE 1V1
                       </span>
                     </div>
-                    <p className="text-[10px] text-muted-foreground font-mono">
-                      Direct 1v1 Thread • Honest Human Response
-                    </p>
+                    <div className="font-mono text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                      <span>Direct Aspirant Terminal</span>
+                      <span>•</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">Turnaround 2–4 hrs</span>
+                    </div>
                   </div>
                 </div>
 
@@ -329,69 +317,91 @@ export default function SupportPage() {
                   <button
                     type="button"
                     onClick={() => navigate('/donate')}
-                    className="border-2 border-border bg-card hover:bg-muted text-foreground font-sans font-bold text-xs px-3 py-1.5 rounded-lg shadow-[2px_2px_0px_var(--desk-border)] flex items-center gap-1.5 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 hover:bg-amber-500/20 transition-all cursor-pointer"
                   >
-                    <Coffee className="w-3.5 h-3.5 text-primary" />
-                    <span className="hidden sm:inline">Chai Break</span>
+                    <span>Chai</span>
+                    <span>☕</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => refetch()}
-                    className="p-1.5 text-muted-foreground hover:text-foreground rounded-lg border border-border hover:bg-muted transition-colors"
-                    title="Refresh chat"
+                    className="p-1.5 text-muted-foreground hover:text-foreground rounded-lg border border-border/80 hover:bg-muted transition-colors cursor-pointer"
+                    title="Refresh connection"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
 
-              {/* Messages Thread Feed */}
-              <div ref={scrollerRef} className="flex-1 p-5 overflow-y-auto space-y-4 bg-background">
+              {/* Confidentiality notice sub-strip */}
+              <div className="px-6 py-2.5 bg-muted/30 border-b border-border/80 flex items-center justify-between text-xs font-mono text-muted-foreground">
+                <span>Direct peer-to-peer line — Confidential & unmoderated by third parties.</span>
+                <span className="hidden sm:inline text-primary text-[11px] font-semibold">Strict Academic Privacy</span>
+              </div>
+
+              {/* Thread Messages Feed */}
+              <div ref={scrollerRef} className="flex-1 p-6 md:p-8 overflow-y-auto space-y-4 bg-card">
                 {loading ? (
                   <div className="h-full flex items-center justify-center p-10 text-xs font-mono text-muted-foreground gap-2">
                     <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                    <span>Connecting to Direct Line…</span>
+                    <span>Connecting to Direct Terminal Line…</span>
                   </div>
                 ) : error ? (
                   <div className="h-full flex flex-col items-center justify-center gap-3 p-8 text-center max-w-md mx-auto">
-                    <div className="bg-destructive/10 text-destructive border border-destructive/40 p-4 rounded-xl text-xs font-mono">
+                    <div className="bg-destructive/10 text-destructive border border-destructive/30 p-4 rounded-xl text-xs font-mono">
                       {error}
                     </div>
                     <button
                       onClick={() => refetch()}
-                      className="px-4 py-2 bg-foreground text-background rounded-lg text-xs font-bold font-mono"
+                      className="px-4 py-2 bg-foreground text-background rounded-xl text-xs font-semibold font-mono"
                     >
                       Retry Connection
                     </button>
                   </div>
                 ) : filteredMessages.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto space-y-3">
-                    <div className="w-11 h-11 rounded-xl bg-muted text-primary flex items-center justify-center border-2 border-border shadow-[2px_2px_0px_var(--desk-border)]">
-                      <ShieldCheck className="w-5 h-5 text-primary" />
+                  <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto space-y-4">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-xs">
+                      <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-foreground uppercase font-display tracking-wider">
-                        DIRECT 1v1 MAINTAINER DESK
-                      </h4>
-                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed font-sans">
-                        Run by an aspirant for aspirants. Drop your doubt, bug report, or book request directly. No formal preamble required.
+                      <h3 className="font-serif text-2xl font-bold text-foreground tracking-tight">
+                        Direct 1v1 Archival Desk
+                      </h3>
+                      <p className="font-sans text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
+                        Engineered by an aspirant for serious candidates. Dispatch broken mirrors, submit verified high-yield notes, or request analytical tooling directly.
                       </p>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
+
+                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-lg pt-2">
                       <button
                         type="button"
-                        onClick={() => handleQuickTopic('Check broken test link: ')}
-                        className="text-xs font-mono px-3 py-1 bg-card border-2 border-border rounded-lg hover:border-primary text-foreground shadow-[2px_2px_0px_var(--desk-border)] transition-colors"
+                        onClick={() => handleQuickTopic('PW Varun Advanced Test #04 mirror reports 404 error')}
+                        className="w-full sm:w-1/2 p-3.5 rounded-xl border border-border/80 bg-background hover:border-primary text-left transition-all group cursor-pointer shadow-xs"
                       >
-                        [Check broken link]
+                        <div className="font-mono text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                          Broken Mirror Prompt
+                        </div>
+                        <p className="font-sans text-xs text-foreground group-hover:text-primary leading-snug">
+                          "PW Varun Advanced Test #04 mirror reports 404 error"
+                        </p>
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleQuickTopic('Request Coaching Notes: ')}
-                        className="text-xs font-mono px-3 py-1 bg-card border-2 border-border rounded-lg hover:border-primary text-foreground shadow-[2px_2px_0px_var(--desk-border)] transition-colors"
+                        onClick={() => handleQuickTopic('Deconstructed 2024 JEE Adv rotational notes request')}
+                        className="w-full sm:w-1/2 p-3.5 rounded-xl border border-border/80 bg-background hover:border-primary text-left transition-all group cursor-pointer shadow-xs"
                       >
-                        [Request Notes]
+                        <div className="font-mono text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                          Archival Request
+                        </div>
+                        <p className="font-sans text-xs text-foreground group-hover:text-primary leading-snug">
+                          "Deconstructed 2024 JEE Adv rotational notes"
+                        </p>
                       </button>
+                    </div>
+
+                    <div className="pt-2 font-mono text-[11px] text-muted-foreground flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <span>Awaiting candidate dispatch • Queue index: <span className="font-semibold text-foreground">#01 (Immediate)</span></span>
                     </div>
                   </div>
                 ) : (
@@ -404,7 +414,7 @@ export default function SupportPage() {
                       <div key={m.id} className="space-y-2">
                         {showDate && (
                           <div className="text-center my-3">
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider bg-card border border-border rounded px-2.5 py-0.5 text-muted-foreground">
+                            <span className="text-[10px] font-mono font-semibold uppercase tracking-wider bg-muted/60 border border-border/80 rounded px-2.5 py-0.5 text-muted-foreground">
                               {format(new Date(m.created_at), 'MMM d, yyyy')}
                             </span>
                           </div>
@@ -412,24 +422,24 @@ export default function SupportPage() {
                         
                         <div className={cn("flex items-end gap-2 max-w-[85%] sm:max-w-[75%]", isMine ? "ml-auto justify-end" : "justify-start")}>
                           {!isMine && (
-                            <div className="w-6 h-6 rounded border border-border bg-muted text-primary flex items-center justify-center text-[9px] font-mono font-bold shrink-0 mb-1">
+                            <div className="w-6 h-6 rounded-lg border border-border/80 bg-muted text-primary flex items-center justify-center text-[9px] font-mono font-bold shrink-0 mb-1">
                               DEV
                             </div>
                           )}
                           
                           <div className="space-y-1">
                             <div className={cn(
-                              "p-3 rounded-xl text-xs sm:text-sm leading-relaxed border-2 shadow-[2px_2px_0px_var(--desk-border)]",
+                              "p-3 rounded-2xl text-xs sm:text-sm leading-relaxed border shadow-xs",
                               isMine
-                                ? "bg-primary text-primary-foreground border-border rounded-br-none"
-                                : "bg-card border-border text-foreground rounded-bl-none"
+                                ? "bg-primary text-primary-foreground border-primary rounded-br-none"
+                                : "bg-card border-border/80 text-foreground rounded-bl-none"
                             )}>
                               {m.image_url && (
                                 <a
                                   href={m.image_url}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="block mb-2 rounded-lg overflow-hidden border border-border bg-muted max-w-sm group"
+                                  className="block mb-2 rounded-xl overflow-hidden border border-border/80 bg-muted max-w-sm group"
                                 >
                                   <img src={m.image_url} alt="Attachment" className="max-h-52 w-auto object-cover group-hover:opacity-90" />
                                 </a>
@@ -443,7 +453,7 @@ export default function SupportPage() {
                           </div>
 
                           {isMine && (
-                            <div className="w-6 h-6 rounded border border-border bg-card text-foreground flex items-center justify-center text-[9px] font-mono font-bold shrink-0 mb-1">
+                            <div className="w-6 h-6 rounded-lg border border-border/80 bg-muted/60 text-foreground flex items-center justify-center text-[9px] font-mono font-bold shrink-0 mb-1">
                               YOU
                             </div>
                           )}
@@ -454,18 +464,18 @@ export default function SupportPage() {
                 )}
               </div>
 
-              {/* Enhanced Rich Input Bar */}
-              <footer className="bg-card border-t-2 border-border p-3 sm:p-4 shrink-0">
+              {/* Enhanced Rich Input Bar (Stitch Screen 11) */}
+              <footer className="p-4 sm:p-5 border-t border-border/80 bg-background/50 shrink-0">
                 {/* Math Symbol Helper Ribbon */}
                 {showSymbolBar && (
                   <div className="flex items-center gap-1 pb-2 overflow-x-auto scrollbar-none animate-in fade-in duration-100">
-                    <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase pr-1">Symbols:</span>
+                    <span className="text-[10px] font-mono font-semibold text-muted-foreground uppercase pr-1">Symbols:</span>
                     {MATH_SYMBOLS.map((sym) => (
                       <button
                         key={sym}
                         type="button"
                         onClick={() => insertSymbol(sym)}
-                        className="px-1.5 py-0.5 rounded bg-muted hover:bg-card text-xs font-mono font-bold border border-border text-foreground transition-colors"
+                        className="px-1.5 py-0.5 rounded bg-muted hover:bg-card text-xs font-mono font-bold border border-border/80 text-foreground transition-colors cursor-pointer"
                       >
                         {sym}
                       </button>
@@ -475,83 +485,98 @@ export default function SupportPage() {
 
                 {/* Preview Thumbnail */}
                 {preview && (
-                  <div className="relative inline-block mb-2 rounded-lg overflow-hidden border-2 border-border bg-muted p-1">
-                    <img src={preview} className="h-14 w-auto rounded" alt="Upload Preview" />
+                  <div className="relative inline-block mb-2 rounded-xl overflow-hidden border border-border/80 bg-muted p-1">
+                    <img src={preview} className="h-14 w-auto rounded-lg" alt="Upload Preview" />
                     <button
                       type="button"
                       onClick={() => setImage(null)}
-                      className="absolute top-1 right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
+                      className="absolute top-1 right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </div>
                 )}
 
-                <form onSubmit={submit} onPaste={handlePaste} className="flex items-center gap-2 bg-background rounded-xl px-3 py-1.5 border-2 border-border focus-within:border-primary transition-all">
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <button
-                      type="button"
-                      onClick={() => fileRef.current?.click()}
-                      disabled={!canSend}
-                      className="p-1 hover:text-foreground rounded transition-colors"
-                      title="Attach question screenshot"
-                    >
-                      <Paperclip className="w-4 h-4 transform -rotate-45" />
-                    </button>
-                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] ?? null)} />
-
-                    <button
-                      type="button"
-                      onClick={() => handleQuickTopic('Formula query: ')}
-                      className="p-1 hover:text-foreground rounded transition-colors font-mono text-xs font-bold"
-                      title="Insert Formula Note"
-                    >
-                      fx
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setShowSymbolBar(!showSymbolBar)}
-                      className={cn(
-                        "p-1 rounded transition-colors text-xs font-mono font-bold",
-                        showSymbolBar ? "bg-primary text-primary-foreground" : "hover:text-foreground"
-                      )}
-                      title="Toggle Math Symbols"
-                    >
-                      Ω
-                    </button>
-                  </div>
-
-                  <input
+                <div className="rounded-xl border border-border/80 bg-card shadow-xs focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                  <textarea
                     ref={inputRef}
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
                     onPaste={handlePaste}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        submit();
+                      }
+                    }}
                     maxLength={4000}
                     disabled={!canSend}
-                    placeholder={canSend ? "Message maintainer directly (doubts, broken links, book requests)..." : "Conversation closed"}
-                    className="flex-1 bg-transparent border-none text-xs sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-0 px-2 py-1 font-sans"
+                    placeholder={canSend ? "Draft your dispatch directly to the site architect (doubts, broken mirrors, PYQ requests)..." : "Conversation closed"}
+                    className="w-full border-0 focus:ring-0 text-xs sm:text-sm font-sans placeholder:text-muted-foreground text-foreground p-3.5 resize-none bg-transparent focus:outline-none"
+                    rows={2}
                   />
 
-                  <button
-                    type="submit"
-                    disabled={!canSend || busy || (!draft.trim() && !image)}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 px-3.5 py-1.5 rounded-lg border-2 border-border shadow-[2px_2px_0px_var(--desk-border)] flex items-center gap-1 text-xs font-bold cursor-pointer shrink-0 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
-                  >
-                    {busy ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <>
-                        <span>Send</span>
-                        <Send className="w-3 h-3 ml-0.5" />
-                      </>
-                    )}
-                  </button>
-                </form>
+                  <div className="px-3.5 py-2 border-t border-border/60 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                      <button
+                        type="button"
+                        onClick={() => fileRef.current?.click()}
+                        disabled={!canSend}
+                        className="p-1.5 rounded-lg hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer"
+                        title="Attach question screenshot or notes"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                      </button>
+                      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] ?? null)} />
 
-                <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono mt-2 px-1">
-                  <span>Enter to send • Shift + Enter for new line</span>
-                  <span className="hidden sm:inline">Solo Aspirant Maintained • Direct Thread</span>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickTopic('Formula query: ')}
+                        className="p-1.5 rounded-lg hover:text-foreground hover:bg-muted/60 transition-colors font-serif font-semibold text-xs cursor-pointer"
+                        title="Formula notation"
+                      >
+                        fx
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setShowSymbolBar(!showSymbolBar)}
+                        className={cn(
+                          "p-1.5 rounded-lg transition-colors font-mono text-xs cursor-pointer",
+                          showSymbolBar ? "bg-primary text-primary-foreground" : "hover:text-foreground hover:bg-muted/60"
+                        )}
+                        title="Toggle symbols"
+                      >
+                        Ω
+                      </button>
+
+                      <span className="text-muted-foreground/30 mx-1">|</span>
+                      <span className="text-[11px] font-mono text-muted-foreground hidden sm:inline">
+                        Markdown & Math supported
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => submit()}
+                      disabled={!canSend || busy || (!draft.trim() && !image)}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold tracking-wide transition-all shadow-xs disabled:opacity-50 cursor-pointer"
+                    >
+                      {busy ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <>
+                          <span>Send Dispatch</span>
+                          <Send className="w-3.5 h-3.5" />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-2.5 px-1 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+                  <span>Encrypted TLS 1.3 • Direct Terminal Dispatch</span>
+                  <span className="hidden sm:inline">Non-commercial • Pure academic utility</span>
                 </div>
               </footer>
             </section>
