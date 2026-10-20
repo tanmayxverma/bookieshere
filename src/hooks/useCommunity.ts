@@ -129,13 +129,12 @@ export function useCommunity(sort: Sort = 'recent') {
   useEffect(() => { setLoading(true); load(); }, [load]);
 
   useEffect(() => {
-    const chName = `community-feed-${Math.random().toString(36).substring(2, 9)}`;
-    const ch = supabase.channel(chName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_posts' }, () => load())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_reactions' }, () => load())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_comments' }, () => load())
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        load();
+      }
+    }, 60_000);
+    return () => { clearInterval(interval); };
   }, [load]);
 
   const createPost = useCallback(async (

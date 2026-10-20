@@ -15,3 +15,16 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     autoRefreshToken: true,
   }
 });
+
+if (import.meta.env.DEV && typeof window !== 'undefined') {
+  const stats = { restRequests: 0 };
+  (window as any).__SUPABASE_STATS__ = stats;
+  const origFetch = window.fetch;
+  window.fetch = async (...args) => {
+    const url = String(args[0] || '');
+    if (url.includes(SUPABASE_URL)) {
+      stats.restRequests++;
+    }
+    return origFetch.apply(window, args);
+  };
+}

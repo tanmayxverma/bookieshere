@@ -47,12 +47,13 @@ export function useTickets() {
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    const chName = `tickets-feed-${Math.random().toString(36).substring(2, 9)}`;
+    if (!profile?.id) return;
+    const chName = `tickets-feed-${profile.id}-${Math.random().toString(36).substring(2, 9)}`;
     const ch = supabase.channel(chName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets', filter: `profile_id=eq.${profile.id}` }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, [load]);
+  }, [profile?.id, load]);
 
   const createTicket = useCallback(async (input: { subject: string; category: Ticket['category']; description: string; priority: Ticket['priority'] }) => {
     if (!profile) throw new Error('profile required');
