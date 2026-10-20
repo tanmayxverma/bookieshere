@@ -1,236 +1,149 @@
 import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
-import { ShieldCheck, Mail, MessageSquare, ArrowLeft, Lock, Trash2, EyeOff, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, Mail, MessageSquare, ArrowLeft, Lock, EyeOff, CheckCircle2 } from "lucide-react";
 
 export default function PrivacyPolicy() {
   const lastUpdated = "January 15, 2025";
 
   return (
     <Layout>
-      <div className="w-full bg-background blueprint-grid text-foreground min-h-screen py-10 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto space-y-8">
-          
-          {/* Navigation / Header */}
-          <div>
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-primary transition-colors mb-4 px-3 py-1.5 rounded-lg border border-border bg-card/70"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Back to Cockpit</span>
-            </Link>
+      <div className="w-full bg-background text-foreground min-h-screen py-10 px-4 sm:px-6 pb-24">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-foreground transition-colors mb-2 px-3 py-1.5 rounded-lg border border-border bg-card shadow-[1px_1px_0px_var(--desk-border)]"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Back to Dashboard</span>
+          </Link>
 
-            <div className="rounded-3xl border-2 border-slate-900 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)]">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary font-mono text-xs font-bold uppercase tracking-wider mb-3">
-                <ShieldCheck className="h-4 w-4" /> Privacy & Security Commitment
-              </div>
-              <h1 className="font-display text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">
-                Privacy Policy
-              </h1>
-              <p className="mt-2 text-sm text-muted-foreground font-mono">
-                Last Updated: {lastUpdated} • Effective Immediately
-              </p>
-              <p className="mt-4 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-                At <strong>BOOKIE</strong> ("we," "our," or "the Platform"), we respect your personal privacy and are committed to safeguarding your information. This Privacy Policy details the types of information we access and collect, how we use and protect it, our adherence to Google API Services User Data Policies, and your rights regarding data access and deletion.
-              </p>
+          <div className="rounded-2xl border-2 border-border bg-card p-6 sm:p-8 shadow-[4px_4px_0px_var(--desk-border)]">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded border border-border bg-muted text-foreground font-mono text-xs font-bold uppercase tracking-wider mb-3">
+              <ShieldCheck className="h-3.5 w-3.5 text-primary" /> Privacy & Security Commitment
             </div>
+            <h1 className="font-display text-3xl sm:text-4xl font-black tracking-tight text-foreground">
+              Privacy Policy
+            </h1>
+            <p className="mt-1.5 text-xs text-muted-foreground font-mono">
+              Last Updated: {lastUpdated} • Effective Immediately
+            </p>
+            <p className="mt-4 text-xs sm:text-sm text-muted-foreground leading-relaxed font-sans">
+              At <strong>BOOKIE</strong> ("we," "our," or "the Platform"), we respect your personal privacy and are committed to safeguarding your information. This Privacy Policy details the types of information we access and collect, how we protect it, and your rights regarding data access and permanent deletion.
+            </p>
           </div>
 
-          {/* Core Content */}
-          <div className="rounded-3xl border-2 border-slate-900 bg-white dark:bg-slate-900 p-6 sm:p-10 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] space-y-8 text-slate-800 dark:text-slate-200">
-            
-            {/* 1. Information We Access & Collect */}
+          <div className="rounded-2xl border-2 border-border bg-card p-6 sm:p-8 shadow-[4px_4px_0px_var(--desk-border)] space-y-8 text-foreground/90 font-sans text-xs sm:text-sm">
+            {/* 1. Information */}
             <section className="space-y-3">
-              <h2 className="font-display text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                <span className="w-6 h-6 rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs flex items-center justify-center font-mono">1</span>
+              <h2 className="font-display text-lg font-bold flex items-center gap-2 text-foreground">
+                <span className="w-5 h-5 rounded border border-border bg-muted text-foreground text-[11px] flex items-center justify-center font-mono">1</span>
                 Information We Access & Collect
               </h2>
-              <p className="text-sm leading-relaxed">
-                BOOKIE only collects and accesses the minimum information necessary to operate our study cockpit:
+              <p className="leading-relaxed text-muted-foreground">
+                BOOKIE collects and accesses only the minimum information necessary to operate our study cockpit:
               </p>
               
               <div className="space-y-3 pt-1">
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <div className="font-bold text-sm text-primary flex items-center gap-2">
-                    <Lock className="h-4 w-4" /> A. Google OAuth User Data (When You Sign in with Google)
+                <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-1.5">
+                  <div className="font-bold text-xs text-primary flex items-center gap-2 font-mono">
+                    <Lock className="h-3.5 w-3.5" /> A. Authentication Data
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                    When you choose to authenticate using <strong>Google OAuth</strong>, we request access only to your basic public Google account profile:
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    When you authenticate using Google or email, we receive basic profile info (email and display name) solely for authentication and session management.
                   </p>
-                  <ul className="list-disc list-inside text-xs sm:text-sm space-y-1 pl-2 text-slate-600 dark:text-slate-400">
-                    <li><strong>Google Email Address</strong>: Used solely for account identification and authentication.</li>
-                    <li><strong>Google Display Name</strong>: Used to personalize your study workspace and show your name in peer discussions.</li>
-                    <li><strong>Google Profile Picture URL (Avatar)</strong>: Used to automatically set your default profile picture on the site, which you can customize or remove at any time.</li>
-                  </ul>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <div className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-1.5">
+                  <div className="font-bold text-xs text-foreground font-mono">
                     B. Study Workspace Data You Voluntarily Provide
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                    During onboarding or regular use, you may submit:
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Study timer records, subject focus hours, task completions, and academic doubt discussions voluntarily submitted to the community ledger.
                   </p>
-                  <ul className="list-disc list-inside text-xs sm:text-sm space-y-1 pl-2 text-slate-600 dark:text-slate-400">
-                    <li>Target exam category (e.g. JEE 2027, Droppers).</li>
-                    <li>Study timer records, subject focus hours, and task completions.</li>
-                    <li>Questions, comments, and academic doubts voluntarily submitted to the community board.</li>
-                  </ul>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <div className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                <div className="p-4 rounded-xl bg-muted/40 border border-border space-y-1.5">
+                  <div className="font-bold text-xs text-foreground font-mono">
                     C. Guest Device Identifier & Local Preferences
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                    For guest users who choose not to sign in, a random anonymous client UUID is generated in your browser's local storage to preserve study timer sessions and interface themes (light/dark/lite mode). No personally identifiable information is collected from guest sessions.
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    For guest users, a random anonymous client UUID is generated in local storage to preserve study sessions without collecting personal data.
                   </p>
                 </div>
               </div>
             </section>
 
-            {/* 2. How We Use Information */}
+            {/* 2. Zero Sale */}
             <section className="space-y-3">
-              <h2 className="font-display text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                <span className="w-6 h-6 rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs flex items-center justify-center font-mono">2</span>
-                How We Use Your Information
-              </h2>
-              <p className="text-sm leading-relaxed">
-                We use information strictly to deliver and maintain the educational functionality of BOOKIE:
-              </p>
-              <ul className="list-disc list-inside text-sm space-y-1.5 pl-2 text-slate-700 dark:text-slate-300">
-                <li>Authenticating and securing your user session.</li>
-                <li>Displaying your preferred name and profile photo in the User Menu and community posts.</li>
-                <li>Preserving your study progress, study streaks, and daily time tracker statistics across devices.</li>
-                <li>Providing customer support and responding to academic and platform queries.</li>
-              </ul>
-            </section>
-
-            {/* 3. Google API Services User Data Policy / Limited Use Disclosure */}
-            <section className="space-y-4 p-5 rounded-2xl border-2 border-primary/40 bg-primary/5 dark:bg-primary/10">
-              <h2 className="font-display text-lg sm:text-xl font-bold text-primary flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-                Google API Services User Data Policy Compliance (Limited Use Disclosure)
-              </h2>
-              <p className="text-sm leading-relaxed font-medium">
-                BOOKIE's use and transfer to any other app of information received from Google APIs will adhere to the{" "}
-                <a
-                  href="https://developers.google.com/terms/api-services-user-data-policy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline font-bold text-primary hover:opacity-80"
-                >
-                  Google API Services User Data Policy
-                </a>
-                , including the <strong>Limited Use</strong> requirements.
-              </p>
-              <div className="text-xs sm:text-sm space-y-2 text-slate-700 dark:text-slate-300">
-                <p>Specifically:</p>
-                <ul className="list-disc list-inside space-y-1 pl-2">
-                  <li>We only request access to scopes essential for authentication (<code className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs">openid</code>, <code className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs">email</code>, <code className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs">profile</code>).</li>
-                  <li>We do <strong>NOT</strong> transfer or disclose your Google user data to third parties, except as strictly necessary to provide the platform's core study functionality or comply with applicable laws.</li>
-                  <li>We do <strong>NOT</strong> use or transfer Google user data for serving personalized, targeted, or interest-based advertisements.</li>
-                  <li>We do <strong>NOT</strong> permit humans to read your Google user data, nor do we use it to train artificial intelligence or machine learning models.</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* 4. Data Sharing & Third Parties */}
-            <section className="space-y-3">
-              <h2 className="font-display text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                <span className="w-6 h-6 rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs flex items-center justify-center font-mono">4</span>
+              <h2 className="font-display text-lg font-bold flex items-center gap-2 text-foreground">
+                <span className="w-5 h-5 rounded border border-border bg-muted text-foreground text-[11px] flex items-center justify-center font-mono">2</span>
                 Zero Sale of Personal Data
               </h2>
-              <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-xs sm:text-sm text-emerald-900 dark:text-emerald-200 flex items-start gap-3">
-                <EyeOff className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                <p>
-                  <strong>We do not sell, rent, monetize, or trade your personal data or Google user data to any third party, broker, or advertising network under any circumstances.</strong>
+              <div className="p-4 rounded-xl border border-primary/30 bg-primary/10 text-foreground flex items-start gap-3">
+                <EyeOff className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <p className="text-xs font-sans leading-relaxed">
+                  <strong>We do not sell, rent, monetize, or trade your personal data or study activity to any third party, broker, or advertising network under any circumstances.</strong>
                 </p>
               </div>
-              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                Data is stored securely on cloud database infrastructure provided by Supabase (PostgreSQL), protected by end-to-end TLS encryption in transit and AES-256 encryption at rest with strict Row-Level Security (RLS) enforcement.
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Data is stored securely on Supabase cloud database infrastructure with end-to-end TLS encryption in transit, AES-256 at rest, and PostgreSQL Row-Level Security (RLS) enforcement.
               </p>
             </section>
 
-            {/* 5. User Rights, Data Retention & Deletion */}
+            {/* 3. Deletion Rights */}
             <section className="space-y-3">
-              <h2 className="font-display text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                <span className="w-6 h-6 rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs flex items-center justify-center font-mono">5</span>
+              <h2 className="font-display text-lg font-bold flex items-center gap-2 text-foreground">
+                <span className="w-5 h-5 rounded border border-border bg-muted text-foreground text-[11px] flex items-center justify-center font-mono">3</span>
                 Data Retention & User Deletion Rights
               </h2>
-              <p className="text-sm leading-relaxed">
-                You maintain complete control over your information:
+              <p className="leading-relaxed text-muted-foreground">
+                You maintain complete ownership of your data:
               </p>
-              <ul className="list-disc list-inside text-sm space-y-1.5 pl-2 text-slate-700 dark:text-slate-300">
-                <li><strong>Profile Customization</strong>: You can update your display name, target batch, or change/remove your avatar photo anytime on the <Link to="/profile" className="text-primary underline font-bold">Profile Page</Link>.</li>
-                <li><strong>Account & Data Deletion</strong>: You have the right to request the permanent deletion of your account, study history, community records, and any associated Google user data.</li>
-                <li><strong>Deletion Fulfillment</strong>: To request complete data erasure, simply submit a request through in-app <Link to="/support" className="text-primary underline font-bold">Support Chat</Link> or send an email to <a href="mailto:capcutwaladiddy@gmail.com" className="text-primary underline font-bold">capcutwaladiddy@gmail.com</a>. Deletion requests are processed and confirmed within <strong>24 to 48 hours</strong>.</li>
+              <ul className="list-disc list-inside space-y-1 pl-2 text-muted-foreground">
+                <li><strong>Profile Customization</strong>: You can change or remove your profile details anytime on the <Link to="/profile" className="text-primary underline">Profile Page</Link>.</li>
+                <li><strong>Instant Self-Service Deletion</strong>: You can permanently erase all study history, streaks, and account data instantly in the Danger Zone on your Profile page.</li>
+                <li><strong>Support Deletion Request</strong>: You can also request complete data purge via <Link to="/support" className="text-primary underline">Support Chat</Link> or email.</li>
               </ul>
             </section>
 
-            {/* 6. Cookies and Local Storage */}
-            <section className="space-y-3">
-              <h2 className="font-display text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                <span className="w-6 h-6 rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs flex items-center justify-center font-mono">6</span>
-                Cookies & Local Browser Storage
+            {/* 4. Contact */}
+            <section className="space-y-3 pt-4 border-t border-border">
+              <h2 className="font-display text-lg font-bold flex items-center gap-2 text-foreground">
+                <span className="w-5 h-5 rounded border border-border bg-muted text-foreground text-[11px] flex items-center justify-center font-mono">4</span>
+                Privacy Inquiries & Official Contact
               </h2>
-              <p className="text-sm leading-relaxed">
-                BOOKIE uses browser LocalStorage strictly for functional and performance purposes:
-              </p>
-              <ul className="list-disc list-inside text-sm space-y-1 pl-2 text-slate-700 dark:text-slate-300">
-                <li>Authentication session tokens (<code className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs">sb-access-token</code>).</li>
-                <li>Theme preferences (light, dark, system).</li>
-                <li>Lite Mode toggle state for low-bandwidth devices.</li>
-                <li>Local active timer states to prevent timer resets upon page reload.</li>
-              </ul>
-              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                We do not employ third-party tracking pixels, cross-site trackers, or advertising cookies.
-              </p>
-            </section>
-
-            {/* 7. Contact & Privacy Inquiries */}
-            <section className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-              <h2 className="font-display text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                <span className="w-6 h-6 rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs flex items-center justify-center font-mono">7</span>
-                Contact Us & Privacy Enquiries
-              </h2>
-              <p className="text-sm leading-relaxed">
-                If you have questions, data deletion requests, or need clarification regarding our privacy practices and Google OAuth verification, please reach out through our official channels:
-              </p>
-
-              <div className="grid sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-4 rounded-2xl border-2 border-slate-900 bg-slate-50 dark:bg-slate-800/80 shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]">
-                  <div className="flex items-center gap-2 text-primary font-bold text-sm mb-1.5">
-                    <MessageSquare className="h-4 w-4" /> In-App Support Chat
+              <div className="grid sm:grid-cols-2 gap-3 pt-1">
+                <div className="p-4 rounded-xl border-2 border-border bg-muted/40 shadow-[2px_2px_0px_var(--desk-border)]">
+                  <div className="flex items-center gap-2 text-primary font-bold text-xs mb-1">
+                    <MessageSquare className="h-3.5 w-3.5" /> Support Chat
                   </div>
-                  <p className="text-xs text-muted-foreground mb-3">
-                    Submit a real-time support enquiry or ticket directly inside the portal.
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Submit a support ticket or privacy inquiry directly inside the app.
                   </p>
                   <Link
                     to="/support"
-                    className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-900 hover:bg-primary/10 transition-colors"
+                    className="inline-flex items-center gap-1 text-xs font-mono font-bold text-foreground hover:underline"
                   >
-                    <span>Open Support Desk</span> ↗
+                    Open Support Desk →
                   </Link>
                 </div>
 
-                <div className="p-4 rounded-2xl border-2 border-slate-900 bg-slate-50 dark:bg-slate-800/80 shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]">
-                  <div className="flex items-center gap-2 text-primary font-bold text-sm mb-1.5">
-                    <Mail className="h-4 w-4" /> Official Email Enquiry
+                <div className="p-4 rounded-xl border-2 border-border bg-muted/40 shadow-[2px_2px_0px_var(--desk-border)]">
+                  <div className="flex items-center gap-2 text-primary font-bold text-xs mb-1">
+                    <Mail className="h-3.5 w-3.5" /> Direct Email
                   </div>
-                  <p className="text-xs text-muted-foreground mb-3">
-                    For privacy questions, data deletion requests, and Google Cloud compliance:
+                  <p className="text-xs text-muted-foreground mb-2">
+                    For privacy questions and data deletion confirmations:
                   </p>
                   <a
                     href="mailto:capcutwaladiddy@gmail.com"
-                    className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-900 hover:bg-primary/10 transition-colors"
+                    className="inline-flex items-center gap-1 text-xs font-mono font-bold text-foreground hover:underline"
                   >
-                    <span>capcutwaladiddy@gmail.com</span> ↗
+                    capcutwaladiddy@gmail.com →
                   </a>
                 </div>
               </div>
             </section>
-
           </div>
         </div>
       </div>
