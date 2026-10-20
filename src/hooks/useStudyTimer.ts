@@ -3,9 +3,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { TIMER_STORAGE_KEY, type TimerState, type TimerMode } from '@/types/ypt';
 
 const THREE_HOURS = 3 * 60 * 60;
-const HEARTBEAT_INTERVAL = 30_000; // 30s
+const HEARTBEAT_INTERVAL = 120_000; // 120s (2 min)
 const INACTIVITY_COUNTDOWN = 15; // seconds
-const STALE_CLEANUP_INTERVAL = 5 * 60_000; // 5 min
+const STALE_CLEANUP_INTERVAL = 15 * 60_000; // 15 min
 /** Wall-clock vs monotonic-clock divergence (ms) treated as impossible */
 const CLOCK_JUMP_TOLERANCE_MS = 120_000;
 
@@ -141,6 +141,41 @@ export function useStudyTimer(yptUserId: string | undefined) {
     try {
       window.dispatchEvent(new CustomEvent('study-session-ended'));
     } catch {}
+  }, [calcElapsed]);
+
+  // Cleanly finalize session on tab close using keepalive
+  useEffect(() => {
+    const handlePageHide = (e: PageTransitionEvent) => {
+      if (e.persisted) return;
+      const state = getTimerState();
+      if (!state || state.pausedAt || !state.sessionId) return;
+      const clientDuration = calcElapsed(state);
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      if (!supabaseUrl || !supabaseKey) return;
+
+      const payload = JSON.stringify({
+        sessionId: state.sessionId,
+        clientDuration,
+        clientFlagged: flaggedRef.current,
+      });
+
+      try {
+        fetch(`${supabaseUrl}/functions/v1/end-study-session`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+          },
+          body: payload,
+          keepalive: true,
+        }).catch(() => {});
+      } catch {}
+    };
+
+    window.addEventListener('pagehide', handlePageHide);
+    return () => window.removeEventListener('pagehide', handlePageHide);
   }, [calcElapsed]);
 
   // Heartbeat: last_heartbeat is the server's source of truth for real duration

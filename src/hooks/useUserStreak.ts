@@ -94,23 +94,25 @@ export function useUserStreak() {
     refreshStreak();
   }, [refreshStreak]);
 
-  // Subscribe to realtime study_sessions updates
+  // Refresh streak on session end or when tab becomes visible
   useEffect(() => {
     if (!user?.id) return;
-    const channelName = `streak-${user.id}-${Math.random().toString(36).substring(2, 7)}`;
-    const ch = supabase
-      .channel(channelName)
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'study_sessions', filter: `ypt_user_id=eq.${user.id}` },
-        () => {
-          refreshStreak();
-        }
-      )
-      .subscribe();
+
+    const onSessionEnd = () => refreshStreak();
+    window.addEventListener('study-session-ended', onSessionEnd);
+
+    let lastFetched = Date.now();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && Date.now() - lastFetched > 60_000) {
+        lastFetched = Date.now();
+        refreshStreak();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      supabase.removeChannel(ch);
+      window.removeEventListener('study-session-ended', onSessionEnd);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [user?.id, refreshStreak]);
 

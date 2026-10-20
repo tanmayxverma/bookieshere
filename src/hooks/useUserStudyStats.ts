@@ -127,20 +127,19 @@ export function useUserStudyStats(): UserStudyStats {
     const onSessionEnd = () => fetchStats();
     window.addEventListener('study-session-ended', onSessionEnd);
 
-    const channel = supabase
-      .channel('realtime:study_stats')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'study_sessions' },
-        () => {
-          fetchStats();
-        }
-      )
-      .subscribe();
+    // Refresh when user returns to tab after more than 60s
+    let lastFetched = Date.now();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && Date.now() - lastFetched > 60_000) {
+        lastFetched = Date.now();
+        fetchStats();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
       window.removeEventListener('study-session-ended', onSessionEnd);
-      supabase.removeChannel(channel);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [fetchStats]);
 

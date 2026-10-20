@@ -69,13 +69,14 @@ export function useNotifications() {
     let serverReadIds: string[] = [];
 
     if (profile) {
-      if (isAuthenticated) {
+      const isRealUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(profile.id || '');
+      if (isAuthenticated && isRealUUID) {
         const { data: reads } = await supabase
           .from('notification_reads')
           .select('notification_id')
           .eq('profile_id', profile.id);
         serverReadIds = (reads ?? []).map((r: any) => r.notification_id);
-      } else {
+      } else if (deviceId) {
         const { data: reads } = await (supabase as any).rpc('guest_list_notification_reads', { _device_id: deviceId });
         serverReadIds = (reads ?? []).map((r: any) => r.notification_id);
       }
@@ -89,12 +90,11 @@ export function useNotifications() {
 
   useEffect(() => { load(); }, [load]);
 
-  // Realtime
+  // Realtime: Listen only to new active announcements, dropping notification_reads listener
   useEffect(() => {
-    const chName = `notifications-feed-${Math.random().toString(36).substring(2, 9)}`;
+    const chName = `notifications-live-${Math.random().toString(36).substring(2, 9)}`;
     const ch = supabase.channel(chName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => load())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'notification_reads' }, () => load())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: 'is_active=eq.true' }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [load]);
@@ -110,7 +110,8 @@ export function useNotifications() {
     });
 
     try {
-      if (isAuthenticated && profile) {
+      const isRealUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(profile?.id || '');
+      if (isAuthenticated && profile && isRealUUID) {
         await supabase
           .from('notification_reads')
           .upsert({ notification_id: id, profile_id: profile.id }, { onConflict: 'notification_id,profile_id' });

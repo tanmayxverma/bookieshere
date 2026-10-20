@@ -32,23 +32,10 @@ function getPriorityRank(materialName?: string | null): number {
 }
 
 export function useMaterials() {
-  const qc = useQueryClient();
-  useEffect(() => {
-    const channelId = `materials-live-${Math.random().toString(36).substring(2, 9)}`;
-    const ch = supabase
-      .channel(channelId)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'materials' }, () => {
-        qc.invalidateQueries({ queryKey: ['materials'] });
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(ch);
-    };
-  }, [qc]);
-
   return useQuery({
     queryKey: ["materials"],
+    staleTime: 10 * 60_000,
+    gcTime: 30 * 60_000,
     queryFn: async (): Promise<Material[]> => {
       try {
         const { data, error } = await supabase

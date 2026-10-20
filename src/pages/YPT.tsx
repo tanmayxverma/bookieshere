@@ -43,7 +43,7 @@ export default function YPT() {
   }, [isLoading, isOnboarded, profile, profileOnboarded, createUser]);
 
   const timer = useStudyTimer(user?.id);
-  const { onlineCount, activeUsers } = useYPTPresence(user?.id, user?.name, user?.jee_focus_year);
+  const { onlineCount, activeUsers } = useYPTPresence(user?.id, user?.name, user?.jee_focus_year, timer.isActive ? timer.subject : undefined);
   const roomSession = useRoomSession(user || null, timer.startSession, timer.endSession, timer.isActive);
   const [tab, setTab] = useState<TabId>('study');
   const [animating, setAnimating] = useState(false);

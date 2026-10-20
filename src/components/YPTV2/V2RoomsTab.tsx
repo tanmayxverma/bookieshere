@@ -348,12 +348,12 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
 
   useEffect(() => {
     fetchRooms();
-    const chName = `ypt_rooms_${Math.random().toString(36).substring(2, 9)}`;
-    const channel = supabase
-      .channel(chName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'ypt_rooms' }, () => { fetchRooms(); })
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchRooms();
+      }
+    }, 60_000);
+    return () => { clearInterval(interval); };
   }, []);
 
   // Realtime chat with message deduplication & stable connection (no roomView thrashing)

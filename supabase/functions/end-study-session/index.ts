@@ -5,8 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-/** Grace added to the last heartbeat: heartbeats land every 30s. */
-const HEARTBEAT_GRACE_S = 45;
+/** Grace added to the last heartbeat: heartbeats land every 120s; grace is 300s to support throttled background tabs. */
+const HEARTBEAT_GRACE_S = 300;
 /** Client duration may exceed the server figure by at most this before we clamp + flag. */
 const DEVIATION_TOLERANCE_S = 180;
 /** No single session can legitimately exceed this. */
