@@ -6,58 +6,58 @@
 
 @layer base {
   :root {
-    /* LIGHT THEME — Sticker Pop Academic Desk */
-    --background: 46 100% 98%; /* #FFFDF7 Warm Cream */
-    --foreground: 222 47% 11%; /* #0F172A Archival Ink Navy */
+    /* LIGHT THEME — Editorial Ink (Bookie Academic Journal) */
+    --background: 280 20% 98%; /* #FBF8FC Warm Archival Ivory Parchment */
+    --foreground: 260 8% 12%;  /* #1C1B1F Sumi Drafting Ink */
 
-    --surface-1: 0 0% 100%;
-    --surface-2: 40 40% 96%;
-    --surface-3: 40 30% 92%;
+    --surface-1: 0 0% 100%;    /* #FFFFFF Crisp Paper */
+    --surface-2: 270 12% 96%;  /* #F6F2F7 Soft Shaded Panel */
+    --surface-3: 270 8% 92%;   /* #F0EDF2 Recessed Ledger */
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 260 8% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 260 8% 12%;
 
-    --primary: 221 83% 53%; /* #2563EB Electric Cobalt */
+    --primary: 5 37% 41%;      /* #904A43 Deep Archival Crimson */
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 224 76% 48%;
+    --primary-hover: 5 39% 35%;
 
-    --secondary: 43 96% 56%; /* #FBBF24 Sunflower Yellow */
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 38 92% 50%;   /* #F59E0B Warm Amber (Chai ☕) */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 40 40% 94%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 270 12% 96%;
+    --muted-foreground: 260 7% 30%; /* #49454E Archival Charcoal */
 
-    --accent: 43 96% 56%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 38 92% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 348 83% 60%; /* #F43F5E Coral Punch */
+    --destructive: 0 72% 42%;  /* #B91C1C Warning / Penalty Crimson */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 222 47% 11%;
-    --input: 222 47% 11%;
-    --ring: 221 83% 53%;
+    --border: 34 16% 87%;      /* #E2DED8 Crisp Hairline */
+    --input: 34 16% 87%;
+    --ring: 5 37% 41%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
-    --section: 40 40% 96%;
+    --section: 270 12% 96%;
 
-    --physics: 221 83% 53%;
+    --physics: 5 37% 41%;
     --chemistry: 160 84% 39%;
-    --mathematics: 43 96% 56%;
-    --jee: 221 83% 53%;
-    --other-exam: 200 60% 50%;
+    --mathematics: 38 92% 50%;
+    --jee: 5 37% 41%;
+    --other-exam: 215 16% 47%;
 
-    --sidebar-background: 46 100% 98%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 221 83% 53%;
+    --sidebar-background: 280 20% 98%;
+    --sidebar-foreground: 260 8% 12%;
+    --sidebar-primary: 5 37% 41%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 40 40% 94%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 222 47% 11%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-accent: 270 12% 96%;
+    --sidebar-accent-foreground: 260 8% 12%;
+    --sidebar-border: 34 16% 87%;
+    --sidebar-ring: 5 37% 41%;
 
     /* Semantic Aliases */
     --surface-arcade: 46 100% 98%;
@@ -98,12 +98,12 @@
   }
 
   .dark {
-    /* DARK THEME — Night Shift Cockpit */
+    /* DARK THEME — Nocturnal Broadside / Night Shift */
     --background: 222 47% 6%; /* #0A0E17 Deep Nocturnal Void */
-    --foreground: 210 40% 98%; /* #F1F5F9 */
+    --foreground: 210 40% 98%; /* #F1F5F9 High-contrast chalk */
 
-    --surface-1: 222 38% 11%; /* #111726 */
-    --surface-2: 217 33% 15%; /* #182234 */
+    --surface-1: 222 38% 11%; /* #111726 Dark Slate Container */
+    --surface-2: 217 33% 15%; /* #182234 Elevated Deck */
     --surface-3: 217 33% 20%;
 
     --card: 222 38% 11%;
@@ -112,42 +112,42 @@
     --popover: 222 38% 11%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217 91% 60%; /* #3B82F6 Laser Cobalt */
+    --primary: 0 84% 60%;      /* #EF4444 Crimson Beacon */
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 217 91% 68%;
+    --primary-hover: 0 84% 50%;
 
-    --secondary: 38 92% 50%; /* #F59E0B Radiant Amber */
+    --secondary: 43 96% 56%;   /* #FBBF24 Warm Amber */
     --secondary-foreground: 222 47% 6%;
 
     --muted: 217 33% 15%;
-    --muted-foreground: 215 20% 65%;
+    --muted-foreground: 215 20% 65%; /* #94A3B8 Cool Slate */
 
     --accent: 217 33% 20%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 343 89% 71%; /* #FB7185 */
-    --destructive-foreground: 222 47% 6%;
+    --destructive: 0 84% 60%;  /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217 33% 17%; /* #1E293B */
+    --border: 217 33% 17%;     /* #1E293B Hairline Edge */
     --input: 217 33% 17%;
-    --ring: 217 91% 60%;
+    --ring: 0 84% 60%;
 
     --section: 222 38% 11%;
 
-    --physics: 217 91% 65%;
-    --chemistry: 160 60% 50%;
-    --mathematics: 35 90% 60%;
-    --jee: 199 89% 53%;
-    --other-exam: 200 60% 55%;
+    --physics: 0 84% 60%;
+    --chemistry: 160 84% 50%;
+    --mathematics: 43 96% 56%;
+    --jee: 0 84% 60%;
+    --other-exam: 215 20% 65%;
 
     --sidebar-background: 222 47% 6%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary: 0 84% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 217 33% 15%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-ring: 0 84% 60%;
 
     /* Semantic Aliases - Dark */
     --surface-arcade: 222 47% 6%;

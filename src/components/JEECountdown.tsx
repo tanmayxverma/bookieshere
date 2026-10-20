@@ -48,7 +48,6 @@ export const EXAM_OPTIONS: { id: TargetKey; label: string; shortLabel: string }[
 
 const STORAGE_KEY = "bookie_jee_countdown_target";
 
-/** Get next upcoming timestamp for a target (advances year if date already passed) */
 function getTargetTimestamp(targetDateISO: string): number {
   const target = new Date(targetDateISO).getTime();
   const now = Date.now();
@@ -73,11 +72,11 @@ function getDiff(target: number) {
 function Cell({ value, label, colorClass = "text-foreground" }: { value: number; label: string; colorClass?: string }) {
   const padded = String(value).padStart(2, "0");
   return (
-    <div className="bg-card border-2 border-[var(--desk-border)] rounded-xl sm:rounded-2xl p-2.5 sm:p-5 text-center shadow-[2px_2px_0px_var(--desk-border)]">
-      <div className={`font-mono font-black text-2xl sm:text-5xl tracking-tight font-tabular ${colorClass}`}>
+    <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-2.5 sm:p-5 text-center shadow-xs">
+      <div className={`font-mono font-bold text-2xl sm:text-4xl tracking-tight font-tabular ${colorClass}`}>
         {padded}
       </div>
-      <div className="font-mono text-[9px] sm:text-xs font-extrabold tracking-widest text-muted-foreground uppercase mt-1">
+      <div className="font-mono text-[9px] sm:text-xs font-semibold tracking-widest text-muted-foreground uppercase mt-1">
         {label}
       </div>
     </div>
@@ -85,7 +84,6 @@ function Cell({ value, label, colorClass = "text-foreground" }: { value: number;
 }
 
 export function JEECountdown() {
-  // Default for everyone is JEE Main Session 1; restores user choice from localStorage
   const [selectedTarget, setSelectedTarget] = useState<TargetKey>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as TargetKey;
@@ -114,19 +112,14 @@ export function JEECountdown() {
   };
 
   return (
-    <section className="relative bg-card border-2 border-[var(--desk-border)] rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-[4px_4px_0px_var(--desk-border)] transition-all">
-      {/* Washi Tape */}
-      <div className="washi-tape bg-[var(--sunflower)] text-[#0F172A] -rotate-1">
-        TARGET TIMELINE // REALTIME SYNC
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center pt-2">
+    <section className="relative bg-card border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] transition-all">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
         {/* Target Info & Selector */}
         <div className="lg:col-span-5 space-y-3 sm:space-y-4">
           {/* Selector with 3 Options */}
-          <div className="w-full sm:w-auto inline-flex items-center gap-1 p-1 bg-muted/40 rounded-xl border-2 border-[var(--desk-border)] shadow-[2px_2px_0px_var(--desk-border)]">
-            <span className="px-2 py-1 text-xs font-mono font-bold text-foreground hidden sm:flex items-center gap-1.5 shrink-0">
-              <Flame className="w-4 h-4 text-[var(--coral)] fill-[var(--coral)] animate-pulse" />
+          <div className="w-full sm:w-auto inline-flex items-center gap-1 p-1 bg-muted/60 rounded-full border border-border">
+            <span className="px-2.5 py-1 text-xs font-mono font-semibold text-muted-foreground hidden sm:flex items-center gap-1.5 shrink-0">
+              <Flame className="w-3.5 h-3.5 text-primary" />
               <span>LIVE</span>
             </span>
             <div className="grid grid-cols-3 sm:flex items-center gap-1 w-full sm:w-auto">
@@ -138,10 +131,10 @@ export function JEECountdown() {
                     type="button"
                     onClick={() => handleSelect(opt.id)}
                     className={cn(
-                      "px-2 sm:px-3 py-1.5 sm:py-1 text-xs font-mono font-bold rounded-lg transition-all duration-100 cursor-pointer whitespace-nowrap text-center",
+                      "px-2 sm:px-3 py-1 text-xs font-sans font-medium rounded-full transition-all duration-150 cursor-pointer whitespace-nowrap text-center select-none",
                       isSelected
-                        ? "bg-primary text-primary-foreground border-2 border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)]"
-                        : "text-muted-foreground hover:text-foreground border-2 border-transparent"
+                        ? "bg-card text-foreground font-semibold shadow-xs border border-border/80"
+                        : "text-muted-foreground hover:text-foreground border border-transparent"
                     )}
                   >
                     <span className="sm:hidden">{opt.shortLabel}</span>
@@ -153,26 +146,26 @@ export function JEECountdown() {
           </div>
 
           <div>
-            <h2 className="text-2xl sm:text-3xl font-heading font-extrabold text-foreground tracking-tight">
-              {active.label} <span className="text-primary font-mono">{active.year}</span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-medium text-foreground tracking-tight">
+              {active.label} <span className="text-primary font-mono font-bold text-xl sm:text-2xl">{active.year}</span>
             </h2>
-            <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold text-muted-foreground mt-1 sm:mt-2">
-              <span className="inline-flex items-center gap-1 text-primary">
-                <Calendar className="w-4 h-4" />
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-muted-foreground mt-1 sm:mt-1.5">
+              <span className="inline-flex items-center gap-1 text-primary font-semibold">
+                <Calendar className="w-3.5 h-3.5" />
                 {active.displayDate}
               </span>
               <span className="hidden sm:inline">•</span>
-              <span className="text-muted-foreground italic text-[11px] sm:text-xs block sm:inline">{active.note}</span>
+              <span className="italic text-[11px] sm:text-xs block sm:inline">{active.note}</span>
             </div>
           </div>
         </div>
 
-        {/* Giant Counter Numbers */}
-        <div className="lg:col-span-7 grid grid-cols-4 gap-2 sm:gap-4">
+        {/* Counter Numbers */}
+        <div className="lg:col-span-7 grid grid-cols-4 gap-2 sm:gap-3">
           <Cell value={t.days} label="DAYS" colorClass="text-foreground" />
           <Cell value={t.hours} label="HOURS" colorClass="text-foreground" />
           <Cell value={t.minutes} label="MINUTES" colorClass="text-primary" />
-          <Cell value={t.seconds} label="SECONDS" colorClass="text-[var(--coral)]" />
+          <Cell value={t.seconds} label="SECONDS" colorClass="text-[#B91C1C]" />
         </div>
       </div>
     </section>

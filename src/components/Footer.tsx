@@ -2,33 +2,28 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Send, PlusCircle } from "lucide-react";
 import { AdminLoginModal } from "@/components/Admin/AdminLoginModal";
-import logo from "@/assets/logo.png";
+import { BookieEmblem } from "@/components/Brand/BookieEmblem";
 
 export function Footer() {
   const year = new Date().getFullYear();
   const [adminOpen, setAdminOpen] = useState(false);
 
   return (
-    <div className="w-full relative mt-16 pb-16 md:pb-0">
-      {/* Telegram Drop Channel CTA Card */}
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-8 py-6">
-        <div className="relative bg-card border-2 border-[var(--desk-border)] text-card-foreground rounded-2xl p-6 sm:p-10 overflow-hidden shadow-[6px_6px_0px_var(--desk-border)]">
-          {/* Playful washi tape on top edge */}
-          <div className="washi-tape bg-[var(--sunflower)] text-[#0F172A] -rotate-1">
-            TELEGRAM CHANNEL // ZERO DELAY
-          </div>
-          
-          <div className="relative z-10 max-w-3xl flex flex-col items-start gap-3 pt-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-[var(--desk-border)] bg-muted/60 font-mono text-xs font-bold uppercase tracking-wider text-foreground">
-              <span className="w-2 h-2 rounded-full bg-[var(--mint)] animate-pulse"></span>
-              INSTANT DROPS
+    <div className="w-full relative mt-16 pb-20 md:pb-0">
+      {/* Telegram Drop Channel Banner */}
+      <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        <div className="relative bg-card border border-border text-card-foreground rounded-2xl p-6 sm:p-8 overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+          <div className="relative z-10 max-w-3xl flex flex-col items-start gap-2.5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-muted/60 font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              TELEGRAM CHANNEL // ZERO DELAY ARCHIVAL DROPS
             </div>
 
-            <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl text-foreground font-extrabold tracking-tight">
-              New material drops. Straight to your feed.
+            <h2 className="font-serif text-2xl sm:text-3xl text-foreground font-medium tracking-tight">
+              New material drops. Straight to your desk.
             </h2>
 
-            <p className="font-body text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
+            <p className="font-sans text-sm text-muted-foreground max-w-2xl leading-relaxed">
               Be the first to know when we index fresh Kota test series, PYQ video links, Allen milestone modules, and verified notes — no spam, just pure signal.
             </p>
 
@@ -37,55 +32,48 @@ export function Footer() {
                 href="https://t.me/bookieshere"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border-2 border-[var(--desk-border)] bg-primary text-primary-foreground font-body font-bold text-sm uppercase tracking-wide shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all hover:brightness-105 cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-sans font-medium text-sm shadow-sm hover:bg-primary/90 transition-all select-none active:scale-[0.98]"
               >
                 <Send className="w-4 h-4" />
                 <span>Join Telegram Channel ↗</span>
               </a>
               <Link
                 to="/support"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border-2 border-[var(--desk-border)] bg-muted/50 hover:bg-muted text-foreground font-body font-bold text-sm uppercase tracking-wide shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border bg-card hover:bg-muted text-foreground font-sans font-medium text-sm shadow-sm transition-all select-none active:scale-[0.98]"
               >
                 <PlusCircle className="w-4 h-4" />
                 <span>Request a Resource ↗</span>
               </Link>
             </div>
 
-            {/* Mini Channel Metrics */}
-            <div className="flex items-center gap-3 mt-2 font-mono text-xs text-muted-foreground">
+            <div className="flex items-center gap-3 mt-1 font-mono text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--mint)]"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 24.8K ASPIRANTS ACTIVE
               </span>
               <span>•</span>
-              <span>2 DROPS / WEEK</span>
+              <span>2 ARCHIVAL DROPS / WEEK</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer Strip */}
-      <footer className="w-full bg-card mt-12 border-t-2 border-[var(--desk-border)] shadow-[0px_-2px_0px_var(--desk-border)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* Official Multi-Tier Archival Footer */}
+      <footer className="w-full bg-card mt-8 border-t border-border shadow-xs">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start gap-1">
-            <div className="flex items-center gap-2">
-              <img
-                src={logo}
-                alt="Bookie"
-                className="w-7 h-7 rounded-lg object-cover border-2 border-[var(--desk-border)] shadow-[1px_1px_0px_var(--desk-border)]"
-                onError={(e) => {
-                  e.currentTarget.src = "/logo.png";
-                }}
-              />
-              <span className="font-heading font-extrabold text-lg text-foreground tracking-tight">BOOKIE®</span>
+            <div className="flex items-center gap-2.5">
+              <BookieEmblem size={26} />
+              <span className="font-serif font-bold text-lg text-foreground tracking-tight">BOOKIE®</span>
+              <span className="text-[11px] font-mono text-muted-foreground border-l border-border pl-2">ACADEMIC INK</span>
             </div>
-            <p className="font-body text-xs text-muted-foreground text-center md:text-left">
-              © {year} Bookie Academics. Engineered for Ambitious Aspirants.
+            <p className="font-sans text-xs text-muted-foreground text-center md:text-left mt-0.5">
+              © {year} Bookie Academic Journal. Engineered for Ambitious Aspirants.
             </p>
           </div>
           
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-            <div className="flex items-center gap-3 font-mono text-xs tracking-wider text-muted-foreground font-semibold">
+            <div className="flex items-center gap-3 font-mono text-xs tracking-wider text-muted-foreground font-medium">
               <Link to="/materials" className="hover:text-primary transition-colors">PRACTICE</Link>
               <span>•</span>
               <Link to="/tests" className="hover:text-primary transition-colors">PROGRESS</Link>
@@ -96,53 +84,53 @@ export function Footer() {
               <span>•</span>
               <Link to="/dmca" className="hover:text-primary transition-colors">DMCA</Link>
             </div>
-            <div className="hidden sm:flex items-center gap-1.5 font-mono text-xs px-2.5 py-1 rounded-full border-2 border-[var(--desk-border)] bg-[var(--sunflower)] text-[#0F172A] font-bold shadow-[1.5px_1.5px_0px_var(--desk-border)]">
-              <span className="w-2 h-2 rounded-full bg-primary"></span>
+            <div className="hidden sm:flex items-center gap-1.5 font-mono text-xs px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               AIR TARGET 2027
             </div>
           </div>
         </div>
 
-        {/* Legal & Verification Sub-Footer (Restored) */}
-        <div className="border-t border-outline-variant/15 dark:border-slate-800 bg-surface-container-lowest/60 dark:bg-slate-900/40 py-4 mt-space-md">
-          <div className="max-w-7xl mx-auto px-margin lg:px-margin-desktop space-y-3">
+        {/* Legal & Compliance Sub-Footer */}
+        <div className="border-t border-border bg-muted/40 py-4">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-2.5">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono">
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-on-surface">
-                <Link to="/copyright-terms" className="font-bold underline hover:text-primary transition-colors">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4 text-muted-foreground">
+                <Link to="/copyright-terms" className="hover:text-primary transition-colors">
                   Terms of Service
                 </Link>
-                <span className="text-outline-variant">•</span>
-                <Link to="/privacy-policy" className="font-bold underline hover:text-primary transition-colors">
+                <span>•</span>
+                <Link to="/privacy-policy" className="hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
-                <span className="text-outline-variant">•</span>
-                <Link to="/dmca" className="text-on-surface-variant hover:text-primary transition-colors">
+                <span>•</span>
+                <Link to="/dmca" className="hover:text-primary transition-colors">
                   DMCA &amp; Copyright
                 </Link>
-                <span className="text-outline-variant">•</span>
-                <Link to="/support" className="text-on-surface-variant hover:text-primary transition-colors">
+                <span>•</span>
+                <Link to="/support" className="hover:text-primary transition-colors">
                   Support Desk
                 </Link>
-                {/* Secret admin gateway dot, styled identically to all other separator dots */}
+                {/* Secret admin gateway trigger */}
                 <button
                   type="button"
                   onClick={() => setAdminOpen(true)}
-                  aria-label="•"
-                  className="text-outline-variant hover:text-primary transition-colors cursor-pointer select-none px-0.5 focus:outline-none"
+                  aria-label="Admin gateway"
+                  className="text-muted-foreground hover:text-primary transition-colors cursor-pointer select-none px-0.5 focus:outline-none"
                 >
                   •
                 </button>
               </div>
 
-              <div className="text-on-surface-variant text-[11px] font-mono text-center sm:text-right">
+              <div className="text-muted-foreground text-[11px] font-mono text-center sm:text-right">
                 Legal &amp; Verification Enquiries:{' '}
-                <Link to="/support" className="font-bold text-primary hover:underline">
+                <Link to="/support" className="font-semibold text-primary hover:underline">
                   Support Desk
                 </Link>
               </div>
             </div>
 
-            <p className="text-[11px] font-mono leading-relaxed text-on-surface-variant/75 text-center sm:text-left">
+            <p className="text-[11px] font-mono leading-relaxed text-muted-foreground/80 text-center sm:text-left">
               BOOKIE is an educational workspace and study tracker. Google OAuth is used solely for secure sign-in and profile synchronization in adherence to the Google API Services User Data Policy Limited Use requirements. We never sell user data.
             </p>
           </div>

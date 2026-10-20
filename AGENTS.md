@@ -2,7 +2,7 @@
 
 ## 1. Design & Interaction Authority — Physical Dynamics & Topology
 
-`apple-design` supplies interaction physics and structural topology only (springs, interruptible motion, press feedback, hierarchy, restraint, accessibility). It does NOT dictate fonts, colors, materials or visual style. The visual aesthetic is a premium, distinctive, slightly funky product identity (not generic, not vibe-coded, not templated).
+The Stitch design in `docs/DESIGN.md` is the visual authority; `apple-design` contributes interaction physics and topology only (springs, interruptible motion, press feedback, hierarchy, restraint, accessibility), never fonts, colors or materials. The visual aesthetic is a premium, distinctive, disciplined academic journal product identity (not generic, not vibe-coded, not templated).
 
 ### 1.1 Structural Topology
 - **Clear Hierarchy:** One primary action per view, strong navigation model, progressive disclosure, and quiet surfaces.

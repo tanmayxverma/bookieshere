@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bookie — Scholarly Discipline for JEE Adv &amp; NEET-UG</title>
+<!-- Typography: Newsreader (Serif), Plus Jakarta Sans (Grotesk), JetBrains Mono (Tabular/Monospace) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error-container": "#ffdad6",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#eae7eb",
+            "on-primary-fixed-variant": "#930000",
+            "on-secondary": "#ffffff",
+            "inverse-on-surface": "#f3f0f4",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#d8e3fb",
+            "primary-fixed": "#ffdad4",
+            "on-secondary-fixed": "#111c2d",
+            "secondary": "#545f73",
+            "surface-container-low": "#f6f2f7",
+            "primary": "#b41d12",
+            "tertiary-container": "#007da9",
+            "tertiary-fixed": "#c3e8ff",
+            "secondary-container": "#d5e0f8",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fbfcff",
+            "tertiary": "#006386",
+            "inverse-surface": "#303033",
+            "surface-container": "#f0edf1",
+            "surface-dim": "#dcd9dd",
+            "on-secondary-fixed-variant": "#3c475a",
+            "surface-container-highest": "#e4e1e6",
+            "inverse-primary": "#ffb4a8",
+            "on-primary-fixed": "#410000",
+            "surface-tint": "#b82014",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#1b1b1e",
+            "tertiary-fixed-dim": "#7ad0ff",
+            "surface": "#fbf8fc",
+            "surface-variant": "#e4e1e6",
+            "on-secondary-container": "#586377",
+            "outline": "#8f706b",
+            "outline-variant": "#e4beb8",
+            "on-background": "#1b1b1e",
+            "on-surface-variant": "#5b403c",
+            "on-error": "#ffffff",
+            "surface-bright": "#fbf8fc",
+            "on-tertiary-fixed": "#001e2c",
+            "background": "#fbf8fc",
+            "primary-container": "#d83828",
+            "on-tertiary-fixed-variant": "#004c68",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#fffbff",
+            "primary-fixed-dim": "#ffb4a8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "margin-mobile": "1rem",
+            "space-xl": "2.5rem",
+            "gutter": "1.5rem",
+            "space-lg": "1.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-xs": "0.25rem",
+            "margin-tablet": "2rem",
+            "margin": "3rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Newsreader", "serif"],
+            "headline-lg-mobile": ["Newsreader", "serif"],
+            "label-caps": ["JetBrains Mono", "monospace"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-md": ["Newsreader", "serif"],
+            "headline-sm": ["Newsreader", "serif"],
+            "label-code": ["JetBrains Mono", "monospace"],
+            "body-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "title-md": ["Plus Jakarta Sans", "sans-serif"],
+            "display-lg": ["Newsreader", "serif"],
+            "display-lg-mobile": ["Newsreader", "serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "metric-timer": ["JetBrains Mono", "monospace"]
+          },
+          "fontSize": {
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "500" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-code": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+            "display-lg-mobile": ["34px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "metric-timer": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Architectural hairline rules and paper grid rendering */
+    .ink-border-b { border-bottom: 1px solid #e4beb8; }
+    .ink-border-t { border-top: 1px solid #e4beb8; }
+    .ink-border-r { border-right: 1px solid #e4beb8; }
+    .ink-border-l { border-left: 1px solid #e4beb8; }
+    .ink-box-border { border: 1px solid #e4beb8; }
+    .ink-shadow { box-shadow: 4px 4px 0px 0px rgba(27, 27, 30, 0.08); }
+    
+    /* Strict font-feature setting for tabular numbers in academic data */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<meta content="web_standard" name="shell-type"/></head>
+<body class="bg-surface text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col font-body-md text-body-md bg-grid-pattern" style="background-color: #fbf9f5; background-image: radial-gradient(circle at 50% 120px, rgba(255, 255, 255, 0.85) 0%, rgba(251, 249, 245, 0.4) 60%, rgba(246, 242, 236, 0.95) 100%), linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px); background-size: 100% 100%, 28px 28px, 28px 28px;">
+<!-- ==================== 1. MASTHEAD & TOP APP BAR ==================== -->
+<!-- Archival Volume Strip -->
+<!-- Shared TopNavBar Component -->
+<header class="sticky top-0 z-50 w-full pt-3 px-space-md md:px-margin">
+<div class="max-w-7xl mx-auto flex items-center justify-between bg-surface-container-lowest/95 backdrop-blur-md border border-outline-variant/60 rounded-full py-2 px-4 md:px-6 bookie-pill-shadow" style="box-shadow: 0 4px 20px -2px rgba(27, 27, 30, 0.06), 0 1px 3px 0 rgba(27, 27, 30, 0.04); background-color: rgba(255, 255, 255, 0.94); border: 1px solid rgba(228, 190, 184, 0.65);">
+<!-- Logo & Seal Badge -->
+<div class="flex items-center gap-3 shrink-0">
+<div class="w-9 h-9 rounded-full bg-[#f4ebe1] border border-[#e5d8cb] flex items-center justify-center text-[#8a5d3b] shadow-inner font-serif text-base select-none">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+</div>
+<a class="font-headline-lg font-bold tracking-tight text-xl text-on-surface hover:text-primary transition-colors flex items-center" href="#">
+        BOOKIE<span class="text-[10px] align-super text-secondary ml-0.5 font-sans font-normal">®</span>
+</a>
+</div>
+<!-- Center Nav Items -->
+<nav class="hidden md:flex items-center space-x-1 lg:space-x-2 text-body-sm font-medium text-secondary">
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container/60 text-tertiary-container font-semibold transition-all hover:bg-secondary-container" href="#home">
+<span class="material-symbols-outlined text-base">home</span>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#materials">
+<span class="material-symbols-outlined text-base">auto_stories</span>
+<span>Materials</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#tests">
+<span class="material-symbols-outlined text-base">description</span>
+<span>Tests</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#ypt">
+<span class="material-symbols-outlined text-base">timer</span>
+<span>YPT</span>
+<span class="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-700 tracking-wider font-label-caps">LIVE</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#portals">
+<span class="material-symbols-outlined text-base">grid_view</span>
+<span>Portals</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#community">
+<span class="material-symbols-outlined text-base">chat_bubble_outline</span>
+<span>Community</span>
+</a>
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#support">
+<span class="material-symbols-outlined text-base">headset_mic</span>
+<span>Support</span>
+</a>
+</nav>
+<!-- Right Utilities -->
+<div class="flex items-center gap-2.5 shrink-0">
+<!-- Chai Button in Honey Badge -->
+<a class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#fdf3e2] hover:bg-[#fae7c9] text-[#935b12] border border-[#f5dcaf] font-body-sm font-medium transition-colors" href="#chai">
+<span class="material-symbols-outlined text-base">coffee</span>
+<span>Chai</span>
+</a>
+<!-- Bell Notification -->
+<button aria-label="Notifications" class="p-1.5 text-secondary hover:text-on-surface rounded-full hover:bg-surface-container-low transition-colors" type="button">
+<span class="material-symbols-outlined text-lg">notifications</span>
+</button>
+<!-- Sun/Theme Toggle -->
+<button aria-label="Toggle theme" class="p-1.5 text-secondary hover:text-on-surface rounded-full hover:bg-surface-container-low transition-colors" type="button">
+<span class="material-symbols-outlined text-lg">wb_sunny</span>
+</button>
+<!-- Dark Streak / Target Pill Badge -->
+<div class="flex flex-col items-center justify-center bg-on-surface text-surface rounded-full px-2.5 py-1 min-w-[36px] shadow-sm leading-tight cursor-pointer select-none">
+<span class="text-xs font-bold leading-none">0</span>
+<span class="text-[9px] text-amber-400 font-label-code leading-none flex items-center gap-0.5">
+<span>🔥</span>0d
+        </span>
+</div>
+</div>
+</div>
+</header>
+<!-- ==================== 2. HERO SECTION: ASYMMETRIC EDITORIAL GRID ==================== -->
+<main class="flex-grow"><div class="flex flex-col w-full">
+<!-- Top Academic Context Header & Ledger Snapshot -->
+<section class="w-full max-w-7xl mx-auto px-space-md md:px-margin py-8 md:py-12">
+<!-- Archival Metadata Ledger Ribbon -->
+<div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-outline-variant/60 text-secondary">
+<div class="flex items-center gap-2 font-label-caps text-label-caps uppercase tracking-widest text-primary font-semibold">
+<span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>STUDY ARSENAL // CURATED FOR JEE ADVANCED &amp; NEET-UG</span>
+<span class="text-outline-variant">/</span>
+<span class="text-secondary font-medium">ARCHIVAL REPOSITORY v2026.4</span>
+</div>
+<div class="flex items-center gap-3 text-secondary font-label-code text-body-sm">
+<span class="flex items-center gap-1.5 bg-surface-container-low px-2.5 py-0.5 rounded-full text-on-surface-variant border border-outline-variant/40">
+<span class="material-symbols-outlined text-[15px] text-tertiary">verified</span>
+          Verified KaTeX &amp; Vector OCR
+        </span>
+<span class="hidden sm:inline-block text-outline-variant">|</span>
+<span class="hidden sm:inline-block text-secondary">Zero-Rot Scholarly Standard</span>
+</div>
+</div>
+<!-- Editorial Title & Ledger Grid -->
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Title & Rigorous Mandate -->
+<div class="lg:col-span-7 space-y-4">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-secondary-container/50 text-tertiary-container font-label-caps text-label-caps uppercase">
+<span>Official Curated Compendium</span>
+</div>
+<h1 class="font-headline-lg text-display-lg text-on-surface tracking-tight leading-tight">
+          Materials Library <span class="font-light italic text-secondary font-headline-lg">&amp; Vault.</span>
+</h1>
+<p class="font-headline-md text-headline-sm text-secondary italic font-serif leading-relaxed">
+          Deconstructed syllabi, verbatim test modules, and first-principle proofs.
+        </p>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed pt-1">
+          Hand-curated, zero-filler archival papers, chapter-by-chapter trap matrices, and verified professor proofs — strictly indexed for serious rankers without low-resolution scans.
+        </p>
+</div>
+<!-- Right Column: Minimalist Archival Ledger Widget -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/70 shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/40">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary inline-block"></span>
+<span class="font-label-caps text-label-caps tracking-widest text-on-surface uppercase">LIBRARY SNAPSHOT</span>
+</div>
+<span class="font-label-code text-body-sm text-secondary">Updated: 04:00 IST</span>
+</div>
+<div class="py-4 flex items-baseline justify-between">
+<div>
+<div class="font-metric-timer text-[42px] leading-none text-on-surface font-bold tracking-tight">190<span class="text-primary font-serif">+</span></div>
+<div class="font-label-caps text-label-caps uppercase text-secondary tracking-wider mt-1">Combat-Ready Resources</div>
+</div>
+<div class="text-right">
+<span class="font-label-caps text-label-caps text-tertiary uppercase bg-tertiary-fixed/40 px-2 py-0.5 rounded text-[10px] font-bold">100% Peer Verified</span>
+<p class="font-label-code text-body-sm text-on-surface-variant mt-1">4.9/5.0 Quality Rating</p>
+</div>
+</div>
+<!-- Subject Division Ledger Bar -->
+<div class="space-y-2 pt-2 border-t border-outline-variant/30">
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-primary" style="width: 25%" title="Physics: 48"></div>
+<div class="h-full bg-tertiary" style="width: 27%" title="Chemistry: 52"></div>
+<div class="h-full bg-secondary" style="width: 26%" title="Math: 50"></div>
+<div class="h-full bg-outline" style="width: 22%" title="PCM Full-Mocks: 40"></div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-label-code text-[12px] text-secondary">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-sm bg-primary"></span>
+<span>Phys: <strong class="text-on-surface">48</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-sm bg-tertiary"></span>
+<span>Chem: <strong class="text-on-surface">52</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-sm bg-secondary"></span>
+<span>Math: <strong class="text-on-surface">50</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-sm bg-outline"></span>
+<span>Mocks: <strong class="text-on-surface">40</strong></span>
+</div>
+</div>
+</div>
+<!-- Strict Curation Guarantee Badge -->
+<div class="mt-4 p-2.5 bg-surface-container-low rounded border border-outline-variant/50 flex items-start gap-2.5">
+<span class="material-symbols-outlined text-primary text-base shrink-0 mt-0.5">verified_user</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+<strong class="text-on-surface font-medium">Strict Curation Guarantee:</strong> No photocopied notes or watermark-polluted scans. Every file contains vectorized equations and indexed bookmarks.
+          </p>
+</div>
+</div>
+</div>
+<!-- Search & Fast Filter Hub -->
+<div class="mt-10 bg-surface-container-lowest rounded-xl p-4 md:p-5 border border-outline-variant/70 shadow-sm space-y-4">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-secondary text-xl pointer-events-none">search</span>
+<input class="w-full pl-12 pr-28 py-3.5 bg-surface rounded-lg border border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-secondary/60 focus:outline-none focus:border-on-surface focus:ring-0 transition-all shadow-inner" id="vault-search-input" placeholder="Search 190+ deconstructed books, Irodov sets, Allen modules, Cengage series, Black Book, PYQ archives..." type="text"/>
+<div class="absolute right-3.5 flex items-center gap-2">
+<kbd class="hidden sm:inline-block font-label-code text-[11px] px-2 py-1 bg-surface-container-high text-secondary rounded border border-outline-variant/60 font-semibold tracking-wider">⌘K</kbd>
+<button aria-label="Trigger Search" class="w-8 h-8 rounded bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Quick Filter Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 pt-1 scrollbar-none font-label-caps text-label-caps uppercase text-secondary">
+<span class="text-secondary/70 shrink-0 mr-1 text-[10px] tracking-widest">PRESETS:</span>
+<button class="px-3 py-1.5 rounded-full bg-on-surface text-surface font-semibold shrink-0 shadow-sm transition-all hover:bg-on-surface/90">
+          All (190)
+        </button>
+<button class="px-3 py-1.5 rounded-full bg-surface hover:bg-surface-container text-on-surface border border-outline-variant shrink-0 transition-colors">
+          Coaching Modules
+        </button>
+<button class="px-3 py-1.5 rounded-full bg-surface hover:bg-surface-container text-on-surface border border-outline-variant shrink-0 transition-colors">
+          Standard Classics (HC Verma, Irodov, Cengage)
+        </button>
+<button class="px-3 py-1.5 rounded-full bg-surface hover:bg-surface-container text-on-surface border border-outline-variant shrink-0 transition-colors">
+          10-Year PYQ Archives
+        </button>
+<button class="px-3 py-1.5 rounded-full bg-surface hover:bg-surface-container text-on-surface border border-outline-variant shrink-0 transition-colors">
+          Formula Sheets &amp; Proofs
+        </button>
+<button class="px-3 py-1.5 rounded-full bg-surface hover:bg-surface-container text-on-surface border border-outline-variant shrink-0 transition-colors">
+          Negative-Mark Trap Vaults
+        </button>
+</div>
+</div>
+</section>
+<!-- Workspace Two-Column Layout: Sidebar Filters + Main Archival Cards -->
+<section class="w-full max-w-7xl mx-auto px-space-md md:px-margin pb-16">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Sidebar: Rigorous Refinement Console (~280px / col-span-3) -->
+<aside class="lg:col-span-3 space-y-6">
+<div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/70 shadow-sm sticky top-24 space-y-6">
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-primary">filter_list</span>
+<span class="font-headline-sm text-title-md font-semibold text-on-surface">Refine Catalog</span>
+</div>
+<button class="font-label-code text-[11px] text-primary hover:underline uppercase tracking-wider font-semibold" type="button">Reset</button>
+</div>
+<!-- Section 1: Subject Stream -->
+<div class="space-y-3">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block">1. Subject Stream</span>
+<div class="space-y-1.5 font-body-sm text-body-sm">
+<label class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/50 cursor-pointer text-on-surface font-medium hover:bg-surface-container transition-colors">
+<span class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>Physics</span>
+</span>
+<span class="font-label-code text-[12px] text-secondary">48</span>
+</label>
+<label class="flex items-center justify-between p-2 rounded hover:bg-surface-container-low cursor-pointer text-on-surface-variant transition-colors">
+<span class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>Chemistry</span>
+</span>
+<span class="font-label-code text-[12px] text-secondary">52</span>
+</label>
+<label class="flex items-center justify-between p-2 rounded hover:bg-surface-container-low cursor-pointer text-on-surface-variant transition-colors">
+<span class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Mathematics</span>
+</span>
+<span class="font-label-code text-[12px] text-secondary">50</span>
+</label>
+<label class="flex items-center justify-between p-2 rounded hover:bg-surface-container-low cursor-pointer text-on-surface-variant transition-colors">
+<span class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>Comprehensive PCM</span>
+</span>
+<span class="font-label-code text-[12px] text-secondary">40</span>
+</label>
+</div>
+</div>
+<!-- Section 2: Arsenal Category -->
+<div class="space-y-3 pt-3 border-t border-outline-variant/30">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block">2. Arsenal Category</span>
+<div class="space-y-2 font-body-sm text-body-sm text-on-surface">
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-0 focus:outline-none" type="checkbox"/>
+<span class="flex-1">Coaching Modules</span>
+<span class="font-label-code text-[11px] text-secondary">48</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-0 focus:outline-none" type="checkbox"/>
+<span class="flex-1">Standard Reference Works</span>
+<span class="font-label-code text-[11px] text-secondary">65</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-0 focus:outline-none" type="checkbox"/>
+<span class="flex-1">10-Yr Deconstructed PYQs</span>
+<span class="font-label-code text-[11px] text-secondary">34</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-0 focus:outline-none" type="checkbox"/>
+<span class="flex-1">Negative-Mark Trap Compendiums</span>
+<span class="font-label-code text-[11px] text-secondary">21</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-0 focus:outline-none" type="checkbox"/>
+<span class="flex-1">High-Yield Formula Sheets</span>
+<span class="font-label-code text-[11px] text-secondary">22</span>
+</label>
+</div>
+</div>
+<!-- Section 3: Difficulty Benchmark -->
+<div class="space-y-3 pt-3 border-t border-outline-variant/30">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block">3. Difficulty Benchmark</span>
+<div class="space-y-2 font-body-sm text-body-sm text-on-surface">
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input class="w-4 h-4 border-outline-variant text-primary focus:ring-0" name="difficulty" type="radio"/>
+<span class="flex-1">Foundation / NCERT Master</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input class="w-4 h-4 border-outline-variant text-primary focus:ring-0" name="difficulty" type="radio"/>
+<span class="flex-1">JEE Main Mirror (99.0%ile)</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 border-outline-variant text-primary focus:ring-0" name="difficulty" type="radio"/>
+<span class="flex-1 font-medium text-primary">JEE Adv. 99.4th Percentile</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input class="w-4 h-4 border-outline-variant text-primary focus:ring-0" name="difficulty" type="radio"/>
+<span class="flex-1">Olympiad / Rank Booster</span>
+</label>
+</div>
+</div>
+<!-- Section 4: File Format & Fidelity -->
+<div class="space-y-3 pt-3 border-t border-outline-variant/30">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block">4. Format &amp; Fidelity</span>
+<div class="space-y-1.5 font-label-code text-[12px] text-secondary">
+<div class="flex items-center justify-between py-1">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-tertiary">check_circle</span>
+                  Verified Vector OCR
+                </span>
+<span class="text-on-surface font-semibold">100%</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-tertiary">check_circle</span>
+                  LaTeX Exportable
+                </span>
+<span class="text-on-surface font-semibold">142</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-tertiary">check_circle</span>
+                  Annotated Solutions
+                </span>
+<span class="text-on-surface font-semibold">All</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Catalog Display Area (col-span-9) -->
+<main class="lg:col-span-9 space-y-6">
+<!-- Catalog Status Bar & Order Selectors -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/60">
+<div class="flex items-center gap-2 font-label-code text-body-sm text-on-surface">
+<span class="font-semibold text-primary">SHOWING:</span>
+<span>STANDARD REFERENCE CLASSICS &amp; VERIFIED MODULES</span>
+<span class="text-secondary">(190 ITEMS)</span>
+</div>
+<div class="flex items-center gap-3 font-label-code text-[12px]">
+<span class="text-secondary uppercase tracking-wider font-label-caps text-label-caps">Sort:</span>
+<button class="px-2.5 py-1 rounded bg-surface-container text-on-surface font-medium hover:bg-surface-container-high transition-colors">
+              Highest Yield
+            </button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container text-secondary transition-colors">
+              Most Saves
+            </button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container text-secondary transition-colors">
+              Exam Weightage
+            </button>
+</div>
+</div>
+<!-- 6 Prestigious Academic Resource Cards (2 columns on lg screens) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Card 1: HC Verma Concepts of Physics -->
+<article class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/70 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-primary/10 text-primary font-bold uppercase tracking-wider border border-primary/20">
+                  AIR CLASSIC
+                </span>
+<span class="font-label-code text-[11px] text-secondary">#PHY-4ba0</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                HC Verma: Concepts of Physics (Vol 1 &amp; 2)
+              </h2>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                The definitive first-principles physics treatise with full deconstructed problem trees and conceptual friction traps annotated by top rankers.
+              </p>
+<div class="flex flex-wrap items-center gap-1.5 pt-1">
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Book</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Verified OCR</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">LaTeX Solutions</span>
+</div>
+</div>
+<div class="pt-5 mt-4 border-t border-outline-variant/40 flex items-center justify-between">
+<div class="flex items-center gap-1 font-label-code text-[12px] text-amber-600">
+<span>★</span>
+<span class="font-semibold text-on-surface">4.9</span>
+<span class="text-secondary">(4.9k saves)</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-secondary hover:text-on-surface rounded hover:bg-surface-container transition-colors" title="View Chapter Index" type="button">
+<span class="material-symbols-outlined text-lg">toc</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-on-surface text-surface hover:bg-primary font-label-code text-[12px] font-medium transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>PDF [14.2 MB]</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 2: HC Verma Solutions & Alternate Proofs -->
+<article class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/70 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-tertiary-fixed/60 text-tertiary font-bold uppercase tracking-wider border border-tertiary/20">
+                  STEP-BY-STEP PROOFS
+                </span>
+<span class="font-label-code text-[11px] text-secondary">#PHY-d835</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                HC Verma Deconstructed Solutions &amp; Alternate Proofs
+              </h2>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                Comprehensive step-by-step calculus vs symmetry proofs for all 2,400+ exercises with faculty commentary and cross-vector checks.
+              </p>
+<div class="flex flex-wrap items-center gap-1.5 pt-1">
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Solutions</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Faculty Approved</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Calculus Proofs</span>
+</div>
+</div>
+<div class="pt-5 mt-4 border-t border-outline-variant/40 flex items-center justify-between">
+<div class="flex items-center gap-1 font-label-code text-[12px] text-amber-600">
+<span>★</span>
+<span class="font-semibold text-on-surface">4.8</span>
+<span class="text-secondary">(3.1k saves)</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-secondary hover:text-on-surface rounded hover:bg-surface-container transition-colors" title="View Chapter Index" type="button">
+<span class="material-symbols-outlined text-lg">toc</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-on-surface text-surface hover:bg-primary font-label-code text-[12px] font-medium transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>PDF [8.4 MB]</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 3: Cengage Physics 6-Volume Set -->
+<article class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/70 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-surface-container text-on-surface font-bold uppercase tracking-wider border border-outline-variant/50">
+                  COMPREHENSIVE THEORY
+                </span>
+<span class="font-label-code text-[11px] text-secondary">#PHY-0766</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                Cengage Physics for JEE Advanced (6-Volume Set)
+              </h2>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                BM Sharma's master series covering Mechanics, Waves, Thermo, Electrodynamics &amp; Optics with high-yield multi-concept question sets.
+              </p>
+<div class="flex flex-wrap items-center gap-1.5 pt-1">
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Series</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Advanced Drill</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Multi-Correct</span>
+</div>
+</div>
+<div class="pt-5 mt-4 border-t border-outline-variant/40 flex items-center justify-between">
+<div class="flex items-center gap-1 font-label-code text-[12px] text-amber-600">
+<span>★</span>
+<span class="font-semibold text-on-surface">4.9</span>
+<span class="text-secondary">(2.2k saves)</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-secondary hover:text-on-surface rounded hover:bg-surface-container transition-colors" title="View Chapter Index" type="button">
+<span class="material-symbols-outlined text-lg">toc</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-on-surface text-surface hover:bg-primary font-label-code text-[12px] font-medium transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>Archive [28 MB]</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 4: Cengage Mathematics Set -->
+<article class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/70 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-primary/10 text-primary font-bold uppercase tracking-wider border border-primary/20">
+                  CALCULUS &amp; ALGEBRA
+                </span>
+<span class="font-label-code text-[11px] text-secondary">#MAT-06a3</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                Cengage Mathematics for JEE Advanced (5-Volume Set)
+              </h2>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                The benchmark mathematics suite by G. Tewani with step-by-step derivations, coordinate geometry tricks, and integral transforms.
+              </p>
+<div class="flex flex-wrap items-center gap-1.5 pt-1">
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Series</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">High-Yield</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Vector &amp; 3D</span>
+</div>
+</div>
+<div class="pt-5 mt-4 border-t border-outline-variant/40 flex items-center justify-between">
+<div class="flex items-center gap-1 font-label-code text-[12px] text-amber-600">
+<span>★</span>
+<span class="font-semibold text-on-surface">5.0</span>
+<span class="text-secondary">(2.1k saves)</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-secondary hover:text-on-surface rounded hover:bg-surface-container transition-colors" title="View Chapter Index" type="button">
+<span class="material-symbols-outlined text-lg">toc</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-on-surface text-surface hover:bg-primary font-label-code text-[12px] font-medium transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>Archive [32 MB]</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 5: Problems in General Physics - Irodov -->
+<article class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/70 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-error/10 text-error font-bold uppercase tracking-wider border border-error/20">
+                  OLYMPIAD &amp; TOP 500
+                </span>
+<span class="font-label-code text-[11px] text-secondary">#PHY-1877</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                Problems in General Physics — I.E. Irodov
+              </h2>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                1,877 problem sets with annotated hints, vector coordinate sketches, and trap risk warnings cross-mapped to JEE Advanced syllabi.
+              </p>
+<div class="flex flex-wrap items-center gap-1.5 pt-1">
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Elite</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Hard Physics</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Annotated Hints</span>
+</div>
+</div>
+<div class="pt-5 mt-4 border-t border-outline-variant/40 flex items-center justify-between">
+<div class="flex items-center gap-1 font-label-code text-[12px] text-amber-600">
+<span>★</span>
+<span class="font-semibold text-on-surface">4.9</span>
+<span class="text-secondary">(1.8k saves)</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-secondary hover:text-on-surface rounded hover:bg-surface-container transition-colors" title="View Chapter Index" type="button">
+<span class="material-symbols-outlined text-lg">toc</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-on-surface text-surface hover:bg-primary font-label-code text-[12px] font-medium transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>Proofs [9.6 MB]</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 6: MS Chouhan Organic Chemistry -->
+<article class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/70 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-tertiary-fixed/60 text-tertiary font-bold uppercase tracking-wider border border-tertiary/20">
+                  ORGANIC MECHANISMS
+                </span>
+<span class="font-label-code text-[11px] text-secondary">#CHM-9912</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                MS Chouhan: Advanced Problems in Organic Chemistry
+              </h2>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                Reaction mechanisms, stereochemistry traps, and multi-step synthesis pathways with faculty marginalia and mechanism arrow diagrams.
+              </p>
+<div class="flex flex-wrap items-center gap-1.5 pt-1">
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Chemistry</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">Trap Matrix</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 rounded bg-surface-container text-secondary font-semibold">GOC &amp; Synthesis</span>
+</div>
+</div>
+<div class="pt-5 mt-4 border-t border-outline-variant/40 flex items-center justify-between">
+<div class="flex items-center gap-1 font-label-code text-[12px] text-amber-600">
+<span>★</span>
+<span class="font-semibold text-on-surface">4.9</span>
+<span class="text-secondary">(2.4k saves)</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-secondary hover:text-on-surface rounded hover:bg-surface-container transition-colors" title="View Chapter Index" type="button">
+<span class="material-symbols-outlined text-lg">toc</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-on-surface text-surface hover:bg-primary font-label-code text-[12px] font-medium transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>PDF [12.1 MB]</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+<!-- Archival Pagination Bar -->
+<div class="pt-6 pb-2 border-t border-outline-variant/40 flex items-center justify-between font-label-code text-body-sm text-secondary">
+<span class="text-secondary">Showing 1 – 6 of 190 items</span>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1.5 rounded bg-on-surface text-surface font-semibold">1</button>
+<button class="px-3 py-1.5 rounded hover:bg-surface-container text-on-surface transition-colors">2</button>
+<button class="px-3 py-1.5 rounded hover:bg-surface-container text-on-surface transition-colors">3</button>
+<span class="px-2 text-outline-variant">…</span>
+<button class="px-3 py-1.5 rounded hover:bg-surface-container text-on-surface transition-colors">32</button>
+</div>
+</div>
+</main>
+</div>
+</section>
+<!-- Archival Quick-Action Banner / Fast Resource Bundle -->
+<section class="w-full max-w-7xl mx-auto px-space-md md:px-margin pb-16">
+<div class="rounded-xl bg-inverse-surface text-inverse-on-surface p-8 md:p-10 border border-inverse-surface shadow-md relative overflow-hidden">
+<!-- Background Architectural Texture -->
+<div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 16px 16px;"></div>
+<div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+<div class="space-y-3 max-w-2xl">
+<div class="inline-flex items-center gap-2 font-label-caps text-label-caps tracking-widest text-inverse-primary uppercase">
+<span class="w-2 h-2 rounded-full bg-inverse-primary inline-block"></span>
+<span>HIGH-VELOCITY REVISION CONSOLE</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-white font-serif leading-tight">
+            Need a complete 14-day revision dossier?
+          </h2>
+<p class="font-body-md text-body-md text-surface-container-highest/80 leading-relaxed">
+            Instant 1-click download package containing the top 20 high-yield formula cheat sheets, 5-year verified NTA mock answer keys, and faculty negative-marking trap notes.
+          </p>
+</div>
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0 w-full lg:w-auto">
+<button class="px-5 py-3 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-code text-[13px] font-semibold tracking-wide transition-all shadow-md flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-base">folder_zip</span>
+<span>Generate 1-Click Dossier</span>
+</button>
+<button class="px-5 py-3 rounded-lg bg-inverse-surface hover:bg-white/10 text-white border border-white/20 font-label-code text-[13px] font-semibold transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-base">post_add</span>
+<span>Request Verified Textbook</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div></main>
+<!-- ==================== 6. FOOTER COMPONENT ==================== -->
+<footer class="w-full bg-[#f4f2f8] border-t border-outline-variant/50 text-secondary py-8 px-space-lg md:px-margin">
+<div class="max-w-7xl mx-auto space-y-6">
+<!-- Top Row: Logo & Copyright on Left, Practice/Progress/Perform Nav on Right -->
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
+<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-[#e8ded3] border border-[#d6c7b7] flex items-center justify-center text-[#7d5333] shadow-inner text-sm select-none">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+</div>
+<span class="font-headline-lg font-bold tracking-tight text-lg text-on-surface">
+            BOOKIE<span class="text-[10px] align-super text-secondary font-sans font-normal">®</span>
+</span>
+</div>
+<span class="text-body-sm font-body-sm text-secondary sm:border-l sm:border-outline-variant/60 sm:pl-3">
+          © 2026 | Engineered for Ambitious Aspirants
+        </span>
+</div>
+<!-- Nav Items from IMAGE_5 -->
+<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-label-caps font-label-caps font-semibold text-xs tracking-wider uppercase text-on-surface">
+<a class="hover:text-primary transition-colors" href="#practice">PRACTICE</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-primary transition-colors" href="#progress">PROGRESS</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-primary transition-colors" href="#perform">PERFORM</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#chai">
+<span>CHAI</span>
+<span class="text-sm">☕</span>
+</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-primary transition-colors" href="#dmca">DMCA</a>
+<span class="text-outline-variant">•</span>
+<div class="inline-flex items-center gap-1.5 font-bold text-emerald-800">
+<span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span>
+<span>AIR TARGET 2027</span>
+</div>
+</div>
+</div>
+<!-- Bottom Row: Legal Links, Support & OAuth Disclaimer from IMAGE_5 -->
+<div class="space-y-3">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-body-sm">
+<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-on-surface font-medium font-body-sm">
+<a class="underline hover:text-primary transition-colors" href="#tos">Terms of Service</a>
+<span class="text-outline-variant">•</span>
+<a class="underline hover:text-primary transition-colors" href="#privacy">Privacy Policy</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:underline hover:text-primary transition-colors" href="#dmca-copyright">DMCA &amp; Copyright</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:underline hover:text-primary transition-colors" href="#support">Support Desk</a>
+</div>
+<div class="text-secondary text-xs">
+          Legal &amp; Verification Enquiries: <a class="text-tertiary-container hover:underline font-medium" href="#support">Support Desk</a>
+</div>
+</div>
+<!-- Detailed Educational Platform Disclaimer -->
+<p class="font-label-code text-[12px] leading-relaxed text-secondary/90 tracking-tight">
+        BOOKIE is an educational workspace and study tracker. Google OAuth is used solely for secure sign-in and profile synchronization in adherence to the Google API Services User Data Policy Limited Use requirements. We never sell user data.
+      </p>
+</div>
+</div>
+</footer>
+</body></html>

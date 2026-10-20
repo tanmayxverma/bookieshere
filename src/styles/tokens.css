@@ -1,287 +1,143 @@
-/* Bookie Design System Tokens: Sticker Pop Academic Desk */
-@import "@fontsource/bricolage-grotesque/600.css";
-@import "@fontsource/bricolage-grotesque/700.css";
-@import "@fontsource/bricolage-grotesque/800.css";
-@import "@fontsource/space-grotesk/400.css";
-@import "@fontsource/space-grotesk/500.css";
-@import "@fontsource/space-grotesk/700.css";
+/* Bookie Design System Tokens: Editorial Ink (Bookie Academic Journal) */
+@import "@fontsource/newsreader/400.css";
+@import "@fontsource/newsreader/500.css";
+@import "@fontsource/newsreader/600.css";
+@import "@fontsource/newsreader/400-italic.css";
+@import "@fontsource/plus-jakarta-sans/400.css";
+@import "@fontsource/plus-jakarta-sans/500.css";
+@import "@fontsource/plus-jakarta-sans/600.css";
+@import "@fontsource/plus-jakarta-sans/700.css";
 @import "@fontsource/jetbrains-mono/500.css";
 @import "@fontsource/jetbrains-mono/700.css";
 
 :root {
   /* Typography Families */
-  --font-display: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-body: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "Newsreader", Georgia, Cambria, "Times New Roman", serif;
+  --font-display: "Newsreader", Georgia, Cambria, "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
-  /* Color Palette — Light Mode (Warm Drafting Paper Canvas) */
-  --desk-bg: #FFFDF7;
+  /* Color Palette — Light Mode (Warm Archival Ivory Parchment) */
+  --desk-bg: #FBF8FC;
   --desk-card: #FFFFFF;
-  --desk-subtle: #F5EFE6;
-  --desk-ink: #0F172A;
-  --desk-ink-muted: #64748B;
-  --desk-ink-subtle: #94A3B8;
-  --desk-primary: #2563EB;
-  --desk-primary-hover: #1D4ED8;
+  --desk-subtle: #F6F2F7;
+  --desk-dim: #DCD9DD;
+  --desk-ink: #1C1B1F;
+  --desk-ink-muted: #49454E;
+  --desk-ink-subtle: #7A757E;
+  --desk-primary: #904A43;
+  --desk-primary-hover: #7E3E37;
   --desk-primary-fg: #FFFFFF;
-  --desk-secondary: #FBBF24;
-  --desk-secondary-hover: #F59E0B;
-  --desk-secondary-fg: #0F172A;
+  --desk-secondary: #F59E0B;
+  --desk-secondary-hover: #D97706;
+  --desk-secondary-fg: #FFFFFF;
   --desk-tertiary: #10B981;
   --desk-tertiary-fg: #FFFFFF;
-  --desk-destructive: #F43F5E;
+  --desk-destructive: #B91C1C;
   --desk-destructive-fg: #FFFFFF;
-  --desk-border: #0F172A;
-  --desk-border-subtle: rgba(15, 23, 42, 0.12);
+  --desk-border: #E2DED8;
+  --desk-border-subtle: rgba(15, 23, 42, 0.08);
+  --desk-streak-pill: #0F172A;
 
-  /* Tactile Hard Shadow Tokens */
-  --desk-shadow-sm: 2px 2px 0px #0F172A;
-  --desk-shadow-md: 4px 4px 0px #0F172A;
-  --desk-shadow-lg: 8px 8px 0px #0F172A;
-  --desk-shadow-active: 1px 1px 0px #0F172A;
+  /* Ambient Soft Shadows */
+  --desk-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --desk-shadow-md: 0 4px 24px -4px rgba(0, 0, 0, 0.04);
+  --desk-shadow-lg: 0 12px 36px -6px rgba(15, 23, 42, 0.08);
+  --desk-shadow-active: 0 1px 2px rgba(0, 0, 0, 0.06);
 
   /* Radii */
   --desk-radius-sm: 6px;
   --desk-radius-md: 10px;
   --desk-radius-lg: 16px;
+  --desk-radius-xl: 20px;
   --desk-radius-pill: 9999px;
 
-  /* Spacing Grid (8px Base) */
-  --desk-container-max: 1200px;
+  /* Spacing & Container */
+  --desk-container-max: 1280px;
   --desk-touch-min: 44px;
 
-  /* Spring Physics & Motion */
+  /* Physical Dynamics & Spring Motion */
   --spring-critically-damped: cubic-bezier(0.25, 1, 0.5, 1);
   --spring-duration-fast: 120ms;
   --spring-duration-normal: 220ms;
 }
 
 .dark {
-  /* Color Palette — Dark Mode (Night Shift Cockpit) */
+  /* Color Palette — Dark Mode (Night Shift / Nocturnal Broadside) */
   --desk-bg: #0A0E17;
   --desk-card: #111726;
   --desk-subtle: #182234;
+  --desk-dim: #1E293B;
   --desk-ink: #F1F5F9;
   --desk-ink-muted: #94A3B8;
   --desk-ink-subtle: #64748B;
-  --desk-primary: #3B82F6;
-  --desk-primary-hover: #60A5FA;
-  --desk-primary-fg: #0A0E17;
-  --desk-secondary: #F59E0B;
-  --desk-secondary-hover: #D97706;
-  --desk-secondary-fg: #0A0E17;
-  --desk-tertiary: #A3E635;
+  --desk-primary: #EF4444;
+  --desk-primary-hover: #DC2626;
+  --desk-primary-fg: #FFFFFF;
+  --desk-secondary: #FBBF24;
+  --desk-secondary-hover: #F59E0B;
+  --desk-secondary-fg: #0F172A;
+  --desk-tertiary: #34D399;
   --desk-tertiary-fg: #0A0E17;
-  --desk-destructive: #FB7185;
+  --desk-destructive: #F87171;
   --desk-destructive-fg: #0A0E17;
-  --desk-border: #334155;
-  --desk-border-subtle: rgba(255, 255, 255, 0.1);
+  --desk-border: #1E293B;
+  --desk-border-subtle: rgba(255, 255, 255, 0.06);
+  --desk-streak-pill: #1E293B;
 
-  /* Dark mode depth uses crisp borders and deep ambient occlusion */
-  --desk-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --desk-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --desk-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.7);
-  --desk-shadow-active: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --desk-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --desk-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --desk-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  --desk-shadow-active: 0 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-/* ───── Fluid Typography Scale ───── */
-.text-display-xl {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 6vw, 68px);
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: -0.03em;
+/* Drafting Grid Backgrounds */
+.editorial-grid {
+  background-color: var(--desk-bg);
+  background-image: radial-gradient(rgba(15, 23, 42, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0;
 }
 
-.text-display-l {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4.5vw, 44px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.025em;
+.dark .editorial-grid {
+  background-image: radial-gradient(rgba(241, 245, 249, 0.06) 1px, transparent 1px);
 }
 
-.text-title-1 {
-  font-family: var(--font-display);
-  font-size: clamp(22px, 3.2vw, 32px);
-  font-weight: 700;
-  line-height: 1.2;
+/* Instant Response Physical Press Interaction (<16ms) */
+.tactile-btn {
+  transition: transform 120ms cubic-bezier(0.25, 1, 0.5, 1), opacity 120ms ease, background-color 150ms ease;
+  will-change: transform;
+}
+.tactile-btn:active {
+  transform: scale(0.98);
+}
+
+/* Ambient Card Elevations */
+.shadow-ambient {
+  box-shadow: var(--desk-shadow-md);
+}
+
+.shadow-capsule {
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.dark .shadow-capsule {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.shadow-elevated {
+  box-shadow: var(--desk-shadow-lg);
+}
+
+/* Tabular Numerals for Monospace Telemetry */
+.font-tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
 
-.text-title-2 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
-}
-
-.text-headline {
-  font-family: var(--font-body);
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-}
-
-.text-body {
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-.text-callout {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-.text-caption {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.font-tabular {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum" 1;
-}
-
-/* ───── Tactile Geometry & Buttons ───── */
-.tactile-card {
-  background-color: var(--desk-card);
-  color: var(--desk-ink);
-  border: 2px solid var(--desk-border);
-  box-shadow: var(--desk-shadow-md);
-  border-radius: var(--desk-radius-lg);
-  position: relative;
-  transition: transform var(--spring-duration-fast) var(--spring-critically-damped),
-              box-shadow var(--spring-duration-fast) var(--spring-critically-damped);
-}
-
-.tactile-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-body);
-  font-weight: 600;
-  min-height: var(--desk-touch-min);
-  padding: 0 1.25rem;
-  border-radius: var(--desk-radius-md);
-  border: 2px solid var(--desk-border);
-  box-shadow: var(--desk-shadow-md);
-  transition: transform 100ms ease-out, box-shadow 100ms ease-out;
-  cursor: pointer;
-  user-select: none;
-  text-decoration: none;
-}
-
-.tactile-btn:active {
-  transform: translate(3px, 3px);
-  box-shadow: var(--desk-shadow-active);
-}
-
-.tactile-btn-primary {
-  background-color: var(--desk-primary);
-  color: var(--desk-primary-fg);
-}
-
-.tactile-btn-primary:hover {
-  background-color: var(--desk-primary-hover);
-}
-
-.tactile-btn-secondary {
-  background-color: var(--desk-secondary);
-  color: var(--desk-secondary-fg);
-}
-
-.tactile-btn-secondary:hover {
-  background-color: var(--desk-secondary-hover);
-}
-
-.tactile-btn-outline {
-  background-color: var(--desk-card);
-  color: var(--desk-ink);
-}
-
-.tactile-btn-outline:hover {
-  background-color: var(--desk-subtle);
-}
-
-/* ───── Distinctive Desk Artifacts ───── */
-.sticky-note {
-  background-color: #FEF9C3;
-  color: #0F172A;
-  border: 2px solid #0F172A;
-  box-shadow: 3px 3px 0px #0F172A;
-  border-radius: 8px;
-  transform: rotate(-1.5deg);
-  transition: transform 180ms ease-out;
-}
-
-.dark .sticky-note {
-  background-color: #1E293B;
-  color: #F8FAFC;
-  border-color: #F59E0B;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-.sticky-note:hover {
-  transform: rotate(0deg) scale(1.02);
-}
-
-.washi-tape {
-  position: absolute;
-  top: -10px;
-  left: 20px;
-  background-color: rgba(251, 191, 36, 0.9);
-  color: #0F172A;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 2px 10px;
-  border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  transform: rotate(-1deg);
-  z-index: 10;
-}
-
-.dark .washi-tape {
-  background-color: rgba(163, 230, 53, 0.85);
-  color: #0A0E17;
-}
-
-/* Subtle drafting graph background matrix */
-.desk-canvas {
-  background-color: var(--desk-bg);
-  background-image: radial-gradient(var(--desk-border-subtle) 1px, transparent 1px);
-  background-size: 24px 24px;
-  color: var(--desk-ink);
-  min-height: 100vh;
-}
-
-/* Marquee Ticker Animation */
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-}
-
-/* Accessibility & Reduced Motion */
+/* Reduced Motion Fallbacks */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
@@ -291,11 +147,17 @@
   }
   .tactile-btn:active {
     transform: none !important;
+    opacity: 0.8 !important;
   }
-  .sticky-note {
-    transform: none !important;
-  }
-  .sticky-note:hover {
-    transform: none !important;
+}
+
+/* Reduced Transparency Fallbacks */
+@media (prefers-reduced-transparency: reduce) {
+  .backdrop-blur-md,
+  .backdrop-blur-sm,
+  .backdrop-blur {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: var(--desk-card) !important;
   }
 }

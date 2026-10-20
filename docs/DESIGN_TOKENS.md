@@ -1,63 +1,111 @@
-# Design Tokens Documentation — Bookie
+# Bookie Design Tokens Reference — Editorial Ink
 
-**Source File:** [`src/styles/tokens.css`](file:///c:/Users/HP/Downloads/bookieshere/src/styles/tokens.css)  
-**Design System:** Sticker Pop Academic Desk (with Night Shift Cockpit for Dark Mode)  
-**Lead Authority:** `frontend-design` & `apple-design`
-
----
-
-## 1. Color Palette
-
-| Token | Light Theme | Dark Theme | Purpose |
-|---|---|---|---|
-| `--desk-bg` | `#FFFDF7` (Warm cream paper) | `#0A0E17` (Deep nocturnal void) | Primary page canvas |
-| `--desk-card` | `#FFFFFF` (Pure white card) | `#111726` (Slate surface) | Primary interactive card surface |
-| `--desk-subtle` | `#F5EFE6` (Recessed wash) | `#182234` (Elevated dark tray) | Recessed containers, toolbars, chips |
-| `--desk-ink` | `#0F172A` (Archival ink navy) | `#F1F5F9` (Crisp off-white) | Primary typography, borders, icons |
-| `--desk-ink-muted`| `#64748B` (Graphite slate) | `#94A3B8` (Cool slate) | Secondary descriptions, timestamps |
-| `--desk-primary` | `#2563EB` (Electric Cobalt) | `#3B82F6` (Electric Laser Blue)| Primary action CTA, active sprint triggers |
-| `--desk-secondary`| `#FBBF24` (Sunflower Yellow) | `#F59E0B` (Radiant Amber) | Sticky notes, urgent alerts, ELO/rank pills |
-| `--desk-tertiary` | `#10B981` (Mint Emerald) | `#A3E635` (Acid Volt) | Solved problems, verified proctor status, timer rings |
-| `--desk-destructive`| `#F43F5E` (Coral Red) | `#FB7185` (Soft Crimson) | Negative-marking warnings, penalty alerts |
-| `--desk-border` | `#0F172A` (2px solid ink) | `#1E293B` (Hairline slate) | Structural card & component boundaries |
+**Authority:** Stitch Project `17297096438450244819` and `docs/DESIGN.md`  
+**Stylesheet:** `src/styles/tokens.css` & `src/index.css`
 
 ---
 
-## 2. Typography Hierarchy (Fluid Clamps)
+## 1. Color Tokens (CSS Variables)
 
-All visible brand typography uses self-hosted open fonts from `@fontsource`:
+### Light Mode
+```css
+:root {
+  /* Surfaces */
+  --desk-bg: #FBF8FC;                  /* Base ivory parchment canvas */
+  --desk-card: #FFFFFF;                /* Crisp white paper container */
+  --desk-subtle: #F6F2F7;              /* Soft shaded panel wash */
+  --desk-dim: #DCD9DD;                 /* Recessed container */
+  --desk-border: #E2DED8;              /* Hairline boundary 1px */
+  --desk-border-subtle: rgba(15, 23, 42, 0.08);
 
-- **Headline/Display Font:** `Bricolage Grotesque` (Weights: 600, 700, 800)
-- **Body/Content Font:** `Space Grotesk` (Weights: 400, 500, 700)
-- **Telemetry & Numbers:** `JetBrains Mono` (Weights: 500, 700, with `font-variant-numeric: tabular-nums`)
+  /* Typography Inks */
+  --desk-ink: #1C1B1F;                 /* Jet black sumi ink */
+  --desk-ink-muted: #49454E;           /* Archival charcoal secondary */
+  --desk-ink-subtle: #7A757E;          /* Muted metadata */
 
-| Role | Class | Specs | Tracking | Usage |
-|---|---|---|---|---|
-| Display XL | `.text-display-xl` | `clamp(36px, 6vw, 68px)` / `1.04` / 800 | `-0.03em` | Hero page mastheads |
-| Display L | `.text-display-l` | `clamp(28px, 4.5vw, 44px)` / `1.1` / 700 | `-0.025em`| Section headers |
-| Title 1 | `.text-title-1` | `clamp(22px, 3.2vw, 32px)` / `1.2` / 700 | `-0.02em` | Module & card block titles |
-| Title 2 | `.text-title-2` | `20px` / `1.25` / 700 | `-0.015em`| Chapter names, test titles |
-| Headline | `.text-headline` | `17px` / `1.35` / 600 | `-0.01em` | Subsection leads, table headers |
-| Body | `.text-body` | `15px` / `1.5` / 400 | `0em` | Explanations, problem stems |
-| Callout | `.text-callout` | `13px` / `1.4` / 500 | `0em` | Microcopy, user stats |
-| Caption | `.text-caption` | `11px` / `1.3` / 600 | `+0.06em` | Monospace metadata, tags |
-| Telemetry | `.font-tabular` | `tabular-nums` | `inherit` | Stopwatches, timers, scores, rankings |
+  /* Accents */
+  --desk-primary: #904A43;             /* Archival Indian ink crimson */
+  --desk-primary-hover: #7E3E37;
+  --desk-primary-fg: #FFFFFF;
+  --desk-secondary: #F59E0B;           /* Warm Amber (Chai ☕) */
+  --desk-secondary-hover: #D97706;
+  --desk-secondary-fg: #FFFFFF;
+  --desk-tertiary: #10B981;            /* Emerald Live Telemetry */
+  --desk-tertiary-fg: #FFFFFF;
+  --desk-destructive: #B91C1C;         /* Warning / Trap Crimson */
+  --desk-destructive-fg: #FFFFFF;
+  --desk-streak-pill: #0F172A;         /* Dark midnight streak capsule */
+}
+```
+
+### Dark Mode
+```css
+.dark {
+  /* Surfaces */
+  --desk-bg: #0A0E17;                  /* Nocturnal void */
+  --desk-card: #111726;                /* Layer 1 dark slate container */
+  --desk-subtle: #182234;              /* Layer 2 elevated deck */
+  --desk-border: #1E293B;              /* Hairline structural edge */
+  --desk-border-subtle: rgba(255, 255, 255, 0.06);
+
+  /* Typography Inks */
+  --desk-ink: #F1F5F9;                 /* High contrast chalk typography */
+  --desk-ink-muted: #94A3B8;           /* Cool slate secondary */
+  --desk-ink-subtle: #64748B;          /* Muted timestamp/slugs */
+
+  /* Accents */
+  --desk-primary: #EF4444;             /* Crimson Beacon */
+  --desk-primary-hover: #DC2626;
+  --desk-primary-fg: #FFFFFF;
+  --desk-secondary: #FBBF24;           /* Warm Amber */
+  --desk-secondary-fg: #0F172A;
+  --desk-tertiary: #34D399;            /* Laser emerald timer */
+  --desk-destructive: #F87171;
+  --desk-destructive-fg: #0A0E17;
+  --desk-streak-pill: #1E293B;
+}
+```
 
 ---
 
-## 3. Tactile 3D Depth & Elevation Tokens
+## 2. Typography Tokens
 
-- **Light Mode Elevation:**
-  - Level 1: `box-shadow: 2px 2px 0px #0F172A`
-  - Level 2: `box-shadow: 4px 4px 0px #0F172A`
-  - Level 3: `box-shadow: 8px 8px 0px #0F172A`
-  - Active Press: `transform: translate(3px, 3px); box-shadow: 1px 1px 0px #0F172A;`
-- **Dark Mode Elevation:**
-  - Ambient occlusion: `0 8px 24px rgba(0, 0, 0, 0.5)` with hairline border `#1E293B`.
+All fonts are self-hosted via Fontsource packages:
+- **`--font-display` / `--font-serif`**: `'Newsreader', Georgia, serif`
+- **`--font-body` / `--font-sans`**: `'Plus Jakarta Sans', -apple-system, sans-serif`
+- **`--font-mono`**: `'JetBrains Mono', monospace` with `font-variant-numeric: tabular-nums`
+
+### Fluid Scale Definitions
+- `text-display-xl`: `clamp(36px, 5.5vw, 64px)` (Hero H1)
+- `text-display-lg`: `clamp(24px, 3.5vw, 36px)` (Section H2)
+- `text-lead`: `clamp(15px, 1.8vw, 18px)` (Lead subhead)
+- `text-overline`: `11px` (Category overline, mono, tracking-wider, uppercase)
+- `text-telemetry`: `JetBrains Mono`, `tabular-nums`
 
 ---
 
-## 4. Spacing & Touch Targets
-- **Base Grid:** 8px rhythm (4px micro).
-- **Touch Targets:** Minimum `44×44px` height on all buttons, triggers, and tab items.
-- **Container Max-Width:** `1200px` (`--desk-container-max`).
+## 3. Elevation & Radius Tokens
+
+```css
+:root {
+  /* Hairline Border */
+  --border-hairline: 1px solid var(--desk-border);
+
+  /* Ambient Elevation Shadows */
+  --shadow-ambient: 0 4px 24px -4px rgba(0, 0, 0, 0.04);
+  --shadow-capsule: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-elevated: 0 12px 36px -6px rgba(15, 23, 42, 0.08);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+
+  /* Motion Springs */
+  --spring-critically-damped: cubic-bezier(0.25, 1, 0.5, 1);
+  --motion-fast: 120ms;
+  --motion-normal: 220ms;
+}
+```

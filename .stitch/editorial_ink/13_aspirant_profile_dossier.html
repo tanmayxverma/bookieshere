@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aspirant Dossier &amp; Profile — BOOKIE® Academic Ledger</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Newsreader (Editorial Serif), Plus Jakarta Sans (Clean UI), JetBrains Mono (Telemetry) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&amp;family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            parchment: {
+              50: '#fcfbf8',
+              100: '#fbf9f6',
+              200: '#f6f2eb',
+              300: '#ece5da',
+              border: '#e4dfd6',
+            },
+            ink: {
+              crimson: '#9b2226',
+              crimsonHover: '#7e1a1e',
+              deep: '#141416',
+              secondary: '#4a4846',
+              muted: '#7e7973',
+            },
+            journal: {
+              amber: '#b45309',
+              amberBg: '#fef3c7',
+              emerald: '#047857',
+              emeraldBg: '#d1fae5',
+            }
+          },
+          boxShadow: {
+            'academic': '0 4px 20px -2px rgba(28, 25, 23, 0.04), 0 1px 3px -1px rgba(28, 25, 23, 0.03)',
+            'floating': '0 12px 36px -4px rgba(20, 20, 22, 0.08), 0 4px 12px -2px rgba(20, 20, 22, 0.03)',
+            'inset-subtle': 'inset 0 1px 2px rgba(0,0,0,0.03)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Draft Grid & Journal Utility Styles -->
+<style data-purpose="drafting-grid">
+    /* Subtle 40px archival drafting coordinate grid lines */
+    .bg-academic-grid {
+      background-color: #fbf9f6;
+      background-image: 
+        linear-gradient(to right, rgba(226, 222, 216, 0.45) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(226, 222, 216, 0.45) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+  </style>
+<style data-purpose="editorial-typography">
+    .font-serif-italic {
+      font-family: 'Newsreader', Georgia, serif;
+      font-style: italic;
+    }
+    .text-balance {
+      text-wrap: balance;
+    }
+  </style>
+<!-- END: Custom Draft Grid & Journal Utility Styles -->
+</head>
+<body class="bg-academic-grid min-h-screen text-ink-deep font-sans antialiased selection:bg-ink-crimson/10 selection:text-ink-crimson">
+<!-- BEGIN: MainHeader -->
+<!-- Floating translucent capsule header -->
+<header class="sticky top-4 z-50 px-4 mb-8">
+<div class="max-w-6xl mx-auto backdrop-blur-md bg-white/90 border border-parchment-border/90 rounded-full px-4 sm:px-6 py-2.5 shadow-floating flex items-center justify-between gap-3">
+<!-- Brand Identity -->
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2.5 group" href="#home">
+<div class="w-8 h-8 rounded-full bg-ink-crimson/10 border border-ink-crimson/20 flex items-center justify-center text-ink-crimson group-hover:bg-ink-crimson group-hover:text-white transition-all duration-200">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+<path d="M6 6h10"></path>
+<path d="M6 10h10"></path>
+</svg>
+</div>
+<div class="flex items-baseline">
+<span class="font-serif tracking-tight text-xl font-bold text-ink-deep">BOOKIE</span>
+<span class="text-[9px] font-mono text-ink-crimson font-semibold ml-0.5">®</span>
+</div>
+</a>
+</div>
+<!-- Scholarly Navigation Links -->
+<nav class="hidden md:flex items-center space-x-1 lg:space-x-2 text-[13px] font-medium text-ink-secondary">
+<a class="px-3 py-1.5 rounded-full hover:text-ink-deep hover:bg-parchment-100 transition-colors" href="#home">Home</a>
+<a class="px-3 py-1.5 rounded-full hover:text-ink-deep hover:bg-parchment-100 transition-colors" href="#materials">Materials</a>
+<a class="px-3 py-1.5 rounded-full hover:text-ink-deep hover:bg-parchment-100 transition-colors" href="#tests">Tests</a>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-ink-deep bg-emerald-50 border border-emerald-200/60 font-semibold transition-colors" href="#ypt">
+<span>YPT</span>
+<span class="flex h-1.5 w-1.5 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+</span>
+<span class="text-[10px] font-mono uppercase tracking-wider text-emerald-700">LIVE</span>
+</a>
+<a class="px-3 py-1.5 rounded-full hover:text-ink-deep hover:bg-parchment-100 transition-colors" href="#portals">Portals</a>
+<a class="px-3 py-1.5 rounded-full hover:text-ink-deep hover:bg-parchment-100 transition-colors" href="#community">Community</a>
+<a class="px-3 py-1.5 rounded-full hover:text-ink-deep hover:bg-parchment-100 transition-colors" href="#support">Support</a>
+</nav>
+<!-- Right Utility Controls -->
+<div class="flex items-center gap-2 sm:gap-2.5">
+<!-- Chai Sponsor Pill -->
+<a class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50/80 border border-amber-200 text-amber-900 hover:bg-amber-100 transition" href="#chai">
+<span class="text-sm">☕</span>
+<span class="hidden sm:inline">Chai</span>
+</a>
+<!-- Notifications Bell -->
+<button aria-label="Notifications" class="p-1.5 text-ink-secondary hover:text-ink-deep hover:bg-parchment-200 rounded-full transition" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+<path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+</svg>
+</button>
+<!-- Academic Desk Sparkle -->
+<button aria-label="Study Tools" class="hidden sm:flex p-1.5 text-ink-secondary hover:text-ink-deep hover:bg-parchment-200 rounded-full transition" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+</svg>
+</button>
+<!-- Streak Ledger Badge -->
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 text-amber-300 text-xs font-mono font-medium shadow-sm border border-slate-800">
+<svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+</svg>
+<span class="text-white font-sans font-semibold text-[11px]">0</span>
+<span class="text-[10px] text-amber-400">🔥 0d</span>
+</div>
+<!-- Dossier Quick Trigger -->
+<a class="w-8 h-8 rounded-full bg-parchment-200 border border-parchment-border flex items-center justify-center text-ink-deep hover:border-ink-crimson transition" href="#profile">
+<span class="font-serif font-bold text-xs">O</span>
+</a>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="max-w-5xl mx-auto px-4 sm:px-6 pb-20 space-y-6">
+<!-- BEGIN: HeroProfileDossier -->
+<!-- Hero Profile Dossier Card with Editorial Ink treatment -->
+<section class="bg-white border border-parchment-border rounded-2xl p-6 sm:p-8 shadow-academic relative overflow-hidden">
+<!-- Watermark Background Seal -->
+<div class="absolute -right-12 -top-12 opacity-[0.03] select-none pointer-events-none">
+<svg class="w-72 h-72 text-ink-deep" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2L1 21h22L12 2zm0 3.8L19.5 19h-15L12 5.8z"></path>
+</svg>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start relative z-10">
+<!-- Left: Portrait Frame & Quick Status -->
+<div class="md:col-span-4 flex flex-col items-center text-center">
+<!-- Refined Circular Portrait Frame -->
+<div class="relative group cursor-pointer mb-3">
+<div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-indigo-50/80 via-white to-sky-50 border border-slate-200 flex items-center justify-center shadow-inner relative overflow-hidden">
+<span class="font-mono text-3xl sm:text-4xl font-bold text-slate-800 tracking-wider">0</span>
+<!-- Camera Upload Overlay -->
+<button aria-label="Change portrait" class="absolute inset-0 bg-ink-deep/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white text-xs gap-1" type="button">
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+<circle cx="12" cy="13" r="4"></circle>
+</svg>
+<span class="text-[10px] font-medium font-sans">Change Photo</span>
+</button>
+</div>
+<!-- Mini camera badge indicator -->
+<div class="absolute bottom-1 right-1 w-7 h-7 rounded-full bg-slate-900 border-2 border-white text-white flex items-center justify-center shadow-sm">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+<circle cx="12" cy="13" r="4"></circle>
+</svg>
+</div>
+</div>
+<!-- Streak Telemetry Capsule -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50/90 border border-amber-200/80 text-[11px] font-mono text-amber-900 mb-2">
+<span>🔥</span>
+<span class="font-semibold">0d streak</span>
+<span class="text-amber-500">•</span>
+<span class="text-amber-700/80">3 AM IST Reset</span>
+</div>
+<!-- Upload Custom Photo text button -->
+<button class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-crimson hover:text-ink-crimsonHover transition-colors mt-1" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="17 8 12 3 7 8"></polyline>
+<line x1="12" x2="12" y1="3" y2="15"></line>
+</svg>
+<span>Upload Custom Photo</span>
+</button>
+</div>
+<!-- Right: Aspirant Dossier Metadata -->
+<div class="md:col-span-8 flex flex-col justify-between h-full">
+<div>
+<!-- Dossier Header Tags & Cloud Link Action -->
+<div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+<div class="flex flex-wrap items-center gap-2">
+<!-- Guest Tag -->
+<span class="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded bg-amber-50 border border-amber-200 text-amber-800 font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                  Guest Account
+                </span>
+<!-- Target Exam Pill -->
+<span class="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded bg-sky-50 border border-sky-200 text-sky-800 font-semibold">
+<span class="text-xs">🎯</span>
+                  JEE 2027
+                </span>
+<!-- Streak badge -->
+<span class="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-parchment-200 border border-parchment-border text-ink-muted">
+                  0d streak
+                </span>
+</div>
+<!-- Link Cloud / Permanent Ledger Primary Button -->
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-ink-deep hover:bg-black text-white text-xs font-medium tracking-wide shadow-sm hover:shadow transition-all group" type="button">
+<svg class="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+</svg>
+<span>Link Cloud</span>
+</button>
+</div>
+<!-- Aspirant Name -->
+<h1 class="text-3xl sm:text-4xl font-serif font-bold text-ink-deep tracking-tight mb-2">
+              Owner
+              <span class="font-serif-italic font-normal text-ink-muted text-2xl ml-2 sm:inline-block block text-base sm:text-2xl">— Academic Candidate</span>
+</h1>
+<!-- Candidate Tenure / Registry Date -->
+<div class="flex items-center gap-2 text-xs font-sans text-ink-muted mb-6">
+<svg class="w-3.5 h-3.5 text-ink-crimson" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y2="6"></line>
+<line x1="8" x2="8" y2="6"></line>
+<line x1="3" x2="21" y2="10"></line>
+</svg>
+<span>Aspirant cataloged since <strong class="text-ink-deep font-semibold">September 17, 2026</strong></span>
+</div>
+</div>
+<!-- Quick Aspirant Avatar Archetypes Selector -->
+<div class="pt-4 border-t border-parchment-border/80">
+<div class="flex items-center justify-between text-xs text-ink-muted mb-2.5 font-mono">
+<span class="text-[11px] uppercase tracking-wider flex items-center gap-1.5 text-ink-secondary">
+<span>✨</span> Quick Aspirant Avatars
+              </span>
+<span class="text-[11px] text-ink-muted italic">or upload above</span>
+</div>
+<div class="flex items-center gap-2 flex-wrap">
+<!-- Archetype: Rocket -->
+<button aria-label="Select Rocket Avatar" class="w-8 h-8 rounded-full border border-parchment-border bg-parchment-100 hover:border-ink-crimson hover:scale-105 transition flex items-center justify-center text-sm shadow-sm" title="The High Velocity Aspirant" type="button">
+                🚀
+              </button>
+<!-- Archetype: Lightning -->
+<button aria-label="Select Lightning Avatar" class="w-8 h-8 rounded-full border border-parchment-border bg-parchment-100 hover:border-ink-crimson hover:scale-105 transition flex items-center justify-center text-sm shadow-sm" title="Fast Concept Finisher" type="button">
+                ⚡
+              </button>
+<!-- Archetype: Target -->
+<button aria-label="Select Bullseye Avatar" class="w-8 h-8 rounded-full border border-parchment-border bg-parchment-100 hover:border-ink-crimson hover:scale-105 transition flex items-center justify-center text-sm shadow-sm" title="Rank Maximizer" type="button">
+                🎯
+              </button>
+<!-- Archetype: Scroll / Book -->
+<button aria-label="Select Archive Scroll Avatar" class="w-8 h-8 rounded-full border border-parchment-border bg-parchment-100 hover:border-ink-crimson hover:scale-105 transition flex items-center justify-center text-sm shadow-sm" title="Bibliophile &amp; Theory Scholar" type="button">
+                📜
+              </button>
+<!-- Archetype: Precision Ruler -->
+<button aria-label="Select Drafting Set Avatar" class="w-8 h-8 rounded-full border border-parchment-border bg-parchment-100 hover:border-ink-crimson hover:scale-105 transition flex items-center justify-center text-sm shadow-sm" title="Problem Solver" type="button">
+                📐
+              </button>
+<!-- Archetype: Trophy -->
+<button aria-label="Select Trophy Avatar" class="w-8 h-8 rounded-full border border-parchment-border bg-parchment-100 hover:border-ink-crimson hover:scale-105 transition flex items-center justify-center text-sm shadow-sm" title="AIR 1 Contender" type="button">
+                🏆
+              </button>
+<!-- Archetype: Chai / Midnight Coffee -->
+<button aria-label="Select Chai Mug Avatar" class="w-8 h-8 rounded-full border border-parchment-border bg-parchment-100 hover:border-ink-crimson hover:scale-105 transition flex items-center justify-center text-sm shadow-sm" title="Night Owl Candidate" type="button">
+                ☕
+              </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: HeroProfileDossier -->
+<!-- BEGIN: PerformanceLedgerSection -->
+<!-- Today's Study Performance Ledger -->
+<section class="bg-white border border-parchment-border rounded-2xl p-6 sm:p-8 shadow-academic">
+<!-- Ledger Header & Live Status -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-parchment-border gap-3">
+<div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-sky-50 border border-sky-100 text-[10px] font-mono uppercase tracking-wider text-sky-800 font-semibold mb-2">
+<svg class="w-3 h-3 text-sky-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>DAILY STUDY METRIC // CANDIDATE TELEMETRY</span>
+</div>
+<h2 class="text-2xl sm:text-3xl font-serif font-bold text-ink-deep tracking-tight">
+            Today’s Study Performance
+          </h2>
+<p class="text-xs text-ink-muted font-sans mt-0.5">
+            Measured live across YPT study sessions, desk stopwatches, and active timers
+          </p>
+</div>
+<a class="inline-flex items-center gap-1 text-xs font-semibold text-ink-crimson hover:text-ink-crimsonHover border border-ink-crimson/20 hover:border-ink-crimson/40 bg-ink-crimson/5 hover:bg-ink-crimson/10 px-3.5 py-2 rounded-xl transition" href="#stats">
+<span>View Full Stats</span>
+<span class="text-sm">→</span>
+</a>
+</div>
+<!-- 4 Telemetry Metrics Tiles -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+<!-- Tile 1: Today Studied -->
+<div class="bg-amber-50/40 border border-amber-200/80 rounded-xl p-4 transition hover:border-amber-300">
+<div class="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-amber-900 font-medium mb-1">
+<svg class="w-3.5 h-3.5 text-amber-700" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>TODAY STUDIED</span>
+</div>
+<div class="text-3xl font-mono font-bold text-ink-deep mt-2">
+            0.0<span class="text-lg font-serif-italic font-normal text-ink-muted">h</span>
+</div>
+<div class="text-xs text-ink-muted font-sans mt-1">
+            0 sessions logged today
+          </div>
+</div>
+<!-- Tile 2: Study Streak -->
+<div class="bg-parchment-50 border border-parchment-border rounded-xl p-4 transition hover:border-parchment-300">
+<div class="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-ink-secondary font-medium mb-1">
+<span>🔥</span>
+<span>STUDY STREAK</span>
+</div>
+<div class="text-3xl font-mono font-bold text-ink-deep mt-2">
+            0 <span class="text-lg font-serif-italic font-normal text-ink-muted">days</span>
+</div>
+<div class="text-xs text-amber-700 font-sans font-medium mt-1 flex items-center gap-1">
+<span>🔥</span> Start streak today
+          </div>
+</div>
+<!-- Tile 3: Daily Goal -->
+<div class="bg-blue-50/40 border border-blue-200/70 rounded-xl p-4 transition hover:border-blue-300">
+<div class="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-blue-900 font-medium mb-1">
+<svg class="w-3.5 h-3.5 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg>
+<span>DAILY GOAL (6H)</span>
+</div>
+<div class="text-3xl font-mono font-bold text-ink-deep mt-2">
+            0<span class="text-lg font-mono font-normal text-ink-muted">%</span>
+</div>
+<div class="text-xs text-ink-muted font-sans mt-1">
+            0.0h of 6h completed
+          </div>
+</div>
+<!-- Tile 4: Total Hours -->
+<div class="bg-parchment-50 border border-parchment-border rounded-xl p-4 transition hover:border-parchment-300">
+<div class="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-ink-secondary font-medium mb-1">
+<span>⏳</span>
+<span>TOTAL HOURS</span>
+</div>
+<div class="text-3xl font-mono font-bold text-ink-deep mt-2">
+            0.1<span class="text-lg font-serif-italic font-normal text-ink-muted">h</span>
+</div>
+<div class="text-xs text-ink-muted font-sans mt-1">
+            All-time Bookie focus time
+          </div>
+</div>
+</div>
+<!-- Daily 6-Hour Target Progress Gauge -->
+<div class="pt-4 border-t border-parchment-border/70">
+<div class="flex items-center justify-between text-xs font-mono text-ink-secondary mb-2">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-ink-crimson"></span>
+<span class="font-semibold text-ink-deep">Daily 6-Hour Target Progress</span>
+<span class="text-ink-muted font-normal">• 6.0h remaining</span>
+</div>
+<div class="font-bold text-ink-deep">
+            0% <span class="font-normal text-ink-muted">(0h / 6h)</span>
+</div>
+</div>
+<!-- Hairline Track & Indicator -->
+<div class="w-full bg-parchment-200 h-2.5 rounded-full overflow-hidden p-0.5 border border-parchment-border">
+<!-- 0% initial study progress bar -->
+<div class="bg-gradient-to-r from-ink-crimson to-amber-600 h-full rounded-full w-[2%] min-w-[5px]"></div>
+</div>
+</div>
+</section>
+<!-- END: PerformanceLedgerSection -->
+<!-- BEGIN: DataPreservationUpgradeCard -->
+<!-- Account Upgrade & Zero Data Loss Guarantee Banner -->
+<section class="bg-white border border-parchment-border rounded-2xl p-6 sm:p-8 shadow-academic relative overflow-hidden">
+<!-- Decorative Archival Border Accent -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-ink-crimson to-slate-900"></div>
+<div class="flex flex-col md:flex-row gap-6 items-start">
+<!-- Archival Security Badge Icon -->
+<div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex-shrink-0 flex items-center justify-center text-amber-700 shadow-sm">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+<path d="m9 12 2 2 4-4"></path>
+</svg>
+</div>
+<div class="flex-1 space-y-4">
+<!-- Pill Header -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-wider bg-amber-100 text-amber-900 font-bold">
+              ⚡ GUEST MODE ACTIVE
+            </span>
+<span class="text-xs text-emerald-700 font-medium flex items-center gap-1 font-mono">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+              100% Free • Saved Data is Safe
+            </span>
+</div>
+<!-- Headline & Context -->
+<div>
+<h3 class="text-2xl font-serif font-bold text-ink-deep tracking-tight">
+              Upgrade Account <span class="font-serif-italic font-normal text-ink-crimson">(Zero Data Loss)</span>
+</h3>
+<p class="text-xs sm:text-sm text-ink-secondary mt-1.5 leading-relaxed text-balance">
+              You are currently using a guest device account. Everything is saved locally. Upgrade to a permanent account with Google or email so your study sessions <strong class="text-ink-deep font-mono">(0h 0m)</strong>, streak <strong class="text-ink-deep font-mono">(0d)</strong>, and syllabus bookmarks follow you across all your devices seamlessly.
+            </p>
+</div>
+<!-- 4 Pillars Checkmarks Matrix -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-ink-secondary pt-1 font-sans">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span><strong class="text-ink-deep font-semibold">100% Free:</strong> Timers, tests, notes &amp; stats</span>
+</div>
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span><strong class="text-ink-deep font-semibold">Custom Identity:</strong> Free avatar photo &amp; name</span>
+</div>
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span><strong class="text-ink-deep font-semibold">Zero Data Loss:</strong> Streaks &amp; sessions saved</span>
+</div>
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span><strong class="text-ink-deep font-semibold">Optional Cloud:</strong> Sync phone, tab &amp; PC</span>
+</div>
+</div>
+<!-- Upgrade CTA Action Buttons -->
+<div class="flex flex-wrap items-center gap-3 pt-3">
+<!-- Google OAuth Action -->
+<button class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-semibold tracking-wide transition shadow-sm hover:shadow" type="button">
+<svg class="w-4 h-4" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"></path>
+</svg>
+<span>Upgrade with Google</span>
+</button>
+<!-- Email Magic Link Action -->
+<button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-parchment-100 text-ink-deep border border-parchment-border text-xs font-semibold tracking-wide transition shadow-sm" type="button">
+<svg class="w-4 h-4 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="16" rx="2" width="20" x="2" y="4"></rect>
+<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+</svg>
+<span>Upgrade with Email</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: DataPreservationUpgradeCard -->
+<!-- BEGIN: SettingsAndYptSplitSection -->
+<!-- Two Column Configuration: Profile Settings & YPT Tracker Settings -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Profile Dossier Settings (7 Cols) -->
+<section class="lg:col-span-7 bg-white border border-parchment-border rounded-2xl p-6 sm:p-8 shadow-academic">
+<div class="flex items-center justify-between pb-4 border-b border-parchment-border">
+<div>
+<h3 class="text-xl font-serif font-bold text-ink-deep">Profile Settings</h3>
+<p class="text-xs text-ink-muted">Update your public aspirant identity and target focus</p>
+</div>
+<span class="text-[10px] font-mono uppercase bg-parchment-200 px-2 py-0.5 rounded text-ink-secondary">Editable</span>
+</div>
+<form class="mt-6 space-y-4" onsubmit="event.preventDefault();">
+<!-- Display Name -->
+<div>
+<label class="block text-xs font-mono uppercase tracking-wider text-ink-secondary font-semibold mb-1" for="display-name">
+              DISPLAY NAME
+            </label>
+<input class="w-full text-sm font-sans bg-parchment-50 border border-parchment-border rounded-xl px-3.5 py-2.5 focus:border-ink-crimson focus:ring-1 focus:ring-ink-crimson focus:outline-none transition shadow-inner" id="display-name" name="displayName" type="text" value="Owner"/>
+<span class="text-[11px] text-ink-muted mt-1 block">Visible to cohort peers in carrels and leaderboard telemetry.</span>
+</div>
+<!-- Target Exam Year Dropdown -->
+<div>
+<label class="block text-xs font-mono uppercase tracking-wider text-ink-secondary font-semibold mb-1" for="exam-target">
+              TARGET EXAM &amp; YEAR
+            </label>
+<select class="w-full text-sm font-sans bg-parchment-50 border border-parchment-border rounded-xl px-3.5 py-2.5 focus:border-ink-crimson focus:ring-1 focus:ring-ink-crimson focus:outline-none transition" id="exam-target" name="examTarget">
+<option selected="" value="JEE 2027">JEE Main &amp; Advanced 2027 (XI Aspirant)</option>
+<option value="JEE 2026">JEE Main &amp; Advanced 2026 (XII Aspirant)</option>
+<option value="JEE 2025">JEE 2025 / Dropper Batch</option>
+<option value="NEET 2027">NEET UG 2027</option>
+<option value="NEET 2026">NEET UG 2026</option>
+<option value="UPSC 2027">UPSC CSE 2027</option>
+</select>
+</div>
+<!-- Aspirant Motto -->
+<div>
+<label class="block text-xs font-mono uppercase tracking-wider text-ink-secondary font-semibold mb-1" for="motto">
+              ASPIRANT BIO / FOCUS MOTTO
+            </label>
+<textarea class="w-full text-sm font-sans bg-parchment-50 border border-parchment-border rounded-xl px-3.5 py-2.5 focus:border-ink-crimson focus:ring-1 focus:ring-ink-crimson focus:outline-none transition resize-none" id="motto" placeholder="e.g. Consistent 6 hours focus daily. Targeting AIR &lt; 500." rows="3">Mastering Mechanics &amp; Calculus. Zero distractions, daily consistency.</textarea>
+</div>
+<!-- Submit Action -->
+<div class="pt-2 flex justify-end">
+<button class="px-5 py-2 rounded-xl bg-ink-crimson hover:bg-ink-crimsonHover text-white text-xs font-semibold tracking-wide shadow transition" type="button">
+              Save Ledger Changes
+            </button>
+</div>
+</form>
+</section>
+<!-- Right Column: Study Tracker (YPT) Configuration (5 Cols) -->
+<section class="lg:col-span-5 bg-white border border-parchment-border rounded-2xl p-6 sm:p-8 shadow-academic flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 pb-4 border-b border-parchment-border">
+<div class="w-8 h-8 rounded-lg bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+<path d="M6 6h10"></path>
+<path d="M6 10h10"></path>
+</svg>
+</div>
+<div>
+<h3 class="text-lg font-serif font-bold text-ink-deep">Study Tracker (YPT)</h3>
+<p class="text-[11px] text-ink-muted">Launch focus timer, track study</p>
+</div>
+</div>
+<!-- Feature Toggles Matrix -->
+<div class="mt-5 space-y-4 text-xs">
+<!-- Toggle 1 -->
+<div class="flex items-start justify-between gap-3">
+<div>
+<span class="font-medium text-ink-deep block">Auto-Sync with Live Carrels</span>
+<span class="text-ink-muted text-[11px]">Stream timer ticks to your active batch room.</span>
+</div>
+<input checked="" class="rounded border-parchment-border text-ink-crimson focus:ring-ink-crimson mt-0.5 h-4 w-4" type="checkbox"/>
+</div>
+<!-- Toggle 2 -->
+<div class="flex items-start justify-between gap-3">
+<div>
+<span class="font-medium text-ink-deep block">Daily Target Reset Window</span>
+<span class="text-ink-muted text-[11px]">Standardized to 3:00 AM Indian Standard Time.</span>
+</div>
+<span class="font-mono text-[11px] text-ink-secondary bg-parchment-200 px-2 py-0.5 rounded font-semibold">03:00 IST</span>
+</div>
+<!-- Toggle 3 -->
+<div class="flex items-start justify-between gap-3">
+<div>
+<span class="font-medium text-ink-deep block">Distraction Lockout Mode</span>
+<span class="text-ink-muted text-[11px]">Pause streak if session is interrupted by tab switch.</span>
+</div>
+<input checked="" class="rounded border-parchment-border text-ink-crimson focus:ring-ink-crimson mt-0.5 h-4 w-4" type="checkbox"/>
+</div>
+<!-- Toggle 4 -->
+<div class="flex items-start justify-between gap-3">
+<div>
+<span class="font-medium text-ink-deep block">Chai Break Reminder</span>
+<span class="text-ink-muted text-[11px]">10 minute auditory bell every 90 minutes.</span>
+</div>
+<input class="rounded border-parchment-border text-ink-crimson focus:ring-ink-crimson mt-0.5 h-4 w-4" type="checkbox"/>
+</div>
+</div>
+</div>
+<div class="pt-6 mt-6 border-t border-parchment-border">
+<button class="w-full py-2.5 rounded-xl border border-parchment-border hover:border-slate-400 bg-parchment-100 hover:bg-parchment-200 text-ink-deep text-xs font-semibold transition flex items-center justify-center gap-2" type="button">
+<span>⏱️</span>
+<span>Launch Dedicated YPT Fullscreen Stop-Clock</span>
+</button>
+</div>
+</section>
+</div>
+<!-- END: SettingsAndYptSplitSection -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MainFooter -->
+<!-- Official Bookie Academic Multi-Tier Footer -->
+<footer class="border-t border-parchment-border bg-white text-ink-secondary text-xs mt-12 py-10 px-4 sm:px-6">
+<div class="max-w-5xl mx-auto space-y-6">
+<!-- Top Tier: Branding & Quick Links -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-parchment-border/70 text-center sm:text-left">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-ink-crimson/10 border border-ink-crimson/20 flex items-center justify-center text-ink-crimson font-serif font-bold text-sm">
+            B
+          </div>
+<div>
+<span class="font-serif font-bold text-ink-deep text-sm tracking-tight">BOOKIE® ACADEMIC JOURNAL</span>
+<span class="text-ink-muted text-[11px] block font-mono">Engineered for Ambitious Aspirants</span>
+</div>
+</div>
+<div class="flex flex-wrap justify-center items-center gap-3 font-mono text-[11px] tracking-wide text-ink-muted">
+<a class="hover:text-ink-crimson transition" href="#practice">PRACTICE</a>
+<span>•</span>
+<a class="hover:text-ink-crimson transition" href="#progress">PROGRESS</a>
+<span>•</span>
+<a class="hover:text-ink-crimson transition" href="#perform">PERFORM</a>
+<span>•</span>
+<a class="text-amber-700 hover:underline" href="#chai">CHAI ☕</a>
+<span>•</span>
+<span class="text-emerald-700 font-semibold">🟢 AIR TARGET 2027</span>
+</div>
+</div>
+<!-- Middle Tier: Compliance Navigation -->
+<div class="flex flex-wrap items-center justify-center sm:justify-between gap-3 text-xs text-ink-muted">
+<div>
+          © 2026 BOOKIE Systems Inc. All scholarly rights reserved.
+        </div>
+<div class="flex items-center gap-4">
+<a class="hover:text-ink-deep transition underline-offset-4 hover:underline" href="#terms">Terms of Service</a>
+<a class="hover:text-ink-deep transition underline-offset-4 hover:underline" href="#privacy">Privacy Policy</a>
+<a class="hover:text-ink-deep transition underline-offset-4 hover:underline" href="#dmca">DMCA &amp; Copyright</a>
+<a class="hover:text-ink-deep transition underline-offset-4 hover:underline" href="#support">Support Desk</a>
+</div>
+</div>
+<!-- Bottom Tier: Legal Transparency Notice -->
+<p class="font-mono text-[10px] text-ink-muted/80 leading-relaxed text-center sm:text-left border-t border-parchment-border/40 pt-4">
+        BOOKIE is an educational workspace and study tracker. Google OAuth is used solely for secure sign-in and profile synchronization in adherence to the Google API Services User Data Policy Limited Use requirements. We never sell user data.
+      </p>
+</div>
+</footer>
+<!-- END: MainFooter -->
+</body></html>

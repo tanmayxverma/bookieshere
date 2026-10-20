@@ -1,64 +1,89 @@
-# Skills Used for Distinctive Premium Redesign
+# Design Skills Applied & Boundary Rules
 
-This document records the exact role, rules applied, and boundaries for each loaded design skill. The goal is a distinctive, premium, slightly funky product identity with Apple-grade interaction physics and structural topology, completely free from generic AI/vibe-coded clichés or neutral Apple visual clones.
+**Project:** `bookieshere`  
+**Design Authority:** Editorial Ink (Bookie Academic Journal) — from Stitch Project `17297096438450244819` and `.stitch/DESIGN.md`.
+
+This document tracks how each skill in `.agents/skills/` is leveraged, which principles are applied, and which rules are explicitly rejected in accordance with repository instructions and the brief.
+
+---
+
+## 1. `frontend-design`
+### Rules to Apply:
+- **Ground design in real student reality:** Bookie is an intensive study cockpit for high-percentile JEE Advanced and NEET aspirants studying 8–14 hours daily. Ground all copy, cards, and data in real academic artifacts (Irodov, HC Verma, Kota test series, NTA CBT calibrations).
+- **Restraint and Quiet Surfaces:** Spend visual boldness in exactly one place per view (e.g., the live focus countdown carrel or the leaderboard podium). Keep the surrounding layout quiet, disciplined, and free of decorative noise.
+- **Intentional, Non-Generic Layouts:** Avoid identical repetitive card grids; introduce asymmetric hierarchy, split-screen momentum, and dense tabular registers.
+- **Copy Discipline:** Eliminate cliché edtech filler ("Unlock your potential!", "Master your journey!"). Replace with authentic student microcopy: "Survive the syllabus. Rule the ranks.", "12ms TCS iON Calibration", "Strict Curation Guarantee: Verified KaTeX & OCR".
+
+### Rules NOT to Take:
+- Do not invent an arbitrary new palette or random layout concepts. Stitch's `Design.md` and the 15 downloaded screens define the visual authority.
 
 ---
 
-### 1. frontend-design (LEAD — Aesthetic Direction & Visual Character)
-- **Rules applied:**
-  1. Commit to a bold, specific aesthetic direction grounded directly in the student/aspirant subject matter before writing code.
-  2. Banish AI tropes: zero Claude cream-and-terracotta palettes, zero identical 3-card rows, zero tracked-out all-caps label spam, zero decorative 01/02/03 markers unless genuine sequences.
-  3. Spend boldness in one primary visual device per screen (dramatic font personality, tangible stickers/chips, or distinctive high-contrast rules), keeping all surrounding containers quiet and readable.
-- **Will NOT take:** Generic minimalist templates, unmotivated decoration, or hesitation to take an opinionated aesthetic stance.
+## 2. `ui-ux-pro-max`
+### Rules to Apply:
+- **WCAG AA Accessibility Floor:** Contrast ratio >= 4.5:1 for normal text and >= 3:1 for large text across both light and dark themes.
+- **Touch Target Floor:** All interactive buttons, chips, and table triggers must satisfy a minimum 44×44px hit area.
+- **Keyboard Navigation & Visible Focus:** 2px solid high-contrast focus rings with `outline-offset: 2px` on all interactive elements.
+- **Hierarchy & Semantic Landmarks:** Single `<h1>` per view, proper `<nav>`, `<main>`, `<aside>`, and `<footer>` semantics.
 
-### 2. ui-ux-pro-max (INTELLIGENCE — Options, Spacing & Accessibility Floor)
-- **Rules applied:**
-  1. Strict accessibility baseline: WCAG AA contrast (≥4.5:1 text, ≥3:1 UI), visible high-contrast focus rings, no raw hex values in components.
-  2. Touch & layout constraints: minimum 44×44px touch targets with ≥8px spacing, mobile-first responsive boundaries with zero horizontal overflow.
-  3. Leverage structured design-system data (palettes, font-pairings, UX guidelines) to propose and benchmark options, with all final design decisions justified in writing.
-- **Will NOT take:** Unfiltered generic styles, emoji icons, or rigid automated styles that override custom brand identity.
-
-### 3. apple-design (TOPOLOGY & INTERACTION PHYSICS ONLY)
-- **Rules applied:**
-  1. Topology & Hierarchy: one primary action per view, clear visual hierarchy, progressive disclosure, bottom tab bar on mobile phones for main destinations, sheets for secondary tasks.
-  2. Physical Dynamics: instant response on `pointerdown` (<16ms), critically damped springs (`damping: 1.0`, `response: 0.35s`), press feedback (`scale(0.97)` over 100ms), and 1:1 direct gesture tracking.
-  3. Spatial consistency: elements enter and exit along symmetric paths, anchored to trigger origins, and fully interruptible mid-flight.
-- **Will NOT take:** Apple's visual style (no SF Pro / Inter look, no neutral-gray-and-blue palette, no frosted-glass-everything).
-
-### 4. emil-design-eng (POLISH — Component Craft & Invisible Details)
-- **Rules applied:**
-  1. Optical alignment, tabular figures (`font-variant-numeric: tabular-nums`) for timers/scores, and origin-aware scaling.
-  2. Hover states strictly gated behind `@media (hover: hover) and (pointer: fine)`.
-  3. Meaningful tactile feedback for every discrete interactive state (default, hover, active, focus, disabled, loading).
-- **Will NOT take:** Fluffy decorative effects or visual noise that distracts from functional clarity.
-
-### 5. animation-vocabulary, find-animation-opportunities, animate (MOTION TAXONOMY, FILTER & BUILD)
-- **Rules applied:**
-  1. Run the build sequence in strict order: frequency check (never animate 100+/day keyboard actions) -> purpose classification (feedback, spatial consistency, state indication) -> spring configuration.
-  2. Composite-only property animation (`transform` and `opacity` only); never animate layout properties (`width`, `height`, `top`, `left`).
-  3. Integrated accessibility: `prefers-reduced-motion` graceful fallbacks (instant state cross-fades) shipped directly with every motion declaration.
-- **Will NOT take:** Vague motion concepts, uncalibrated cubic-bezier easings, or decorative animation loops competing for user attention.
-
-### 6. gsap-core, gsap-react, gsap-plugins, gsap-performance (SCROLL STORYTELLING & FLIP)
-- **Rules applied:**
-  1. Pinned/sticky storytelling and masked text reveals limited strictly to 1–2 hero moments on the home page.
-  2. Animated layout shifts (FLIP) for reordering dynamic lists (e.g. real-time leaderboard transitions).
-  3. React-safe lifecycle scoping (`useGSAP` or cleanup routines) and GPU layer restraint.
-- **Will NOT take:** Layout thrashing, elastic/bouncy easings, or JavaScript-driven animations for standard CSS interactions.
-
-### 7. improve-animations, review-animations, animation-performance, break-ui, web-design-guidelines (AUDIT GATES)
-- **Rules applied:**
-  1. Frame-budget enforcement: verify 60fps/120fps smooth performance on mid-range mobile devices.
-  2. Stress test against edge cases: extreme user names, empty states, slow networks, and 320px screen widths.
-  3. Static code review against web design guidelines (semantic HTML hierarchy, alt attributes, button labels).
-- **Will NOT take:** "Works on my high-end workstation" assumptions or unmeasured blur stacking.
-
-### 8. pick-ui-library (DEPENDENCY MINIMALISM)
-- **Rules applied:**
-  1. Zero frivolous dependencies: reuse and maximize existing packages (`lucide-react`, `sonner`, `@tanstack/react-query`, `date-fns`, `recharts`, `vaul`, `canvas-confetti`).
-  2. Carefully evaluate any new library against Fontsource self-hosted open fonts and performance constraints.
-  3. Restyle existing UI primitives from the ground up to reflect the unique brand identity.
-- **Will NOT take:** Redundant heavy UI frameworks or styling suites.
+### Rules NOT to Take:
+- Do not override the Stitch Editorial Ink color tokens or typography with generic Tailwind / UI-UX Pro Max presets. Stitch's `Design.md` is the final authority for visual tokens.
 
 ---
-*Note: `animate-expo` and `mobile-native` are explicitly excluded from this web project.*
+
+## 3. `apple-design`
+### Rules to Apply:
+- **Structural Topology Only:**
+  - One primary action per view (e.g. "START PHYSICS SESSION" on the study timer; "Join Live Silent Carrel" on home).
+  - Clear visual navigation model: Desktop uses the floating translucent capsule top bar; mobile phones use a thumb-accessible bottom tab bar with safe-area insets (`env(safe-area-inset-bottom)`).
+  - Secondary drill-downs and complex flows use sheets or modal flyouts (like the Bookie AI Archival Mentor Drawer).
+- **Physical Dynamics & Springs:**
+  - Critically damped springs (`damping: 1.0`, `response: 0.35s`) for UI transitions.
+  - Interactive press feedback: instantaneous (<16ms) reaction on pointerdown with slight scale (`scale(0.98)`).
+  - Interruptible animations: transitions must animate from current presentation value.
+  - Zero layout thrashing: animate composite-only properties (`transform` and `opacity`).
+- **Accessibility & Motion Preferences:**
+  - Full support for `prefers-reduced-motion: reduce`: swap motion for instant opacity cross-fades.
+  - Support `prefers-reduced-transparency: reduce` by replacing blurred backdrops with solid opaque backgrounds.
+
+### Rules NOT to Take:
+- **NEVER adopt Apple visual styling:** Do NOT use frosted glass cards, iOS San Francisco system fonts, pastel iOS colors, or sterile gray minimalism.
+
+---
+
+## 4. `animate`, `animation-vocabulary`, `find-animation-opportunities`
+### Rules to Apply:
+- **Signature Interaction per Key Page:**
+  - **Home:** Smooth live countdown ticker & subtle status pulse in the focus carrel.
+  - **Timer:** Elegant SVG progress ring with precision circular track tick indicators.
+  - **Leaderboard:** Smooth layout reordering for rank shifts.
+  - **Mentor AI Drawer:** Smooth spring slide-up and docked flyout presentation.
+- **Restraint:** Only animate when it clarifies state change or communicates momentum. Zero bouncy, cartoonish, or distracting animations.
+
+### Rules NOT to Take:
+- No continuous looping decorative background animations, rotating shapes, or pulsing ambient glows.
+
+---
+
+## 5. `gsap-core`, `gsap-react`, `gsap-performance`
+### Rules to Apply:
+- Reserved for complex scroll-pinned storytelling or multi-stage choreography on the master homepage where CSS transitions or IntersectionObserver are insufficient.
+- Use `useGSAP` with scoped refs and strict unmount cleanup (`gsap.context()`).
+- Always respect `prefers-reduced-motion` in GSAP matchMedia.
+
+### Rules NOT to Take:
+- Do not import heavy GSAP plugins (ScrollSmoother, Inertia, etc.) that inflate bundle size unnecessarily. CSS transitions and standard React hooks handle standard interactive states.
+
+---
+
+## 6. Codebase Review Skills (`improve-animations`, `animation-performance`, `break-ui`, `web-design-guidelines`)
+### Rules to Apply:
+- **Static Code Auditing:** Used during Part 6 to inspect for composite-only animations, layout shifts, unhandled edge cases (long candidate names, empty study sessions, zero scores), and WCAG contrast violations.
+- Verify zero network requests are added for fonts or external CDNs.
+
+---
+
+## 7. Excluded Skills
+- **`animate-expo`:** Excluded (Web application, not React Native / Expo).
+- **`mobile-native`:** Excluded per prompt instructions (web responsive styling with safe-area insets is handled natively via Tailwind and CSS).
+- **`pick-ui-library`:** Excluded (Radix UI primitives and Tailwind CSS already in repository; no new UI libraries needed).

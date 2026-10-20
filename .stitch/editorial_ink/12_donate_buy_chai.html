@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bookie — Scholarly Discipline for JEE Adv &amp; NEET-UG</title>
+<!-- Typography: Newsreader (Serif), Plus Jakarta Sans (Grotesk), JetBrains Mono (Tabular/Monospace) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error-container": "#ffdad6",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#eae7eb",
+            "on-primary-fixed-variant": "#930000",
+            "on-secondary": "#ffffff",
+            "inverse-on-surface": "#f3f0f4",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#d8e3fb",
+            "primary-fixed": "#ffdad4",
+            "on-secondary-fixed": "#111c2d",
+            "secondary": "#545f73",
+            "surface-container-low": "#f6f2f7",
+            "primary": "#b41d12",
+            "tertiary-container": "#007da9",
+            "tertiary-fixed": "#c3e8ff",
+            "secondary-container": "#d5e0f8",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#fbfcff",
+            "tertiary": "#006386",
+            "inverse-surface": "#303033",
+            "surface-container": "#f0edf1",
+            "surface-dim": "#dcd9dd",
+            "on-secondary-fixed-variant": "#3c475a",
+            "surface-container-highest": "#e4e1e6",
+            "inverse-primary": "#ffb4a8",
+            "on-primary-fixed": "#410000",
+            "surface-tint": "#b82014",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#1b1b1e",
+            "tertiary-fixed-dim": "#7ad0ff",
+            "surface": "#fbf8fc",
+            "surface-variant": "#e4e1e6",
+            "on-secondary-container": "#586377",
+            "outline": "#8f706b",
+            "outline-variant": "#e4beb8",
+            "on-background": "#1b1b1e",
+            "on-surface-variant": "#5b403c",
+            "on-error": "#ffffff",
+            "surface-bright": "#fbf8fc",
+            "on-tertiary-fixed": "#001e2c",
+            "background": "#fbf8fc",
+            "primary-container": "#d83828",
+            "on-tertiary-fixed-variant": "#004c68",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#fffbff",
+            "primary-fixed-dim": "#ffb4a8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "margin-mobile": "1rem",
+            "space-xl": "2.5rem",
+            "gutter": "1.5rem",
+            "space-lg": "1.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-xs": "0.25rem",
+            "margin-tablet": "2rem",
+            "margin": "3rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Newsreader", "serif"],
+            "headline-lg-mobile": ["Newsreader", "serif"],
+            "label-caps": ["JetBrains Mono", "monospace"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-md": ["Newsreader", "serif"],
+            "headline-sm": ["Newsreader", "serif"],
+            "label-code": ["JetBrains Mono", "monospace"],
+            "body-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "title-md": ["Plus Jakarta Sans", "sans-serif"],
+            "display-lg": ["Newsreader", "serif"],
+            "display-lg-mobile": ["Newsreader", "serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "metric-timer": ["JetBrains Mono", "monospace"]
+          },
+          "fontSize": {
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "500" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-code": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+            "display-lg-mobile": ["34px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "metric-timer": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Architectural hairline rules and paper grid rendering */
+    .ink-border-b { border-bottom: 1px solid #e4beb8; }
+    .ink-border-t { border-top: 1px solid #e4beb8; }
+    .ink-border-r { border-right: 1px solid #e4beb8; }
+    .ink-border-l { border-left: 1px solid #e4beb8; }
+    .ink-box-border { border: 1px solid #e4beb8; }
+    .ink-shadow { box-shadow: 4px 4px 0px 0px rgba(27, 27, 30, 0.08); }
+    
+    /* Strict font-feature setting for tabular numbers in academic data */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<meta content="web_standard" name="shell-type"/></head>
+<body class="bg-surface text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col font-body-md text-body-md">
+<!-- ==================== 1. MASTHEAD & TOP APP BAR ==================== -->
+<!-- Archival Volume Strip -->
+<div class="w-full bg-surface-container-low ink-border-b text-secondary py-1 px-space-md md:px-margin">
+<div class="max-w-7xl mx-auto flex justify-between items-center text-label-caps font-label-caps tracking-widest uppercase">
+<div class="flex items-center space-x-3">
+<span class="text-primary font-bold">VOL. IX — ISSUE 4</span>
+<span class="text-outline-variant font-normal">|</span>
+<span>EST. 2024</span>
+<span class="hidden sm:inline text-outline-variant font-normal">|</span>
+<span class="hidden sm:inline">ARCHIVAL REGISTER: ACAD-JEE-NEET-771</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="text-on-surface">SYS STATUS: ALL ARCHIVES OPERATIONAL</span>
+</div>
+</div>
+</div>
+<!-- Shared TopNavBar Component -->
+<header class="bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-space-lg md:px-margin max-w-7xl mx-auto h-16">
+<!-- Logo wordmark with archival mark -->
+<div class="flex items-center gap-6">
+<a class="text-headline-md font-headline-md font-medium tracking-tight text-on-surface dark:text-inverse-on-surface flex items-baseline" href="#">
+          Bookie<span class="text-primary text-2xl leading-none">.</span>
+</a>
+<span class="hidden lg:inline text-label-caps font-label-caps uppercase text-secondary border-l border-outline-variant pl-4 py-1">
+          Archival Academic Journal
+        </span>
+</div>
+<!-- Navigation links matching Shared Component exactly -->
+<nav class="hidden md:flex items-center space-x-8">
+<!-- Materials -->
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-title-md text-title-md transition-colors" href="#materials">
+          Materials
+        </a>
+<!-- Tests (Active intent for practicing candidate) -->
+<a class="border-b-2 border-primary text-primary dark:text-inverse-primary dark:border-inverse-primary font-title-md text-title-md pb-1" href="#tests">
+          Tests
+        </a>
+<!-- Rooms -->
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-title-md text-title-md transition-colors" href="#rooms">
+          Rooms
+        </a>
+<!-- Community -->
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-title-md text-title-md transition-colors" href="#community">
+          Community
+        </a>
+<!-- Profile -->
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-title-md text-title-md transition-colors" href="#profile">
+          Profile
+        </a>
+</nav>
+<!-- Trailing actions from JSON -->
+<div class="flex items-center space-x-3">
+<!-- Trailing secondary action: Target cohort toggle -->
+<div class="hidden sm:flex items-center bg-surface-container px-2.5 py-1 border border-outline-variant text-label-caps font-label-caps text-on-surface rounded">
+<span class="w-1.5 h-1.5 bg-primary rounded-full mr-2"></span>
+          JEE Adv '25
+        </div>
+<!-- Timer micro-display -->
+<div class="hidden xl:flex items-center bg-surface-container-low px-2.5 py-1 border border-outline-variant text-label-caps font-label-caps text-secondary rounded">
+<span class="material-symbols-outlined text-sm mr-1 text-primary" data-icon="timer">timer</span>
+<span class="font-label-code text-on-surface font-semibold tabular-nums">04:12:49 today</span>
+</div>
+<!-- Trailing notifications icon action -->
+<button aria-label="Notifications" class="p-1.5 text-secondary hover:text-primary transition-colors duration-150" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<!-- Trailing primary action button -->
+<a class="inline-flex items-center justify-center bg-primary text-on-primary px-4 py-2 text-title-md font-title-md rounded hover:bg-primary-container active:opacity-80 transition-all duration-150 shadow-sm" href="#cbt-simulator">
+<span>Begin Test</span>
+<span class="material-symbols-outlined text-sm ml-1.5" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</header>
+<!-- ==================== 2. HERO SECTION: ASYMMETRIC EDITORIAL GRID ==================== -->
+<main class="flex-grow"><div class="flex flex-col w-full relative">
+<!-- Subtle Background Grid Overlay -->
+<div class="absolute inset-0 pointer-events-none opacity-40 [background-size:36px_36px] [background-image:linear-gradient(to_right,#e4beb81f_1px,transparent_1px),linear-gradient(to_bottom,#e4beb81f_1px,transparent_1px)]"></div>
+<!-- Main Scrollable Section Container -->
+<div class="relative w-full max-w-5xl mx-auto px-space-md sm:px-space-lg md:px-margin pt-space-xl pb-24 flex flex-col items-center">
+<!-- Overline Badge (Scholarly Seal Pill) -->
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low text-secondary rounded-full shadow-sm mb-6">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest text-on-surface-variant">
+        § Archival Patronage // Fuel The Late Night Sprint
+      </span>
+</div>
+<!-- Editorial Masthead Headline -->
+<h1 class="text-center font-display-lg text-display-lg sm:text-display-lg tracking-tight text-on-surface mb-4">
+      BUY US A <span class="italic font-display-lg text-primary decoration-primary underline decoration-1 underline-offset-8">chai.</span>
+</h1>
+<!-- Manifesto / Subtitle -->
+<p class="max-w-2xl text-center font-body-lg text-body-lg text-secondary leading-relaxed mb-12">
+<span class="font-semibold text-on-surface">BOOKIE</span> is an independent, non-commercial archival project — forged in late-night sessions over cutting chai, anchored by an uncompromising refusal to let rank preparation cost a fortune. If this journal aids your JEE or NEET discipline, an offering keeps the indexers and compute nodes awake.
+    </p>
+<!-- Central Patronage Sheet (Hero Donation Card) -->
+<div class="w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden relative mb-16">
+<!-- Card Top Archival Header Bar -->
+<div class="w-full bg-surface-container-low px-6 py-3.5 flex justify-between items-center text-label-caps font-label-caps text-secondary uppercase tracking-widest">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="token">token</span>
+<span>LEDGER ID: CHAI-IND-2025</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-code text-label-code lowercase text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>zero-fee peer payment</span>
+</div>
+</div>
+<!-- Card Inner Body -->
+<div class="p-8 sm:p-12 flex flex-col items-center text-center">
+<!-- Editorial Seal / Tea Glass Emblem -->
+<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center text-primary mb-6 shadow-sm">
+<span class="material-symbols-outlined text-3xl" data-icon="local_cafe" style="font-variation-settings: 'FILL' 1;">local_cafe</span>
+</div>
+<!-- Card Title & Pitch -->
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2 font-normal">
+          Support BOOKIE on <span class="font-semibold text-primary">Buy Me a Chai</span>
+</h2>
+<p class="font-body-md text-body-md text-secondary max-w-md mb-8">
+          A homegrown Indian alternative for scholarly solidarity. Direct, instant via UPI — zero brokerage, zero accounts, pure student-to-server sustenance.
+        </p>
+<!-- Primary Action Trigger -->
+<a class="inline-flex items-center justify-center gap-2.5 bg-primary text-on-primary px-8 py-3.5 rounded-lg shadow-sm hover:bg-primary-container active:scale-[0.99] transition-all duration-150 font-title-md text-title-md group" href="https://bookieupi.lovable.app" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-lg" data-icon="coffee">coffee</span>
+<span>Offer a Chai (₹20 / ₹50 / ₹100)</span>
+<span class="material-symbols-outlined text-base transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" data-icon="north_east">north_east</span>
+</a>
+<!-- Monospace UPI Registry Line & Copy Micro-interaction -->
+<div class="mt-6 flex flex-col sm:flex-row items-center gap-3">
+<div class="flex items-center gap-2 bg-surface-container px-3.5 py-1.5 rounded-lg font-label-code text-label-code text-on-surface-variant">
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="link">link</span>
+<span class="font-semibold tracking-tight text-on-surface" id="upi-handle">bookieupi.lovable.app</span>
+</div>
+<button class="px-3 py-1.5 bg-surface-container-high hover:bg-surface-variant text-secondary hover:text-on-surface rounded-lg font-label-caps text-label-caps uppercase transition-colors flex items-center gap-1.5" onclick="navigator.clipboard.writeText('bookieupi.lovable.app'); const btn=this.querySelector('.copy-txt'); const orig=btn.textContent; btn.textContent='Copied!'; setTimeout(()=&gt;btn.textContent=orig, 1600);" title="Copy portal URL" type="button">
+<span class="material-symbols-outlined text-xs" data-icon="content_copy">content_copy</span>
+<span class="copy-txt">Copy Link</span>
+</button>
+</div>
+<p class="font-label-caps text-label-caps text-secondary uppercase tracking-widest mt-6">
+          Verified VPA Target • 100% Directed to Infrastructure
+        </p>
+</div>
+<!-- Card Ledger Bottom Rule -->
+<div class="bg-surface-container-low px-6 py-2.5 flex justify-between items-center text-body-sm font-label-code text-secondary">
+<span>STATUS: OPEN COHORTS</span>
+<span class="tabular-nums">LAST CHAI: 18m AGO</span>
+</div>
+</div>
+<!-- Section Heading: Where Your Support Goes -->
+<div class="w-full flex flex-col items-center mb-8">
+<div class="w-12 h-px bg-outline-variant mb-4"></div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface text-center tracking-tight">
+        Where your support goes
+      </h3>
+<p class="font-label-caps text-label-caps uppercase text-secondary tracking-widest mt-1">
+        Quarterly Ledger Breakdown &amp; Maintenance Costs
+      </p>
+</div>
+<!-- 3-Column Architectural Cards -->
+<div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Column 1: Compute & Cache -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary mb-5">
+<span class="material-symbols-outlined text-xl" data-icon="dns">dns</span>
+</div>
+<div class="font-label-caps text-label-caps text-secondary uppercase tracking-wider mb-1">
+            Compute &amp; DB Nodes
+          </div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-2 font-normal">
+            Server Costs
+          </h4>
+<p class="font-body-md text-body-md text-secondary leading-normal">
+            High-speed Redis cache instances, PostgreSQL problem sets, and unthrottled API replicas operating 24/7 during test-taking hours.
+          </p>
+</div>
+<div class="mt-6 pt-4 bg-surface-container-low -mx-6 -mb-6 px-6 py-2.5 rounded-b-xl flex items-center justify-between font-label-code text-body-sm text-secondary">
+<span>Target Load</span>
+<span class="text-on-surface font-semibold tabular-nums">99.98% Uptime</span>
+</div>
+</div>
+<!-- Column 2: Test Digitization -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-tertiary mb-5">
+<span class="material-symbols-outlined text-xl" data-icon="menu_book">menu_book</span>
+</div>
+<div class="font-label-caps text-label-caps text-secondary uppercase tracking-wider mb-1">
+            Archival Ingestion
+          </div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-2 font-normal">
+            Test Scanners
+          </h4>
+<p class="font-body-md text-body-md text-secondary leading-normal">
+            Optical indexing of premier Kota mock test archives, rigorous diagram vectorization, and step-by-step first-principle derivations.
+          </p>
+</div>
+<div class="mt-6 pt-4 bg-surface-container-low -mx-6 -mb-6 px-6 py-2.5 rounded-b-xl flex items-center justify-between font-label-code text-body-sm text-secondary">
+<span>Bank Volume</span>
+<span class="text-on-surface font-semibold tabular-nums">34,000+ Items</span>
+</div>
+</div>
+<!-- Column 3: Unconditional Freedom -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary mb-5">
+<span class="material-symbols-outlined text-xl" data-icon="lock_open">lock_open</span>
+</div>
+<div class="font-label-caps text-label-caps text-secondary uppercase tracking-wider mb-1">
+            Public Good
+          </div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-2 font-normal">
+            Free Forever
+          </h4>
+<p class="font-body-md text-body-md text-secondary leading-normal">
+            No ₹2.5 Lakh coach paywalls, zero predatory retention algorithms, and no gated solutions. Complete academic transparency without advertisements.
+          </p>
+</div>
+<div class="mt-6 pt-4 bg-surface-container-low -mx-6 -mb-6 px-6 py-2.5 rounded-b-xl flex items-center justify-between font-label-code text-body-sm text-secondary">
+<span>Tuition Wall</span>
+<span class="text-primary font-semibold">₹0.00 Guaranteed</span>
+</div>
+</div>
+</div>
+<!-- Academic Integrity Quote Banner -->
+<div class="w-full mt-12 bg-surface-container-low p-6 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="verified_user">verified_user</span>
+<div>
+<div class="font-title-md text-title-md text-on-surface">The Academic Non-Commercial Guarantee</div>
+<div class="font-body-sm text-body-sm text-secondary">All contributions cover domain renewals, server bills, and LaTeX processing compute. Bookie takes no private profit.</div>
+</div>
+</div>
+<a class="shrink-0 font-label-code text-label-code text-primary hover:underline flex items-center gap-1" href="#errata">
+<span>View Server Expenses</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_outward">arrow_outward</span>
+</a>
+</div>
+</div>
+</div></main>
+<!-- ==================== 6. FOOTER COMPONENT ==================== -->
+<footer class="bg-surface-container-low dark:bg-surface-container border-t border-outline-variant dark:border-outline">
+<div class="w-full py-space-xl px-space-lg md:px-margin max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-space-md">
+<!-- Brand & Archival Copyright -->
+<div class="max-w-md">
+<span class="text-headline-sm font-headline-sm text-on-surface dark:text-inverse-on-surface font-bold tracking-tight block mb-1">
+          Bookie Academic Journal<span class="text-primary">.</span>
+</span>
+<p class="text-body-sm font-body-sm text-secondary">
+          © 2025 Bookie Academic Journal. Edition Vol. IX, Issue 4. All rights reserved. Strict archival reproduction standard.
+        </p>
+</div>
+<!-- Links matching Shared Component Footnotes -->
+<div class="flex flex-wrap gap-x-6 gap-y-2">
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-label-caps text-label-caps uppercase tracking-wider transition-colors" href="#syllabus">
+          Syllabus Index
+        </a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-label-caps text-label-caps uppercase tracking-wider transition-colors" href="#errata">
+          Errata &amp; Citations
+        </a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-label-caps text-label-caps uppercase tracking-wider transition-colors" href="#honor-code">
+          Honor Code
+        </a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-label-caps text-label-caps uppercase tracking-wider transition-colors" href="#faculty">
+          Faculty Review
+        </a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-label-caps text-label-caps uppercase tracking-wider transition-colors" href="#terms">
+          Archive Terms
+        </a>
+</div>
+</div>
+</footer>
+</body></html>
