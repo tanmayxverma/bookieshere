@@ -61,8 +61,8 @@ export function MaterialFilters({
       <div className="space-y-6">
         {/* Subject Filter Group */}
         <div className="flex flex-col gap-2">
-          <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-bold">
-            1. SUBJECT STREAM
+          <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+            1. Academic Discipline
           </span>
           <div className="grid grid-cols-2 gap-2">
             {subjects.map(({ id, code, label }) => {
@@ -73,17 +73,17 @@ export function MaterialFilters({
                   type="button"
                   onClick={() => toggleSubject(id)}
                   className={cn(
-                    "p-2.5 rounded-lg font-mono text-xs font-bold flex items-center justify-between text-left transition-all border-2 border-[var(--desk-border)] cursor-pointer",
+                    "p-2.5 rounded-lg font-mono text-xs font-medium flex items-center justify-between text-left transition-all border cursor-pointer",
                     active
-                      ? "bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--desk-border)]"
-                      : "bg-card hover:bg-muted text-foreground"
+                      ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                      : "bg-card border-border/70 hover:border-primary/40 text-foreground"
                   )}
                 >
                   <span className="flex items-center gap-1.5">
                     <span className="text-[10px] opacity-80">[{code}]</span>
                     <span>{label}</span>
                   </span>
-                  <span className="text-[10px] font-semibold opacity-75">
+                  <span className="text-[10px] font-semibold opacity-85">
                     {getSubjectCount(id)}
                   </span>
                 </button>
@@ -93,14 +93,14 @@ export function MaterialFilters({
         </div>
 
         {/* Divider */}
-        <div className="border-t border-outline-variant/30" />
+        <div className="border-t border-border/60" />
 
         {/* Resource Type Filter Group */}
-        <div className="flex flex-col gap-space-xs">
-          <span className="font-label-code-sm text-label-code-sm uppercase tracking-wider text-on-surface-variant font-bold">
-            2. ARSENAL CATEGORY
+        <div className="flex flex-col gap-2">
+          <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+            2. Archival Category
           </span>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             {resourceTypes.map((id) => {
               const active = selectedTypes.includes(id);
               const count = getTypeCount(id);
@@ -110,18 +110,23 @@ export function MaterialFilters({
               return (
                 <label 
                   key={id}
-                  className="flex items-center justify-between p-1.5 rounded hover:bg-surface-container-low cursor-pointer"
+                  className={cn(
+                    "flex items-center justify-between p-2 rounded-lg transition-colors cursor-pointer border",
+                    active 
+                      ? "bg-primary/5 border-primary/20 text-foreground" 
+                      : "border-transparent hover:bg-muted/40 text-muted-foreground hover:text-foreground"
+                  )}
                 >
-                  <span className="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+                  <span className="flex items-center gap-2.5 font-mono text-xs">
                     <input
                       type="checkbox"
                       checked={active}
                       onChange={() => toggleResourceType(id)}
-                      className="w-4 h-4 rounded text-primary accent-primary focus:ring-0"
+                      className="w-3.5 h-3.5 rounded text-primary accent-primary cursor-pointer"
                     />
-                    {resourceLabels[id]}
+                    <span>{resourceLabels[id]}</span>
                   </span>
-                  <span className="font-label-code-sm text-[11px] text-on-surface-variant">
+                  <span className="font-mono text-[11px] text-muted-foreground font-medium">
                     {count}
                   </span>
                 </label>
@@ -130,16 +135,16 @@ export function MaterialFilters({
           </div>
         </div>
         
-        {/* Difficulty Target Level (Static for Visual) */}
-        <div className="flex flex-col gap-space-xs pt-space-xs border-t border-outline-variant/30">
-          <span className="font-label-code-sm text-label-code-sm uppercase tracking-wider text-on-surface-variant font-bold">
-            3. TARGET BENCHMARK
+        {/* Difficulty Target Level */}
+        <div className="flex flex-col gap-2 pt-1 border-t border-border/60">
+          <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+            3. Standard Level
           </span>
           <div className="flex flex-wrap gap-1.5">
-            <span className="px-2.5 py-1 rounded-md bg-surface-container text-on-surface font-label-code-sm text-label-code-sm cursor-pointer hover:bg-surface-container-high transition-colors">
+            <span className="px-2.5 py-1 rounded-md bg-muted/60 text-muted-foreground font-mono text-[11px] border border-border/60 cursor-pointer hover:text-foreground transition-colors">
               Mains Speed (99%ile)
             </span>
-            <span className="px-2.5 py-1 rounded-md bg-primary text-on-primary font-label-code-sm text-label-code-sm font-bold cursor-pointer">
+            <span className="px-2.5 py-1 rounded-md bg-primary/10 text-primary font-mono text-[11px] font-semibold border border-primary/20 cursor-pointer">
               Adv Standard (Top 5k)
             </span>
           </div>
