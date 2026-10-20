@@ -66,7 +66,7 @@
   --desk-ink-subtle: #64748B;
   --desk-primary: #3B82F6;
   --desk-primary-hover: #60A5FA;
-  --desk-primary-fg: #FFFFFF;
+  --desk-primary-fg: #0A0E17;
   --desk-secondary: #F59E0B;
   --desk-secondary-hover: #D97706;
   --desk-secondary-fg: #0A0E17;
@@ -74,7 +74,7 @@
   --desk-tertiary-fg: #0A0E17;
   --desk-destructive: #FB7185;
   --desk-destructive-fg: #0A0E17;
-  --desk-border: #1E293B;
+  --desk-border: #334155;
   --desk-border-subtle: rgba(255, 255, 255, 0.1);
 
   /* Dark mode depth uses crisp borders and deep ambient occlusion */
