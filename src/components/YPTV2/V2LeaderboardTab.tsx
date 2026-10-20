@@ -154,32 +154,32 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
 
   return (
     <div className="space-y-6 pop-in">
-      {/* ───── HERO ARENA HEADER ───── */}
-      <div className="bg-surface-container-lowest border-2 border-slate-900 dark:border-slate-700 rounded-3xl p-5 sm:p-7 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-4">
+      {/* ───── HERO ARENA HEADER (STITCH SCREEN 01) ───── */}
+      <div className="bg-card border border-border/80 rounded-2xl p-5 sm:p-7 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-mono text-[11px] font-black uppercase tracking-wider">
-              <Trophy className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 font-mono text-[11px] font-semibold uppercase tracking-wider">
+              <Trophy className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               <span>NATIONAL AIR ARENA // LIVE RANKINGS</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black font-display tracking-tight text-on-surface mt-1.5">
+            <h2 className="text-2xl sm:text-3xl font-bold font-display tracking-tight text-foreground mt-1.5">
               All-India Aspirants Leaderboard
             </h2>
-            <p className="font-mono text-xs text-on-surface-variant mt-0.5">
+            <p className="font-mono text-xs text-muted-foreground mt-0.5">
               Live grind rankings across India · Synchronized every 30 seconds
             </p>
           </div>
 
           {/* Period Toggle */}
-          <div className="flex items-center bg-surface-container p-1 rounded-2xl border border-outline-variant/40 self-start sm:self-center">
+          <div className="flex items-center bg-muted/40 p-1 rounded-xl border border-border/60 self-start sm:self-center">
             <button
               type="button"
               onClick={() => setPeriod('today')}
               className={cn(
-                'px-4 py-1.5 rounded-xl font-mono text-xs font-bold transition-all',
+                'px-4 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all cursor-pointer',
                 period === 'today'
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
-                  : 'text-on-surface-variant hover:text-on-surface'
+                  ? 'bg-background text-foreground shadow-xs border border-border/60'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               Today's AIR
@@ -188,10 +188,10 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
               type="button"
               onClick={() => setPeriod('weekly')}
               className={cn(
-                'px-4 py-1.5 rounded-xl font-mono text-xs font-bold transition-all',
+                'px-4 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all cursor-pointer',
                 period === 'weekly'
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
-                  : 'text-on-surface-variant hover:text-on-surface'
+                  ? 'bg-background text-foreground shadow-xs border border-border/60'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               Weekly (7-Day)
@@ -200,23 +200,23 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
         </div>
 
         {/* User Standing Strip */}
-        <div className="bg-gradient-to-r from-blue-500/10 via-primary/5 to-transparent border-2 border-primary/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+        <div className="bg-muted/20 border border-border/60 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary text-on-primary font-black text-lg flex items-center justify-center shrink-0 shadow-xs border border-primary/40">
+            <div className="w-10 h-10 rounded-xl bg-primary text-primary-foreground font-mono font-bold text-base flex items-center justify-center shrink-0 shadow-xs">
               {userRank > 0 ? `#${userRank}` : '—'}
             </div>
             <div>
-              <p className="text-sm font-bold text-on-surface">
+              <p className="text-sm font-semibold text-foreground">
                 {userRank > 0 ? (
                   <>
-                    You are currently ranked <span className="text-primary font-black">#{userRank}</span> nationwide
+                    You are currently ranked <span className="text-primary font-bold">#{userRank}</span> nationwide
                     with <span className="font-mono font-bold">{formatHours(userEntry?.totalSeconds || 0)}</span> logged!
                   </>
                 ) : (
                   'You have not logged any study time in this period yet.'
                 )}
               </p>
-              <p className="text-xs font-mono text-on-surface-variant mt-0.5">
+              <p className="text-xs font-mono text-muted-foreground mt-0.5">
                 {userRank === 1
                   ? '👑 You are leading All India Rank 1! Keep defending your position!'
                   : userRank > 1 && userRank <= 3
@@ -228,130 +228,154 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-center font-mono text-xs font-bold px-3 py-1.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface">
+          <div className="flex items-center gap-2 self-start sm:self-center font-mono text-xs font-medium px-3 py-1.5 rounded-lg bg-card border border-border/60 text-muted-foreground">
             <span>TOTAL COMPETITORS:</span>
-            <span className="text-primary">{activeBoard.length}</span>
+            <span className="text-foreground font-semibold">{activeBoard.length}</span>
           </div>
         </div>
       </div>
 
-      {/* ───── TOP 3 PODIUM DISPLAY ───── */}
+      {/* ───── TOP 3 PODIUM DISPLAY (EDITORIAL INK ARCHITECTURAL PODIUM) ───── */}
       {activeBoard.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end pt-2">
           {/* RANK 2 (Silver) - Left on desktop */}
           {top2 ? (
-            <div className="order-2 md:order-1 bg-surface-container-lowest border-2 border-slate-300 dark:border-slate-700 rounded-3xl p-5 shadow-[3px_3px_0px_0px_rgba(15,23,42,0.8)] relative flex flex-col items-center text-center space-y-3">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 border-2 border-slate-400 px-3 py-0.5 rounded-full font-mono text-xs font-black uppercase flex items-center gap-1 shadow-xs">
-                <span>🥈</span> AIR #2
-              </div>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-slate-200 to-slate-400 dark:from-slate-700 dark:to-slate-500 text-slate-900 dark:text-white font-black text-2xl flex items-center justify-center border-2 border-slate-400 shadow-sm mt-2">
-                {top2.name.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <h4 className="font-display font-black text-base text-on-surface truncate max-w-[200px]">
-                  {top2.name} {top2.userId === currentUserId && <span className="text-xs text-primary font-mono">(You)</span>}
-                </h4>
-                <span className="text-xs font-mono font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">
-                  {top2.jeeYear}
+            <div className="order-2 md:order-1 bg-card border border-border/80 rounded-xl p-5 shadow-xs relative flex flex-col justify-between group hover:shadow-sm transition-shadow space-y-4">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-slate-300 dark:bg-slate-700 rounded-t-xl" />
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                  🥈 AIR #2
                 </span>
+                <span className="font-mono text-[11px] text-muted-foreground">Top Ranker</span>
               </div>
-              <div className="w-full bg-[#f1f5f9] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl py-2 px-3">
-                <span className="font-mono font-black text-xl text-slate-900 dark:text-white">
-                  {formatHours(top2.totalSeconds)}
-                </span>
-                <p className="text-[10px] font-mono text-on-surface-variant uppercase">Logged Study Time</p>
+              <div className="flex items-center gap-3">
+                <div className="w-13 h-13 rounded-full bg-muted text-foreground flex items-center justify-center font-display text-xl font-bold shrink-0 border border-border/50">
+                  {top2.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <h4 className="font-display font-bold text-base text-foreground truncate">
+                    {top2.name} {top2.userId === currentUserId && <span className="text-xs text-primary font-mono">(You)</span>}
+                  </h4>
+                  <span className="font-mono text-xs text-muted-foreground">{top2.jeeYear} Target</span>
+                </div>
+              </div>
+              <div className="pt-2 flex items-baseline justify-between bg-muted/30 px-3.5 py-2.5 rounded-lg border border-border/40">
+                <div className="flex flex-col">
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">LOGGED TIME</span>
+                  <span className="font-mono text-xl font-bold text-foreground">
+                    {formatHours(top2.totalSeconds)}
+                  </span>
+                </div>
+                <span className="font-mono text-xs text-muted-foreground">AIR 2 Verified</span>
               </div>
             </div>
           ) : (
-            <div className="order-2 md:order-1 bg-surface-container-low/40 border-2 border-dashed border-outline-variant/40 rounded-3xl p-5 flex flex-col items-center justify-center text-center min-h-[220px]">
+            <div className="order-2 md:order-1 bg-card/40 border border-dashed border-border/60 rounded-xl p-5 flex flex-col items-center justify-center text-center min-h-[200px]">
               <span className="text-2xl opacity-40">🥈</span>
-              <p className="text-xs font-mono text-on-surface-variant mt-2">AIR #2 Slot Open</p>
+              <p className="text-xs font-mono text-muted-foreground mt-2">AIR #2 Slot Open</p>
             </div>
           )}
 
-          {/* RANK 1 (Gold) - Center elevated */}
+          {/* RANK 1 (Gold) - Center Monarch (Elevated Prestige) */}
           {top1 && (
-            <div className="order-1 md:order-2 bg-gradient-to-b from-amber-500/10 via-surface-container-lowest to-surface-container-lowest border-2 border-amber-500 rounded-3xl p-6 shadow-[4px_4px_0px_0px_rgba(245,158,11,1)] relative flex flex-col items-center text-center space-y-3.5 scale-100 md:-translate-y-2">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-900 border-2 border-slate-900 px-4 py-1 rounded-full font-mono text-xs font-black uppercase flex items-center gap-1.5 shadow-md">
-                <Crown className="w-3.5 h-3.5 fill-current" />
-                <span>CHAMPION // AIR 1</span>
-              </div>
-              <div className="relative mt-2">
-                <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-400 to-amber-600 text-slate-900 font-black text-3xl flex items-center justify-center border-2 border-slate-900 shadow-md">
-                  {top1.name.charAt(0).toUpperCase()}
+            <div className="order-1 md:order-2 bg-card border-2 border-primary/40 rounded-2xl p-6 shadow-sm relative flex flex-col justify-between space-y-4 scale-100 md:-translate-y-2">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-primary rounded-t-2xl" />
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-mono text-xs font-bold tracking-wider border border-primary/20">
+                  <span>👑 CHAMPION // AIR 1</span>
                 </div>
-                <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-amber-500 animate-bounce" />
+                <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" title="Live Continuous Stream" />
               </div>
-              <div>
-                <h4 className="font-display font-black text-lg text-on-surface truncate max-w-[220px]">
+              <div className="flex flex-col items-center text-center my-1">
+                <div className="relative mb-2">
+                  <div className="w-18 h-18 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-display text-2xl font-bold shadow-xs">
+                    {top1.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-background text-primary flex items-center justify-center shadow-xs border border-border/40">
+                    <Crown className="w-3.5 h-3.5 fill-current" />
+                  </span>
+                </div>
+                <h3 className="font-display font-bold text-lg text-foreground truncate max-w-[220px]">
                   {top1.name} {top1.userId === currentUserId && <span className="text-xs text-primary font-mono">(You)</span>}
-                </h4>
-                <span className="text-xs font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
-                  {top1.jeeYear} Target
-                </span>
+                </h3>
+                <span className="font-mono text-xs text-muted-foreground mt-0.5">{top1.jeeYear} Target</span>
               </div>
-              <div className="w-full bg-[#fef9c3] dark:bg-amber-950/40 border-2 border-amber-500/40 rounded-2xl py-2.5 px-3">
-                <span className="font-mono font-black text-2xl text-amber-900 dark:text-amber-200">
+              <div className="bg-muted/40 p-3.5 rounded-xl border border-border/50 flex flex-col gap-0.5 text-center">
+                <span className="font-mono text-[10px] text-primary font-bold uppercase tracking-widest">NATIONAL LEADING PACE</span>
+                <div className="font-mono text-2xl font-bold text-foreground">
                   {formatHours(top1.totalSeconds)}
-                </span>
-                <p className="text-[10px] font-mono font-bold text-amber-800/80 dark:text-amber-300/80 uppercase">
-                  National Leading Pace
-                </p>
+                </div>
+                <span className="font-mono text-[11px] text-muted-foreground">Continuous Leader Pace</span>
               </div>
             </div>
           )}
 
           {/* RANK 3 (Bronze) - Right on desktop */}
           {top3 ? (
-            <div className="order-3 bg-surface-container-lowest border-2 border-amber-700/40 dark:border-amber-700/60 rounded-3xl p-5 shadow-[3px_3px_0px_0px_rgba(15,23,42,0.8)] relative flex flex-col items-center text-center space-y-3">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-800 text-white border-2 border-amber-900 px-3 py-0.5 rounded-full font-mono text-xs font-black uppercase flex items-center gap-1 shadow-xs">
-                <span>🥉</span> AIR #3
-              </div>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-700 to-amber-900 text-white font-black text-2xl flex items-center justify-center border-2 border-amber-800 shadow-sm mt-2">
-                {top3.name.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <h4 className="font-display font-black text-base text-on-surface truncate max-w-[200px]">
-                  {top3.name} {top3.userId === currentUserId && <span className="text-xs text-primary font-mono">(You)</span>}
-                </h4>
-                <span className="text-xs font-mono font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">
-                  {top3.jeeYear}
+            <div className="order-3 bg-card border border-border/80 rounded-xl p-5 shadow-xs relative flex flex-col justify-between group hover:shadow-sm transition-shadow space-y-4">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-amber-700/60 rounded-t-xl" />
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                  🥉 AIR #3
                 </span>
+                <span className="font-mono text-[11px] text-muted-foreground">Top Ranker</span>
               </div>
-              <div className="w-full bg-[#fff7ed] dark:bg-amber-950/30 border border-amber-700/30 rounded-xl py-2 px-3">
-                <span className="font-mono font-black text-xl text-amber-950 dark:text-amber-200">
-                  {formatHours(top3.totalSeconds)}
-                </span>
-                <p className="text-[10px] font-mono text-on-surface-variant uppercase">Logged Study Time</p>
+              <div className="flex items-center gap-3">
+                <div className="w-13 h-13 rounded-full bg-muted text-foreground flex items-center justify-center font-display text-xl font-bold shrink-0 border border-border/50">
+                  {top3.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <h4 className="font-display font-bold text-base text-foreground truncate">
+                    {top3.name} {top3.userId === currentUserId && <span className="text-xs text-primary font-mono">(You)</span>}
+                  </h4>
+                  <span className="font-mono text-xs text-muted-foreground">{top3.jeeYear} Target</span>
+                </div>
+              </div>
+              <div className="pt-2 flex items-baseline justify-between bg-muted/30 px-3.5 py-2.5 rounded-lg border border-border/40">
+                <div className="flex flex-col">
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">LOGGED TIME</span>
+                  <span className="font-mono text-xl font-bold text-foreground">
+                    {formatHours(top3.totalSeconds)}
+                  </span>
+                </div>
+                <span className="font-mono text-xs text-muted-foreground">AIR 3 Verified</span>
               </div>
             </div>
           ) : (
-            <div className="order-3 bg-surface-container-low/40 border-2 border-dashed border-outline-variant/40 rounded-3xl p-5 flex flex-col items-center justify-center text-center min-h-[220px]">
+            <div className="order-3 bg-card/40 border border-dashed border-border/60 rounded-xl p-5 flex flex-col items-center justify-center text-center min-h-[200px]">
               <span className="text-2xl opacity-40">🥉</span>
-              <p className="text-xs font-mono text-on-surface-variant mt-2">AIR #3 Slot Open</p>
+              <p className="text-xs font-mono text-muted-foreground mt-2">AIR #3 Slot Open</p>
             </div>
           )}
         </div>
       )}
 
-      {/* ───── FULL RANKINGS TABLE (RANKS 4+) ───── */}
-      <div className="bg-surface-container-lowest border-2 border-slate-900 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-4">
-        <div className="flex items-center justify-between border-b border-outline-variant/30 pb-3">
+      {/* ───── FULL RANKINGS TABLE (STITCH SCREEN 01 AIR REGISTRY) ───── */}
+      <div className="bg-card border border-border/80 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <div className="flex items-center gap-2">
             <Medal className="w-4 h-4 text-primary" />
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-on-surface">
-              All India Rankers (Top 30)
+            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">
+              All India Rankers Registry (Top 30)
             </h3>
           </div>
-          <span className="text-xs font-mono text-on-surface-variant">Live updates enabled</span>
+          <span className="text-xs font-mono text-muted-foreground">Synchronized Live</span>
+        </div>
+
+        {/* Ledger Column Headers on Desktop */}
+        <div className="hidden md:grid grid-cols-12 px-4 py-2 text-muted-foreground font-mono text-[11px] font-semibold uppercase tracking-wider bg-muted/30 rounded-lg border border-border/40">
+          <div className="col-span-2">RANK POSITION</div>
+          <div className="col-span-5">CANDIDATE DOSSIER</div>
+          <div className="col-span-2">TARGET PROGRAM</div>
+          <div className="col-span-3 text-right">VERIFIED EFFORT</div>
         </div>
 
         {activeBoard.length === 0 ? (
-          <div className="p-8 text-center text-on-surface-variant font-mono text-sm">
+          <div className="p-8 text-center text-muted-foreground font-mono text-sm">
             No study sessions logged for this period yet. Start your timer to be #1!
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {activeBoard.map((entry, index) => {
               const rank = index + 1;
               const isMe = entry.userId === currentUserId;
@@ -361,58 +385,74 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
                 <div
                   key={entry.userId}
                   className={cn(
-                    'flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl border-2 transition-all',
+                    'flex flex-col md:grid md:grid-cols-12 items-start md:items-center gap-3 p-3.5 sm:p-4 rounded-xl border transition-all',
                     isMe
-                      ? 'border-primary bg-primary/10 shadow-[2px_2px_0px_0px_rgba(0,102,255,0.4)]'
+                      ? 'border-primary/50 bg-primary/5 shadow-2xs'
                       : isTop3
-                      ? 'border-amber-400/80 bg-amber-500/5'
-                      : 'border-slate-200 dark:border-slate-800 bg-surface-container-low/50 hover:bg-surface-container-low'
+                      ? 'border-amber-400/40 bg-amber-500/5 hover:bg-amber-500/10'
+                      : 'border-border/50 bg-card hover:bg-muted/30'
                   )}
                 >
-                  <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                    {/* Rank badge */}
-                    <div
+                  {/* Rank position */}
+                  <div className="md:col-span-2 flex items-center gap-2">
+                    <span
                       className={cn(
-                        'w-9 h-9 rounded-xl flex items-center justify-center font-mono font-black text-sm shrink-0 border',
+                        'w-7 h-7 rounded-full flex items-center justify-center font-mono text-xs font-bold shrink-0',
                         rank === 1
-                          ? 'bg-amber-500 text-slate-900 border-amber-600'
+                          ? 'bg-amber-500 text-slate-900'
                           : rank === 2
-                          ? 'bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white border-slate-400'
+                          ? 'bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white'
                           : rank === 3
-                          ? 'bg-amber-800 text-white border-amber-900'
-                          : 'bg-surface-container text-on-surface-variant border-outline-variant/40'
+                          ? 'bg-amber-800 text-white'
+                          : 'bg-muted text-muted-foreground'
                       )}
                     >
-                      {rank <= 3 ? ['🥇', '🥈', '🥉'][rank - 1] : `#${rank}`}
-                    </div>
+                      {rank <= 3 ? ['01', '02', '03'][rank - 1] : String(rank).padStart(2, '0')}
+                    </span>
+                    <span className={cn(
+                      'font-mono text-xs font-semibold',
+                      isTop3 ? 'text-amber-700 dark:text-amber-400' : 'text-muted-foreground'
+                    )}>
+                      AIR #{rank}
+                    </span>
+                  </div>
 
-                    {/* Avatar */}
-                    <div className="w-9 h-9 rounded-xl bg-surface-container-high flex items-center justify-center font-bold text-sm shrink-0 text-on-surface">
+                  {/* Candidate Dossier */}
+                  <div className="md:col-span-5 flex items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-bold text-xs shrink-0 text-foreground border border-border/40">
                       {entry.name.charAt(0).toUpperCase()}
                     </div>
-
-                    {/* Name & Target */}
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-on-surface truncate flex items-center gap-1.5">
+                      <p className="text-sm font-semibold text-foreground truncate flex items-center gap-1.5">
                         <span>{entry.name}</span>
                         {isMe && (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-extrabold bg-primary text-on-primary">
+                          <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-primary text-primary-foreground">
                             YOU
                           </span>
                         )}
                       </p>
-                      <p className="text-xs font-mono text-on-surface-variant truncate">
+                      <span className="font-mono text-xs text-muted-foreground md:hidden">
                         {entry.jeeYear} Target
-                      </p>
+                      </span>
                     </div>
                   </div>
 
-                  {/* Hours */}
-                  <div className="text-right shrink-0">
-                    <span className="font-mono font-black text-base sm:text-lg text-on-surface tabular-nums">
-                      {formatHours(entry.totalSeconds)}
+                  {/* Target Program (desktop) */}
+                  <div className="hidden md:block md:col-span-2">
+                    <span className="font-mono text-xs text-muted-foreground px-2 py-0.5 rounded bg-muted/40 border border-border/40">
+                      {entry.jeeYear}
                     </span>
-                    <p className="text-[10px] font-mono text-on-surface-variant uppercase">Focus logged</p>
+                  </div>
+
+                  {/* Verified Effort */}
+                  <div className="w-full md:w-auto md:col-span-3 md:text-right flex items-center justify-between md:justify-end gap-2">
+                    <span className="text-[11px] font-mono text-muted-foreground md:hidden uppercase">Verified Effort:</span>
+                    <div>
+                      <span className="font-mono font-bold text-base text-foreground tabular-nums">
+                        {formatHours(entry.totalSeconds)}
+                      </span>
+                      <p className="text-[10px] font-mono text-muted-foreground uppercase hidden md:block">Verified Effort</p>
+                    </div>
                   </div>
                 </div>
               );

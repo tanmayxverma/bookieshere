@@ -496,28 +496,23 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         )}
       </div>
 
-      {/* ───── CLEAN HERO STUDY TIMER CARD ───── */}
-      <div className="relative bg-card rounded-2xl p-6 sm:p-8 border-2 border-[var(--desk-border)] shadow-[5px_5px_0px_var(--desk-border)] overflow-hidden">
-        {/* Washi Header Indicator */}
-        <div className="washi-tape bg-[var(--sunflower)] text-[#0F172A] -rotate-1">
-          STUDY CARREL // ACTIVE SPRINT
-        </div>
-
+      {/* ───── EDITORIAL INK FOCAL STUDY TIMER CARD (STITCH SCREEN 05) ───── */}
+      <div className="relative bg-card rounded-2xl p-6 sm:p-8 border border-border shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] overflow-hidden">
         <div className="relative z-10 flex flex-col items-center max-w-2xl mx-auto text-center space-y-6 pt-2">
           
           {/* Top Control Bar: Mode Toggle & Status */}
-          <div className="flex flex-wrap items-center justify-between gap-3 w-full border-b border-[var(--desk-border)]/20 pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 w-full border-b border-border/40 pb-4">
             {/* Mode Switcher */}
-            <div className="flex items-center gap-1 p-1 bg-muted/40 rounded-xl border-2 border-[var(--desk-border)] shadow-[2px_2px_0px_var(--desk-border)]">
+            <div className="flex items-center gap-1 p-1 bg-muted/40 rounded-xl border border-border/60">
               <button
                 type="button"
                 disabled={timer.isActive}
                 onClick={() => setTimerMode('stopwatch')}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  "px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer",
                   timerMode === 'stopwatch'
-                    ? "bg-primary text-primary-foreground border-2 border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)]"
-                    : "text-muted-foreground hover:text-foreground border-2 border-transparent"
+                    ? "bg-background text-foreground border border-border/60 shadow-xs"
+                    : "text-muted-foreground hover:text-foreground border border-transparent"
                 )}
               >
                 <Clock className="w-3.5 h-3.5" />
@@ -528,10 +523,10 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 disabled={timer.isActive}
                 onClick={() => setTimerMode('countdown')}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  "px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer",
                   timerMode === 'countdown'
-                    ? "bg-primary text-primary-foreground border-2 border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)]"
-                    : "text-muted-foreground hover:text-foreground border-2 border-transparent"
+                    ? "bg-background text-foreground border border-border/60 shadow-xs"
+                    : "text-muted-foreground hover:text-foreground border border-transparent"
                 )}
               >
                 <Target className="w-3.5 h-3.5" />
@@ -542,12 +537,12 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
             {/* Live State Badge */}
             <div className="flex items-center gap-2">
               {timer.isActive ? (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-50 dark:bg-blue-950/60 text-primary border border-blue-200 dark:border-blue-900">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-primary/10 text-primary border border-primary/20">
                   <span className={cn("w-2 h-2 rounded-full", timer.isPaused ? "bg-amber-500" : "bg-primary animate-pulse")} />
                   <span>{timer.isPaused ? "PAUSED" : "IN SESSION"}</span>
                 </div>
               ) : (
-                <span className="text-xs font-mono text-on-surface-variant flex items-center gap-1">
+                <span className="text-xs font-mono text-muted-foreground flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
                   READY TO STUDY
                 </span>
@@ -564,13 +559,13 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                   type="button"
                   onClick={() => setPresetIndex(idx)}
                   className={cn(
-                    "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border",
+                    "px-3.5 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all border",
                     presetIndex === idx
-                      ? "bg-primary text-on-primary border-primary shadow-xs"
-                      : "bg-surface-container-low text-on-surface-variant hover:text-on-surface border-outline-variant/30"
+                      ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                      : "bg-muted/40 text-muted-foreground hover:text-foreground border-border/40"
                   )}
                 >
-                  <span className="font-mono">{p.work}m focus</span>
+                  <span>{p.work}m focus</span>
                   <span className="opacity-70 text-[10px] ml-1">/ {p.break}m break</span>
                 </button>
               ))}
@@ -578,8 +573,8 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
           )}
 
           {/* Subject Selection Pills */}
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-[11px] font-mono font-bold text-on-surface-variant uppercase tracking-wider">
+          <div className="flex flex-col items-center gap-2 w-full">
+            <span className="text-[11px] font-mono font-bold text-muted-foreground uppercase tracking-wider">
               {timer.isActive ? "ACTIVE SUBJECT" : "TARGET SUBJECT"}
             </span>
             <div className="flex flex-wrap items-center justify-center gap-2">
@@ -592,14 +587,16 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                     disabled={timer.isActive}
                     onClick={() => setSelectedSubject(sub.name)}
                     className={cn(
-                      "px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 border",
+                      "px-4 py-1.5 rounded-full text-xs font-mono font-semibold transition-all flex items-center gap-1.5 border cursor-pointer",
                       isSelected
-                        ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-105"
-                        : "bg-surface-container-low hover:bg-surface-container text-on-surface-variant border-outline-variant/30"
+                        ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                        : "bg-muted/30 hover:bg-muted/60 text-muted-foreground hover:text-foreground border-border/50"
                     )}
                   >
-                    <span>{sub.icon}</span>
                     <span>{sub.name}</span>
+                    {isSelected && timer.isActive && (
+                      <span className="text-[10px] bg-primary-foreground/20 text-primary-foreground px-1.5 py-0.2 rounded-full uppercase tracking-tight">Active</span>
+                    )}
                   </button>
                 );
               })}
@@ -607,7 +604,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 <button
                   type="button"
                   onClick={() => setShowSubjectSelect(true)}
-                  className="px-3 py-2 rounded-full text-xs font-bold text-on-surface-variant hover:text-on-surface border border-dashed border-outline-variant hover:border-primary transition-colors"
+                  className="px-3.5 py-1.5 rounded-full text-xs font-mono font-medium text-muted-foreground hover:text-foreground border border-dashed border-border hover:border-primary transition-colors cursor-pointer"
                 >
                   + Custom
                 </button>
@@ -615,68 +612,94 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
             </div>
           </div>
 
-          {/* Central Timer Dial Display */}
-          <div className="relative my-2 py-4 flex flex-col items-center justify-center">
-            {/* Circular Meter Accent Ring */}
-            <div className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-full border-4 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center shadow-inner bg-surface-container-low/40">
-              
-              {/* Dynamic SVG Progress Ring for Countdown */}
-              {isCountdown && (
-                <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
+          {/* Large Focal Dial & Numeric Timer Exhibit (Stitch Screen 05) */}
+          <div className="py-4 flex flex-col items-center justify-center relative z-10">
+            <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+              {/* SVG Progress Ring Dial */}
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                <circle
+                  className="text-muted/30"
+                  cx="100"
+                  cy="100"
+                  fill="transparent"
+                  r="88"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                {isCountdown ? (
                   <circle
-                    cx="50%"
-                    cy="50%"
-                    r="46%"
-                    fill="none"
-                    stroke={activeSubject.color}
-                    strokeWidth="6"
+                    className="text-primary transition-all duration-300 ease-out"
+                    cx="100"
+                    cy="100"
+                    fill="transparent"
+                    r="88"
+                    stroke="currentColor"
+                    strokeDasharray="552.92"
+                    strokeDashoffset={552.92 * (1 - ringProgress)}
                     strokeLinecap="round"
-                    strokeDasharray="100 100"
-                    pathLength="100"
-                    strokeDashoffset={100 - ringProgress * 100}
-                    className="transition-all duration-700 ease-out"
+                    strokeWidth="6"
                   />
-                </svg>
-              )}
-
-              {/* Stopwatch Active Animated Sweep Ring */}
-              {!isCountdown && timer.isActive && !timer.isPaused && (
-                <div className="absolute inset-2 rounded-full border-2 border-primary/40 animate-ping opacity-25 pointer-events-none" />
-              )}
-
-              {/* Digits Display */}
-              <div className="text-4xl sm:text-5xl font-mono font-black tracking-tight text-slate-900 dark:text-white tabular-nums select-none">
-                {formatTime(displaySeconds)}
-              </div>
-
-              {/* Sub-label under digits */}
-              <div className="mt-2 text-xs font-mono font-bold text-on-surface-variant flex items-center gap-1.5">
-                <span>{activeSubject.icon}</span>
-                <span>{activeSubjectName}</span>
-                {timer.isActive && (
-                  <>
-                    <span>•</span>
-                    <span className="text-primary font-bold">
-                      {isCountdown
-                        ? `${Math.round((timer.remainingSeconds ?? 0) / 60)}m left`
-                        : `${formatHours(liveTodaySeconds)} today`}
-                    </span>
-                  </>
+                ) : (
+                  timer.isActive && !timer.isPaused && (
+                    <circle
+                      className="text-primary transition-all duration-500"
+                      cx="100"
+                      cy="100"
+                      fill="transparent"
+                      r="88"
+                      stroke="currentColor"
+                      strokeDasharray="552.92"
+                      strokeDashoffset={552.92 * (1 - ((timer.elapsedSeconds % 3600) / 3600))}
+                      strokeLinecap="round"
+                      strokeWidth="5"
+                    />
+                  )
                 )}
+              </svg>
+
+              {/* Center Content Typography */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                {/* Academic Subject Badge */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-muted/50 font-mono text-xs text-foreground mb-2 border border-border/40 shadow-2xs">
+                  <span className="text-primary font-bold">•</span>
+                  <span className="font-semibold tracking-wide">{activeSubjectName}</span>
+                </div>
+
+                {/* Primary Tabular Counter */}
+                <div className="font-mono text-[42px] sm:text-[50px] leading-none tracking-tight text-foreground select-none font-bold tabular-nums">
+                  {formatTime(displaySeconds)}
+                </div>
+
+                {/* Sub-second micro telemetry */}
+                <div className="flex items-center gap-1 font-mono text-[11px] text-muted-foreground mt-2">
+                  <span>INDEX TICK</span>
+                  <span className="text-primary font-bold">.{String(Math.floor((timer.elapsedSeconds * 10) % 100)).padStart(2, '0')}</span>
+                  <span>• LIVE</span>
+                </div>
+
+                {/* Auxiliary Lap / Session Target */}
+                <div className="mt-3 text-muted-foreground font-mono text-[11px] flex items-center gap-1">
+                  <Target className="w-3 h-3 text-primary" />
+                  <span>
+                    {isCountdown
+                      ? `${Math.round((timer.remainingSeconds ?? 0) / 60)}m remaining`
+                      : `${formatHours(liveTodaySeconds)} logged today`}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Main Action Buttons */}
+          {/* Main Action Controls */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2 w-full">
             {!timer.isActive ? (
               <button
                 type="button"
                 onClick={() => handleStart()}
-                className="w-full sm:w-auto min-w-[240px] px-8 py-4 bg-primary text-primary-foreground font-heading font-extrabold text-base uppercase tracking-wider rounded-xl border-2 border-[var(--desk-border)] shadow-[4px_4px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_var(--desk-border)] transition-all flex items-center justify-center gap-2 cursor-pointer hover:brightness-105"
+                className="w-full sm:w-auto min-w-[240px] px-8 py-3.5 bg-primary text-primary-foreground font-mono font-semibold text-sm tracking-wide rounded-xl shadow-xs hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Play className="w-5 h-5 fill-current" />
-                <span>Start {activeSubjectName} Session</span>
+                <Play className="w-4 h-4 fill-current" />
+                <span>START {activeSubjectName.toUpperCase()} SESSION</span>
               </button>
             ) : (
               <div className="flex items-center gap-3 flex-wrap justify-center">
@@ -684,7 +707,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                   <button
                     type="button"
                     onClick={timer.resumeSession}
-                    className="px-7 py-3.5 bg-primary text-primary-foreground font-body font-bold text-sm rounded-xl border-2 border-[var(--desk-border)] shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-2 cursor-pointer hover:brightness-105"
+                    className="px-6 py-3 bg-primary text-primary-foreground font-mono font-semibold text-xs tracking-wide rounded-xl shadow-xs hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
                   >
                     <Play className="w-4 h-4 fill-current" />
                     <span>Resume Focus</span>
@@ -693,7 +716,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                   <button
                     type="button"
                     onClick={timer.pauseSession}
-                    className="px-7 py-3.5 bg-card text-foreground font-body font-bold text-sm rounded-xl border-2 border-[var(--desk-border)] shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-2 cursor-pointer hover:bg-muted"
+                    className="px-6 py-3 bg-muted/60 text-foreground font-mono font-semibold text-xs rounded-xl border border-border/60 hover:bg-muted active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
                   >
                     <Pause className="w-4 h-4" />
                     <span>Pause</span>
@@ -703,7 +726,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 <button
                   type="button"
                   onClick={timer.endSession}
-                  className="px-7 py-3.5 bg-destructive text-destructive-foreground font-body font-bold text-sm rounded-xl border-2 border-[var(--desk-border)] shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-2 cursor-pointer hover:brightness-105"
+                  className="px-6 py-3 bg-destructive text-destructive-foreground font-mono font-semibold text-xs rounded-xl shadow-xs hover:bg-destructive/90 active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <Square className="w-4 h-4 fill-current" />
                   <span>Stop &amp; Log</span>
@@ -712,7 +735,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 <button
                   type="button"
                   onClick={() => setFocusMode(true)}
-                  className="p-3.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition-colors"
+                  className="p-3 rounded-xl bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground border border-border/40 transition-colors"
                   title="Fullscreen Focus Mode"
                 >
                   <Maximize2 className="w-4 h-4" />
@@ -720,41 +743,44 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
               </div>
             )}
           </div>
+
+          {/* Archival Footnote inside Card */}
+          <div className="w-full pt-4 mt-2 border-t border-border/40 flex flex-wrap items-center justify-between text-muted-foreground font-mono text-[10px] tracking-wider uppercase">
+            <span>Focus Algorithm: Pomodoro / Free Flow Ledger</span>
+            <span>Synced with Offline Cache • 0 Packet Loss</span>
+          </div>
+
         </div>
       </div>
 
       {/* ───── LEADERBOARD AIR SPOTLIGHT (PROMINENT MOTIVATION) ───── */}
-      <div className="bg-gradient-to-r from-amber-500/15 via-amber-500/5 to-surface-container-lowest border-2 border-amber-500/50 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[3px_3px_0px_0px_rgba(245,158,11,0.35)] relative overflow-hidden">
+      <div className="bg-card border border-border/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs relative overflow-hidden">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-2xl shadow-sm shrink-0 border-2 border-slate-900">
+          <div className="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl border border-amber-500/20 shrink-0">
             🏆
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/70 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-800">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
                 AIR LEADERBOARD · LIVE TODAY
               </span>
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             </div>
-            <p className="text-sm sm:text-base font-extrabold text-on-surface mt-1">
+            <p className="text-sm font-semibold text-foreground mt-1">
               {topRanker 
-                ? <>Today's #1: <span className="text-amber-600 dark:text-amber-400 font-black">{topRanker.name}</span> ({topRanker.hours}h logged · {topRanker.year || 'JEE Focus'})</>
+                ? <>Today's #1: <span className="text-primary font-bold">{topRanker.name}</span> ({topRanker.hours}h logged · {topRanker.year || 'JEE Focus'})</>
                 : 'India-wide aspirants are logging intense focus sessions!'}
             </p>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-1.5 text-xs font-mono">
-              <span className="inline-flex items-center gap-1.5 bg-surface-container-high/80 dark:bg-surface-container-high px-2.5 py-1 rounded-lg border border-amber-300/60 dark:border-amber-700/60 font-bold text-on-surface">
-                <span className="text-amber-600 dark:text-amber-400 font-black">⏱️ You Logged:</span>
-                <span className="text-primary font-black text-[13px]">{formatHours(liveTodaySeconds)}</span>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs font-mono">
+              <span className="inline-flex items-center gap-1.5 font-medium text-muted-foreground">
+                <span>⏱️ You Logged:</span>
+                <span className="text-foreground font-semibold">{formatHours(liveTodaySeconds)}</span>
               </span>
               {userRank ? (
-                <span className="text-on-surface-variant font-medium">
-                  Current Standing: <strong className="text-primary font-black">#{userRank}</strong> · Keep pushing for the podium!
+                <span className="text-muted-foreground">
+                  Standing: <strong className="text-primary font-semibold">#{userRank}</strong>
                 </span>
-              ) : (
-                <span className="text-on-surface-variant font-medium">
-                  {liveTodaySeconds > 0 ? 'Updating your national rank live...' : 'Log a session today to claim your national rank!'}
-                </span>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -762,8 +788,9 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         {onNavigate && (
           <Button
             type="button"
+            variant="outline"
             onClick={() => onNavigate('leaderboard')}
-            className="bg-amber-500 hover:bg-amber-600 text-white font-bold font-mono text-xs rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] shrink-0 flex items-center gap-1.5 border-2 border-slate-900 self-start sm:self-auto px-4 py-2.5 h-auto transition-transform active:translate-y-0.5"
+            className="font-mono font-semibold text-xs rounded-xl shrink-0 flex items-center gap-1.5 self-start sm:self-auto px-4 py-2 h-auto"
           >
             <span>View AIR Podium</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -771,19 +798,19 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         )}
       </div>
 
-      {/* ───── CLEAN NEO-STYLE PERFORMANCE CARD (MATCHING USER'S SCREENSHOT) ───── */}
-      <div className="bg-surface-container-lowest border-2 border-slate-900 dark:border-slate-700 rounded-3xl p-5 sm:p-7 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden space-y-6">
+      {/* ───── CLEAN PERFORMANCE CARD (EDITORIAL INK) ───── */}
+      <div className="bg-card border border-border/80 rounded-2xl p-5 sm:p-7 shadow-xs relative overflow-hidden space-y-6">
         {/* Header section inside card */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-mono text-[11px] font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-[11px] font-semibold uppercase tracking-wider">
               <Clock className="w-3.5 h-3.5" />
               <span>DAILY STUDY METRIC</span>
             </div>
-            <h3 className="text-2xl sm:text-[28px] font-black font-display tracking-tight text-slate-900 dark:text-white mt-1.5">
+            <h3 className="text-2xl sm:text-[28px] font-bold font-display tracking-tight text-foreground mt-1.5">
               Today's Study Performance
             </h3>
-            <p className="font-mono text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="font-mono text-xs text-muted-foreground mt-0.5">
               Measured live across YPT study sessions and active timers
             </p>
           </div>
@@ -793,7 +820,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
             onClick={() => {
               if (onNavigate) onNavigate('stats');
             }}
-            className="px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-mono font-bold text-xs border border-blue-200 dark:border-blue-800 transition-all flex items-center gap-1.5 self-start sm:self-center shadow-xs"
+            className="px-4 py-2 rounded-xl bg-muted/40 hover:bg-muted text-foreground font-mono font-semibold text-xs border border-border/60 transition-all flex items-center gap-1.5 self-start sm:self-center shadow-xs cursor-pointer"
           >
             <span>View Full Stats →</span>
           </button>
@@ -802,58 +829,58 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         {/* 4 Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Today Studied */}
-          <div className="bg-[#fef9c3] dark:bg-amber-950/40 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-between min-h-[125px]">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300">
-              <Clock className="w-3.5 h-3.5 text-amber-800 dark:text-amber-400" />
+          <div className="bg-card border border-border/80 rounded-xl p-4 shadow-2xs flex flex-col justify-between min-h-[125px]">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <Clock className="w-3.5 h-3.5 text-primary" />
               <span>TODAY STUDIED</span>
             </div>
-            <div className="font-mono font-black text-3xl sm:text-[34px] tracking-tight text-slate-900 dark:text-slate-100 my-1">
+            <div className="font-mono font-bold text-3xl sm:text-[34px] tracking-tight text-foreground my-1">
               {formatHours(liveTodaySeconds)}
             </div>
-            <p className="text-[11px] font-mono text-amber-900/80 dark:text-amber-300/80 font-medium">
+            <p className="text-[11px] font-mono text-muted-foreground font-medium">
               {sessionCount} sessions logged today
             </p>
           </div>
 
           {/* Card 2: Study Streak */}
-          <div className="bg-[#fff7ed] dark:bg-orange-950/40 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-between min-h-[125px]">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-orange-900 dark:text-orange-300">
-              <Flame className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400 fill-orange-500" />
+          <div className="bg-card border border-border/80 rounded-xl p-4 shadow-2xs flex flex-col justify-between min-h-[125px]">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
               <span>STUDY STREAK</span>
             </div>
-            <div className="font-mono font-black text-3xl sm:text-[34px] tracking-tight text-slate-900 dark:text-slate-100 my-1">
-              {streak} <span className="text-xl font-bold">days</span>
+            <div className="font-mono font-bold text-3xl sm:text-[34px] tracking-tight text-foreground my-1">
+              {streak} <span className="text-xl font-medium">days</span>
             </div>
-            <p className="text-[11px] font-mono text-orange-900/80 dark:text-orange-300/80 font-medium flex items-center gap-1">
+            <p className="text-[11px] font-mono text-muted-foreground font-medium flex items-center gap-1">
               <span>🔥</span>
               <span>{streak > 0 ? 'Streak alive' : 'Start streak today'}</span>
             </p>
           </div>
 
           {/* Card 3: Daily Goal */}
-          <div className="bg-[#eff6ff] dark:bg-blue-950/40 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-between min-h-[125px]">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-blue-900 dark:text-blue-300">
-              <Target className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+          <div className="bg-card border border-border/80 rounded-xl p-4 shadow-2xs flex flex-col justify-between min-h-[125px]">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <Target className="w-3.5 h-3.5 text-emerald-500" />
               <span>DAILY GOAL ({DAILY_GOAL_HOURS}H)</span>
             </div>
-            <div className="font-mono font-black text-3xl sm:text-[34px] tracking-tight text-slate-900 dark:text-slate-100 my-1">
+            <div className="font-mono font-bold text-3xl sm:text-[34px] tracking-tight text-foreground my-1">
               {Math.round(dailyProgress)}%
             </div>
-            <p className="text-[11px] font-mono text-blue-900/80 dark:text-blue-300/80 font-medium">
+            <p className="text-[11px] font-mono text-muted-foreground font-medium">
               {(liveTodaySeconds / 3600).toFixed(1)}h of {DAILY_GOAL_HOURS}h completed
             </p>
           </div>
 
           {/* Card 4: Total Hours */}
-          <div className="bg-surface-container-lowest border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-between min-h-[125px]">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-200">
-              <Trophy className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+          <div className="bg-card border border-border/80 rounded-xl p-4 shadow-2xs flex flex-col justify-between min-h-[125px]">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <Trophy className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
               <span>TOTAL HOURS</span>
             </div>
-            <div className="font-mono font-black text-3xl sm:text-[34px] tracking-tight text-slate-900 dark:text-slate-100 my-1">
+            <div className="font-mono font-bold text-3xl sm:text-[34px] tracking-tight text-foreground my-1">
               {formatHours(liveAllTimeSeconds)}
             </div>
-            <p className="text-[11px] font-mono text-slate-600 dark:text-slate-400 font-medium">
+            <p className="text-[11px] font-mono text-muted-foreground font-medium">
               All-time Bookie focus time
             </p>
           </div>
@@ -861,13 +888,13 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
 
         {/* Bottom Progress Bar */}
         <div className="space-y-1.5 pt-1">
-          <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+          <div className="flex items-center justify-between text-xs font-mono font-semibold text-foreground">
             <span>Daily {DAILY_GOAL_HOURS}-Hour Target Progress</span>
             <span>{Math.round(dailyProgress)}% ({formatHours(liveTodaySeconds)} / {DAILY_GOAL_HOURS}h)</span>
           </div>
-          <div className="w-full h-3 rounded-full border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 p-0.5 overflow-hidden">
+          <div className="w-full h-2.5 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
+              className="h-full rounded-full bg-primary transition-all duration-500"
               style={{ width: `${Math.min(100, Math.max(1, dailyProgress))}%` }}
             />
           </div>
@@ -881,15 +908,15 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         <div className="lg:col-span-7 space-y-6">
           
           {/* Today's Focus Tasks Card */}
-          <div className="bg-surface-container-lowest rounded-3xl p-5 sm:p-6 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-4">
+          <div className="bg-card rounded-2xl p-5 sm:p-6 border border-border/80 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-primary flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <Target className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold font-display uppercase tracking-wider text-on-surface">Today's Focus Tasks</h3>
-                  <p className="text-xs text-on-surface-variant">
+                  <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">Today's Focus Tasks</h3>
+                  <p className="text-xs text-muted-foreground">
                     {todos.length === 0 ? 'Plan high-yield goals for today' : `${completedTasksCount} of ${todos.length} tasks completed`}
                   </p>
                 </div>
@@ -920,9 +947,9 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
 
             {/* Tasks list */}
             {previewTasks.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-outline-variant/40 p-5 text-center">
-                <ListTodo className="h-6 w-6 mx-auto text-on-surface-variant/40 mb-1" />
-                <p className="text-xs text-on-surface-variant">
+              <div className="rounded-xl border border-dashed border-border/60 p-5 text-center">
+                <ListTodo className="h-6 w-6 mx-auto text-muted-foreground/40 mb-1" />
+                <p className="text-xs text-muted-foreground">
                   {todos.length === 0 ? 'No tasks added yet. Drop in your first task above!' : 'All tasks completed for today! 🚀'}
                 </p>
               </div>
@@ -931,7 +958,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 {previewTasks.map((t) => (
                   <li
                     key={t.id}
-                    className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-surface-container-low/50 hover:bg-surface-container-low transition-colors"
+                    className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-border/50 bg-muted/20 hover:bg-muted/40 transition-colors"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <Checkbox
@@ -939,10 +966,10 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                         onCheckedChange={() => toggleTodo(t.id, t.completed)}
                         className="rounded"
                       />
-                      <span className="text-xs sm:text-sm font-medium text-on-surface truncate">{t.text}</span>
+                      <span className="text-xs sm:text-sm font-medium text-foreground truncate">{t.text}</span>
                     </div>
                     {t.subject && (
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-surface-container text-on-surface-variant shrink-0">
+                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground shrink-0">
                         {t.subject}
                       </span>
                     )}
@@ -955,7 +982,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
               <button
                 type="button"
                 onClick={() => onNavigate('tasks')}
-                className="w-full text-center text-xs font-mono font-bold text-primary hover:underline pt-1 flex items-center justify-center gap-1"
+                className="w-full text-center text-xs font-mono font-semibold text-primary hover:underline pt-1 flex items-center justify-center gap-1 cursor-pointer"
               >
                 <span>View Full Task Board</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -964,13 +991,13 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
           </div>
 
           {/* Weekly Study Rhythm Card */}
-          <div className="bg-surface-container-lowest rounded-3xl p-5 sm:p-6 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-4">
-            <div className="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+          <div className="bg-card rounded-2xl p-5 sm:p-6 border border-border/80 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-border/40 pb-3">
               <div className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-primary" />
-                <h3 className="text-sm font-bold font-display uppercase tracking-wider text-on-surface">Weekly Study Rhythm</h3>
+                <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">Weekly Study Rhythm</h3>
               </div>
-              <span className="text-xs font-mono font-bold bg-surface-container px-2 py-0.5 rounded text-on-surface">
+              <span className="text-xs font-mono font-semibold bg-muted px-2 py-0.5 rounded text-foreground">
                 Total: {formatHours(liveWeekSeconds)}
               </span>
             </div>
@@ -981,7 +1008,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 const heightPercent = Math.max(8, (d.secs / maxBar) * 100);
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group">
-                    <div className="text-[10px] font-mono text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="text-[10px] font-mono text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
                       {formatHours(d.secs)}
                     </div>
                     <div className="w-full h-full flex items-end justify-center">
@@ -989,11 +1016,11 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                         style={{ height: `${heightPercent}%` }}
                         className={cn(
                           "w-full rounded-t-lg transition-all duration-300",
-                          d.isToday ? "bg-primary" : "bg-blue-200 dark:bg-blue-900/50 hover:bg-blue-300"
+                          d.isToday ? "bg-primary" : "bg-primary/20 hover:bg-primary/30"
                         )}
                       />
                     </div>
-                    <span className={cn("text-[11px] font-mono font-bold", d.isToday ? "text-primary" : "text-on-surface-variant")}>
+                    <span className={cn("text-[11px] font-mono font-semibold", d.isToday ? "text-primary" : "text-muted-foreground")}>
                       {d.day}
                     </span>
                   </div>
@@ -1007,16 +1034,16 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
         <div className="lg:col-span-5 space-y-6">
           
           {/* Target Goals Card */}
-          <div className="bg-surface-container-lowest rounded-3xl p-5 sm:p-6 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-4">
+          <div className="bg-card rounded-2xl p-5 sm:p-6 border border-border/80 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold font-display uppercase tracking-wider text-on-surface flex items-center gap-1.5">
+              <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-amber-500" /> Study Targets
               </h3>
               {editingGoals ? (
                 <button
                   type="button"
                   onClick={saveEditedGoals}
-                  className="p-1 rounded bg-primary text-on-primary text-xs font-bold flex items-center gap-1 px-2"
+                  className="p-1 rounded-lg bg-primary text-primary-foreground text-xs font-semibold flex items-center gap-1 px-2.5 cursor-pointer"
                 >
                   <Check className="w-3.5 h-3.5" /> Save
                 </button>
@@ -1024,7 +1051,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 <button
                   type="button"
                   onClick={() => { setEditDaily(String(goals.daily)); setEditWeekly(String(goals.weekly)); setEditingGoals(true); }}
-                  className="text-xs font-mono font-bold text-primary hover:underline flex items-center gap-1"
+                  className="text-xs font-mono font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Pencil className="w-3 h-3" /> Edit Targets
                 </button>
@@ -1034,27 +1061,27 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
             {editingGoals ? (
               <div className="space-y-3 pt-1">
                 <div className="space-y-1">
-                  <label className="text-xs font-mono font-bold text-on-surface-variant">Daily Goal (Hours)</label>
+                  <label className="text-xs font-mono font-semibold text-muted-foreground">Daily Goal (Hours)</label>
                   <Input type="number" value={editDaily} onChange={(e) => setEditDaily(e.target.value)} min={0.5} max={24} step={0.5} className="h-9 rounded-xl" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-mono font-bold text-on-surface-variant">Weekly Goal (Hours)</label>
+                  <label className="text-xs font-mono font-semibold text-muted-foreground">Weekly Goal (Hours)</label>
                   <Input type="number" value={editWeekly} onChange={(e) => setEditWeekly(e.target.value)} min={1} max={168} step={1} className="h-9 rounded-xl" />
                 </div>
               </div>
             ) : (
               <div className="space-y-4">
                 <div>
-                  <div className="flex justify-between text-xs font-mono font-bold mb-1.5">
-                    <span className="text-on-surface-variant">Daily Target</span>
-                    <span>{formatHours(liveTodaySeconds)} / {DAILY_GOAL_HOURS}h</span>
+                  <div className="flex justify-between text-xs font-mono font-semibold mb-1.5">
+                    <span className="text-muted-foreground">Daily Target</span>
+                    <span className="text-foreground">{formatHours(liveTodaySeconds)} / {DAILY_GOAL_HOURS}h</span>
                   </div>
                   <Progress value={dailyProgress} className="h-2" />
                 </div>
                 <div>
-                  <div className="flex justify-between text-xs font-mono font-bold mb-1.5">
-                    <span className="text-on-surface-variant">Weekly Target</span>
-                    <span>{formatHours(liveWeekSeconds)} / {WEEKLY_GOAL_HOURS}h</span>
+                  <div className="flex justify-between text-xs font-mono font-semibold mb-1.5">
+                    <span className="text-muted-foreground">Weekly Target</span>
+                    <span className="text-foreground">{formatHours(liveWeekSeconds)} / {WEEKLY_GOAL_HOURS}h</span>
                   </div>
                   <Progress value={weeklyProgress} className="h-2" />
                 </div>
@@ -1063,15 +1090,15 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
           </div>
 
           {/* Subject Mix Card */}
-          <div className="bg-surface-container-lowest rounded-3xl p-5 sm:p-6 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-4">
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-on-surface">Subject Balance (7 Days)</h3>
+          <div className="bg-card rounded-2xl p-5 sm:p-6 border border-border/80 shadow-xs space-y-4">
+            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">Subject Balance (7 Days)</h3>
             
             {subjectMix.length === 0 ? (
-              <p className="text-xs text-on-surface-variant py-2">No study sessions logged this week yet.</p>
+              <p className="text-xs text-muted-foreground py-2">No study sessions logged this week yet.</p>
             ) : (
               <div className="space-y-3">
                 {/* Horizontal Segmented Bar */}
-                <div className="h-2.5 w-full bg-surface-container rounded-full overflow-hidden flex">
+                <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden flex">
                   {subjectMix.map((s) => {
                     const cfg = SUBJECT_CONFIG[s.name] || SUBJECT_CONFIG['Self Study'];
                     const widthPct = (s.secs / totalMix) * 100;
@@ -1090,12 +1117,12 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                   {subjectMix.map((s) => {
                     const cfg = SUBJECT_CONFIG[s.name] || SUBJECT_CONFIG['Self Study'];
                     return (
-                      <div key={s.name} className="flex items-center justify-between p-2 rounded-xl bg-surface-container-low text-xs">
-                        <span className="font-bold flex items-center gap-1.5 text-on-surface">
+                      <div key={s.name} className="flex items-center justify-between p-2 rounded-xl bg-muted/30 border border-border/40 text-xs">
+                        <span className="font-semibold flex items-center gap-1.5 text-foreground">
                           <span>{cfg.icon}</span>
                           <span>{s.name}</span>
                         </span>
-                        <span className="font-mono text-on-surface-variant">{formatHours(s.secs)}</span>
+                        <span className="font-mono text-muted-foreground">{formatHours(s.secs)}</span>
                       </div>
                     );
                   })}

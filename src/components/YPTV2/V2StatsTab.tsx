@@ -289,132 +289,142 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
   return (
     <div className="space-y-6 pop-in">
-      {/* ───── CLEAN NEO-STYLE PERFORMANCE CARD (MATCHING USER SCREENSHOT SPEC) ───── */}
-      <div className="bg-surface-container-lowest border-2 border-slate-900 dark:border-slate-700 rounded-3xl p-5 sm:p-7 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden space-y-6">
+      {/* ───── PERFORMANCE METRIC CARDS (STITCH SCREEN 03) ───── */}
+      <div className="bg-card border border-border/80 rounded-2xl p-5 sm:p-7 shadow-xs relative overflow-hidden space-y-6">
         {/* Header section inside card */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-mono text-[11px] font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-[11px] font-semibold uppercase tracking-wider">
               <Clock className="w-3.5 h-3.5" />
               <span>DAILY STUDY METRIC</span>
             </div>
-            <h3 className="text-2xl sm:text-[28px] font-black font-display tracking-tight text-slate-900 dark:text-white mt-1.5">
+            <h3 className="text-2xl sm:text-[28px] font-bold font-display tracking-tight text-foreground mt-1.5">
               Today's Study Performance
             </h3>
-            <p className="font-mono text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="font-mono text-xs text-muted-foreground mt-0.5">
               Measured live across YPT study sessions, active timers and manual logs
             </p>
           </div>
 
           <Button
             type="button"
+            variant="outline"
             onClick={() => {
               setGoalInput(String(dailyGoalHours));
               setShowGoalDialog(true);
             }}
-            className="px-4 py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-mono font-bold text-xs border border-blue-200 dark:border-blue-800 transition-all flex items-center gap-2 self-start sm:self-center shadow-xs"
+            className="px-4 py-2 rounded-xl text-foreground font-mono font-semibold text-xs border border-border/60 transition-all flex items-center gap-2 self-start sm:self-center shadow-xs cursor-pointer"
           >
-            <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span>Daily Goal: <strong className="font-black text-slate-900 dark:text-white">{dailyGoalHours}h</strong></span>
-            <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-200/60 dark:bg-blue-800/60 text-blue-800 dark:text-blue-200 font-extrabold ml-0.5">
+            <Target className="w-4 h-4 text-primary" />
+            <span>Daily Goal: <strong className="font-bold text-foreground">{dailyGoalHours}h</strong></span>
+            <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-semibold ml-0.5">
               Change
             </span>
           </Button>
         </div>
 
-        {/* 4 Cards Grid (Yellow, Peach, Blue, White) */}
+        {/* 4 Cards Grid (Editorial Ink Layout) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Today Studied */}
-          <div className="bg-[#fef9c3] dark:bg-amber-950/40 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-between min-h-[125px]">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300">
-              <Clock className="w-3.5 h-3.5 text-amber-800 dark:text-amber-400" />
+          <div className="bg-card border border-border/80 rounded-xl p-4 shadow-2xs flex flex-col justify-between min-h-[125px]">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <Clock className="w-3.5 h-3.5 text-primary" />
               <span>TODAY STUDIED</span>
             </div>
-            <div className="font-mono font-black text-3xl sm:text-[34px] tracking-tight text-slate-900 dark:text-slate-100 my-1">
+            <div className="font-mono font-bold text-3xl sm:text-[34px] tracking-tight text-foreground my-1">
               {formatHours(todaySeconds)}
             </div>
-            <p className="text-[11px] font-mono text-amber-900/80 dark:text-amber-300/80 font-medium">
+            <p className="text-[11px] font-mono text-muted-foreground font-medium">
               {todaySessionsCount} sessions logged today
             </p>
           </div>
 
           {/* Card 2: Study Streak */}
-          <div className="bg-[#fff7ed] dark:bg-orange-950/40 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-between min-h-[125px]">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-orange-900 dark:text-orange-300">
-              <Flame className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400 fill-orange-500" />
+          <div className="bg-card border border-border/80 rounded-xl p-4 shadow-2xs flex flex-col justify-between min-h-[125px]">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
               <span>STUDY STREAK</span>
             </div>
-            <div className="font-mono font-black text-3xl sm:text-[34px] tracking-tight text-slate-900 dark:text-slate-100 my-1">
-              {streak} <span className="text-xl font-bold">days</span>
+            <div className="font-mono font-bold text-3xl sm:text-[34px] tracking-tight text-foreground my-1">
+              {streak} <span className="text-xl font-medium">days</span>
             </div>
-            <p className="text-[11px] font-mono text-orange-900/80 dark:text-orange-300/80 font-medium flex items-center gap-1">
+            <p className="text-[11px] font-mono text-muted-foreground font-medium flex items-center gap-1">
               <span>🔥</span>
               <span>{streak > 0 ? 'Streak alive' : 'Start streak today'}</span>
             </p>
           </div>
 
           {/* Card 3: Daily Goal */}
-          <div className="bg-[#eff6ff] dark:bg-blue-950/40 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-between min-h-[125px]">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-blue-900 dark:text-blue-300">
-              <Target className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+          <div className="bg-card border border-border/80 rounded-xl p-4 shadow-2xs flex flex-col justify-between min-h-[125px]">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <Target className="w-3.5 h-3.5 text-emerald-500" />
               <span>DAILY GOAL ({dailyGoalHours}H)</span>
             </div>
-            <div className="font-mono font-black text-3xl sm:text-[34px] tracking-tight text-slate-900 dark:text-slate-100 my-1">
+            <div className="font-mono font-bold text-3xl sm:text-[34px] tracking-tight text-foreground my-1">
               {Math.min(100, Math.round((todaySeconds / (dailyGoalHours * 3600)) * 100))}%
             </div>
-            <p className="text-[11px] font-mono text-blue-900/80 dark:text-blue-300/80 font-medium">
+            <p className="text-[11px] font-mono text-muted-foreground font-medium">
               {(todaySeconds / 3600).toFixed(1)}h of {dailyGoalHours}h completed
             </p>
           </div>
 
           {/* Card 4: Total Focus */}
-          <div className="bg-surface-container-lowest border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex flex-col justify-between min-h-[125px]">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-200">
-              <Trophy className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+          <div className="bg-card border border-border/80 rounded-xl p-4 shadow-2xs flex flex-col justify-between min-h-[125px]">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <Trophy className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
               <span>TOTAL HOURS</span>
             </div>
-            <div className="font-mono font-black text-3xl sm:text-[34px] tracking-tight text-slate-900 dark:text-slate-100 my-1">
+            <div className="font-mono font-bold text-3xl sm:text-[34px] tracking-tight text-foreground my-1">
               {formatHours(monthSeconds)}
             </div>
-            <p className="text-[11px] font-mono text-slate-600 dark:text-slate-400 font-medium">
+            <p className="text-[11px] font-mono text-muted-foreground font-medium">
               This month: {formatHours(monthSeconds)}
             </p>
           </div>
         </div>
 
-        {/* Bottom Progress Bar */}
+        {/* Bottom Target Gauge Horizontal Meter */}
         <div className="space-y-1.5 pt-1">
-          <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+          <div className="flex items-center justify-between text-xs font-mono font-semibold text-foreground">
             <span>Daily {dailyGoalHours}-Hour Target Progress</span>
             <span>
               {Math.min(100, Math.round((todaySeconds / (dailyGoalHours * 3600)) * 100))}% ({formatHours(todaySeconds)} / {dailyGoalHours}h)
             </span>
           </div>
-          <div className="w-full h-3 rounded-full border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 p-0.5 overflow-hidden">
+          <div className="w-full h-2.5 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
+              className="h-full rounded-full bg-primary transition-all duration-500"
               style={{ width: `${Math.min(100, Math.max(1, (todaySeconds / (dailyGoalHours * 3600)) * 100))}%` }}
             />
+          </div>
+          <div className="flex justify-between items-center text-muted-foreground font-mono text-[10px] mt-1">
+            <span>00:00 (START)</span>
+            <span>02:00 (SLOT 1)</span>
+            <span>04:00 (SLOT 2)</span>
+            <span>06:00 (DAILY TARGET)</span>
           </div>
         </div>
       </div>
 
-      {/* ───── INTERACTIVE STUDY CALENDAR WITH DIRECT MANUAL LOG ───── */}
-      <div className="bg-surface-container-lowest border-2 border-slate-900 dark:border-slate-700 rounded-3xl p-5 sm:p-7 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/30 pb-4">
+      {/* ───── INTERACTIVE STUDY CALENDAR WITH DIRECT MANUAL LOG (STITCH SCREEN 03) ───── */}
+      <div className="bg-card border border-border/80 rounded-2xl p-5 sm:p-7 shadow-xs space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <CalendarIcon className="w-4 h-4 text-primary" />
-              <h3 className="text-base sm:text-lg font-black font-display uppercase tracking-wider text-on-surface">
+              <h3 className="text-base sm:text-lg font-bold font-display uppercase tracking-wider text-foreground">
                 {monthName}
               </h3>
-              <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+              <span className="text-[10px] font-mono font-semibold uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                ⚡ Auto-Logs Live Sessions
+                Auto-Logs Live Sessions
+              </span>
+              <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 bg-muted text-muted-foreground font-mono text-[10px] rounded-full">
+                IST (UTC+05:30)
               </span>
             </div>
-            <p className="text-xs text-on-surface-variant font-mono mt-1">
-              Live stopwatch & room sessions <strong className="text-emerald-600 dark:text-emerald-400 font-bold">auto-log</strong> here · <span className="text-primary font-bold">Click any date</span> to add or inspect custom offline/coaching logs ✍️
+            <p className="text-xs text-muted-foreground font-mono mt-1">
+              Live stopwatch & room sessions <strong className="text-emerald-600 dark:text-emerald-400 font-semibold">auto-log</strong> here · <span className="text-primary font-semibold">Click any date</span> to add or inspect custom offline/coaching logs.
             </p>
           </div>
 
@@ -423,7 +433,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
               variant="outline"
               size="sm"
               onClick={() => setMonthOffset((p) => p - 1)}
-              className="h-8 w-8 p-0 rounded-xl border border-slate-300 dark:border-slate-700"
+              className="h-8 w-8 p-0 rounded-xl"
               title="Previous Month"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -432,7 +442,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
               variant="outline"
               size="sm"
               onClick={() => setMonthOffset(0)}
-              className="h-8 px-2.5 text-xs font-mono font-bold rounded-xl border border-slate-300 dark:border-slate-700"
+              className="h-8 px-2.5 text-xs font-mono font-semibold rounded-xl"
             >
               Current
             </Button>
@@ -440,7 +450,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
               variant="outline"
               size="sm"
               onClick={() => setMonthOffset((p) => p + 1)}
-              className="h-8 w-8 p-0 rounded-xl border border-slate-300 dark:border-slate-700"
+              className="h-8 w-8 p-0 rounded-xl"
               title="Next Month"
             >
               <ChevronRight className="w-4 h-4" />
@@ -448,7 +458,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
             <Button
               size="sm"
               onClick={() => openLogForDay(selectedDateKey)}
-              className="h-8 px-3 text-xs font-mono font-bold rounded-xl bg-primary text-on-primary shadow-xs flex items-center gap-1.5 ml-2"
+              className="h-8 px-3 text-xs font-mono font-semibold rounded-xl bg-primary text-primary-foreground shadow-xs flex items-center gap-1.5 ml-2 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Log Time</span>
@@ -461,7 +471,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
             <span
               key={d}
-              className="text-[11px] font-mono font-bold text-center text-on-surface-variant uppercase tracking-wider py-1"
+              className="text-[11px] font-mono font-semibold text-center text-muted-foreground uppercase tracking-wider py-1"
             >
               {d}
             </span>
@@ -471,7 +481,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
         {/* Grid Cells */}
         <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
           {Array.from({ length: firstDayOfWeek }).map((_, i) => (
-            <div key={`empty-${i}`} className="aspect-square rounded-xl bg-surface-container-low/30" />
+            <div key={`empty-${i}`} className="aspect-square rounded-xl bg-muted/20" />
           ))}
 
           {calendarData.map((d) => {
@@ -489,16 +499,16 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
             const bgClass =
               intensity === -1
-                ? 'bg-muted/20 opacity-40 cursor-not-allowed'
+                ? 'bg-muted/10 opacity-30 cursor-not-allowed'
                 : intensity === 0
-                ? 'bg-surface-container-low/70 hover:bg-surface-container-high'
+                ? 'bg-muted/30 hover:bg-muted/60 text-muted-foreground'
                 : intensity === 1
-                ? 'bg-blue-100 dark:bg-blue-950/60 text-blue-900 dark:text-blue-200'
+                ? 'bg-primary/10 text-primary font-medium'
                 : intensity === 2
-                ? 'bg-blue-200 dark:bg-blue-900/70 text-blue-950 dark:text-blue-100 font-bold'
+                ? 'bg-primary/20 text-primary font-semibold'
                 : intensity === 3
-                ? 'bg-blue-400 dark:bg-blue-700 text-white font-bold'
-                : 'bg-blue-600 dark:bg-blue-600 text-white font-extrabold shadow-xs';
+                ? 'bg-primary/35 text-foreground font-bold'
+                : 'bg-primary text-primary-foreground font-bold shadow-2xs';
 
             return (
               <button
@@ -506,32 +516,32 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                 type="button"
                 onClick={() => setSelectedDateKey(d.dateKey)}
                 className={cn(
-                  'aspect-square rounded-xl p-1.5 sm:p-2 flex flex-col items-center justify-between transition-all duration-150 relative text-left group',
+                  'aspect-square rounded-xl p-1.5 sm:p-2 flex flex-col items-center justify-between transition-all duration-150 relative text-left group border border-border/30 cursor-pointer',
                   bgClass,
-                  d.isToday && 'ring-2 ring-amber-500 ring-offset-2 ring-offset-background',
-                  d.isSelected && 'border-2 border-slate-900 dark:border-white shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] scale-[1.03]'
+                  d.isToday && 'ring-2 ring-primary ring-offset-2 ring-offset-background',
+                  d.isSelected && 'border-2 border-foreground shadow-xs scale-[1.03]'
                 )}
               >
                 <div className="flex items-center justify-between w-full">
                   <span
                     className={cn(
-                      'text-xs font-mono font-bold leading-none',
+                      'text-xs font-mono font-semibold leading-none',
                       d.isFuture ? 'text-muted-foreground/40' : ''
                     )}
                   >
                     {d.day}
                   </span>
                   {d.isToday && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
                   )}
                 </div>
 
                 {!d.isFuture && d.seconds > 0 ? (
-                  <span className="text-[10px] sm:text-[11px] font-mono font-bold leading-none tabular-nums px-1 py-0.5 rounded">
+                  <span className="text-[10px] sm:text-[11px] font-mono font-semibold leading-none tabular-nums px-1 py-0.5 rounded">
                     {(d.seconds / 3600).toFixed(1)}h
                   </span>
                 ) : (
-                  <span className="text-[9px] font-mono text-on-surface-variant/40 leading-none group-hover:opacity-100 opacity-0 transition-opacity">
+                  <span className="text-[9px] font-mono text-muted-foreground/50 leading-none group-hover:opacity-100 opacity-0 transition-opacity">
                     +log
                   </span>
                 )}
@@ -541,19 +551,19 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
         </div>
 
         {/* Selected Day Inspector Panel */}
-        <div className="bg-surface-container-low rounded-2xl p-4 sm:p-5 border border-outline-variant/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="bg-muted/20 rounded-2xl p-4 sm:p-5 border border-border/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-on-surface-variant uppercase">
+              <span className="text-xs font-mono font-semibold text-muted-foreground uppercase">
                 Selected Day Overview:
               </span>
-              <span className="text-xs font-mono font-extrabold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-mono font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
                 {selectedDateKey} {selectedDateKey === istTodayStr ? '(Today)' : ''}
               </span>
             </div>
-            <p className="text-lg font-black font-display text-on-surface">
+            <p className="text-lg font-bold font-display text-foreground">
               {formatHours(selectedDayTotalSecs)}{' '}
-              <span className="text-xs font-mono font-medium text-on-surface-variant">
+              <span className="text-xs font-mono font-normal text-muted-foreground">
                 ({selectedDaySessions.length} sessions logged)
               </span>
             </p>
@@ -564,16 +574,16 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                 {selectedDaySessions.map((s, idx) => (
                   <div
                     key={s.id || idx}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-lowest text-xs font-mono border border-outline-variant/30 shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card text-xs font-mono border border-border/60 shadow-2xs"
                   >
                     <span>{SUBJECT_EMOJIS[s.subject] || '📖'}</span>
-                    <span className="font-bold text-on-surface">{s.subject}</span>
-                    <span className="text-on-surface-variant">({formatHours(s.duration_seconds || 0)})</span>
+                    <span className="font-semibold text-foreground">{s.subject}</span>
+                    <span className="text-muted-foreground">({formatHours(s.duration_seconds || 0)})</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-on-surface-variant font-mono">
+              <p className="text-xs text-muted-foreground font-mono">
                 No sessions recorded on this day. Click button to log study hours!
               </p>
             )}
@@ -582,7 +592,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
           <Button
             type="button"
             onClick={() => openLogForDay(selectedDateKey)}
-            className="rounded-xl px-4 py-2 font-mono font-bold text-xs bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 border border-slate-900 shadow-sm shrink-0 flex items-center gap-1.5"
+            className="rounded-xl px-4 py-2 font-mono font-semibold text-xs bg-primary text-primary-foreground shadow-xs shrink-0 flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Log for {selectedDateKey}</span>
@@ -592,43 +602,43 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
       {/* ───── INSIGHT CARDS ───── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-surface-container-lowest rounded-2xl p-5 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center font-bold text-xl shrink-0 border border-amber-300">
+        <div className="bg-card rounded-2xl p-5 border border-border/80 shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl shrink-0 border border-amber-500/20">
             🔥
           </div>
           <div>
-            <span className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider">
+            <span className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider">
               Best Day Record
             </span>
-            <p className="text-base font-black font-display text-on-surface mt-0.5">
+            <p className="text-base font-bold font-display text-foreground mt-0.5">
               {bestDay ? `${bestDayName} (${formatHours(bestDay.seconds)})` : 'No logs yet'}
             </p>
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest rounded-2xl p-5 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center font-bold text-xl shrink-0 border border-blue-300">
+        <div className="bg-card rounded-2xl p-5 border border-border/80 shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-xl shrink-0 border border-primary/20">
             🧠
           </div>
           <div>
-            <span className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider">
+            <span className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider">
               Peak Study Hour
             </span>
-            <p className="text-base font-black font-display text-on-surface mt-0.5">
+            <p className="text-base font-bold font-display text-foreground mt-0.5">
               {peakHourStr} (IST)
             </p>
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest rounded-2xl p-5 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center font-bold text-xl shrink-0 border border-emerald-300">
+        <div className="bg-card rounded-2xl p-5 border border-border/80 shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xl shrink-0 border border-emerald-500/20">
             📈
           </div>
           <div>
-            <span className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider">
+            <span className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider">
               Average Daily Pace
             </span>
-            <p className="text-base font-black font-display text-on-surface mt-0.5">
+            <p className="text-base font-bold font-display text-foreground mt-0.5">
               {formatHours(avgDaily)} / active day
             </p>
           </div>
@@ -638,15 +648,15 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
       {/* ───── WEEKLY OVERVIEW GRAPH & SUBJECT MIX ───── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Weekly Study Rhythm (7 cols) */}
-        <div className="lg:col-span-7 bg-surface-container-lowest rounded-3xl p-5 sm:p-6 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] space-y-4">
-          <div className="flex items-center justify-between border-b border-outline-variant/30 pb-3">
+        <div className="lg:col-span-7 bg-card rounded-2xl p-5 sm:p-6 border border-border/80 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-border/40 pb-3">
             <div className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-primary" />
-              <h3 className="text-sm font-bold font-display uppercase tracking-wider text-on-surface">
+              <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">
                 Weekly Study Overview
               </h3>
             </div>
-            <span className="text-xs font-mono font-bold bg-surface-container px-2.5 py-1 rounded-lg text-on-surface">
+            <span className="text-xs font-mono font-semibold bg-muted px-2.5 py-1 rounded-lg text-foreground">
               Past 7 Days: {formatHours(weekSeconds)}
             </span>
           </div>
@@ -656,7 +666,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
               <BarChart data={dailyData}>
                 <XAxis
                   dataKey="day"
-                  tick={{ fontSize: 12, fontWeight: 700 }}
+                  tick={{ fontSize: 12, fontWeight: 600 }}
                   stroke="hsl(var(--muted-foreground))"
                   axisLine={false}
                   tickLine={false}
@@ -669,35 +679,35 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                   tickLine={false}
                 />
                 <Tooltip
-                  cursor={{ fill: 'rgba(0, 102, 255, 0.05)' }}
+                  cursor={{ fill: 'rgba(144, 74, 67, 0.05)' }}
                   contentStyle={{
                     backgroundColor: 'hsl(var(--card))',
-                    border: '2px solid #0f172a',
+                    border: '1px solid hsl(var(--border))',
                     borderRadius: '12px',
                     fontSize: '13px',
-                    fontWeight: 700,
+                    fontWeight: 600,
                   }}
                   formatter={(val: number) => [`${val} hours`, 'Study Time']}
                 />
-                <Bar dataKey="hours" fill="#0062ff" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="hours" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Subject Distribution (5 cols) */}
-        <div className="lg:col-span-5 bg-surface-container-lowest rounded-3xl p-5 sm:p-6 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] space-y-4">
-          <div className="flex items-center justify-between border-b border-outline-variant/30 pb-3">
+        <div className="lg:col-span-5 bg-card rounded-2xl p-5 sm:p-6 border border-border/80 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-border/40 pb-3">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-primary" />
-              <h3 className="text-sm font-bold font-display uppercase tracking-wider text-on-surface">
+              <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">
                 Subject Distribution
               </h3>
             </div>
           </div>
 
           {subjectData.length === 0 ? (
-            <p className="text-xs text-on-surface-variant py-8 text-center font-mono">
+            <p className="text-xs text-muted-foreground py-8 text-center font-mono">
               No study sessions logged yet. Add your first session!
             </p>
           ) : (
@@ -713,7 +723,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                       cy="50%"
                       innerRadius={50}
                       outerRadius={75}
-                      strokeWidth={3}
+                      strokeWidth={2}
                       stroke="hsl(var(--card))"
                     >
                       {subjectData.map((entry, i) => (
@@ -723,10 +733,10 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                     <Tooltip
                       contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
-                        border: '2px solid #0f172a',
+                        border: '1px solid hsl(var(--border))',
                         borderRadius: '12px',
                         fontSize: '13px',
-                        fontWeight: 700,
+                        fontWeight: 600,
                       }}
                       formatter={(val: number) => [`${val}h`, '']}
                     />
@@ -738,13 +748,13 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                 {subjectData.map((s) => (
                   <div
                     key={s.name}
-                    className="flex items-center justify-between p-2 rounded-xl bg-surface-container-low border border-outline-variant/30 text-xs"
+                    className="flex items-center justify-between p-2 rounded-xl bg-muted/30 border border-border/40 text-xs"
                   >
                     <div className="flex items-center gap-2 truncate">
                       <span className="text-base">{SUBJECT_EMOJIS[s.name] || '📖'}</span>
-                      <span className="font-bold text-on-surface truncate">{s.name}</span>
+                      <span className="font-semibold text-foreground truncate">{s.name}</span>
                     </div>
-                    <span className="font-mono font-bold text-on-surface-variant ml-2">{s.hours}h</span>
+                    <span className="font-mono font-semibold text-muted-foreground ml-2">{s.hours}h</span>
                   </div>
                 ))}
               </div>
@@ -754,15 +764,15 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
       </div>
 
       {/* ───── PEAK STUDY HOURS HEATMAP ───── */}
-      <div className="bg-surface-container-lowest rounded-3xl p-5 sm:p-6 border-2 border-slate-900 dark:border-slate-700 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] space-y-4">
-        <div className="flex items-center justify-between border-b border-outline-variant/30 pb-3">
+      <div className="bg-card rounded-2xl p-5 sm:p-6 border border-border/80 shadow-xs space-y-4">
+        <div className="flex items-center justify-between border-b border-border/40 pb-3">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-primary" />
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-on-surface">
+            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">
               Peak Focus Hours (24-Hour IST Rhythm)
             </h3>
           </div>
-          <span className="text-xs text-on-surface-variant font-mono">Darker = higher focus density</span>
+          <span className="text-xs text-muted-foreground font-mono">Darker = higher focus density</span>
         </div>
 
         <div className="grid grid-cols-6 sm:grid-cols-12 gap-2 pt-1">
@@ -772,15 +782,15 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
             return (
               <div
                 key={d.hour}
-                className="aspect-square rounded-xl flex flex-col items-center justify-center p-1 text-xs font-mono font-bold transition-transform hover:scale-105 border border-outline-variant/20"
-                style={{ backgroundColor: `hsl(210 100% 50% / ${opacity})` }}
+                className="aspect-square rounded-xl flex flex-col items-center justify-center p-1 text-xs font-mono font-semibold transition-transform hover:scale-105 border border-border/30"
+                style={{ backgroundColor: `hsl(var(--primary) / ${opacity})` }}
                 title={`${d.hour}:00 IST – ${formatHours(d.seconds)} logged`}
               >
-                <span className={d.seconds > 0 ? 'text-white' : 'text-on-surface-variant/60'}>
+                <span className={d.seconds > 0 ? 'text-primary-foreground' : 'text-muted-foreground'}>
                   {d.hour}h
                 </span>
                 {d.seconds > 0 && (
-                  <span className="text-[9px] text-white/80 leading-none">
+                  <span className="text-[9px] text-primary-foreground/90 leading-none">
                     {(d.seconds / 3600).toFixed(1)}
                   </span>
                 )}
@@ -792,14 +802,14 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
       {/* ───── MANUAL STUDY LOG DIALOG MODAL ───── */}
       <Dialog open={logDialogOpen} onOpenChange={setLogDialogOpen}>
-        <DialogContent className="sm:max-w-md rounded-3xl border-2 border-slate-900 dark:border-slate-700 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] bg-surface-container-lowest p-6">
+        <DialogContent className="sm:max-w-md rounded-2xl border border-border/80 shadow-sm bg-card p-6">
           <DialogHeader>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-mono text-[11px] font-bold uppercase tracking-wider mb-1 w-fit">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-mono text-[11px] font-semibold uppercase tracking-wider mb-1 w-fit border border-primary/20">
               <CalendarIcon className="w-3.5 h-3.5" />
               <span>MANUAL LOG ENTRY</span>
             </div>
-            <DialogTitle className="text-xl font-black font-display">Log Study Time to Calendar</DialogTitle>
-            <DialogDescription className="text-xs text-on-surface-variant font-mono">
+            <DialogTitle className="text-xl font-bold font-display text-foreground">Log Study Time to Calendar</DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground font-mono">
               Add offline coaching hours, library study, or self-study sessions directly to your cockpit.
             </DialogDescription>
           </DialogHeader>
@@ -807,20 +817,20 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
           <div className="space-y-4 pt-2">
             {/* Date Picker */}
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider">
+              <label className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider">
                 Study Date
               </label>
               <Input
                 type="date"
                 value={logDate}
                 onChange={(e) => setLogDate(e.target.value)}
-                className="h-10 rounded-xl font-mono text-xs border border-outline-variant/50"
+                className="h-10 rounded-xl font-mono text-xs border border-border/60"
               />
             </div>
 
             {/* Subject Picker */}
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider">
+              <label className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider">
                 Select Subject
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -832,10 +842,10 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                       type="button"
                       onClick={() => setLogSubject(subj)}
                       className={cn(
-                        'flex items-center gap-2 p-2.5 rounded-xl border text-xs font-bold transition-all',
+                        'flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer',
                         isSelected
-                          ? 'border-2 border-slate-900 bg-primary/10 text-primary shadow-xs'
-                          : 'border-outline-variant/40 bg-surface-container-low hover:bg-surface-container'
+                          ? 'border-primary bg-primary/10 text-primary shadow-xs'
+                          : 'border-border/50 bg-muted/20 hover:bg-muted/50 text-foreground'
                       )}
                     >
                       <span className="text-base">{SUBJECT_EMOJIS[subj] || '📖'}</span>
@@ -849,7 +859,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
             {/* Duration Input & Quick Chips */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider">
+                <label className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider">
                   Duration
                 </label>
                 <span className="text-xs font-mono font-bold text-primary">
@@ -873,10 +883,10 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                     type="button"
                     onClick={() => setQuickDuration(chip.h, chip.m)}
                     className={cn(
-                      'px-2.5 py-1 rounded-lg text-xs font-mono font-bold border transition-colors',
+                      'px-2.5 py-1 rounded-lg text-xs font-mono font-semibold border transition-colors cursor-pointer',
                       logHours === chip.h && logMinutes === chip.m
-                        ? 'bg-slate-900 text-white border-slate-900'
-                        : 'bg-surface-container-low border-outline-variant/40 hover:bg-surface-container'
+                        ? 'bg-primary text-primary-foreground border-primary shadow-xs'
+                        : 'bg-muted/30 border-border/50 hover:bg-muted text-muted-foreground'
                     )}
                   >
                     {chip.label}
@@ -886,7 +896,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
               <div className="grid grid-cols-2 gap-3 pt-1">
                 <div className="space-y-1">
-                  <span className="text-[11px] font-mono text-on-surface-variant">Hours</span>
+                  <span className="text-[11px] font-mono text-muted-foreground">Hours</span>
                   <Input
                     type="number"
                     min={0}
@@ -897,7 +907,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[11px] font-mono text-on-surface-variant">Minutes</span>
+                  <span className="text-[11px] font-mono text-muted-foreground">Minutes</span>
                   <Input
                     type="number"
                     min={0}
@@ -912,7 +922,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
             {/* Optional Notes */}
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider">
+              <label className="text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider">
                 Topic / Chapter Note (Optional)
               </label>
               <Input
@@ -938,7 +948,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
               type="button"
               disabled={savingLog || (logHours === 0 && logMinutes === 0)}
               onClick={handleSaveManualLog}
-              className="rounded-xl font-mono font-bold text-xs bg-primary text-on-primary shadow-xs"
+              className="rounded-xl font-mono font-semibold text-xs bg-primary text-primary-foreground shadow-xs cursor-pointer"
             >
               {savingLog ? 'Saving to Calendar...' : 'Save to Calendar 📅'}
             </Button>
@@ -948,17 +958,17 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
       {/* ───── EDIT DAILY GOAL DIALOG ───── */}
       <Dialog open={showGoalDialog} onOpenChange={setShowGoalDialog}>
-        <DialogContent className="sm:max-w-md bg-surface-container-lowest border-2 border-slate-900 dark:border-slate-700 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)]">
+        <DialogContent className="sm:max-w-md bg-card border border-border/80 rounded-2xl p-6 shadow-sm">
           <DialogHeader>
             <div className="flex items-center gap-2.5 mb-1">
-              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-primary flex items-center justify-center border-2 border-slate-900 dark:border-slate-700">
-                <Target className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20">
+                <Target className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <DialogTitle className="text-xl font-black font-display text-on-surface">
+                <DialogTitle className="text-xl font-bold font-display text-foreground">
                   Set Daily Study Goal
                 </DialogTitle>
-                <DialogDescription className="text-xs font-mono text-on-surface-variant">
+                <DialogDescription className="text-xs font-mono text-muted-foreground">
                   Customize your daily target focus hours
                 </DialogDescription>
               </div>
@@ -967,7 +977,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
 
           <div className="space-y-4 pt-2">
             <div>
-              <label className="text-[11px] font-mono font-bold text-on-surface-variant uppercase tracking-wider block mb-2">
+              <label className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider block mb-2">
                 Quick Presets
               </label>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
@@ -977,10 +987,10 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                     type="button"
                     onClick={() => setGoalInput(String(hours))}
                     className={cn(
-                      "py-2 rounded-xl text-xs font-mono font-bold border transition-all active:scale-95",
+                      "py-2 rounded-xl text-xs font-mono font-semibold border transition-all active:scale-95 cursor-pointer",
                       parseFloat(goalInput) === hours
-                        ? "bg-primary text-white border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]"
-                        : "bg-surface-container hover:bg-surface-container-high border-outline-variant text-on-surface"
+                        ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                        : "bg-muted/30 hover:bg-muted/60 border-border/50 text-foreground"
                     )}
                   >
                     {hours}h
@@ -990,7 +1000,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
             </div>
 
             <div>
-              <label className="text-[11px] font-mono font-bold text-on-surface-variant uppercase tracking-wider block mb-1.5">
+              <label className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
                 Target Hours / Day
               </label>
               <div className="flex items-center gap-2">
@@ -998,23 +1008,20 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                   type="number"
                   min={1}
                   max={24}
-                  step={0.5}
                   value={goalInput}
                   onChange={(e) => setGoalInput(e.target.value)}
-                  className="font-mono text-base font-bold h-11 border-2 border-slate-900 dark:border-slate-700 rounded-xl"
-                  placeholder="e.g. 8"
+                  className="h-10 rounded-xl font-mono text-sm"
                 />
-                <span className="font-mono font-bold text-sm text-on-surface-variant shrink-0">hrs / day</span>
               </div>
             </div>
           </div>
 
           <DialogFooter className="mt-4 flex gap-2">
             <Button
-              variant="outline"
               type="button"
+              variant="outline"
               onClick={() => setShowGoalDialog(false)}
-              className="rounded-xl font-mono text-xs font-bold"
+              className="rounded-xl font-mono text-xs"
             >
               Cancel
             </Button>
@@ -1038,7 +1045,7 @@ export function V2StatsTab({ userId, liveElapsed = 0 }: Props) {
                 });
                 setShowGoalDialog(false);
               }}
-              className="bg-primary hover:bg-primary/90 text-white font-mono font-bold text-xs rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] border-2 border-slate-900"
+              className="rounded-xl font-mono font-semibold text-xs bg-primary text-primary-foreground shadow-xs cursor-pointer"
             >
               Save Goal
             </Button>
