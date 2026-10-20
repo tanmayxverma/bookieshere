@@ -20,11 +20,11 @@ export function MaterialFilters({
 }: MaterialFiltersProps) {
   const { data: materials } = useMaterials();
   
-  const subjects: { id: SubjectType; emoji: string }[] = [
-    { id: 'physics', emoji: '⚛️' },
-    { id: 'chemistry', emoji: '🧪' },
-    { id: 'mathematics', emoji: '∑' },
-    { id: 'combined', emoji: '📦' },
+  const subjects: { id: SubjectType; code: string; label: string }[] = [
+    { id: 'physics', code: 'PHY', label: 'Physics' },
+    { id: 'chemistry', code: 'CHEM', label: 'Chemistry' },
+    { id: 'mathematics', code: 'MATH', label: 'Maths' },
+    { id: 'combined', code: 'ALL', label: 'PCM Mix' },
   ];
 
   const resourceTypes: ResourceType[] = [
@@ -60,12 +60,12 @@ export function MaterialFilters({
     <ScrollArea className="h-[calc(100vh-280px)] max-h-[480px] pr-3 -mr-3">
       <div className="space-y-6">
         {/* Subject Filter Group */}
-        <div className="flex flex-col gap-space-xs">
-          <span className="font-label-code-sm text-label-code-sm uppercase tracking-wider text-on-surface-variant font-bold">
+        <div className="flex flex-col gap-2">
+          <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-bold">
             1. SUBJECT STREAM
           </span>
-          <div className="grid grid-cols-2 gap-space-xs">
-            {subjects.map(({ id, emoji }) => {
+          <div className="grid grid-cols-2 gap-2">
+            {subjects.map(({ id, code, label }) => {
               const active = selectedSubjects.includes(id);
               return (
                 <button
@@ -73,14 +73,17 @@ export function MaterialFilters({
                   type="button"
                   onClick={() => toggleSubject(id)}
                   className={cn(
-                    "p-2 rounded-lg font-label-ui text-label-ui flex items-center justify-between text-left transition-all",
+                    "p-2.5 rounded-lg font-mono text-xs font-bold flex items-center justify-between text-left transition-all border-2 border-[var(--desk-border)] cursor-pointer",
                     active
-                      ? "bg-primary text-on-primary font-bold shadow-[0_2px_0_0_#00174b]"
-                      : "bg-surface-container-low hover:bg-surface-container text-on-surface"
+                      ? "bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--desk-border)]"
+                      : "bg-card hover:bg-muted text-foreground"
                   )}
                 >
-                  <span className="flex items-center gap-1.5"><span>{emoji}</span> {id === 'combined' ? 'PCM Mix' : subjectLabels[id].substring(0, 4)}</span>
-                  <span className={cn("text-label-code-sm font-normal", active ? "text-primary-foreground/80" : "text-on-surface-variant")}>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-[10px] opacity-80">[{code}]</span>
+                    <span>{label}</span>
+                  </span>
+                  <span className="text-[10px] font-semibold opacity-75">
                     {getSubjectCount(id)}
                   </span>
                 </button>
