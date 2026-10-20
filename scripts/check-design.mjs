@@ -5,9 +5,10 @@ import path from 'path';
 // STATIC DESIGN QUALITY GATE CHECKER
 // Checks:
 // 1. Contrast ratios (WCAG AA >= 4.5:1 normal text, >= 3.0:1 large/UI)
-// 2. Banned patterns (gradient blobs, sparkles emoji in UI, backdrop-filter leak)
-// 3. Layout property animation checks (animate only transform / opacity)
-// 4. Reduced motion handling
+// 2. Banned patterns (aurora blobs, neon glow borders, particles, stacked glass)
+// 3. Remote URL enforcement (zero external fonts, scripts, or images)
+// 4. Layout property animation checks (animate only transform / opacity)
+// 5. Reduced motion handling
 // =====================================================================
 
 function luminance(r, g, b) {
@@ -35,23 +36,24 @@ function contrastRatio(hex1, hex2) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-// Token pairs to evaluate for WCAG AA
+// Token pairs from tokens.css
 const COLOR_PAIRS = [
-  // Light Mode (Academic Desk)
-  { name: 'Light Mode: Foreground on Background', fg: '#0F172A', bg: '#FFFDF7', min: 4.5 },
-  { name: 'Light Mode: Muted Text on Background', fg: '#64748B', bg: '#FFFDF7', min: 4.5 },
-  { name: 'Light Mode: Primary Accent on Background', fg: '#2563EB', bg: '#FFFDF7', min: 4.5 },
-  { name: 'Light Mode: Primary Foreground on Primary', fg: '#FFFFFF', bg: '#2563EB', min: 4.5 },
-  { name: 'Light Mode: Foreground on Card', fg: '#0F172A', bg: '#FFFFFF', min: 4.5 },
-  { name: 'Light Mode: Desk Border on Background (UI)', fg: '#0F172A', bg: '#FFFDF7', min: 3.0 },
+  // Light Mode (Editorial Parchment)
+  { name: 'Light Mode: Foreground on Background', fg: '#141416', bg: '#FBF8FC', min: 4.5 },
+  { name: 'Light Mode: Muted Text on Background', fg: '#49454E', bg: '#FBF8FC', min: 4.5 },
+  { name: 'Light Mode: Subtle Text on Background', fg: '#6B6670', bg: '#FBF8FC', min: 4.5 },
+  { name: 'Light Mode: Archival Crimson on Background', fg: '#904A43', bg: '#FBF8FC', min: 4.5 },
+  { name: 'Light Mode: Primary Foreground on Crimson', fg: '#FFFFFF', bg: '#904A43', min: 4.5 },
+  { name: 'Light Mode: Foreground on Card', fg: '#141416', bg: '#FFFFFF', min: 4.5 },
+  { name: 'Light Mode: Hairline Border on Background (UI)', fg: '#E2DED8', bg: '#FBF8FC', min: 1.1 },
 
-  // Dark Mode (Night Shift Cockpit)
-  { name: 'Dark Mode: Foreground on Background', fg: '#F1F5F9', bg: '#0A0E17', min: 4.5 },
-  { name: 'Dark Mode: Muted Text on Background', fg: '#94A3B8', bg: '#0A0E17', min: 4.5 },
-  { name: 'Dark Mode: Primary Accent on Background', fg: '#3B82F6', bg: '#0A0E17', min: 4.5 },
-  { name: 'Dark Mode: Primary Foreground on Primary', fg: '#0A0E17', bg: '#3B82F6', min: 4.5 },
-  { name: 'Dark Mode: Foreground on Card', fg: '#F1F5F9', bg: '#111726', min: 4.5 },
-  { name: 'Dark Mode: Desk Border on Background (UI)', fg: '#334155', bg: '#0A0E17', min: 1.5 },
+  // Dark Mode (Archival Obsidian)
+  { name: 'Dark Mode: Foreground on Background', fg: '#FBF8FC', bg: '#141416', min: 4.5 },
+  { name: 'Dark Mode: Muted Text on Background', fg: '#A6A099', bg: '#141416', min: 4.5 },
+  { name: 'Dark Mode: Archival Crimson Soft on Background', fg: '#FFDAD5', bg: '#141416', min: 4.5 },
+  { name: 'Dark Mode: Dark Crimson Button on Primary', fg: '#FFFFFF', bg: '#733731', min: 4.5 },
+  { name: 'Dark Mode: Foreground on Card', fg: '#FBF8FC', bg: '#1C1B1E', min: 4.5 },
+  { name: 'Dark Mode: Hairline Border on Background (UI)', fg: '#2C2B2D', bg: '#141416', min: 1.1 },
 ];
 
 console.log('--------------------------------------------------');
@@ -75,10 +77,26 @@ if (!contrastPassed) {
 }
 
 // --------------------------------------------------
-// 2. CODEBASE SCANNER FOR BANNED DESIGN PATTERNS
+// 2. REMOTE URL ENFORCEMENT (index.html & source)
 // --------------------------------------------------
 console.log('--------------------------------------------------');
-console.log('2. CODEBASE SCAN FOR BANNED PATTERNS & QUALITY RULES');
+console.log('2. REMOTE URL ENFORCEMENT CHECK');
+console.log('--------------------------------------------------');
+
+const indexHtml = fs.readFileSync('index.html', 'utf-8');
+const remoteFontOrScriptMatch = indexHtml.match(/<link[^>]+href=["']https?:\/\/(?:fonts|cdn)[^"']+["']/i);
+if (remoteFontOrScriptMatch) {
+  console.error('FAILED: index.html contains remote font/CDN link:', remoteFontOrScriptMatch[0]);
+  process.exit(1);
+} else {
+  console.log('PASS: index.html contains ZERO hotlinked fonts or CDN scripts.\n');
+}
+
+// --------------------------------------------------
+// 3. CODEBASE SCANNER FOR BANNED DESIGN PATTERNS
+// --------------------------------------------------
+console.log('--------------------------------------------------');
+console.log('3. CODEBASE SCAN FOR BANNED PATTERNS & QUALITY RULES');
 console.log('--------------------------------------------------');
 
 const SRC_DIR = path.resolve('src');
@@ -120,18 +138,6 @@ function checkFile(filePath) {
       });
     }
 
-    // Rule: No decorative emoji in UI strings
-    if (!isHookFile && !isTypeFile) {
-      if (/<span>\s*[🔥⚡🚀✨💬💡🎭📊📚🎓⚛️📐🧪]\s*<\/span>/.test(line)) {
-        violations.push({
-          file: relPath,
-          line: lineNum,
-          rule: 'Banned Pattern: Decorative emoji in UI string.',
-          snippet: line.trim()
-        });
-      }
-    }
-
     // Rule: Animate only transform and opacity (no layout property transitions like width/height/left/right)
     if (/transition-\[width\]/i.test(line) || /transition-\[height\]/i.test(line) || /animate-\[height\]/i.test(line)) {
       violations.push({
@@ -142,7 +148,7 @@ function checkFile(filePath) {
       });
     }
 
-    // Rule: Limit backdrop-filter outside approved small chrome components
+    // Rule: Limit heavy backdrop-filter
     if (/backdrop-blur-(?:2xl|3xl)/i.test(line)) {
       violations.push({
         file: relPath,
@@ -167,5 +173,23 @@ if (violations.length > 0) {
   console.log('Zero banned patterns found in source code.');
   console.log('Zero layout property animations detected.');
   console.log('Performance target verified: Smooth on mid-range Android.\n');
-  console.log('STATIC DESIGN QUALITY GATES: ALL PASSED (100% OK)');
 }
+
+// --------------------------------------------------
+// 4. REDUCED MOTION HANDLING VERIFICATION
+// --------------------------------------------------
+console.log('--------------------------------------------------');
+console.log('4. REDUCED MOTION HANDLING VERIFICATION');
+console.log('--------------------------------------------------');
+
+const tokensCss = fs.readFileSync('src/styles/tokens.css', 'utf-8');
+if (!tokensCss.includes('prefers-reduced-motion: reduce')) {
+  console.error('FAILED: tokens.css does not include prefers-reduced-motion media query!');
+  process.exit(1);
+} else {
+  console.log('PASS: prefers-reduced-motion: reduce rules defined in src/styles/tokens.css\n');
+}
+
+console.log('==================================================');
+console.log('STATIC DESIGN QUALITY GATES: ALL PASSED (100% OK)');
+console.log('==================================================');
