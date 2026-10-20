@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
-  Calendar, Mail, Sparkles, Save, LogOut, Loader2, Target,
+  Calendar, Mail, Save, LogOut, Loader2, Target,
   BookOpen, Trophy, BarChart3, Clock, Flame, ShieldCheck,
-  AlertTriangle, Trash2, CheckCircle2, ArrowRight, X, User
+  AlertTriangle, Trash2, ArrowRight, Zap, CheckCircle2, User,
+  Check
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ import { useUserStudyStats, formatStudyTime } from "@/hooks/useUserStudyStats";
 import { AvatarUploader } from "@/components/Profile/AvatarUploader";
 import { validateName } from "@/types/ypt";
 import { UpgradeModal } from "@/components/Auth/UpgradeModal";
+import { cn } from "@/lib/utils";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0">
@@ -51,9 +53,8 @@ export default function Profile() {
 
   const { signInWithGoogle, linkGoogleIdentity, signUp } = useAuth();
   const { todaySeconds, totalSeconds, todaySessionsCount, streak: statsStreak } = useUserStudyStats();
-  const { streak: streakFromHook, longestStreak } = useUserStreak();
+  const { streak: streakFromHook } = useUserStreak();
 
-  // Pick the streak that is greater or available
   const streak = Math.max(statsStreak || 0, streakFromHook || 0);
 
   const [name, setName] = useState("");
@@ -119,7 +120,6 @@ export default function Profile() {
     navigate("/welcome", { replace: true });
   };
 
-  // 1. Upgrade Guest to Google
   const handleUpgradeToGoogle = async () => {
     setUpgrading(true);
     const r = await signInWithGoogle(`${window.location.origin}/profile`);
@@ -129,7 +129,6 @@ export default function Profile() {
     }
   };
 
-  // 2. Upgrade Email user to Google (Link identity)
   const handleLinkGoogle = async () => {
     setUpgrading(true);
     const { error } = await linkGoogleIdentity();
@@ -141,7 +140,6 @@ export default function Profile() {
     }
   };
 
-  // 3. Upgrade Guest to Email
   const handleUpgradeToEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!upgradeEmail || !upgradePassword) {
@@ -163,7 +161,6 @@ export default function Profile() {
     }
   };
 
-  // 4. Permanent Account and Data Deletion
   const handleDeleteEverything = async () => {
     if (deleteConfirmText.trim().toUpperCase() !== "DELETE") {
       toast({ variant: "destructive", title: "Please type DELETE to confirm" });
@@ -188,7 +185,6 @@ export default function Profile() {
 
   const todayFormatted = formatStudyTime(todaySeconds);
   const totalFormatted = formatStudyTime(totalSeconds);
-  // Daily target is standard 6 hours for aspirants
   const dailyTargetHours = 6;
   const dailyTargetSeconds = dailyTargetHours * 3600;
   const targetPercent = Math.min(100, Math.round((todaySeconds / dailyTargetSeconds) * 100));
@@ -197,16 +193,12 @@ export default function Profile() {
 
   return (
     <Layout>
-      <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen py-6 sm:py-10 px-3 sm:px-6">
-        <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
+      <div className="w-full bg-background text-foreground min-h-screen py-6 sm:py-10 px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="max-w-5xl mx-auto space-y-6">
 
           {/* ───── 1. HERO COCKPIT CARD ───── */}
-          <Card className="relative overflow-hidden border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl">
-            <div aria-hidden className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
-            <div aria-hidden className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
-
+          <Card className="relative overflow-hidden border-2 border-border bg-card p-6 sm:p-8 shadow-[4px_4px_0px_var(--desk-border)] rounded-2xl">
             <div className="relative flex flex-col md:flex-row gap-6 md:items-center justify-between">
-              
               <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center min-w-0 flex-1">
                 <AvatarUploader
                   avatarUrl={avatarUrl}
@@ -229,29 +221,29 @@ export default function Profile() {
                   {/* Account Type Badges */}
                   <div className="flex items-center gap-2 flex-wrap">
                     {isGoogle && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-emerald-100 dark:bg-emerald-950/80 text-[11px] font-mono font-black text-emerald-800 dark:text-emerald-300 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-border bg-muted text-[11px] font-mono font-bold text-foreground">
                         <GoogleIcon /> Google Verified
                       </span>
                     )}
                     {isEmail && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-blue-100 dark:bg-blue-950/80 text-[11px] font-mono font-black text-blue-800 dark:text-blue-300 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-border bg-muted text-[11px] font-mono font-bold text-foreground">
                         <Mail className="h-3 w-3" /> Email Account
                       </span>
                     )}
                     {isGuest && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-brand-softYellow dark:bg-amber-950/80 text-[11px] font-mono font-black text-amber-900 dark:text-amber-300 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                        <Sparkles className="h-3 w-3" /> Guest Account
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-primary/30 bg-primary/10 text-[11px] font-mono font-bold text-primary">
+                        <Zap className="h-3 w-3" /> Guest Dossier
                       </span>
                     )}
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-[11px] font-mono font-bold text-slate-800 dark:text-slate-200 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-border bg-background text-[11px] font-mono font-bold text-foreground">
                       <Target className="h-3.5 w-3.5 text-primary" /> {profile.target_category}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-orange-100 dark:bg-orange-950/80 text-[11px] font-mono font-black text-orange-800 dark:text-orange-300 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                      <Flame className="h-3.5 w-3.5 text-orange-500" /> {streak}d streak
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-primary/30 bg-primary/10 text-[11px] font-mono font-bold text-primary">
+                      <Flame className="h-3.5 w-3.5 text-primary" /> {streak}d streak
                     </span>
                   </div>
 
-                  <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white break-words">
+                  <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-foreground break-words">
                     {profile.display_name}
                   </h1>
 
@@ -273,16 +265,16 @@ export default function Profile() {
                 {isGuest && (
                   <Button
                     onClick={() => setUpgradeModalOpen(true)}
-                    className="border-2 border-slate-900 dark:border-slate-700 bg-primary text-white hover:bg-primary/90 font-bold text-xs h-10 px-4 rounded-xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] dark:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5"
+                    className="border-2 border-border bg-primary text-primary-foreground hover:bg-primary/90 font-sans text-xs font-bold h-10 px-4 rounded-xl shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
                   >
-                    <Sparkles className="h-3.5 w-3.5 mr-1.5 text-amber-300" /> Link Cloud
+                    <Zap className="h-3.5 w-3.5 mr-1.5" /> Link Cloud
                   </Button>
                 )}
                 {isAuthenticated && (
                   <Button
                     variant="outline"
                     onClick={() => setShowSignOutModal(true)}
-                    className="border-2 border-slate-900 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-red-600 font-bold text-xs h-10 px-4 rounded-xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] dark:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5"
+                    className="border-2 border-border bg-card text-foreground hover:text-destructive font-mono text-xs font-bold h-10 px-4 rounded-xl shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
                   >
                     <LogOut className="h-3.5 w-3.5 mr-1.5" /> Sign Out
                   </Button>
@@ -291,26 +283,26 @@ export default function Profile() {
             </div>
           </Card>
 
-          {/* ───── 2. DAILY STUDY HOURS & METRICS (FOR EVERYONE) ───── */}
-          <Card className="border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800/80 pb-4">
+          {/* ───── 2. DAILY STUDY HOURS & METRICS ───── */}
+          <Card className="border-2 border-border bg-card p-6 sm:p-7 shadow-[4px_4px_0px_var(--desk-border)] rounded-2xl space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-blue-400/40 bg-blue-50 dark:bg-blue-950/60 text-brand-blue dark:text-blue-300 text-[10.5px] font-mono font-bold uppercase tracking-wider mb-1">
-                  <Clock className="h-3 w-3" /> DAILY STUDY METRIC
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-border bg-muted text-muted-foreground text-[10px] font-mono font-bold uppercase tracking-wider mb-1">
+                  <Clock className="h-3 w-3 text-primary" /> DAILY FOCUS DISPATCH
                 </div>
-                <h2 className="font-display text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                  Today's Study Performance
+                <h2 className="font-display text-xl sm:text-2xl font-black text-foreground tracking-tight">
+                  Study Performance Ledger
                 </h2>
                 <p className="text-xs text-muted-foreground font-mono mt-0.5">
-                  Measured live across YPT study sessions and active timers
+                  Logged across YPT study carrels and active session timers
                 </p>
               </div>
 
               <Link
                 to="/ypt"
-                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-brand-blue bg-blue-50/80 dark:bg-blue-950/80 hover:bg-blue-100 dark:hover:bg-blue-900/60 px-4 py-2 rounded-xl border border-blue-200 dark:border-blue-800 transition-all self-start sm:self-auto shadow-xs active:scale-95 shrink-0"
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-foreground bg-muted hover:bg-card px-4 py-2 rounded-xl border border-border shadow-[2px_2px_0px_var(--desk-border)] transition-all self-start sm:self-auto active:translate-x-0.5 active:translate-y-0.5 shrink-0"
               >
-                <span>View Full Stats</span>
+                <span>Launch YPT Carrel</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -318,72 +310,72 @@ export default function Profile() {
             {/* Metric Highlights Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* Box 1: Today Studied */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-brand-softYellow dark:bg-amber-950/30 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-1">
-                <span className="text-[11px] font-mono font-bold text-amber-900 dark:text-amber-300 uppercase flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5" /> TODAY STUDIED
+              <div className="p-4 sm:p-5 rounded-xl border-2 border-border bg-background shadow-[3px_3px_0px_var(--desk-border)] space-y-1">
+                <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5 text-primary" /> TODAY STUDIED
                 </span>
-                <div className="text-2xl sm:text-3xl font-display font-black text-amber-950 dark:text-amber-100">
+                <div className="text-2xl sm:text-3xl font-display font-black text-foreground">
                   {todayHoursNumeric}
                 </div>
-                <p className="text-[10px] font-mono text-amber-800/80 dark:text-amber-300/80">
-                  {todaySessionsCount} session{todaySessionsCount !== 1 ? 's' : ''} logged today
+                <p className="text-[10px] font-mono text-muted-foreground">
+                  {todaySessionsCount} session{todaySessionsCount !== 1 ? "s" : ""} logged today
                 </p>
               </div>
 
               {/* Box 2: Study Streak */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-orange-50 dark:bg-orange-950/30 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-1">
-                <span className="text-[11px] font-mono font-bold text-orange-700 dark:text-orange-300 uppercase flex items-center gap-1.5">
-                  <Flame className="h-3.5 w-3.5 text-orange-500" /> STUDY STREAK
+              <div className="p-4 sm:p-5 rounded-xl border-2 border-border bg-background shadow-[3px_3px_0px_var(--desk-border)] space-y-1">
+                <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase flex items-center gap-1.5">
+                  <Flame className="h-3.5 w-3.5 text-primary" /> STUDY STREAK
                 </span>
-                <div className="text-2xl sm:text-3xl font-display font-black text-orange-950 dark:text-orange-100">
-                  {streak} <span className="text-base font-bold">days</span>
+                <div className="text-2xl sm:text-3xl font-display font-black text-foreground">
+                  {streak} <span className="text-sm font-mono text-muted-foreground">days</span>
                 </div>
-                <p className="text-[10px] font-mono text-orange-800/80 dark:text-orange-300/80">
-                  {streak > 0 ? "🔥 Streak alive" : "🔥 Start streak today"}
+                <p className="text-[10px] font-mono text-muted-foreground">
+                  {streak > 0 ? "Active streak recorded" : "Begin streak today"}
                 </p>
               </div>
 
               {/* Box 3: Daily Goal Target */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-blue-50 dark:bg-blue-950/30 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-1">
-                <span className="text-[11px] font-mono font-bold text-blue-700 dark:text-blue-300 uppercase flex items-center gap-1.5">
-                  <Target className="h-3.5 w-3.5 text-brand-blue" /> DAILY GOAL ({dailyTargetHours}H)
+              <div className="p-4 sm:p-5 rounded-xl border-2 border-border bg-background shadow-[3px_3px_0px_var(--desk-border)] space-y-1">
+                <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase flex items-center gap-1.5">
+                  <Target className="h-3.5 w-3.5 text-primary" /> DAILY GOAL ({dailyTargetHours}H)
                 </span>
-                <div className="text-2xl sm:text-3xl font-display font-black text-blue-950 dark:text-blue-100">
+                <div className="text-2xl sm:text-3xl font-display font-black text-foreground">
                   {targetPercent}%
                 </div>
-                <p className="text-[10px] font-mono text-blue-800/80 dark:text-blue-300/80">
+                <p className="text-[10px] font-mono text-muted-foreground">
                   {(todaySeconds / 3600).toFixed(1)}h of {dailyTargetHours}h completed
                 </p>
               </div>
 
               {/* Box 4: Total Lifetime Study */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-1">
-                <span className="text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300 uppercase flex items-center gap-1.5">
-                  <Trophy className="h-3.5 w-3.5 text-amber-500" /> TOTAL HOURS
+              <div className="p-4 sm:p-5 rounded-xl border-2 border-border bg-background shadow-[3px_3px_0px_var(--desk-border)] space-y-1">
+                <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase flex items-center gap-1.5">
+                  <Trophy className="h-3.5 w-3.5 text-primary" /> TOTAL HOURS
                 </span>
-                <div className="text-2xl sm:text-3xl font-display font-black text-slate-900 dark:text-slate-100">
+                <div className="text-2xl sm:text-3xl font-display font-black text-foreground">
                   {totalHoursNumeric}
                 </div>
-                <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                <p className="text-[10px] font-mono text-muted-foreground">
                   All-time Bookie focus time
                 </p>
               </div>
             </div>
 
             {/* Daily Goal Visual Progress Bar */}
-            <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-              <div className="flex justify-between items-center text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+            <div className="space-y-2 pt-2 border-t border-border">
+              <div className="flex justify-between items-center text-xs font-mono font-bold text-foreground">
                 <span className="flex items-center gap-1.5">
-                  <span>🎯 Daily 6-Hour Target Progress</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                    {targetPercent >= 100 ? "Goal Crushed! 🚀" : `${Math.max(0, dailyTargetHours - (todaySeconds / 3600)).toFixed(1)}h remaining`}
+                  <span>Daily 6-Hour Target Progress</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded border border-border bg-muted text-muted-foreground">
+                    {targetPercent >= 100 ? "Goal Fulfilled" : `${Math.max(0, dailyTargetHours - (todaySeconds / 3600)).toFixed(1)}h remaining`}
                   </span>
                 </span>
                 <span>{targetPercent}% ({todayFormatted.formatted} / {dailyTargetHours}h)</span>
               </div>
-              <div className="h-3.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border-2 border-slate-900 dark:border-slate-700 p-0.5">
+              <div className="h-3 w-full bg-muted rounded-full overflow-hidden border-2 border-border p-0.5">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-primary rounded-full transition-all duration-500"
+                  className="h-full bg-primary rounded-full transition-all duration-300"
                   style={{ width: `${Math.min(100, targetPercent)}%` }}
                 />
               </div>
@@ -392,42 +384,42 @@ export default function Profile() {
 
           {/* ───── 3. ACCOUNT UPGRADATION CARD ───── */}
           {isGuest && (
-            <Card className="border-2 border-slate-900 dark:border-slate-700 bg-gradient-to-br from-brand-softYellow/60 via-amber-50/40 to-white dark:from-amber-950/20 dark:to-slate-900 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl space-y-4">
+            <Card className="border-2 border-border bg-card p-6 sm:p-7 shadow-[4px_4px_0px_var(--desk-border)] rounded-2xl space-y-4">
               <div className="flex items-start gap-3.5">
-                <div className="h-10 w-10 rounded-2xl bg-amber-400 text-slate-900 border-2 border-slate-900 flex items-center justify-center shrink-0 shadow-xs">
-                  <Sparkles className="h-5 w-5" />
+                <div className="h-10 w-10 rounded-xl bg-muted border-2 border-border flex items-center justify-center shrink-0 shadow-[2px_2px_0px_var(--desk-border)]">
+                  <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <div className="space-y-1.5 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 text-[10px] font-mono font-black uppercase tracking-wider">
-                      ⚡ Guest Mode Active
+                    <span className="px-2.5 py-0.5 rounded border border-primary/30 bg-primary/10 text-primary text-[10px] font-mono font-bold uppercase tracking-wider">
+                      Guest Mode Active
                     </span>
-                    <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5" /> 100% Free · Saved Data is Safe
+                    <span className="text-xs font-mono text-muted-foreground font-bold flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5 text-primary" /> Free & Local Session
                     </span>
                   </div>
-                  <h3 className="font-display text-lg font-black text-slate-900 dark:text-slate-100">
+                  <h3 className="font-display text-lg font-black text-foreground">
                     Upgrade Account (Zero Data Loss)
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                    You are currently using a guest device account. Everything is saved locally. Upgrade to a permanent account with Google or email so your <strong>study sessions ({todayFormatted.formatted})</strong>, <strong>streak ({streak}d)</strong>, and syllabus bookmarks follow you across all your devices seamlessly.
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    You are currently using a guest device dossier. Everything is saved locally. Upgrade to a permanent account with Google or email so your <strong>study sessions ({todayFormatted.formatted})</strong>, <strong>streak ({streak}d)</strong>, and syllabus bookmarks follow you across all your devices seamlessly.
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs text-slate-700 dark:text-slate-300 font-mono">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs text-muted-foreground font-mono">
                     <div className="flex items-center gap-2">
-                      <span className="text-emerald-500 font-bold">✓</span>
-                      <span><strong>100% Free:</strong> Timers, tests, notes &amp; stats</span>
+                      <Check className="h-3.5 w-3.5 text-primary" />
+                      <span><strong>100% Free:</strong> Timers, tests, notes & stats</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-emerald-500 font-bold">✓</span>
-                      <span><strong>Custom Identity:</strong> Free avatar photo &amp; name</span>
+                      <Check className="h-3.5 w-3.5 text-primary" />
+                      <span><strong>Custom Identity:</strong> Free avatar photo & name</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-emerald-500 font-bold">✓</span>
-                      <span><strong>Zero Data Loss:</strong> Streaks &amp; sessions saved</span>
+                      <Check className="h-3.5 w-3.5 text-primary" />
+                      <span><strong>Zero Data Loss:</strong> Streaks & sessions preserved</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-emerald-500 font-bold">✓</span>
-                      <span><strong>Optional Cloud:</strong> Sync phone, tab &amp; PC</span>
+                      <Check className="h-3.5 w-3.5 text-primary" />
+                      <span><strong>Multi-Device:</strong> Sync phone, tablet & laptop</span>
                     </div>
                   </div>
                 </div>
@@ -437,7 +429,7 @@ export default function Profile() {
                 <Button
                   onClick={handleUpgradeToGoogle}
                   disabled={upgrading}
-                  className="bg-slate-900 text-white hover:bg-slate-800 border-2 border-slate-900 font-bold text-xs h-11 px-5 rounded-2xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-0.5"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-border font-sans font-bold text-xs h-10 px-5 rounded-xl shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
                 >
                   {upgrading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <GoogleIcon />}
                   <span className="ml-2">Upgrade with Google</span>
@@ -446,7 +438,7 @@ export default function Profile() {
                   variant="outline"
                   onClick={() => setShowEmailUpgrade(true)}
                   disabled={upgrading}
-                  className="bg-white dark:bg-slate-900 border-2 border-slate-900 text-slate-900 dark:text-slate-100 font-bold text-xs h-11 px-5 rounded-2xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-0.5"
+                  className="bg-card border-2 border-border text-foreground font-sans font-bold text-xs h-10 px-5 rounded-xl shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
                 >
                   <Mail className="h-4 w-4 mr-2" /> Upgrade with Email
                 </Button>
@@ -455,16 +447,16 @@ export default function Profile() {
           )}
 
           {isEmail && (
-            <Card className="border-2 border-slate-900 dark:border-slate-700 bg-blue-50/70 dark:bg-blue-950/20 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl space-y-4">
+            <Card className="border-2 border-border bg-card p-6 sm:p-7 shadow-[4px_4px_0px_var(--desk-border)] rounded-2xl space-y-4">
               <div className="flex items-start gap-3.5">
-                <div className="h-10 w-10 rounded-2xl bg-brand-blue text-white border-2 border-slate-900 flex items-center justify-center shrink-0 shadow-xs">
-                  <ShieldCheck className="h-5 w-5" />
+                <div className="h-10 w-10 rounded-xl bg-muted border-2 border-border flex items-center justify-center shrink-0 shadow-[2px_2px_0px_var(--desk-border)]">
+                  <ShieldCheck className="h-5 w-5 text-primary" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="font-display text-lg font-bold text-slate-900 dark:text-slate-100">
-                    Upgrade to Google Account
+                  <h3 className="font-display text-lg font-bold text-foreground">
+                    Link Google Account
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     You are signed in via Email. Link your Google account to enable instant one-click login and automated profile picture sync. Your study hours, streak, and history remain 100% intact.
                   </p>
                 </div>
@@ -474,7 +466,7 @@ export default function Profile() {
                 <Button
                   onClick={handleLinkGoogle}
                   disabled={upgrading}
-                  className="bg-slate-900 text-white hover:bg-slate-800 border-2 border-slate-900 font-bold text-xs h-11 px-5 rounded-2xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-0.5"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-border font-sans font-bold text-xs h-10 px-5 rounded-xl shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
                 >
                   {upgrading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <GoogleIcon />}
                   <span className="ml-2">Link Google Account</span>
@@ -485,36 +477,35 @@ export default function Profile() {
 
           {/* ───── 4. EDIT PROFILE SETTINGS & SHORTCUTS ───── */}
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Edit form */}
-            <Card className="md:col-span-2 border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl space-y-5">
+            <Card className="md:col-span-2 border-2 border-border bg-card p-6 sm:p-7 shadow-[4px_4px_0px_var(--desk-border)] rounded-2xl space-y-5">
               <div>
-                <h2 className="font-display text-xl font-bold text-slate-900 dark:text-slate-100">
+                <h2 className="font-display text-xl font-bold text-foreground">
                   Profile Settings
                 </h2>
                 <p className="text-xs font-mono text-muted-foreground mt-0.5">
-                  Update your public aspirant identity and exam focus
+                  Update your public aspirant identity and target examination
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <label className="text-xs font-mono font-bold text-foreground uppercase tracking-wider">
                     Display Name
                   </label>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     maxLength={30}
-                    className="mt-1.5 h-11 border-2 border-slate-900 dark:border-slate-700 font-mono text-sm rounded-xl focus-visible:border-primary"
+                    className="mt-1.5 h-10 border-2 border-border font-sans text-sm rounded-lg"
                     placeholder="Your Name"
                   />
                   <p className="text-[11px] font-mono text-muted-foreground mt-1">
-                    Visible across community discussions, doubts, and leaderboards.
+                    Visible across community discussions, doubts, and study carrels.
                   </p>
                 </div>
 
                 <div>
-                  <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <label className="text-xs font-mono font-bold text-foreground uppercase tracking-wider">
                     Target Exam Category
                   </label>
                   <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -523,11 +514,12 @@ export default function Profile() {
                         key={c}
                         type="button"
                         onClick={() => setTarget(c)}
-                        className={`h-11 px-2.5 rounded-xl border-2 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center ${
+                        className={cn(
+                          "h-10 px-2 rounded-lg border-2 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center",
                           target === c
-                            ? "border-2 border-slate-900 bg-brand-blue text-white shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] scale-[1.02]"
-                            : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-slate-400 text-slate-700 dark:text-slate-300"
-                        }`}
+                            ? "border-foreground bg-foreground text-background shadow-[2px_2px_0px_var(--desk-border)]"
+                            : "border-border bg-muted/50 hover:bg-muted text-foreground"
+                        )}
                       >
                         {c}
                       </button>
@@ -539,7 +531,7 @@ export default function Profile() {
                   <Button
                     onClick={handleSave}
                     disabled={saving}
-                    className="h-11 px-6 bg-slate-900 text-white font-bold text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] hover:bg-slate-800 active:translate-y-0.5 rounded-xl cursor-pointer"
+                    className="h-10 px-5 bg-primary text-primary-foreground font-sans font-bold text-xs border-2 border-border shadow-[2px_2px_0px_var(--desk-border)] hover:bg-primary/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none rounded-lg cursor-pointer"
                   >
                     {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
                     Save Changes
@@ -548,16 +540,15 @@ export default function Profile() {
                     <Button
                       variant="outline"
                       onClick={() => setUpgradeModalOpen(true)}
-                      className="h-11 px-4 font-bold text-xs border-2 border-slate-900 dark:border-slate-700 rounded-xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] dark:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
+                      className="h-10 px-4 font-sans font-bold text-xs border-2 border-border bg-card text-foreground rounded-lg shadow-[2px_2px_0px_var(--desk-border)] cursor-pointer"
                     >
-                      <Sparkles className="h-4 w-4 mr-1.5 text-primary" /> Upgrade with Google
+                      <Zap className="h-4 w-4 mr-1.5 text-primary" /> Upgrade with Google
                     </Button>
                   )}
                 </div>
               </div>
             </Card>
 
-            {/* Quick Nav Cards */}
             <div className="space-y-4">
               <StatCard
                 icon={BookOpen}
@@ -584,17 +575,17 @@ export default function Profile() {
           </div>
 
           {/* ───── 5. DANGER ZONE: PERMANENT DATA DELETION ───── */}
-          <Card className="border-2 border-red-500 bg-red-50/50 dark:bg-red-950/20 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(239,68,68,0.5)] rounded-3xl space-y-4">
+          <Card className="border-2 border-destructive bg-card p-6 sm:p-7 shadow-[4px_4px_0px_var(--desk-border)] rounded-2xl space-y-4">
             <div className="flex items-start gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 border-2 border-red-500 flex items-center justify-center shrink-0 shadow-xs">
+              <div className="h-10 w-10 rounded-xl bg-destructive/10 text-destructive border-2 border-destructive flex items-center justify-center shrink-0">
                 <AlertTriangle className="h-5 w-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-display text-lg font-bold text-red-950 dark:text-red-100">
-                  Danger Zone: Permanent Account &amp; Data Deletion
+                <h3 className="font-display text-lg font-bold text-foreground">
+                  Danger Zone: Permanent Account & Data Deletion
                 </h3>
-                <p className="text-xs sm:text-sm text-red-800/90 dark:text-red-300/90 leading-relaxed font-mono">
-                  Permanently purge all data regarding your account from our database. This immediately wipes your <strong>study sessions</strong>, <strong>study streak</strong>, <strong>profile details</strong>, <strong>community questions &amp; comments</strong>, and <strong>support conversations</strong>. This action is irreversible.
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-sans">
+                  Permanently purge all data regarding your account from our database. This immediately wipes your <strong>study sessions</strong>, <strong>study streak</strong>, <strong>profile details</strong>, <strong>community questions & comments</strong>, and <strong>support conversations</strong>. This action is irreversible.
                 </p>
               </div>
             </div>
@@ -606,14 +597,13 @@ export default function Profile() {
                   setDeleteConfirmText("");
                   setShowDeleteModal(true);
                 }}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs border-2 border-red-900 shadow-[2px_2px_0px_0px_rgba(153,27,27,1)] active:translate-y-0.5 h-11 px-5 rounded-xl cursor-pointer"
+                className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-sans font-bold text-xs border-2 border-border shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none h-10 px-5 rounded-lg cursor-pointer"
               >
                 <Trash2 className="h-3.5 w-3.5 mr-1.5" />
                 Permanently Delete All My Data
               </Button>
             </div>
           </Card>
-
         </div>
 
         <UpgradeModal
@@ -625,19 +615,19 @@ export default function Profile() {
 
       {/* ───── MODAL: UPGRADE WITH EMAIL ───── */}
       <Dialog open={showEmailUpgrade} onOpenChange={setShowEmailUpgrade}>
-        <DialogContent className="max-w-md border-2 border-slate-900 bg-white dark:bg-slate-900 rounded-3xl shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] p-6">
+        <DialogContent className="max-w-md border-2 border-border bg-card rounded-2xl shadow-[6px_6px_0px_var(--desk-border)] p-6">
           <DialogHeader>
-            <DialogTitle className="font-display font-black text-xl flex items-center gap-2">
+            <DialogTitle className="font-display font-black text-xl flex items-center gap-2 text-foreground">
               <Mail className="h-5 w-5 text-primary" /> Upgrade with Email
             </DialogTitle>
-            <DialogDescription className="text-xs font-mono text-slate-500">
+            <DialogDescription className="text-xs font-mono text-muted-foreground">
               Your existing guest study hours ({todayFormatted.formatted}), streak ({streak}d), and settings will be preserved completely.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleUpgradeToEmail} className="space-y-4 pt-2">
             <div>
-              <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              <label className="text-xs font-mono font-bold uppercase tracking-wider text-foreground">
                 Email Address
               </label>
               <Input
@@ -646,12 +636,12 @@ export default function Profile() {
                 placeholder="name@example.com"
                 value={upgradeEmail}
                 onChange={(e) => setUpgradeEmail(e.target.value)}
-                className="mt-1 h-11 border-2 border-slate-300 focus-visible:border-slate-900 text-sm rounded-xl"
+                className="mt-1 h-10 border-2 border-border text-sm rounded-lg"
               />
             </div>
 
             <div>
-              <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              <label className="text-xs font-mono font-bold uppercase tracking-wider text-foreground">
                 Create Password
               </label>
               <Input
@@ -661,15 +651,15 @@ export default function Profile() {
                 placeholder="At least 6 characters"
                 value={upgradePassword}
                 onChange={(e) => setUpgradePassword(e.target.value)}
-                className="mt-1 h-11 border-2 border-slate-300 focus-visible:border-slate-900 text-sm rounded-xl"
+                className="mt-1 h-10 border-2 border-border text-sm rounded-lg"
               />
             </div>
 
-            <DialogFooter className="gap-2 pt-2">
-              <Button type="button" variant="outline" onClick={() => setShowEmailUpgrade(false)} className="h-11 rounded-xl">
+            <DialogFooter className="gap-2 pt-2 border-t border-border">
+              <Button type="button" variant="outline" onClick={() => setShowEmailUpgrade(false)} className="h-10 rounded-lg border-border">
                 Cancel
               </Button>
-              <Button type="submit" disabled={upgrading} className="h-11 bg-slate-900 text-white font-bold rounded-xl">
+              <Button type="submit" disabled={upgrading} className="h-10 bg-primary text-primary-foreground font-bold rounded-lg border-2 border-border shadow-[2px_2px_0px_var(--desk-border)]">
                 {upgrading ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : null}
                 Upgrade Account
               </Button>
@@ -680,23 +670,23 @@ export default function Profile() {
 
       {/* ───── MODAL: SIGN OUT CONFIRMATION ───── */}
       <AlertDialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
-        <AlertDialogContent className="border-2 border-slate-900 rounded-3xl bg-white dark:bg-slate-900 shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] max-w-md p-6">
+        <AlertDialogContent className="border-2 border-border rounded-2xl bg-card shadow-[6px_6px_0px_var(--desk-border)] max-w-md p-6">
           <AlertDialogHeader>
-            <div className="flex items-center gap-2 mb-1 text-slate-900 dark:text-slate-100">
+            <div className="flex items-center gap-2 mb-1 text-foreground">
               <LogOut className="h-5 w-5 text-primary" />
               <AlertDialogTitle className="font-display font-black text-xl">
                 Log Out of Bookie?
               </AlertDialogTitle>
             </div>
-            <AlertDialogDescription className="text-xs font-mono text-slate-600 dark:text-slate-400 leading-relaxed">
+            <AlertDialogDescription className="text-xs font-mono text-muted-foreground leading-relaxed">
               You will be signed out of your account on this device. Your study streak ({streak}d), logs, and progress are saved in the cloud and will be available whenever you log back in.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="gap-2 pt-3">
-            <AlertDialogCancel className="h-11 font-mono font-bold rounded-xl">Stay Logged In</AlertDialogCancel>
+          <AlertDialogFooter className="gap-2 pt-3 border-t border-border">
+            <AlertDialogCancel className="h-10 font-mono font-bold rounded-lg border-border">Stay Logged In</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleSignOut}
-              className="h-11 font-mono font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl"
+              className="h-10 font-mono font-bold bg-foreground text-background hover:bg-foreground/90 rounded-lg"
             >
               Sign Out
             </AlertDialogAction>
@@ -706,19 +696,19 @@ export default function Profile() {
 
       {/* ───── MODAL: PERMANENT DATA DELETION WITH WARNING ───── */}
       <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-        <AlertDialogContent className="border-2 border-red-600 rounded-3xl bg-white dark:bg-slate-900 shadow-[8px_8px_0px_0px_rgba(220,38,38,1)] max-w-lg p-6 sm:p-7">
+        <AlertDialogContent className="border-2 border-destructive rounded-2xl bg-card shadow-[6px_6px_0px_var(--desk-border)] max-w-lg p-6 sm:p-7">
           <AlertDialogHeader>
-            <div className="flex items-center gap-2.5 text-red-600 mb-1">
+            <div className="flex items-center gap-2.5 text-destructive mb-1">
               <AlertTriangle className="h-6 w-6 shrink-0" />
-              <AlertDialogTitle className="font-display font-black text-xl sm:text-2xl text-red-600">
+              <AlertDialogTitle className="font-display font-black text-xl sm:text-2xl text-destructive">
                 Permanent Data Deletion Warning
               </AlertDialogTitle>
             </div>
-            <AlertDialogDescription className="space-y-3 pt-2 text-xs font-mono text-slate-700 dark:text-slate-300 leading-relaxed">
-              <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-900 dark:text-red-200 space-y-1">
-                <div className="font-bold text-sm">⚠️ This action is permanent and irreversible.</div>
+            <AlertDialogDescription className="space-y-3 pt-2 text-xs font-mono text-foreground leading-relaxed">
+              <div className="p-3.5 rounded-xl border border-destructive/40 bg-destructive/10 text-foreground space-y-1">
+                <div className="font-bold text-sm text-destructive">This action is permanent and irreversible.</div>
                 <p>All data connected to this account ({isGuest ? "Guest Device" : isGoogle ? "Google Account" : "Email Account"}) will be immediately purged from our database:</p>
-                <ul className="list-disc list-inside space-y-0.5 pt-1 text-[11px]">
+                <ul className="list-disc list-inside space-y-0.5 pt-1 text-[11px] text-muted-foreground">
                   <li>All study timers and completed study sessions ({totalFormatted.formatted})</li>
                   <li>Active study streak ({streak} days)</li>
                   <li>Syllabus progress, bookmarks, and room records</li>
@@ -728,29 +718,29 @@ export default function Profile() {
               </div>
 
               <div className="space-y-1.5 pt-2">
-                <label className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-slate-100 block">
-                  To confirm, type <span className="text-red-600 font-black">DELETE</span> below:
+                <label className="font-bold text-xs uppercase tracking-wider text-foreground block">
+                  To confirm, type <span className="text-destructive font-black">DELETE</span> below:
                 </label>
                 <Input
                   value={deleteConfirmText}
                   onChange={(e) => setDeleteConfirmText(e.target.value)}
                   placeholder="Type DELETE"
-                  className="h-11 border-2 border-red-300 focus-visible:border-red-600 font-mono text-sm tracking-wider uppercase rounded-xl"
+                  className="h-10 border-2 border-destructive font-mono text-sm tracking-wider uppercase rounded-lg"
                   autoFocus
                 />
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
 
-          <AlertDialogFooter className="gap-2 pt-3">
-            <AlertDialogCancel disabled={deleting} className="h-11 font-mono font-bold rounded-xl">
+          <AlertDialogFooter className="gap-2 pt-3 border-t border-border">
+            <AlertDialogCancel disabled={deleting} className="h-10 font-mono font-bold rounded-lg border-border">
               Cancel
             </AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDeleteEverything}
               disabled={deleteConfirmText.trim().toUpperCase() !== "DELETE" || deleting}
-              className="h-11 font-mono font-bold bg-red-600 hover:bg-red-700 text-white disabled:opacity-50 rounded-xl"
+              className="h-10 font-mono font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground disabled:opacity-50 rounded-lg border-2 border-border shadow-[2px_2px_0px_var(--desk-border)]"
             >
               {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Trash2 className="h-4 w-4 mr-2" />}
               Permanently Purge All Data
@@ -758,19 +748,18 @@ export default function Profile() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
     </Layout>
   );
 }
 
 function StatCard({ icon: Icon, title, desc, cta, onClick }: { icon: any; title: string; desc: string; cta: string; onClick: () => void }) {
   return (
-    <Card className="border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-2xl hover:-translate-y-0.5 transition-transform">
-      <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center mb-2.5">
-        <Icon className="h-4.5 w-4.5" />
+    <Card className="border-2 border-border bg-card p-5 shadow-[3px_3px_0px_var(--desk-border)] rounded-xl hover:-translate-y-0.5 transition-transform">
+      <div className="h-9 w-9 rounded-lg border border-border bg-muted text-primary flex items-center justify-center mb-2.5">
+        <Icon className="h-4 w-4" />
       </div>
-      <h3 className="text-sm font-display font-bold text-slate-900 dark:text-slate-100">{title}</h3>
-      <p className="text-xs text-muted-foreground mt-1 leading-relaxed font-mono">{desc}</p>
+      <h3 className="text-sm font-display font-bold text-foreground">{title}</h3>
+      <p className="text-xs text-muted-foreground mt-1 leading-relaxed font-sans">{desc}</p>
       <button onClick={onClick} className="mt-3 text-xs font-mono font-bold text-primary hover:underline inline-flex items-center gap-1 cursor-pointer">
         <span>{cta}</span> →
       </button>
