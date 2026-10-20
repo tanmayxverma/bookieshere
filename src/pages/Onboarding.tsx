@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, ArrowRight, Loader2, Check } from "lucide-react";
+import { ArrowRight, Loader2, Check, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -8,6 +8,7 @@ import { useProfile, TARGET_CATEGORIES, type TargetCategory } from "@/hooks/useP
 import { AvatarUploader } from "@/components/Profile/AvatarUploader";
 import { validateName } from "@/types/ypt";
 import logo from "@/assets/logo.png";
+import { cn } from "@/lib/utils";
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -21,7 +22,6 @@ export default function Onboarding() {
   const [avatarCustomized, setAvatarCustomized] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  // Hydrate from existing profile (Google etc.)
   useEffect(() => {
     if (profile && !isOnboarded) {
       setName(profile.display_name && profile.display_name !== "Aspirant" ? profile.display_name : "");
@@ -32,7 +32,6 @@ export default function Onboarding() {
     }
   }, [profile, isOnboarded, googleAvatar]);
 
-  // If already onboarded, bounce home
   useEffect(() => {
     if (!loading && profile && isOnboarded) navigate("/", { replace: true });
   }, [loading, profile, isOnboarded, navigate]);
@@ -66,51 +65,70 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden">
-      <div aria-hidden className="absolute -top-32 -left-24 w-[420px] h-[420px] rounded-full bg-primary/15 blur-[140px]" />
-      <div aria-hidden className="absolute -bottom-32 -right-24 w-[420px] h-[420px] rounded-full bg-primary/10 blur-[140px]" />
-
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-background text-foreground">
       <div className="relative w-full max-w-lg">
-        <div className="flex items-center justify-center gap-2.5 mb-7">
+        <div className="flex items-center justify-center gap-2.5 mb-6">
           <img
             src={logo}
             alt="BOOKIE"
-            className="h-9 w-9 rounded-xl ring-1 ring-border/60 object-cover"
+            className="h-10 w-10 rounded-xl border-2 border-border shadow-[2px_2px_0px_var(--desk-border)] object-cover"
             onError={(e) => {
               e.currentTarget.src = "/logo.png";
             }}
           />
-          <span className="font-display text-xl font-black tracking-tight">BOOKIE<span className="text-primary">.</span></span>
+          <span className="font-display text-2xl font-black tracking-tight text-foreground">
+            BOOKIE<span className="text-primary">.</span>
+          </span>
         </div>
 
-        <div className="rounded-3xl border border-border/50 bg-card/70 backdrop-blur-2xl p-7 md:p-8 shadow-[0_40px_80px_-30px_hsl(var(--primary)/0.35)]">
+        <div className="rounded-2xl border-2 border-border bg-card p-6 sm:p-8 shadow-[6px_6px_0px_var(--desk-border)]">
           {/* Stepper */}
           <div className="flex items-center gap-2 mb-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className={`flex-1 h-1.5 rounded-full transition-colors ${i <= step ? "bg-primary" : "bg-border/50"}`} />
+              <div
+                key={i}
+                className={cn(
+                  "flex-1 h-2 rounded-full border border-border transition-colors",
+                  i <= step ? "bg-primary" : "bg-muted"
+                )}
+              />
             ))}
           </div>
 
-          <div className="text-center mb-5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border/60 bg-surface-2/60 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              <Sparkles className="h-3 w-3 text-primary" /> Step {step} of 3
+          <div className="text-center mb-6">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-border bg-muted font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <Zap className="h-3 w-3 text-primary" /> Step {step} of 3
             </span>
-            <h1 className="mt-3 font-display text-[26px] font-bold tracking-tight">
+            <h1 className="mt-3 font-display text-2xl font-black tracking-tight text-foreground">
               {step === 1 && "What should we call you?"}
-              {step === 2 && "Pick your target"}
-              {step === 3 && "Add a profile picture"}
+              {step === 2 && "Pick your target exam"}
+              {step === 3 && "Aspirant avatar photo"}
             </h1>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              {step === 1 && "This name shows up across Bookie and on leaderboards."}
-              {step === 2 && "Helps us tailor your study experience."}
-              {step === 3 && "Optional — you can change this anytime."}
+            <p className="mt-1 text-xs font-sans text-muted-foreground">
+              {step === 1 && "This name shows up across study carrels and leaderboards."}
+              {step === 2 && "Calibrates chapter syllabus and exam countdowns."}
+              {step === 3 && "Optional — you can change or update this anytime."}
             </p>
           </div>
 
           {step === 1 && (
             <div className="space-y-4">
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Arjun Sharma" maxLength={30} className="h-12 text-base" autoFocus />
-              <Button onClick={next} disabled={!name.trim()} className="w-full h-11">Continue <ArrowRight className="h-4 w-4 ml-1" /></Button>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Arjun Sharma"
+                maxLength={30}
+                className="h-11 text-sm border-2 border-border font-sans"
+                autoFocus
+              />
+              <Button
+                onClick={next}
+                disabled={!name.trim()}
+                className="w-full h-11 btn-desk-primary"
+              >
+                <span>Continue</span>
+                <ArrowRight className="h-4 w-4 ml-1" />
+              </Button>
             </div>
           )}
 
@@ -120,8 +138,17 @@ export default function Onboarding() {
                 {TARGET_CATEGORIES.map((cat) => {
                   const active = target === cat;
                   return (
-                    <button key={cat} onClick={() => setTarget(cat)}
-                      className={`relative h-12 px-3 rounded-xl border text-sm font-semibold transition-all ${active ? "border-primary bg-primary/10 text-foreground" : "border-border/60 bg-background hover:border-primary/40"}`}>
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setTarget(cat)}
+                      className={cn(
+                        "relative h-11 px-3 rounded-xl border-2 text-xs font-mono font-bold transition-all flex items-center justify-center",
+                        active
+                          ? "border-foreground bg-foreground text-background shadow-[2px_2px_0px_var(--desk-border)]"
+                          : "border-border bg-card hover:bg-muted text-foreground"
+                      )}
+                    >
                       {cat}
                       {active && <Check className="absolute top-1.5 right-1.5 h-3.5 w-3.5 text-primary" />}
                     </button>
@@ -129,8 +156,13 @@ export default function Onboarding() {
                 })}
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={back} className="flex-1 h-11">Back</Button>
-                <Button onClick={next} className="flex-1 h-11">Continue <ArrowRight className="h-4 w-4 ml-1" /></Button>
+                <Button variant="outline" onClick={back} className="flex-1 h-11 border-border">
+                  Back
+                </Button>
+                <Button onClick={next} className="flex-1 h-11 btn-desk-primary">
+                  <span>Continue</span>
+                  <ArrowRight className="h-4 w-4 ml-1" />
+                </Button>
               </div>
             </div>
           )}
@@ -155,12 +187,19 @@ export default function Onboarding() {
                 />
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={back} className="flex-1 h-11">Back</Button>
-                <Button onClick={finish} disabled={busy} className="flex-1 h-11">
+                <Button variant="outline" onClick={back} className="flex-1 h-11 border-border">
+                  Back
+                </Button>
+                <Button onClick={finish} disabled={busy} className="flex-1 h-11 btn-desk-primary">
                   {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Finish & Enter Bookie"}
                 </Button>
               </div>
-              <button onClick={finish} className="block mx-auto text-xs text-muted-foreground hover:text-foreground">Skip for now</button>
+              <button
+                onClick={finish}
+                className="block mx-auto font-mono text-xs text-muted-foreground hover:text-foreground"
+              >
+                Skip for now →
+              </button>
             </div>
           )}
         </div>
