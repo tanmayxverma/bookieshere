@@ -168,6 +168,7 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const userNameCacheRef = useRef<Map<string, string>>(new Map());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isRoomDragging, setIsRoomDragging] = useState(false);
@@ -285,12 +286,6 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const { activeRoomId, presenceMembers, roomOnlineCounts, joinRoom, leaveRoom } = roomSession;
 
   const fetchRooms = async () => {
-    try {
-      await (supabase as any).rpc('cleanup_inactive_rooms');
-      // Clean up stale room members older than 2 hours
-      await (supabase as any).from('ypt_room_members').delete().lt('joined_at', new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString());
-    } catch {}
-
     const [roomsRes] = await Promise.all([
       (supabase as any)
         .from('ypt_rooms')
@@ -331,17 +326,21 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   }, [roomOnlineCounts, activeRoomId, presenceMembers.length]);
 
   const fetchMessages = useCallback(async (roomId: string) => {
-    await (supabase as any).rpc('cleanup_old_messages');
     const { data } = await (supabase as any)
       .from('room_messages')
-      .select('*, ypt_users(name)')
+      .select('id, room_id, ypt_user_id, message, created_at, ypt_users(name)')
       .eq('room_id', roomId)
       .order('created_at', { ascending: true })
       .limit(200);
     if (data) {
+      data.forEach((m: any) => {
+        if (m.ypt_user_id && m.ypt_users?.name) {
+          userNameCacheRef.current.set(m.ypt_user_id, m.ypt_users.name);
+        }
+      });
       setMessages(data.map((m: any) => ({
         ...m,
-        user_name: m.ypt_users?.name || 'Aspirant',
+        user_name: m.ypt_users?.name || userNameCacheRef.current.get(m.ypt_user_id) || 'Aspirant',
       })));
     }
   }, []);
@@ -385,8 +384,15 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
 
         let authorName = payload.new.ypt_user_id === currentUser.id ? currentUser.name : 'Aspirant';
         if (payload.new.ypt_user_id !== currentUser.id) {
-          const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).maybeSingle();
-          if (user?.name) authorName = user.name;
+          if (userNameCacheRef.current.has(payload.new.ypt_user_id)) {
+            authorName = userNameCacheRef.current.get(payload.new.ypt_user_id)!;
+          } else {
+            const { data: user } = await (supabase as any).from('ypt_users').select('name').eq('id', payload.new.ypt_user_id).maybeSingle();
+            if (user?.name) {
+              authorName = user.name;
+              userNameCacheRef.current.set(payload.new.ypt_user_id, user.name);
+            }
+          }
         }
 
         const newMsg: ChatMessage = { ...payload.new, user_name: authorName };

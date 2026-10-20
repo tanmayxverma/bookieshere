@@ -40,7 +40,16 @@ import Onboarding from "./pages/Onboarding";
 import Profile from "./pages/Profile";
 import ResetPassword from "./pages/ResetPassword";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      gcTime: 5 * 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const OPEN_PATHS = new Set([
   "/welcome",

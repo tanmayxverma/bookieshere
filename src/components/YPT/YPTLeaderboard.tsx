@@ -18,17 +18,41 @@ interface LeaderboardEntry {
   totalSeconds: number;
 }
 
-export function YPTLeaderboard({ currentUserId, liveElapsed = 0 }: Props) {
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(true);
+let yptLeaderboardCache: {
+  board: LeaderboardEntry[];
+  timestamp: number;
+} | null = null;
+const CACHE_TTL_MS = 2 * 60 * 1000;
 
-  const fetchLeaderboard = async () => {
-    // Clean stale sessions first
-    await (supabase as any).rpc('cleanup_stale_sessions');
+export function YPTLeaderboard({ currentUserId, liveElapsed = 0 }: Props) {
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(() => yptLeaderboardCache?.board || []);
+  const [loading, setLoading] = useState(() => !yptLeaderboardCache);
+
+  const fetchLeaderboard = async (force = false) => {
+    if (!force && yptLeaderboardCache && Date.now() - yptLeaderboardCache.timestamp < CACHE_TTL_MS) {
+      setLeaderboard(yptLeaderboardCache.board);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data: rpcData, error } = await (supabase as any).rpc('get_leaderboard_today', { top_n: 50 });
+      if (rpcData && !error) {
+        const board: LeaderboardEntry[] = rpcData.map((r: any) => ({
+          userId: r.user_id,
+          name: r.name || 'Unknown',
+          jeeYear: r.jee_year || '',
+          totalSeconds: Number(r.total_seconds) || 0,
+        }));
+        yptLeaderboardCache = { board, timestamp: Date.now() };
+        setLeaderboard(board);
+        setLoading(false);
+        return;
+      }
+    } catch {}
 
     const todayStartUTC = getISTTodayStartUTC();
 
-    // Fetch both completed and active sessions (active = live time via duration_seconds heartbeat)
     const { data: sessions } = await (supabase as any)
       .from('study_sessions')
       .select('ypt_user_id, duration_seconds, status, ypt_users(name, jee_focus_year)')
@@ -51,15 +75,29 @@ export function YPTLeaderboard({ currentUserId, liveElapsed = 0 }: Props) {
       userMap[uid].totalSeconds += s.duration_seconds || 0;
     });
 
-    setLeaderboard(Object.values(userMap).sort((a, b) => b.totalSeconds - a.totalSeconds));
+    const board = Object.values(userMap).sort((a, b) => b.totalSeconds - a.totalSeconds);
+    yptLeaderboardCache = { board, timestamp: Date.now() };
+    setLeaderboard(board);
     setLoading(false);
   };
 
   useEffect(() => {
     fetchLeaderboard();
-    // Auto-refresh every 30s
-    const interval = setInterval(fetchLeaderboard, 30_000);
-    return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchLeaderboard(true);
+      }
+    }, 120_000);
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchLeaderboard();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
   if (loading) {

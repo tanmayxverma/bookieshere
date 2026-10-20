@@ -135,9 +135,11 @@ export function V2TasksTab({ userId, timer }: Props) {
     reordered.splice(dropIdx, 0, moved);
     const updates = reordered.map((t, i) => ({ ...t, sort_order: i }));
     setTodos([...updates, ...completed.map((t, i) => ({ ...t, sort_order: updates.length + i }))]);
-    for (const item of updates) {
-      await (supabase as any).from('ypt_todos').update({ sort_order: item.sort_order }).eq('id', item.id);
-    }
+    await Promise.all(
+      updates.map(item =>
+        (supabase as any).from('ypt_todos').update({ sort_order: item.sort_order }).eq('id', item.id)
+      )
+    );
     setDraggedId(null);
     setDragOverId(null);
   };

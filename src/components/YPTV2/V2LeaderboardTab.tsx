@@ -20,16 +20,54 @@ interface LeaderboardEntry {
   totalSeconds: number;
 }
 
+let v2LeaderboardCache: {
+  today: LeaderboardEntry[];
+  week: LeaderboardEntry[];
+  timestamp: number;
+} | null = null;
+const CACHE_TTL_MS = 2 * 60 * 1000;
+
 export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
-  const [todayBoard, setTodayBoard] = useState<LeaderboardEntry[]>([]);
-  const [weekBoard, setWeekBoard] = useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [todayBoard, setTodayBoard] = useState<LeaderboardEntry[]>(() => v2LeaderboardCache?.today || []);
+  const [weekBoard, setWeekBoard] = useState<LeaderboardEntry[]>(() => v2LeaderboardCache?.week || []);
+  const [loading, setLoading] = useState(() => !v2LeaderboardCache);
   const [period, setPeriod] = useState<'today' | 'weekly'>('today');
 
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = async (force = false) => {
+    if (!force && v2LeaderboardCache && Date.now() - v2LeaderboardCache.timestamp < CACHE_TTL_MS) {
+      setTodayBoard(v2LeaderboardCache.today);
+      setWeekBoard(v2LeaderboardCache.week);
+      setLoading(false);
+      return;
+    }
+
     try {
-      await (supabase as any).rpc('cleanup_stale_sessions');
-    } catch {}
+      const [todayRpc, weekRpc] = await Promise.all([
+        (supabase as any).rpc('get_leaderboard_today', { top_n: 50 }),
+        (supabase as any).rpc('get_leaderboard_week', { top_n: 100 }),
+      ]);
+
+      if (todayRpc.data && weekRpc.data && !todayRpc.error && !weekRpc.error) {
+        const mapRows = (rows: any[]): LeaderboardEntry[] =>
+          rows.map((r: any) => ({
+            userId: r.user_id,
+            name: r.name || 'Aspirant',
+            jeeYear: r.jee_year || 'JEE',
+            totalSeconds: Number(r.total_seconds) || 0,
+          }));
+
+        const today = mapRows(todayRpc.data);
+        const week = mapRows(weekRpc.data);
+        v2LeaderboardCache = { today, week, timestamp: Date.now() };
+        setTodayBoard(today);
+        setWeekBoard(week);
+        setLoading(false);
+        return;
+      }
+    } catch {
+      // Fallback below if RPC is not yet applied
+    }
+
     const todayStartUTC = getISTTodayStartUTC();
     const weekStartDate = getISTDate();
     weekStartDate.setDate(weekStartDate.getDate() - 6);
@@ -52,7 +90,6 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
 
     sessions.forEach((s: any) => {
       const uid = s.ypt_user_id;
-      // The current user's live session is added separately via liveElapsed
       if (s.status === 'active' && uid === currentUserId) return;
       const entry = {
         userId: uid,
@@ -68,15 +105,31 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
       }
     });
 
-    setTodayBoard(Object.values(todayMap).sort((a, b) => b.totalSeconds - a.totalSeconds));
-    setWeekBoard(Object.values(weekMap).sort((a, b) => b.totalSeconds - a.totalSeconds));
+    const today = Object.values(todayMap).sort((a, b) => b.totalSeconds - a.totalSeconds);
+    const week = Object.values(weekMap).sort((a, b) => b.totalSeconds - a.totalSeconds);
+    v2LeaderboardCache = { today, week, timestamp: Date.now() };
+    setTodayBoard(today);
+    setWeekBoard(week);
     setLoading(false);
   };
 
   useEffect(() => {
     fetchLeaderboard();
-    const interval = setInterval(fetchLeaderboard, 30_000);
-    return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchLeaderboard(true);
+      }
+    }, 120_000);
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchLeaderboard();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
   if (loading) return <YPTLeaderboardSkeleton />;

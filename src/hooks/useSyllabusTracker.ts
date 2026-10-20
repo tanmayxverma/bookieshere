@@ -76,15 +76,23 @@ export function useSyllabusTracker() {
 
         // Push any local-only progress up so it survives across devices
         if (needsUpload) {
-          for (const [k, v] of Object.entries(local.stars)) {
-            if ((remote[k] || 0) < v) {
-              if (isAuthenticated && profile) {
-                await supabase
-                  .from('syllabus_progress' as any)
-                  .upsert({ profile_id: profile.id, chapter_key: k, stars: v }, { onConflict: 'profile_id,chapter_key' });
-              } else if (deviceId) {
-                await (supabase as any).rpc('guest_upsert_syllabus_progress', { _device_id: deviceId, _chapter_key: k, _stars: v });
-              }
+          const toUpload = Object.entries(local.stars).filter(([k, v]) => (remote[k] || 0) < v);
+          if (toUpload.length > 0) {
+            if (isAuthenticated && profile) {
+              const rows = toUpload.map(([k, v]) => ({
+                profile_id: profile.id,
+                chapter_key: k,
+                stars: v,
+              }));
+              await supabase
+                .from('syllabus_progress' as any)
+                .upsert(rows, { onConflict: 'profile_id,chapter_key' });
+            } else if (deviceId) {
+              await Promise.all(
+                toUpload.map(([k, v]) =>
+                  (supabase as any).rpc('guest_upsert_syllabus_progress', { _device_id: deviceId, _chapter_key: k, _stars: v })
+                )
+              );
             }
           }
         }

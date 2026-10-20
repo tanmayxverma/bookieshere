@@ -95,11 +95,7 @@ serve(async (req) => {
     if (SUPABASE_URL && SUPABASE_ANON_KEY && token) {
       // If user passed a personal access token, verify them
       const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      const { data: userData } = await authClient.auth.getUser(token);
-      // We log but don't hard reject unless desired
-      if (userData?.user) {
-        console.log(`[Bookie AI] Request from authenticated user: ${userData.user.id}`);
-      }
+      await authClient.auth.getUser(token);
     }
 
     const { messages } = await req.json();
