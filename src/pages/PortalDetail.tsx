@@ -4,7 +4,7 @@ import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookieLoader } from "@/components/BookieLoader";
-import { ArrowLeft, ArrowUpRight, Info, Rocket } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Info, Rocket, ShieldCheck } from "lucide-react";
 import { usePortals } from "@/hooks/usePortals";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
@@ -21,8 +21,13 @@ export default function PortalDetail() {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-24 text-center">
-          <h1 className="font-display text-3xl font-black">Portal not found</h1>
-          <Button className="mt-6" onClick={() => navigate("/portals")}>Back to portals</Button>
+          <div className="inline-block p-8 rounded-2xl border-2 border-border bg-card shadow-[4px_4px_0px_var(--desk-border)]">
+            <h1 className="font-display text-2xl font-black text-foreground">Portal not found</h1>
+            <p className="mt-2 text-xs font-sans text-muted-foreground">The coaching portal you requested might have been updated or archived.</p>
+            <Button className="mt-5 btn-desk-primary" onClick={() => navigate("/portals")}>
+              Back to Portals
+            </Button>
+          </div>
         </div>
       </Layout>
     );
@@ -44,68 +49,93 @@ export default function PortalDetail() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8 pb-20">
-        <Link to="/portals" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="h-3.5 w-3.5" /> All portals
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 max-w-5xl">
+        <Link
+          to="/portals"
+          className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-6 group"
+        >
+          <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
+          <span>Back to Portals Directory</span>
         </Link>
 
-        <header className={`relative mt-5 overflow-hidden rounded-[28px] border border-border/50 bg-gradient-to-br ${portal.accent} p-8 md:p-14`}>
-          <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
+        {/* Hero Header */}
+        <header className="relative overflow-hidden rounded-2xl border-2 border-border bg-card p-6 sm:p-8 md:p-10 shadow-[4px_4px_0px_var(--desk-border)]">
           <div className="relative flex flex-col md:flex-row md:items-center gap-6">
             <InstituteLogo
               id={portal.id}
               name={portal.name}
               logo={portal.logo}
               accent={portal.accent}
-              className="h-24 w-24 rounded-3xl text-3xl ring-1 ring-border/60 shadow-lg"
+              className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-xl text-2xl border-2 border-border shadow-[3px_3px_0px_var(--desk-border)]"
             />
-            <div className="min-w-0">
-              <Badge variant="secondary" className="mb-3 text-[10px] uppercase tracking-[0.2em]">
-                {portal.links.length} link{portal.links.length > 1 ? "s" : ""}
-              </Badge>
-              <h1 className="font-display text-4xl md:text-6xl font-black tracking-tight leading-[0.95]">{portal.name}</h1>
-              <p className="mt-3 text-sm md:text-base italic text-muted-foreground">{portal.tagline}</p>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <Badge variant="outline" className="font-mono text-[10px] uppercase font-bold">
+                  <Rocket className="mr-1 h-3 w-3 text-primary" /> {portal.links.length} link{portal.links.length > 1 ? "s" : ""}
+                </Badge>
+                <Badge variant="outline" className="font-mono text-[10px] uppercase font-bold border-primary/30 text-primary bg-primary/10">
+                  <ShieldCheck className="mr-1 h-3 w-3" /> Direct Coaching Mirror
+                </Badge>
+              </div>
+              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-foreground leading-tight">
+                {portal.name}
+              </h1>
+              <p className="mt-2 text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
+                {portal.tagline}
+              </p>
             </div>
           </div>
         </header>
 
         {portal.instructions && (
-          <div className="mt-6 flex items-start gap-3 rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4">
+          <div className="mt-6 flex items-start gap-3 rounded-xl border-2 border-border bg-muted/40 p-4 shadow-[2px_2px_0px_var(--desk-border)]">
             <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">How to use: </strong>{portal.instructions}
+            <p className="text-xs font-sans text-muted-foreground leading-relaxed">
+              <strong className="text-foreground">Access Guidance: </strong>{portal.instructions}
             </p>
           </div>
         )}
 
-        <section className="mt-10">
-          <h2 className="font-display text-xs uppercase tracking-[0.3em] text-muted-foreground mb-4">Access links</h2>
-          <div className="grid gap-3 md:grid-cols-2">
+        <section className="mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-bold">
+              Available Access Links ({portal.links.length})
+            </h2>
+            <span className="font-mono text-[11px] text-muted-foreground">Direct Redirect</span>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
             {portal.links.map((l, i) => (
               <button
                 key={l.url}
                 onClick={() => launch(l.url)}
-                className="group flex items-center justify-between gap-4 rounded-2xl border border-border/50 bg-card/60 hover:bg-card hover:border-primary/50 px-5 py-4 text-left transition-all hover:-translate-y-0.5"
+                className="group relative flex items-center justify-between gap-4 rounded-xl border-2 border-border bg-card hover:bg-muted p-4 text-left shadow-[2px_2px_0px_var(--desk-border)] hover:shadow-[4px_4px_0px_var(--desk-border)] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
               >
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono text-muted-foreground/60">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="font-semibold truncate">{l.label}</span>
+                    <span className="text-[11px] font-mono text-muted-foreground/70 shrink-0">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-sans text-xs sm:text-sm font-bold text-foreground truncate">
+                      {l.label}
+                    </span>
                   </div>
-                  <span className="mt-0.5 block text-[11px] text-muted-foreground truncate">
+                  <span className="mt-1 block text-[11px] font-mono text-muted-foreground truncate">
                     {(() => { try { return new URL(l.url).hostname.replace(/^www\./, ""); } catch { return ""; } })()}
                     {l.note ? ` · ${l.note}` : ""}
                   </span>
                 </div>
-                <Rocket className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
+                <div className="p-1.5 rounded-md border border-border bg-background group-hover:bg-primary group-hover:text-primary-foreground transition-colors shrink-0">
+                  <ArrowUpRight className="h-4 w-4" />
+                </div>
               </button>
             ))}
           </div>
         </section>
 
-        <p className="mt-10 text-center text-[11px] text-muted-foreground/80">
-          Bookie does not own or host any content. All links belong to their respective owners.
-        </p>
+        <div className="mt-10 p-4 rounded-xl border border-border bg-muted/30 text-center font-mono text-[11px] text-muted-foreground">
+          Notice: Bookie aggregates links for student accessibility. All rights remain with original copyright holders.
+        </div>
       </div>
     </Layout>
   );
