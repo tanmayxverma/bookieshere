@@ -2,35 +2,35 @@ import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 
-const DMCA = () => {
+export default function DMCA() {
   return (
     <Layout>
-      <div className="w-full bg-background text-foreground min-h-screen py-10 px-4 sm:px-6 pb-24">
+      <div className="w-full bg-academic-grid text-foreground min-h-screen py-10 px-4 sm:px-6 pb-24">
         <div className="max-w-4xl mx-auto space-y-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-foreground transition-colors mb-2 px-3 py-1.5 rounded-lg border border-border bg-card shadow-[1px_1px_0px_var(--desk-border)]"
+            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-2 px-3.5 py-1.5 rounded-xl border border-border/80 bg-card shadow-xs group"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
+            <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
             <span>Back to Dashboard</span>
           </Link>
 
-          <div className="rounded-2xl border-2 border-border bg-card p-6 sm:p-8 shadow-[4px_4px_0px_var(--desk-border)] space-y-6">
+          <div className="rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-xs space-y-6">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-border bg-muted font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-primary font-mono text-[10px] font-semibold uppercase tracking-wider mb-3">
                 <ShieldCheck className="h-3.5 w-3.5 text-primary" /> COPYRIGHT POLICY
               </div>
-              <h1 className="font-display text-2xl sm:text-3xl font-black text-foreground">
+              <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
                 DMCA Copyright Notice Protocol
               </h1>
               <p className="font-mono text-xs text-muted-foreground mt-1">
-                Notice &amp; Takedown Procedure
+                Notice &amp; Takedown Procedure • Academic Transparency
               </p>
             </div>
 
-            <div className="space-y-4 text-xs sm:text-sm font-sans text-foreground/90 leading-relaxed border-t border-border pt-4">
+            <div className="space-y-4 text-xs sm:text-sm font-sans text-muted-foreground leading-relaxed border-t border-border/80 pt-4">
               <p>
-                BOOKIE respects the intellectual property rights of copyright holders and expects all users to do the same.
+                <strong className="text-foreground">BOOKIE</strong> respects the intellectual property rights of copyright holders and expects all users and aspirants to do the same.
               </p>
 
               <p>
@@ -38,10 +38,10 @@ const DMCA = () => {
               </p>
 
               <p>
-                If you believe content linked or referenced on this website infringes upon your copyrighted work, please provide our agent with:
+                If you believe content linked or referenced on this website infringes upon your copyrighted work, please provide our designated representative with:
               </p>
 
-              <ol className="list-decimal list-inside space-y-2 ml-2 font-mono text-xs bg-muted/30 p-4 rounded-xl border border-border">
+              <ol className="list-decimal list-inside space-y-2 ml-2 font-mono text-xs bg-muted/40 p-4 rounded-xl border border-border/80 text-foreground">
                 <li>Identification of the copyrighted work claimed to have been infringed.</li>
                 <li>The exact URL(s) or reference locations on BOOKIE.</li>
                 <li>Proof of copyright ownership or legal authorization from the rights holder.</li>
@@ -50,31 +50,19 @@ const DMCA = () => {
                 <li>Your official contact information (legal name, physical address, phone number, email).</li>
               </ol>
 
-              <div className="mt-6 p-4 rounded-xl border-2 border-border bg-muted/40 space-y-2">
-                <p className="font-mono text-xs font-bold uppercase text-foreground">Official Takedown Inquiries:</p>
+              <div className="mt-6 p-4 rounded-xl border border-border/80 bg-muted/40 space-y-2">
+                <p className="font-mono text-xs font-semibold uppercase text-foreground">Official Takedown Inquiries:</p>
                 <p className="font-sans text-xs">
-                  Chat Support:{" "}
-                  <Link to="/support" className="text-primary underline font-medium">
+                  Direct Support Line:{" "}
+                  <Link to="/support" className="text-primary underline font-semibold">
                     Open a maintainer support ticket
                   </Link>
                 </p>
-                <p className="font-sans text-xs">
-                  Email:{" "}
-                  <a href="mailto:capcutwaladiddy@gmail.com" className="text-primary underline font-medium">
-                    capcutwaladiddy@gmail.com
-                  </a>
-                </p>
               </div>
-
-              <p className="text-xs text-muted-foreground font-mono">
-                Upon receiving a verified notice, we will remove or disable access to the specified link within 24–48 hours.
-              </p>
             </div>
           </div>
         </div>
       </div>
     </Layout>
   );
-};
-
-export default DMCA;
+}
