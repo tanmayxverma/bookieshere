@@ -173,14 +173,14 @@ export function AvatarUploader({
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="relative group">
-        <div className="h-28 w-28 rounded-full overflow-hidden ring-4 ring-primary/20 bg-gradient-to-br from-primary/20 via-indigo-500/10 to-primary/5 flex items-center justify-center text-3xl font-display font-black text-foreground/80 shadow-md">
+        <div className="h-28 w-28 sm:h-32 sm:w-32 rounded-full overflow-hidden border border-border/80 bg-gradient-to-br from-parchment-100 via-white to-parchment-200 flex items-center justify-center text-3xl sm:text-4xl font-mono font-bold text-foreground shadow-inner">
           {avatarUrl ? (
             <img src={avatarUrl} alt={displayName} referrerPolicy="no-referrer" className="h-full w-full object-cover" />
           ) : (
-            <span>{initials(displayName)}</span>
+            <span className="font-serif font-bold text-3xl">{initials(displayName)}</span>
           )}
           {busy && (
-            <div className="absolute inset-0 bg-background/70 backdrop-blur-xs flex items-center justify-center">
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-xs flex items-center justify-center">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           )}
@@ -189,7 +189,7 @@ export function AvatarUploader({
           type="button"
           onClick={handlePick}
           disabled={busy}
-          className="absolute -bottom-1 -right-1 h-9 w-9 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-2 border-white dark:border-slate-900 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+          className="absolute bottom-0 right-0 h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-slate-900 text-white border-2 border-background flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform cursor-pointer"
           aria-label="Upload custom photo"
         >
           <Camera className="h-4 w-4" />
@@ -199,22 +199,22 @@ export function AvatarUploader({
       {/* Streak badge if available */}
       {streak !== undefined && (
         <div
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-700/80 text-amber-800 dark:text-amber-200 text-xs font-mono font-black shadow-xs select-none"
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-400 text-xs font-mono font-semibold shadow-xs select-none"
           title="Streak updates based on 3:00 AM IST daily rollover"
         >
           <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
           <span>{streak ?? 0}d streak</span>
-          <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80 font-normal">· 3AM IST</span>
+          <span className="text-[10px] text-amber-600/70 dark:text-amber-400/70 font-normal">· 3AM IST</span>
         </div>
       )}
 
       {/* Actions row */}
-      <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs">
+      <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5 text-xs font-sans">
         <button
           type="button"
           onClick={handlePick}
           disabled={busy}
-          className="font-bold text-primary hover:underline cursor-pointer flex items-center gap-1"
+          className="font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer flex items-center gap-1.5"
         >
           <Camera className="w-3.5 h-3.5" />
           <span>{avatarUrl ? "Change Photo" : "Upload Custom Photo"}</span>
@@ -249,21 +249,21 @@ export function AvatarUploader({
 
       {/* Preset avatar selector pills */}
       {showPresets && (
-        <div className="w-full pt-2">
-          <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground mb-1.5 px-1">
-            <span className="flex items-center gap-1 font-bold">
-              <Sparkles className="w-3 h-3 text-amber-500" /> Quick Aspirant Avatars
+        <div className="w-full pt-3 border-t border-border/60">
+          <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground mb-2 px-1">
+            <span className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-foreground/80">
+              <Sparkles className="w-3 h-3 text-primary" /> Quick Aspirant Avatars
             </span>
-            <span>or upload above</span>
+            <span className="italic text-[10px]">or upload above</span>
           </div>
-          <div className="flex items-center justify-center gap-1.5 flex-wrap">
+          <div className="flex items-center justify-center gap-2 flex-wrap">
             {ASPIRANT_AVATAR_PRESETS.map((preset) => (
               <button
                 key={preset.id}
                 type="button"
                 onClick={() => handleSelectPreset(preset.emoji)}
                 title={preset.label}
-                className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary/20 dark:hover:bg-primary/30 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-lg hover:scale-110 active:scale-95 transition-all cursor-pointer shadow-xs"
+                className="w-8 h-8 rounded-full bg-card hover:border-primary border border-border/80 flex items-center justify-center text-sm hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-xs"
               >
                 <span>{preset.emoji}</span>
               </button>
