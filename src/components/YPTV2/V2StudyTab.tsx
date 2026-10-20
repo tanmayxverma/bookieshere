@@ -86,35 +86,35 @@ interface SubjectMeta {
 const SUBJECT_CONFIG: Record<string, SubjectMeta> = {
   Physics: {
     name: 'Physics',
-    icon: '⚡',
-    color: '#0062ff',
+    icon: 'PHY',
+    color: '#2563EB',
     borderColor: 'border-blue-500',
     badgeBg: 'bg-blue-50 dark:bg-blue-950/60',
     badgeText: 'text-blue-600 dark:text-blue-400',
   },
   Chemistry: {
     name: 'Chemistry',
-    icon: '🧪',
-    color: '#f59e0b',
+    icon: 'CHEM',
+    color: '#FBBF24',
     borderColor: 'border-amber-500',
     badgeBg: 'bg-amber-50 dark:bg-amber-950/60',
     badgeText: 'text-amber-600 dark:text-amber-400',
   },
   Mathematics: {
     name: 'Mathematics',
-    icon: '📐',
-    color: '#10b981',
+    icon: 'MATH',
+    color: '#10B981',
     borderColor: 'border-emerald-500',
     badgeBg: 'bg-emerald-50 dark:bg-emerald-950/60',
     badgeText: 'text-emerald-600 dark:text-emerald-400',
   },
   'Self Study': {
     name: 'Self Study',
-    icon: '📖',
-    color: '#8b5cf6',
-    borderColor: 'border-purple-500',
-    badgeBg: 'bg-purple-50 dark:bg-purple-950/60',
-    badgeText: 'text-purple-600 dark:text-purple-400',
+    icon: 'SELF',
+    color: '#6366F1',
+    borderColor: 'border-indigo-500',
+    badgeBg: 'bg-indigo-50 dark:bg-indigo-950/60',
+    badgeText: 'text-indigo-600 dark:text-indigo-400',
   },
 };
 
@@ -421,18 +421,12 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
   // ============ FULLSCREEN FOCUS MODE ============
   if (focusMode && timer.isActive) {
     return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background p-6">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full blur-[140px] opacity-20"
-            style={{ backgroundColor: activeSubject.color }}
-          />
-        </div>
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-card p-6 select-none border-4 border-[var(--desk-border)]">
         <div className="relative z-10 flex flex-col items-center gap-8 max-w-lg w-full text-center animate-in fade-in zoom-in-95 duration-200">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant/60 bg-surface-container-lowest/80 backdrop-blur-md shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-[var(--desk-border)] bg-muted/60 shadow-[2px_2px_0px_var(--desk-border)]">
             <span className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ backgroundColor: activeSubject.color }} />
-            <span className="text-sm font-bold">{activeSubject.icon} {timer.subject}</span>
-            <span className="text-xs font-mono text-on-surface-variant">• {timer.isPaused ? 'Paused' : 'Active'}</span>
+            <span className="text-sm font-bold font-mono">[{activeSubject.icon}] {timer.subject}</span>
+            <span className="text-xs font-mono text-muted-foreground">• {timer.isPaused ? 'Paused' : 'Active'}</span>
           </div>
 
           <div className="relative flex flex-col items-center justify-center">
@@ -503,25 +497,27 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
       </div>
 
       {/* ───── CLEAN HERO STUDY TIMER CARD ───── */}
-      <div className="relative bg-surface-container-lowest rounded-3xl p-6 sm:p-8 border-2 border-slate-900/80 shadow-[4px_4px_0px_0px_rgba(15,23,42,0.9)] overflow-hidden">
-        {/* Subtle Blueprint Grid pattern inside timer card */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,102,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,102,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+      <div className="relative bg-card rounded-2xl p-6 sm:p-8 border-2 border-[var(--desk-border)] shadow-[5px_5px_0px_var(--desk-border)] overflow-hidden">
+        {/* Washi Header Indicator */}
+        <div className="washi-tape bg-[var(--sunflower)] text-[#0F172A] -rotate-1">
+          STUDY CARREL // ACTIVE SPRINT
+        </div>
 
-        <div className="relative z-10 flex flex-col items-center max-w-2xl mx-auto text-center space-y-6">
+        <div className="relative z-10 flex flex-col items-center max-w-2xl mx-auto text-center space-y-6 pt-2">
           
           {/* Top Control Bar: Mode Toggle & Status */}
-          <div className="flex flex-wrap items-center justify-between gap-3 w-full border-b border-outline-variant/30 pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 w-full border-b border-[var(--desk-border)]/20 pb-4">
             {/* Mode Switcher */}
-            <div className="flex items-center gap-1.5 p-1 bg-surface-container-low rounded-full border border-outline-variant/40">
+            <div className="flex items-center gap-1 p-1 bg-muted/40 rounded-xl border-2 border-[var(--desk-border)] shadow-[2px_2px_0px_var(--desk-border)]">
               <button
                 type="button"
                 disabled={timer.isActive}
                 onClick={() => setTimerMode('stopwatch')}
                 className={cn(
-                  "px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5",
+                  "px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer",
                   timerMode === 'stopwatch'
-                    ? "bg-slate-900 text-white shadow-xs"
-                    : "text-on-surface-variant hover:text-on-surface"
+                    ? "bg-primary text-primary-foreground border-2 border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)]"
+                    : "text-muted-foreground hover:text-foreground border-2 border-transparent"
                 )}
               >
                 <Clock className="w-3.5 h-3.5" />
@@ -532,10 +528,10 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 disabled={timer.isActive}
                 onClick={() => setTimerMode('countdown')}
                 className={cn(
-                  "px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5",
+                  "px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer",
                   timerMode === 'countdown'
-                    ? "bg-slate-900 text-white shadow-xs"
-                    : "text-on-surface-variant hover:text-on-surface"
+                    ? "bg-primary text-primary-foreground border-2 border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)]"
+                    : "text-muted-foreground hover:text-foreground border-2 border-transparent"
                 )}
               >
                 <Target className="w-3.5 h-3.5" />
@@ -677,7 +673,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
               <button
                 type="button"
                 onClick={() => handleStart()}
-                className="w-full sm:w-auto min-w-[240px] px-8 py-4 bg-brand-blue hover:bg-blue-600 text-white font-display font-black text-base uppercase tracking-wider rounded-full shadow-brutal-blue hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto min-w-[240px] px-8 py-4 bg-primary text-primary-foreground font-heading font-extrabold text-base uppercase tracking-wider rounded-xl border-2 border-[var(--desk-border)] shadow-[4px_4px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_var(--desk-border)] transition-all flex items-center justify-center gap-2 cursor-pointer hover:brightness-105"
               >
                 <Play className="w-5 h-5 fill-current" />
                 <span>Start {activeSubjectName} Session</span>
@@ -688,7 +684,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                   <button
                     type="button"
                     onClick={timer.resumeSession}
-                    className="px-7 py-3.5 bg-brand-blue hover:bg-blue-600 text-white font-bold text-sm rounded-full shadow-brutal-blue active:translate-y-0.5 transition-all flex items-center gap-2"
+                    className="px-7 py-3.5 bg-primary text-primary-foreground font-body font-bold text-sm rounded-xl border-2 border-[var(--desk-border)] shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-2 cursor-pointer hover:brightness-105"
                   >
                     <Play className="w-4 h-4 fill-current" />
                     <span>Resume Focus</span>
@@ -697,7 +693,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                   <button
                     type="button"
                     onClick={timer.pauseSession}
-                    className="px-7 py-3.5 bg-white text-slate-900 hover:bg-slate-50 font-bold text-sm rounded-full border-2 border-slate-900 shadow-brutal active:translate-y-0.5 transition-all flex items-center gap-2"
+                    className="px-7 py-3.5 bg-card text-foreground font-body font-bold text-sm rounded-xl border-2 border-[var(--desk-border)] shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-2 cursor-pointer hover:bg-muted"
                   >
                     <Pause className="w-4 h-4" />
                     <span>Pause</span>
@@ -707,7 +703,7 @@ export function V2StudyTab({ user, timer, onNavigate }: Props) {
                 <button
                   type="button"
                   onClick={timer.endSession}
-                  className="px-7 py-3.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-sm rounded-full border-2 border-rose-300 active:translate-y-0.5 transition-all flex items-center gap-2"
+                  className="px-7 py-3.5 bg-destructive text-destructive-foreground font-body font-bold text-sm rounded-xl border-2 border-[var(--desk-border)] shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-2 cursor-pointer hover:brightness-105"
                 >
                   <Square className="w-4 h-4 fill-current" />
                   <span>Stop &amp; Log</span>

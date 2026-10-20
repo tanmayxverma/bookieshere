@@ -77,32 +77,33 @@ export default function YPT() {
         }}
       />
 
-      <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen">
-        <main className="max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 flex-1">
+      <div className="w-full text-foreground min-h-screen">
+        <main className="max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 sm:py-8 space-y-6 flex-1">
             
             {/* Header section with tabs */}
-            <section className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 pb-2 border-b border-outline-variant/50" data-purpose="sub-navigation">
+            <section className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b-2 border-[var(--desk-border)]" data-purpose="sub-navigation">
               <div>
-                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-mono font-medium text-on-surface-variant uppercase tracking-wide">
-                  <span className="inline-block w-2 h-2 rounded-full bg-tertiary animate-ping"></span>
-                  <span className="inline-block w-2 h-2 -ml-3 sm:-ml-3 rounded-full bg-tertiary"></span>
-                  <span className="text-tertiary font-semibold">{onlineCount} online</span>
+                <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold text-muted-foreground uppercase tracking-wide">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[var(--mint)] animate-pulse"></span>
+                  <span className="text-foreground font-semibold">{onlineCount} online</span>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <span className="truncate max-w-[120px] sm:max-w-none">{user.name}</span>
+                    <span className="truncate max-w-[120px] sm:max-w-none text-foreground">{user.name}</span>
                     <YPTNameChange user={user} onChangeName={changeName} />
                   </span>
-                  <span className="text-on-surface-variant/50">|</span>
-                  <span className="flex items-center gap-1">
+                  <span>|</span>
+                  <span className="flex items-center gap-1 text-foreground">
                     <span>{user.jee_focus_year}</span>
                     <YPTYearChange user={user} onChangeYear={changeJeeYear} />
                   </span>
                 </div>
-                <h1 className="text-xl sm:text-2xl md:text-[28px] font-headline-lg font-black tracking-tight text-on-surface mt-1">Bookie YPT Cockpit</h1>
+                <h1 className="text-2xl sm:text-3xl font-heading font-extrabold tracking-tight text-foreground mt-1">
+                  Bookie YPT Immersion Cockpit
+                </h1>
               </div>
 
-              {/* Segmented Module Selector based on YPT Reference */}
-              <div className="flex items-center bg-surface-container-lowest border-2 border-on-surface rounded-xl p-1 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-xs font-bold overflow-x-auto scrollbar-none gap-1 max-w-full touch-pan-x">
+              {/* Segmented Module Selector based on Academic Desk Reference */}
+              <div className="flex items-center bg-card border-2 border-[var(--desk-border)] rounded-xl p-1 shadow-[3px_3px_0px_var(--desk-border)] text-xs font-bold overflow-x-auto scrollbar-none gap-1 max-w-full touch-pan-x">
                 {TABS.map((t) => {
                   const Icon = t.icon;
                   const isActive = tab === t.id;
@@ -112,22 +113,22 @@ export default function YPT() {
                       key={t.id}
                       onClick={() => switchTab(t.id)}
                       className={cn(
-                        "px-3 sm:px-3.5 py-2 sm:py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-all whitespace-nowrap relative shrink-0 min-h-[40px] sm:min-h-0",
+                        "px-3.5 py-1.5 rounded-lg font-mono text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap relative shrink-0 min-h-[38px] cursor-pointer",
                         isActive 
                           ? isLeaderboard
-                            ? "bg-amber-500 text-white shadow-sm font-bold"
-                            : "bg-primary text-on-primary shadow-sm font-bold" 
+                            ? "bg-[var(--sunflower)] text-[#0F172A] border-2 border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)]"
+                            : "bg-primary text-primary-foreground border-2 border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)]" 
                           : isLeaderboard
-                            ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 font-bold border border-amber-500/30"
-                            : "text-on-surface-variant hover:text-on-surface"
+                            ? "bg-amber-100 dark:bg-amber-950/40 text-amber-950 dark:text-amber-200 hover:bg-amber-200 border-2 border-transparent"
+                            : "text-muted-foreground hover:text-foreground border-2 border-transparent"
                       )}
                     >
-                      <Icon className={cn("w-3.5 h-3.5", isLeaderboard && !isActive && "text-amber-500 animate-bounce")} />
+                      <Icon className="w-3.5 h-3.5" />
                       <span>{t.label}</span>
                       {isLeaderboard && (
                         <span className={cn(
-                          "ml-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-black uppercase tracking-wider",
-                          isActive ? "bg-amber-700 text-white" : "bg-amber-500 text-white animate-pulse"
+                          "ml-0.5 px-1.5 py-0.2 rounded-full text-[9px] font-mono font-black uppercase tracking-wider",
+                          isActive ? "bg-[#0F172A] text-white" : "bg-[var(--coral)] text-white animate-pulse"
                         )}>
                           LIVE
                         </span>
