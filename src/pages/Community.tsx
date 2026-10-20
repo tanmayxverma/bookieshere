@@ -312,112 +312,71 @@ export default function Community() {
   return (
     <Layout>
       <div className="min-h-screen bg-background pb-24 text-foreground">
-        {/* Top Community Navigation Header */}
-        <div className="border-b-2 border-border bg-card sticky top-0 z-30 shadow-[0_2px_0px_var(--desk-border)]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-lg border-2 border-border shadow-[2px_2px_0px_var(--desk-border)] hover:bg-muted"
-                onClick={() => navigate(-1)}
-                title="Go back"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
+        {/* Main Content Layout Container */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 w-full pt-6 pb-12">
+          
+          {/* Hero Dossier Banner (Matching Screen 10) */}
+          <section className="mb-6 pb-5 border-b border-border/80" data-purpose="lounge-hero">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="font-display text-lg md:text-xl font-black tracking-tight text-foreground flex items-center gap-2">
-                    <span>Aspirant Lounge</span>
-                    <span className="font-mono text-[10px] px-2 py-0.5 rounded border border-border bg-muted font-bold">
-                      ledger:community
-                    </span>
-                  </h1>
+                <div className="font-mono text-xs uppercase tracking-wider font-semibold text-primary flex items-center gap-2 mb-1.5">
+                  <span>Archival Peer Codex // r/Bookieshere</span>
+                  <span className="text-muted-foreground/40">•</span>
+                  <span className="text-muted-foreground">Zero Fluff // High-Yield Discourse</span>
                 </div>
-                <p className="font-sans text-xs text-muted-foreground">
-                  Peer discussions, study strategies, meme breakdowns, and doubt exchanges.
+                <h1 className="font-serif text-3xl sm:text-4xl font-normal text-foreground tracking-tight">
+                  Aspirant Lounge <span className="font-serif italic text-primary">&amp;</span> Peer Codex
+                </h1>
+                <p className="font-mono text-xs sm:text-sm text-muted-foreground mt-1 max-w-2xl leading-relaxed">
+                  High-yield problem deconstruction, verified strategy logs, and anti-burnout discourse engineered for serious JEE Advanced &amp; NEET-UG scholars.
                 </p>
               </div>
+
+              {/* Action Controls */}
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  onClick={() => setFilterMode(prev => (prev === "bookmarks" ? "all" : "bookmarks"))}
+                  variant={filterMode === "bookmarks" ? "default" : "outline"}
+                  size="sm"
+                  className={cn(
+                    "gap-1.5 font-mono text-xs h-9 rounded-lg border shadow-xs cursor-pointer",
+                    filterMode === "bookmarks" ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border/80 hover:bg-muted/50"
+                  )}
+                >
+                  {filterMode === "bookmarks" ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
+                  <span>Saved</span>
+                  {bookmarks.size > 0 && (
+                    <span className="ml-0.5 px-1.5 py-0.2 text-[10px] rounded border border-current font-mono font-semibold">
+                      {bookmarks.size}
+                    </span>
+                  )}
+                </Button>
+
+                <Button
+                  onClick={() => openNewPostWithCat(activeCategory)}
+                  size="sm"
+                  className="rounded-lg gap-1.5 px-4 h-9 font-mono text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>Initiate Discourse</span>
+                </Button>
+              </div>
             </div>
+          </section>
 
-            <div className="flex items-center gap-2 self-end md:self-auto">
-              <Button
-                onClick={() => setFilterMode(prev => (prev === "bookmarks" ? "all" : "bookmarks"))}
-                variant={filterMode === "bookmarks" ? "default" : "outline"}
-                size="sm"
-                className={cn(
-                  "gap-1.5 font-mono text-xs h-9 rounded-lg border-2 border-border shadow-[2px_2px_0px_var(--desk-border)]",
-                  filterMode === "bookmarks" ? "bg-primary text-primary-foreground" : "bg-card hover:bg-muted"
-                )}
-              >
-                {filterMode === "bookmarks" ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
-                <span>Saved</span>
-                {bookmarks.size > 0 && (
-                  <span className="ml-0.5 px-1.5 py-0.2 text-[10px] rounded border border-current font-mono font-bold">
-                    {bookmarks.size}
-                  </span>
-                )}
-              </Button>
-
-              <Button
-                onClick={() => openNewPostWithCat(activeCategory)}
-                size="sm"
-                className="rounded-lg gap-1.5 px-4 h-9 font-sans text-xs font-bold border-2 border-border bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--desk-border)] hover:bg-primary/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Create Post</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile Horizontal Sub-community Chips */}
-          <div className="lg:hidden border-t border-border bg-card/90 overflow-x-auto no-scrollbar">
-            <div className="px-4 py-2 flex items-center gap-1.5">
-              {CATEGORIES.map(cat => {
-                const isActive = activeCategory === cat.id;
-                const count = cat.id === "all" ? posts.length : (categoryCounts.get(cat.id) || 0);
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={cn(
-                      "flex items-center gap-1.5 px-3 py-1 rounded-lg font-mono text-xs font-bold whitespace-nowrap border-2 transition-all shrink-0",
-                      isActive
-                        ? "bg-foreground text-background border-foreground shadow-[2px_2px_0px_var(--desk-border)]"
-                        : "bg-card text-foreground border-border hover:bg-muted"
-                    )}
-                  >
-                    <span className="text-[10px] opacity-70">[{cat.code}]</span>
-                    <span>{cat.label}</span>
-                    {count > 0 && (
-                      <span className={cn(
-                        "text-[10px] px-1 rounded border",
-                        isActive ? "bg-background text-foreground border-background" : "bg-muted border-border text-muted-foreground"
-                      )}>
-                        {count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* 3-Column Desk Layout */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Three-Column Architecture Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left Sidebar: Sub-Community Directory (Desktop) */}
-            <aside className="hidden lg:block lg:col-span-3 sticky top-20 space-y-4">
-              <div className="bg-card rounded-xl border-2 border-border p-3.5 shadow-[3px_3px_0px_var(--desk-border)]">
-                <div className="flex items-center justify-between px-2.5 py-1 mb-2 border-b border-border">
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                    Channels & Flairs
+            
+            {/* LEFT COLUMN: Communities, Syllabi & Dossier Channels (3 cols) */}
+            <aside aria-label="Sidebar Channels" className="lg:col-span-3 space-y-4 sticky top-20">
+              <div className="bg-card rounded-2xl border border-border/80 p-5 shadow-xs">
+                <div className="flex items-center justify-between pb-3 border-b border-border/60 mb-3">
+                  <span className="font-mono text-[11px] uppercase tracking-wider font-semibold text-foreground">
+                    Communities &amp; Syllabi
                   </span>
-                  <Compass className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="font-mono text-[10px] text-muted-foreground">{CATEGORIES.length} Topics</span>
                 </div>
-
-                <div className="space-y-1">
+                <nav aria-label="Discussion Topics" className="space-y-1">
                   {CATEGORIES.map(cat => {
                     const isActive = activeCategory === cat.id;
                     const count = cat.id === "all" ? posts.length : (categoryCounts.get(cat.id) || 0);
@@ -429,20 +388,20 @@ export default function Community() {
                           setFilterMode("all");
                         }}
                         className={cn(
-                          "w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-left border",
+                          "w-full flex items-center justify-between px-3 py-2 rounded-xl font-mono text-xs font-medium transition-all text-left border cursor-pointer",
                           isActive
-                            ? "bg-foreground text-background border-foreground font-bold shadow-[2px_2px_0px_var(--desk-border)]"
-                            : "border-transparent text-foreground hover:bg-muted hover:border-border"
+                            ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                            : "border-transparent text-foreground hover:bg-muted/50 hover:border-border/60"
                         )}
                       >
                         <div className="flex items-center gap-2 truncate">
-                          <span className="font-mono text-[10px] opacity-70">[{cat.code}]</span>
+                          <span className="text-[10px] opacity-70">[{cat.code}]</span>
                           <span className="truncate">{cat.label}</span>
                         </div>
                         {count > 0 && (
                           <span className={cn(
-                            "font-mono text-[10px] px-1.5 py-0.2 rounded border",
-                            isActive ? "bg-background text-foreground border-background" : "bg-muted border-border text-muted-foreground"
+                            "text-[10px] px-1.5 py-0.2 rounded border",
+                            isActive ? "bg-white/20 text-white border-white/30" : "bg-muted/50 border-border/60 text-muted-foreground"
                           )}>
                             {count}
                           </span>
@@ -450,42 +409,42 @@ export default function Community() {
                       </button>
                     );
                   })}
-                </div>
+                </nav>
               </div>
 
-              {/* Quick Navigation Box */}
-              <div className="bg-card rounded-xl border-2 border-border p-3.5 shadow-[3px_3px_0px_var(--desk-border)] space-y-2">
-                <h4 className="font-mono text-[11px] font-bold text-muted-foreground uppercase tracking-wider px-2">
-                  Dossier Views
+              {/* Quick Dossier Views Box */}
+              <div className="bg-card rounded-2xl border border-border/80 p-4 shadow-xs space-y-2">
+                <h4 className="font-mono text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-2">
+                  Dossier Filters
                 </h4>
                 <div className="space-y-1">
                   <button
                     onClick={() => setFilterMode("all")}
                     className={cn(
-                      "w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs transition-colors border",
+                      "w-full flex items-center gap-2 px-3 py-1.5 rounded-lg font-mono text-xs transition-colors border cursor-pointer",
                       filterMode === "all"
-                        ? "bg-primary text-primary-foreground font-bold border-primary shadow-[2px_2px_0px_var(--desk-border)]"
-                        : "border-transparent text-foreground hover:bg-muted"
+                        ? "bg-muted/60 text-foreground font-semibold border-border/80"
+                        : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40"
                     )}
                   >
-                    <Compass className="h-3.5 w-3.5" />
-                    <span>All Feed Topics</span>
+                    <Compass className="h-3.5 w-3.5 text-primary" />
+                    <span>All Feeds</span>
                   </button>
                   <button
                     onClick={() => setFilterMode("bookmarks")}
                     className={cn(
-                      "w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-colors border",
+                      "w-full flex items-center justify-between px-3 py-1.5 rounded-lg font-mono text-xs transition-colors border cursor-pointer",
                       filterMode === "bookmarks"
-                        ? "bg-primary text-primary-foreground font-bold border-primary shadow-[2px_2px_0px_var(--desk-border)]"
-                        : "border-transparent text-foreground hover:bg-muted"
+                        ? "bg-muted/60 text-foreground font-semibold border-border/80"
+                        : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40"
                     )}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Bookmark className="h-3.5 w-3.5" />
+                    <div className="flex items-center gap-2">
+                      <Bookmark className="h-3.5 w-3.5 text-primary" />
                       <span>Saved Bookmarks</span>
                     </div>
                     {bookmarks.size > 0 && (
-                      <span className="font-mono text-[10px] px-1.5 py-0.2 rounded border border-current">
+                      <span className="font-mono text-[10px] px-1.5 py-0.2 rounded border border-border/60">
                         {bookmarks.size}
                       </span>
                     )}
@@ -494,13 +453,13 @@ export default function Community() {
                     <button
                       onClick={() => setFilterMode("mine")}
                       className={cn(
-                        "w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs transition-colors border",
+                        "w-full flex items-center gap-2 px-3 py-1.5 rounded-lg font-mono text-xs transition-colors border cursor-pointer",
                         filterMode === "mine"
-                          ? "bg-primary text-primary-foreground font-bold border-primary shadow-[2px_2px_0px_var(--desk-border)]"
-                          : "border-transparent text-foreground hover:bg-muted"
+                          ? "bg-muted/60 text-foreground font-semibold border-border/80"
+                          : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40"
                       )}
                     >
-                      <Award className="h-3.5 w-3.5" />
+                      <Award className="h-3.5 w-3.5 text-primary" />
                       <span>My Discussions</span>
                     </button>
                   )}
@@ -508,126 +467,85 @@ export default function Community() {
               </div>
             </aside>
 
-            {/* Center Column: Main Community Stream */}
+            {/* CENTER COLUMN: Discussion Stream & Post Composer (6 cols) */}
             <main className="lg:col-span-6 space-y-4">
               <GuestUpgradeBanner feature="community" />
 
-              {/* Quick Post Composer Input Card */}
-              <div className="bg-card rounded-xl border-2 border-border p-4 shadow-[3px_3px_0px_var(--desk-border)]">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-9 w-9 border-2 border-border shadow-[1px_1px_0px_var(--desk-border)] shrink-0">
-                    <AvatarImage src={profile?.avatar_url || ""} />
-                    <AvatarFallback className="bg-muted text-foreground font-mono font-bold text-xs">
-                      {((profile?.display_name || "A")?.[0] || "A").toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <button
-                    onClick={() => openNewPostWithCat(activeCategory)}
-                    className="flex-1 bg-muted/60 hover:bg-muted text-left px-4 py-2 rounded-lg text-xs text-muted-foreground transition-colors border-2 border-dashed border-border truncate font-sans"
-                  >
-                    Share a strategy, ask a doubt, post a meme or mock score...
-                  </button>
-                  <Button
-                    onClick={() => openNewPostWithCat(activeCategory)}
-                    size="sm"
-                    className="rounded-lg gap-1.5 px-3.5 h-8 font-sans text-xs font-bold border-2 border-border bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--desk-border)] hover:bg-primary/90 shrink-0"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    <span className="hidden sm:inline">Post</span>
-                  </Button>
-                </div>
-
-                {/* Quick Shortcuts */}
-                <div className="pt-2.5 mt-2.5 border-t border-border flex items-center justify-between gap-1 overflow-x-auto text-xs text-muted-foreground">
-                  <button
-                    onClick={() => openNewPostWithCat("memes")}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded border border-transparent hover:border-border hover:bg-muted transition-colors shrink-0"
-                  >
-                    <Smile className="h-3.5 w-3.5 text-primary" />
-                    <span>Meme / Humor</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("strategy")}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded border border-transparent hover:border-border hover:bg-muted transition-colors shrink-0"
-                  >
-                    <Lightbulb className="h-3.5 w-3.5 text-primary" />
-                    <span>Strategy</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("mocks")}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded border border-transparent hover:border-border hover:bg-muted transition-colors shrink-0"
-                  >
-                    <TrendingUp className="h-3.5 w-3.5 text-primary" />
-                    <span>Mock Scores</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("physics")}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded border border-transparent hover:border-border hover:bg-muted transition-colors shrink-0"
-                  >
-                    <Zap className="h-3.5 w-3.5 text-primary" />
-                    <span>Ask Doubt</span>
-                  </button>
-                </div>
+              {/* Refined Scholar Composer Box (Screen 10) */}
+              <div className="bg-card rounded-2xl border border-border/80 p-3.5 shadow-xs flex items-center gap-3">
+                <Avatar className="h-8 w-8 border border-border/70 shrink-0">
+                  <AvatarImage src={profile?.avatar_url || ""} />
+                  <AvatarFallback className="bg-muted text-foreground font-mono font-bold text-xs">
+                    {((profile?.display_name || "A")?.[0] || "A").toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <input
+                  readOnly
+                  onClick={() => openNewPostWithCat(activeCategory)}
+                  className="flex-grow text-xs font-mono text-foreground placeholder-muted-foreground bg-muted/30 hover:bg-muted/50 border border-border/70 rounded-xl px-3.5 py-2.5 cursor-pointer transition"
+                  placeholder="Deconstruct a problem, log a mock score, or share a peer inquiry..."
+                  type="text"
+                />
+                <button
+                  onClick={() => openNewPostWithCat(activeCategory)}
+                  className="shrink-0 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-mono font-semibold transition flex items-center gap-1 shadow-xs cursor-pointer"
+                  type="button"
+                >
+                  <span>Post</span>
+                </button>
               </div>
 
-              {/* Feed Controls: Sort Tabs + Search */}
-              <div className="bg-card rounded-xl border-2 border-border p-2.5 shadow-[3px_3px_0px_var(--desk-border)] flex flex-col sm:flex-row items-center justify-between gap-2.5">
-                <div className="flex items-center gap-1 bg-muted p-1 rounded-lg w-full sm:w-auto border border-border">
+              {/* Filter & Search Toolbar Strip */}
+              <div className="bg-card/80 rounded-xl border border-border/80 px-3 py-2 flex flex-col sm:flex-row items-center justify-between gap-2 shadow-xs">
+                {/* Feed Order Tabs */}
+                <div className="flex items-center space-x-1 w-full sm:w-auto">
                   <button
                     onClick={() => setSortBy("hot")}
                     className={cn(
-                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold transition-all",
-                      sortBy === "hot"
-                        ? "bg-card text-foreground border border-border shadow-[1px_1px_0px_var(--desk-border)]"
-                        : "text-muted-foreground hover:text-foreground"
+                      "px-2.5 py-1 rounded-lg font-mono text-[11px] font-medium transition cursor-pointer",
+                      sortBy === "hot" ? "bg-primary text-primary-foreground shadow-xs" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                     )}
+                    type="button"
                   >
-                    <Flame className={cn("h-3.5 w-3.5", sortBy === "hot" ? "text-primary" : "")} />
-                    <span>Hot</span>
+                    Curated High-Yield
                   </button>
-
                   <button
                     onClick={() => setSortBy("new")}
                     className={cn(
-                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold transition-all",
-                      sortBy === "new"
-                        ? "bg-card text-foreground border border-border shadow-[1px_1px_0px_var(--desk-border)]"
-                        : "text-muted-foreground hover:text-foreground"
+                      "px-2.5 py-1 rounded-lg font-mono text-[11px] font-medium transition cursor-pointer",
+                      sortBy === "new" ? "bg-primary text-primary-foreground shadow-xs" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                     )}
+                    type="button"
                   >
-                    <Clock className="h-3.5 w-3.5 text-primary" />
-                    <span>New</span>
+                    Chronological
                   </button>
-
                   <button
                     onClick={() => setSortBy("top")}
                     className={cn(
-                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold transition-all",
-                      sortBy === "top"
-                        ? "bg-card text-foreground border border-border shadow-[1px_1px_0px_var(--desk-border)]"
-                        : "text-muted-foreground hover:text-foreground"
+                      "px-2.5 py-1 rounded-lg font-mono text-[11px] font-medium transition cursor-pointer",
+                      sortBy === "top" ? "bg-primary text-primary-foreground shadow-xs" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                     )}
+                    type="button"
                   >
-                    <TrendingUp className="h-3.5 w-3.5 text-primary" />
-                    <span>Top</span>
+                    Top Ranked
                   </button>
                 </div>
-
-                {/* Search */}
-                <div className="relative w-full sm:w-60">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                  <Input
+                {/* Quick Search */}
+                <div className="relative w-full sm:w-56">
+                  <input
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    placeholder="Search posts..."
-                    className="pl-8 pr-7 h-8 text-xs bg-background border-2 border-border rounded-lg"
+                    className="w-full text-[11px] font-mono bg-muted/30 border border-border/70 rounded-lg px-2.5 py-1 pl-7 placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
+                    placeholder="Search derivations... [Ctrl+K]"
+                    type="text"
                   />
+                  <Search className="w-3.5 h-3.5 text-muted-foreground absolute left-2 top-2" />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery("")}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      className="absolute right-2 top-1.5 text-muted-foreground hover:text-foreground"
                     >
-                      <X className="h-3.5 w-3.5" />
+                      <X className="h-3 w-3" />
                     </button>
                   )}
                 </div>
@@ -635,20 +553,20 @@ export default function Community() {
 
               {/* Feed Content List */}
               {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 bg-card rounded-xl border-2 border-border space-y-3 shadow-[3px_3px_0px_var(--desk-border)]">
+                <div className="flex flex-col items-center justify-center py-20 bg-card rounded-2xl border border-border/80 space-y-3 shadow-xs">
                   <Loader2 className="h-8 w-8 text-primary animate-spin" />
-                  <p className="font-mono text-xs text-muted-foreground">Loading discussions ledger...</p>
+                  <p className="font-mono text-xs text-muted-foreground">Loading peer codex ledger...</p>
                 </div>
               ) : filteredPosts.length === 0 ? (
-                <div className="text-center py-16 px-4 bg-card rounded-xl border-2 border-border space-y-3 shadow-[3px_3px_0px_var(--desk-border)]">
-                  <MessageCircle className="w-10 h-10 text-muted-foreground mx-auto" />
-                  <h3 className="font-display font-bold text-sm text-foreground">
-                    {searchQuery ? "No discussions match your query" : "No posts in this channel yet"}
+                <div className="text-center py-16 px-4 bg-card rounded-2xl border border-border/80 space-y-3 shadow-xs">
+                  <MessageCircle className="w-10 h-10 text-muted-foreground/40 mx-auto" />
+                  <h3 className="font-serif font-medium text-base text-foreground">
+                    {searchQuery ? "No discussions match your query" : "No entries in this channel yet"}
                   </h3>
-                  <p className="font-sans text-xs text-muted-foreground max-w-sm mx-auto">
+                  <p className="font-mono text-xs text-muted-foreground max-w-sm mx-auto">
                     {searchQuery
                       ? "Try searching for a different keyword or reset active filters."
-                      : "Be the first aspirant to start the conversation! Ask a question or share a thought."}
+                      : "Be the first scholar to initiate discourse! Pose a question or log a derivation."}
                   </p>
                   <Button
                     onClick={() => {
@@ -656,9 +574,9 @@ export default function Community() {
                       else openNewPostWithCat(activeCategory);
                     }}
                     size="sm"
-                    className="mt-2 text-xs rounded-lg border-2 border-border shadow-[2px_2px_0px_var(--desk-border)]"
+                    className="mt-2 text-xs font-mono font-semibold rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs cursor-pointer"
                   >
-                    {searchQuery ? "Clear Search" : "Create First Post"}
+                    {searchQuery ? "Clear Search" : "Initiate First Entry"}
                   </Button>
                 </div>
               ) : (
@@ -682,112 +600,86 @@ export default function Community() {
               )}
             </main>
 
-            {/* Right Sidebar: About Lounge & Rules (lg:col-span-3 Desktop) */}
-            <aside className="hidden lg:block lg:col-span-3 sticky top-20 space-y-4">
+            {/* RIGHT COLUMN: Chamber Telemetry & Guidelines (3 cols - Screen 10) */}
+            <aside aria-label="Lounge Telemetry" className="hidden lg:block lg:col-span-3 space-y-4 sticky top-20">
+              {/* Telemetry Strip */}
+              <div className="bg-card rounded-2xl border border-border/80 p-4 shadow-xs flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="font-mono text-[11px] uppercase tracking-wider font-semibold text-foreground">
+                    Active Carrels
+                  </span>
+                </div>
+                <span className="font-mono text-[10px] text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md font-semibold">
+                  142 Online
+                </span>
+              </div>
+
+              {/* Bookie Codex Box (Screen 10) */}
+              <div className="bg-card rounded-2xl border border-border/80 p-5 shadow-xs space-y-3">
+                <div className="pb-3 border-b border-border/60 flex items-center justify-between">
+                  <span className="font-mono text-[11px] uppercase tracking-wider font-bold text-foreground">
+                    Bookie Codex
+                  </span>
+                  <span className="font-mono text-[10px] text-primary font-semibold">STANDARDS</span>
+                </div>
+                <ol className="space-y-3 font-mono text-xs text-muted-foreground leading-relaxed">
+                  <li className="flex items-start gap-2.5">
+                    <span className="font-semibold text-foreground shrink-0 text-[11px]">01.</span>
+                    <span><strong>Zero Promotional Fluff:</strong> Coaching leaks, paid spam, and non-academic rants are removed on sight.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="font-semibold text-foreground shrink-0 text-[11px]">02.</span>
+                    <span><strong>Structured Tagging:</strong> Identify exam year, subject, and chapter for archival retention.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="font-semibold text-foreground shrink-0 text-[11px]">03.</span>
+                    <span><strong>Rigorous Peer Critique:</strong> Objective problem deconstruction without ego or hostility.</span>
+                  </li>
+                </ol>
+              </div>
+
+              {/* Guest Upgrade Card */}
               {(!user || profile?.account_type === "guest") && (
-                <div className="bg-card rounded-xl border-2 border-border p-4 shadow-[3px_3px_0px_var(--desk-border)] space-y-2.5">
+                <div className="bg-card rounded-2xl border border-border/80 p-5 shadow-xs space-y-2.5">
                   <div className="flex items-center gap-2">
-                    <span className="p-1 rounded bg-primary text-primary-foreground text-xs font-mono font-bold">
+                    <span className="px-1.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-mono font-bold border border-primary/20">
                       [ACC]
                     </span>
                     <h4 className="font-mono text-xs font-bold text-foreground uppercase tracking-wider">
-                      Unlock Full Community
+                      Full Peer Access
                     </h4>
                   </div>
-                  <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                    You're browsing as Guest. Upgrade to Google (1-Click) to post questions, solve doubts, and preserve your study progress.
+                  <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+                    You're browsing in read-only mode. Upgrade to Google (1-Click) to post questions, solve doubts, and preserve your study progress.
                   </p>
                   <Button
                     size="sm"
                     onClick={() => setUpgradeModalOpen(true)}
-                    className="w-full text-xs font-bold rounded-lg h-8 gap-1.5 border-2 border-border bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--desk-border)] hover:bg-primary/90"
+                    className="w-full text-xs font-mono font-semibold rounded-lg h-9 gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs cursor-pointer"
                   >
                     <Zap className="h-3.5 w-3.5" />
-                    <span>Upgrade to Google</span>
+                    <span>Upgrade with Google</span>
                   </Button>
                 </div>
               )}
 
-              {/* About Box */}
-              <div className="bg-card rounded-xl border-2 border-border p-4 shadow-[3px_3px_0px_var(--desk-border)] space-y-3">
-                <div className="flex items-center gap-2.5 pb-2.5 border-b border-border">
-                  <div className="p-1.5 rounded-lg border border-border bg-muted text-primary font-bold">
-                    <BookOpen className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="font-display text-sm font-bold text-foreground">About the Lounge</h3>
-                    <p className="font-mono text-[10px] text-muted-foreground">Aspirant Community Desk</p>
-                  </div>
-                </div>
-
-                <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                  The unfiltered home for JEE & NEET warriors. Free from toxic coaching PR, built for real students sharing strategies, mock marks, memes & support.
-                </p>
-
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border">
-                  <div className="p-2 rounded-lg bg-muted/60 border border-border">
-                    <div className="font-mono text-base font-extrabold text-foreground">{posts.length}</div>
-                    <div className="font-mono text-[10px] text-muted-foreground">Discussions</div>
-                  </div>
-                  <div className="p-2 rounded-lg bg-muted/60 border border-border">
-                    <div className="font-mono text-base font-extrabold text-primary flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                      <span>Live</span>
-                    </div>
-                    <div className="font-mono text-[10px] text-muted-foreground">Peers Online</div>
-                  </div>
-                </div>
-
-                <Button
-                  onClick={() => openNewPostWithCat(activeCategory)}
-                  className="w-full text-xs font-bold rounded-lg h-8 border-2 border-border bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--desk-border)] hover:bg-primary/90"
-                >
-                  <Plus className="h-3.5 w-3.5 mr-1" /> Start Discussion
-                </Button>
-              </div>
-
-              {/* Community Rules Box */}
-              <div className="bg-card rounded-xl border-2 border-border p-4 shadow-[3px_3px_0px_var(--desk-border)] space-y-2.5">
-                <div className="flex items-center gap-2 font-mono text-xs font-bold text-foreground uppercase tracking-wider pb-1 border-b border-border">
-                  <ShieldCheck className="h-4 w-4 text-primary" />
-                  <span>Community Code</span>
-                </div>
-                <ul className="font-sans text-xs text-muted-foreground space-y-1.5 leading-relaxed">
-                  <li className="flex items-start gap-1.5">
-                    <span className="font-mono font-bold text-foreground">1.</span>
-                    <span>Be polite and constructive to fellow aspirants.</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="font-mono font-bold text-foreground">2.</span>
-                    <span>Use relevant flairs so questions reach the right peers.</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="font-mono font-bold text-foreground">3.</span>
-                    <span>No spam, commercial leaks, or promotional links.</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="font-mono font-bold text-foreground">4.</span>
-                    <span>Focus on problem-solving and honest preparation.</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Quick Links */}
+              {/* Quick Navigation Links */}
               <div className="space-y-2">
                 <Link
                   to="/ypt"
-                  className="p-3 rounded-xl border-2 border-border bg-card hover:bg-muted shadow-[2px_2px_0px_var(--desk-border)] transition-all flex items-center gap-3"
+                  className="p-3.5 rounded-xl border border-border/80 bg-card hover:border-primary/40 shadow-xs transition-all flex items-center gap-3 group"
                 >
-                  <div className="p-1.5 rounded-lg border border-border bg-muted text-primary shrink-0">
+                  <div className="p-1.5 rounded-lg border border-border/60 bg-muted/40 text-primary shrink-0">
                     <Users className="h-4 w-4" />
                   </div>
                   <div>
-                    <h4 className="font-display text-xs font-bold text-foreground flex items-center gap-1">
+                    <h4 className="font-serif text-xs font-semibold text-foreground flex items-center gap-1 group-hover:text-primary transition-colors">
                       <span>YPT Study Carrels</span>
                       <ExternalLink className="h-3 w-3 text-muted-foreground" />
                     </h4>
                     <p className="font-mono text-[10px] text-muted-foreground mt-0.5">
-                      Live timer study sessions with peer webcams
+                      Live timer study sessions with peer telemetry
                     </p>
                   </div>
                 </Link>
@@ -796,13 +688,13 @@ export default function Community() {
                   href="https://t.me/bookieshere"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-3 rounded-xl border-2 border-border bg-card hover:bg-muted shadow-[2px_2px_0px_var(--desk-border)] transition-all flex items-center gap-3"
+                  className="p-3.5 rounded-xl border border-border/80 bg-card hover:border-primary/40 shadow-xs transition-all flex items-center gap-3 group"
                 >
-                  <div className="p-1.5 rounded-lg border border-border bg-muted text-primary shrink-0">
+                  <div className="p-1.5 rounded-lg border border-border/60 bg-muted/40 text-primary shrink-0">
                     <Send className="h-4 w-4" />
                   </div>
                   <div>
-                    <h4 className="font-display text-xs font-bold text-foreground flex items-center gap-1">
+                    <h4 className="font-serif text-xs font-semibold text-foreground flex items-center gap-1 group-hover:text-primary transition-colors">
                       <span>Telegram Dispatch</span>
                       <ExternalLink className="h-3 w-3 text-muted-foreground" />
                     </h4>
@@ -833,14 +725,14 @@ export default function Community() {
           >
             <button
               onClick={() => setLightboxImage(null)}
-              className="absolute top-4 right-4 p-2 rounded-lg border-2 border-border bg-card text-foreground shadow-[2px_2px_0px_var(--desk-border)] hover:bg-muted"
+              className="absolute top-4 right-4 p-2 rounded-lg border border-border/80 bg-card text-foreground shadow-xs hover:bg-muted"
             >
               <X className="h-5 w-5" />
             </button>
             <img
               src={lightboxImage}
               alt="Enlarged content"
-              className="max-w-full max-h-[85vh] object-contain rounded-xl border-2 border-border shadow-[8px_8px_0px_var(--desk-border)]"
+              className="max-w-full max-h-[85vh] object-contain rounded-xl border border-border/80 shadow-md"
               onClick={e => e.stopPropagation()}
             />
           </div>
@@ -906,11 +798,11 @@ function PostCard({
   };
 
   return (
-    <article id={post.id} className="bg-card rounded-xl border-2 border-border p-5 shadow-[3px_3px_0px_var(--desk-border)] hover:shadow-[5px_5px_0px_var(--desk-border)] hover:-translate-y-0.5 transition-all space-y-3.5">
+    <article id={post.id} className="bg-card rounded-2xl border border-border/80 p-5 shadow-xs hover:border-primary/40 transition-all duration-200 space-y-3.5">
       {/* Post Top Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <Avatar className="h-9 w-9 border-2 border-border shadow-[1px_1px_0px_var(--desk-border)] shrink-0">
+          <Avatar className="h-8 w-8 border border-border/70 shrink-0">
             <AvatarImage src={post.author_avatar || post.author?.avatar_url || ""} />
             <AvatarFallback className="bg-muted text-foreground font-mono font-bold text-xs">
               {((post.author_name || post.author?.display_name || "A")?.[0] || "A").toUpperCase()}
@@ -919,13 +811,13 @@ function PostCard({
 
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="font-sans font-bold text-xs sm:text-sm text-foreground truncate">
+              <span className="font-sans font-semibold text-xs sm:text-sm text-foreground truncate">
                 {post.author_name || post.author?.display_name || "Anonymous Aspirant"}
               </span>
               {post.user_id && (
                 <BadgeCheck className="h-3.5 w-3.5 text-primary inline-block shrink-0" />
               )}
-              <span className={cn("font-mono text-[10px] px-2 py-0.2 rounded border ml-0.5 font-bold", category.badge)}>
+              <span className={cn("font-mono text-[10px] px-2 py-0.5 rounded-md border ml-0.5 font-semibold", category.badge)}>
                 [{category.code}] {category.label}
               </span>
             </div>
@@ -940,7 +832,7 @@ function PostCard({
             onClick={onToggleBookmark}
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-lg"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-lg cursor-pointer"
             title="Bookmark post"
           >
             {isBookmarked ? (
@@ -954,7 +846,7 @@ function PostCard({
             onClick={handleShare}
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-lg"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-lg cursor-pointer"
             title="Share post"
           >
             <Share2 className="h-4 w-4" />
@@ -965,7 +857,7 @@ function PostCard({
               onClick={() => onDeletePost(post.id)}
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-lg"
+              className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-lg cursor-pointer"
               title="Delete post"
             >
               <Trash2 className="h-4 w-4" />
@@ -976,10 +868,10 @@ function PostCard({
 
       {/* Post Body Title & Content */}
       <div className="space-y-1.5">
-        <h2 className="font-display text-base font-bold text-foreground leading-snug">
+        <h2 className="font-serif text-base sm:text-lg font-medium text-foreground leading-snug tracking-tight hover:text-primary cursor-pointer transition-colors">
           {post.title || post.subject || "Untitled Discussion"}
         </h2>
-        <p className="font-sans text-xs sm:text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">
+        <p className="font-mono text-xs sm:text-[13px] text-foreground/90 whitespace-pre-wrap leading-relaxed">
           {post.content || post.body || ""}
         </p>
 
@@ -987,7 +879,7 @@ function PostCard({
           <div className="pt-2">
             <div
               onClick={() => onImageClick(post.image_url!)}
-              className="relative group rounded-xl overflow-hidden border-2 border-border max-h-96 bg-muted cursor-pointer shadow-[2px_2px_0px_var(--desk-border)]"
+              className="relative group rounded-xl overflow-hidden border border-border/80 max-h-96 bg-muted cursor-pointer shadow-xs"
             >
               <img
                 src={post.image_url}
@@ -1004,7 +896,7 @@ function PostCard({
       </div>
 
       {/* Post Reactions Bar & Comments Counter */}
-      <div className="pt-2.5 border-t border-border flex flex-wrap items-center justify-between gap-2">
+      <div className="pt-2.5 border-t border-border/60 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
           {REACTION_ORDER.map(rk => {
             const users = post.reactions?.[rk];
@@ -1027,10 +919,10 @@ function PostCard({
                 key={rk}
                 onClick={() => onToggleReaction(post.id, rk)}
                 className={cn(
-                  "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all select-none cursor-pointer border",
+                  "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-medium transition-all select-none cursor-pointer border shadow-2xs",
                   hasReacted
-                    ? "bg-primary text-primary-foreground border-border shadow-[2px_2px_0px_var(--desk-border)] font-bold"
-                    : "bg-muted/50 border-border text-foreground hover:bg-muted"
+                    ? "bg-primary text-primary-foreground border-primary font-semibold"
+                    : "bg-muted/40 border-border/60 text-foreground hover:bg-muted/70"
                 )}
               >
                 <ReactionIcon className="w-3.5 h-3.5" />
@@ -1044,10 +936,10 @@ function PostCard({
         <button
           onClick={() => setShowComments(!showComments)}
           className={cn(
-            "flex items-center gap-1.5 px-3 py-1 rounded-lg font-mono text-xs font-bold transition-colors ml-auto border",
+            "flex items-center gap-1.5 px-3 py-1 rounded-lg font-mono text-xs font-medium transition-colors ml-auto border shadow-2xs cursor-pointer",
             showComments
-              ? "bg-foreground text-background border-foreground shadow-[2px_2px_0px_var(--desk-border)]"
-              : "border-border bg-card text-foreground hover:bg-muted"
+              ? "bg-foreground text-background border-foreground font-semibold"
+              : "border-border/70 bg-card text-foreground hover:bg-muted/50"
           )}
         >
           <MessageCircle className="h-3.5 w-3.5" />
@@ -1125,10 +1017,10 @@ function CommentsSection({
   };
 
   return (
-    <div className="pt-3 mt-3 border-t border-border space-y-3">
+    <div className="pt-3 mt-3 border-t border-border/60 space-y-3">
       {/* Reply input card */}
-      <form onSubmit={handleSubmit} className="flex items-start gap-2.5 bg-muted/40 p-2.5 rounded-xl border border-border">
-        <Avatar className="h-7 w-7 border border-border shrink-0 mt-0.5">
+      <form onSubmit={handleSubmit} className="flex items-start gap-2.5 bg-muted/30 p-2.5 rounded-xl border border-border/70">
+        <Avatar className="h-7 w-7 border border-border/60 shrink-0 mt-0.5">
           <AvatarImage src={profile?.avatar_url || ""} />
           <AvatarFallback className="bg-muted text-foreground font-mono font-bold text-[10px]">
             {((profile?.display_name || "A")?.[0] || "A").toUpperCase()}
@@ -1148,7 +1040,7 @@ function CommentsSection({
             }}
             readOnly={isGuest}
             className={cn(
-              "text-xs bg-background border-border rounded-lg h-9 px-3",
+              "text-xs bg-background border-border/70 rounded-lg h-9 px-3 font-mono",
               isGuest && "cursor-pointer"
             )}
           />
@@ -1157,7 +1049,7 @@ function CommentsSection({
           type="submit"
           size="sm"
           disabled={submitting || (!isGuest && !text.trim())}
-          className="rounded-lg px-3 h-9 shrink-0 font-sans text-xs font-bold border border-border bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--desk-border)] hover:bg-primary/90"
+          className="rounded-lg px-3.5 h-9 shrink-0 font-mono text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs cursor-pointer"
         >
           {submitting ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1174,7 +1066,7 @@ function CommentsSection({
           <span>Retrieving replies...</span>
         </div>
       ) : comments.length === 0 ? (
-        <div className="text-center py-4 px-3 bg-muted/30 rounded-lg border border-dashed border-border font-mono text-xs text-muted-foreground">
+        <div className="text-center py-4 px-3 bg-muted/20 rounded-lg border border-dashed border-border/60 font-mono text-xs text-muted-foreground">
           No replies yet. Be the first to add to the thread.
         </div>
       ) : (
@@ -1191,9 +1083,9 @@ function CommentsSection({
             return (
               <div
                 key={c.id}
-                className="group flex gap-2.5 text-xs bg-card p-3 rounded-lg border border-border shadow-[1px_1px_0px_var(--desk-border)]"
+                className="group flex gap-2.5 text-xs bg-card p-3 rounded-xl border border-border/70 shadow-2xs"
               >
-                <Avatar className="h-7 w-7 shrink-0 border border-border mt-0.5">
+                <Avatar className="h-7 w-7 shrink-0 border border-border/60 mt-0.5">
                   <AvatarImage src={c.author_avatar || c.author?.avatar_url || ""} />
                   <AvatarFallback className="bg-muted text-foreground font-mono font-bold text-[10px]">
                     {((c.author_name || c.author?.display_name || "A")?.[0] || "A").toUpperCase()}
@@ -1203,11 +1095,11 @@ function CommentsSection({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <div className="flex items-center gap-1.5 flex-wrap min-w-0">
-                      <span className="font-sans font-bold text-xs text-foreground truncate">
+                      <span className="font-sans font-semibold text-xs text-foreground truncate">
                         {c.author_name || c.author?.display_name || "Aspirant"}
                       </span>
                       {targetCat && (
-                        <span className="font-mono text-[9px] px-1.5 py-0.2 rounded border border-border bg-muted text-muted-foreground">
+                        <span className="font-mono text-[9px] px-1.5 py-0.2 rounded border border-border/60 bg-muted/40 text-muted-foreground">
                           {targetCat}
                         </span>
                       )}
@@ -1219,7 +1111,7 @@ function CommentsSection({
                     {(isCommentOwner || isMod) && (
                       <button
                         onClick={() => onDeleteComment(c.id)}
-                        className="text-muted-foreground hover:text-destructive p-1 rounded transition-colors shrink-0"
+                        className="text-muted-foreground hover:text-destructive p-1 rounded transition-colors shrink-0 cursor-pointer"
                         title="Delete comment"
                       >
                         <Trash2 className="h-3 w-3" />
@@ -1227,7 +1119,7 @@ function CommentsSection({
                     )}
                   </div>
 
-                  <p className="font-sans text-xs text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                  <p className="font-mono text-xs text-foreground/90 whitespace-pre-wrap leading-relaxed">
                     {c.body}
                   </p>
                 </div>
@@ -1400,14 +1292,14 @@ function NewPostDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-lg bg-card border-2 border-border rounded-xl p-6 shadow-[6px_6px_0px_var(--desk-border)]">
+      <DialogContent className="max-w-lg bg-card border border-border/80 rounded-2xl p-6 shadow-md">
         <DialogHeader>
-          <DialogTitle className="font-display text-lg font-bold text-foreground flex items-center gap-2">
+          <DialogTitle className="font-serif text-lg font-medium text-foreground flex items-center gap-2">
             <Zap className="h-4 w-4 text-primary" />
-            <span>Create Discussion Entry</span>
+            <span>Initiate Discussion Entry</span>
           </DialogTitle>
-          <DialogDescription className="font-sans text-xs text-muted-foreground">
-            Share study strategies, memes, mock test results, doubts or resources.
+          <DialogDescription className="font-mono text-xs text-muted-foreground">
+            Share problem deconstructions, strategies, mock analysis, doubts or resources.
           </DialogDescription>
         </DialogHeader>
 
@@ -1417,11 +1309,11 @@ function NewPostDialog({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={cn("space-y-4 mt-2 transition-colors rounded-lg", isDragging && "border-2 border-dashed border-primary bg-primary/5 p-2")}
+          className={cn("space-y-4 mt-2 transition-colors rounded-xl", isDragging && "border border-dashed border-primary bg-primary/5 p-2")}
         >
           {/* Category Selector Pills */}
           <div>
-            <label className="font-mono text-xs font-bold text-foreground block mb-1.5">
+            <label className="font-mono text-xs font-semibold text-foreground block mb-1.5">
               Select Channel Flair
             </label>
             <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
@@ -1431,10 +1323,10 @@ function NewPostDialog({
                   type="button"
                   onClick={() => setSelectedCat(c.id)}
                   className={cn(
-                    "px-2.5 py-1 rounded-md text-xs font-mono font-bold transition-all border",
+                    "px-2.5 py-1 rounded-md text-xs font-mono transition-all border cursor-pointer",
                     selectedCat === c.id
-                      ? "bg-foreground text-background border-foreground shadow-[2px_2px_0px_var(--desk-border)]"
-                      : "bg-muted border-border text-foreground hover:bg-card"
+                      ? "bg-primary text-primary-foreground border-primary font-semibold shadow-xs"
+                      : "bg-muted/40 border-border/60 text-muted-foreground hover:bg-muted/70 hover:text-foreground"
                   )}
                 >
                   <span>[{c.code}]</span> {c.label}
@@ -1445,14 +1337,14 @@ function NewPostDialog({
 
           {/* Title Input */}
           <div>
-            <label className="font-mono text-xs font-bold text-foreground block mb-1">
-              Discussion Title
+            <label className="font-mono text-xs font-semibold text-foreground block mb-1">
+              Entry Title
             </label>
             <Input
               value={title}
               onChange={e => setTitle(e.target.value)}
-              placeholder="e.g. Cleared Physics Mechanics backlog in 3 weeks (My exact routine)"
-              className="font-sans text-xs bg-background border-2 border-border rounded-lg"
+              placeholder="e.g. Cleared Physics Mechanics backlog in 3 weeks (Exact routine)"
+              className="font-mono text-xs bg-background border border-border/80 rounded-lg focus-visible:ring-1 focus-visible:ring-primary"
               required
             />
           </div>
@@ -1460,20 +1352,20 @@ function NewPostDialog({
           {/* Content Textarea with Math Keyboard */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="font-mono text-xs font-bold text-foreground">
-                Discussion Content
+              <label className="font-mono text-xs font-semibold text-foreground">
+                Deconstruction / Query
               </label>
             </div>
 
             {/* Quick Math Symbols Toolbar */}
-            <div className="flex items-center gap-1 flex-wrap p-1.5 mb-1.5 bg-muted rounded-lg border border-border">
-              <span className="font-mono text-[10px] font-bold text-muted-foreground px-1">Symbols:</span>
+            <div className="flex items-center gap-1 flex-wrap p-1.5 mb-1.5 bg-muted/30 rounded-lg border border-border/60">
+              <span className="font-mono text-[10px] font-semibold text-muted-foreground px-1">Symbols:</span>
               {MATH_SYMBOLS.map(sym => (
                 <button
                   key={sym}
                   type="button"
                   onClick={() => insertSymbol(sym)}
-                  className="px-1.5 py-0.5 text-xs font-mono bg-card border border-border rounded hover:bg-background text-foreground transition-colors"
+                  className="px-1.5 py-0.5 text-xs font-mono bg-card border border-border/60 rounded hover:bg-muted text-foreground transition-colors cursor-pointer"
                 >
                   {sym}
                 </button>
@@ -1486,7 +1378,7 @@ function NewPostDialog({
               onChange={e => setContent(e.target.value)}
               placeholder="Write your advice, meme explanation, rant or doubt clearly (or paste image with Ctrl+V)..."
               rows={4}
-              className="font-sans text-xs bg-background border-2 border-border rounded-lg leading-relaxed resize-none"
+              className="font-mono text-xs bg-background border border-border/80 rounded-lg leading-relaxed resize-none focus-visible:ring-1 focus-visible:ring-primary"
               required
             />
           </div>
@@ -1502,7 +1394,7 @@ function NewPostDialog({
             />
 
             {imageUrl ? (
-              <div className="relative rounded-lg overflow-hidden border-2 border-border max-h-48 bg-muted shadow-[2px_2px_0px_var(--desk-border)]">
+              <div className="relative rounded-xl overflow-hidden border border-border/80 max-h-48 bg-muted shadow-xs">
                 <img
                   src={imageUrl}
                   alt="Attached preview"
@@ -1511,7 +1403,7 @@ function NewPostDialog({
                 <button
                   type="button"
                   onClick={() => setImageUrl("")}
-                  className="absolute top-2 right-2 p-1.5 rounded-md border border-border bg-card text-foreground shadow-sm hover:bg-muted transition-colors"
+                  className="absolute top-2 right-2 p-1.5 rounded-md border border-border/70 bg-card text-foreground shadow-xs hover:bg-muted transition-colors cursor-pointer"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -1520,10 +1412,10 @@ function NewPostDialog({
               <div
                 onClick={() => fileInputRef.current?.click()}
                 className={cn(
-                  "cursor-pointer border-2 border-dashed rounded-lg p-3 text-center transition-all flex flex-col items-center justify-center gap-1",
+                  "cursor-pointer border border-dashed rounded-xl p-3 text-center transition-all flex flex-col items-center justify-center gap-1",
                   isDragging
                     ? "border-primary bg-primary/10"
-                    : "border-border hover:border-primary/50 hover:bg-muted"
+                    : "border-border/80 hover:border-primary/50 hover:bg-muted/40"
                 )}
               >
                 {isUploadingImage ? (
@@ -1533,11 +1425,11 @@ function NewPostDialog({
                   </div>
                 ) : (
                   <>
-                    <div className="p-1.5 rounded-md border border-border bg-card text-primary">
+                    <div className="p-1.5 rounded-lg border border-border/60 bg-card text-primary shadow-2xs">
                       <ImageIcon className="h-4 w-4" />
                     </div>
-                    <p className="font-sans text-xs font-semibold text-foreground">
-                      Attach Image (Drag & Drop or <kbd className="px-1 py-0.2 text-[10px] font-mono bg-muted rounded border border-border">Ctrl+V</kbd>)
+                    <p className="font-mono text-xs font-semibold text-foreground">
+                      Attach Image (Drag & Drop or <kbd className="px-1 py-0.2 text-[10px] font-mono bg-muted/60 rounded border border-border/60">Ctrl+V</kbd>)
                     </p>
                     <p className="font-mono text-[10px] text-muted-foreground">
                       Screenshots, JPG, PNG, WebP up to 5MB
@@ -1548,22 +1440,22 @@ function NewPostDialog({
             )}
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0 pt-2 border-t border-border">
+          <DialogFooter className="gap-2 sm:gap-0 pt-2 border-t border-border/60">
             <Button
               type="button"
               variant="outline"
               onClick={() => setIsOpen(false)}
-              className="rounded-lg text-xs border border-border"
+              className="rounded-lg text-xs font-mono border-border/70 cursor-pointer"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting || isUploadingImage || !title.trim() || !content.trim()}
-              className="rounded-lg text-xs font-bold gap-1.5 px-4 border-2 border-border bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--desk-border)] hover:bg-primary/90"
+              className="rounded-lg text-xs font-mono font-semibold gap-1.5 px-4 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs cursor-pointer"
             >
               {isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-              <span>Post to Community</span>
+              <span>Publish Entry</span>
             </Button>
           </DialogFooter>
         </form>
