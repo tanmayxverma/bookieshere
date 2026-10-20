@@ -1,590 +1,343 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { 
-  BookOpen, FileText, Timer, ArrowRight, ShieldCheck, 
-  ExternalLink, CheckCircle2, ChevronRight
-} from "lucide-react";
+import { Link } from "react-router-dom";
+import { Copy, MessageSquareText, ArrowUpRight, ArrowRight, BookOpen, FileText, HeadphonesIcon, Sparkles } from "lucide-react";
 import { Layout } from "@/components/Layout";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { JEECountdown } from "@/components/JEECountdown";
 import { useProfile } from "@/hooks/useProfile";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
-interface ChapterTrap {
-  name: string;
-  sub: string;
-  weightage: string;
-  negativeRate: string;
-  trapNotes: string;
-  link: string;
-}
-
-const chaptersBySubject: Record<string, ChapterTrap[]> = {
-  Physics: [
-    {
-      name: "Rotational Dynamics & Rigid Bodies",
-      sub: "Physics // Mechanics & CM Frame Multi-Mass",
-      weightage: "12.4%",
-      negativeRate: "-2: 41.2%",
-      trapNotes: "Incorrect torque axis choice about non-inertial points without fictitious force correction.",
-      link: "/materials",
-    },
-    {
-      name: "Electrodynamics & Induction Geometry",
-      sub: "Physics // Maxwell Equations & Motional EMF",
-      weightage: "10.8%",
-      negativeRate: "-2: 34.6%",
-      trapNotes: "Lenz law sign errors in rotating non-uniform magnetic loops.",
-      link: "/materials",
-    },
-    {
-      name: "Wave Optics & Thin Film Interference",
-      sub: "Physics // Physical Optics & Phase Shifts",
-      weightage: "7.2%",
-      negativeRate: "-2: 28.1%",
-      trapNotes: "Missing pi phase change upon reflection from denser boundary.",
-      link: "/materials",
-    },
-    {
-      name: "Thermodynamics & Kinetic Theory",
-      sub: "Physics // Heat Engines & Polytropic Paths",
-      weightage: "8.6%",
-      negativeRate: "-2: 22.4%",
-      trapNotes: "Work done convention sign confusion between chemistry and physics standards.",
-      link: "/materials",
-    },
-  ],
-  Chemistry: [
-    {
-      name: "Organic Reaction Mechanisms & GOC",
-      sub: "Chemistry // Stereochemistry & Carbocation Shifts",
-      weightage: "14.2%",
-      negativeRate: "-2: 44.8%",
-      trapNotes: "Hydride vs methyl shift stereochemical inversions in pinacol rearrangements.",
-      link: "/materials",
-    },
-    {
-      name: "Coordination Compounds & CFT",
-      sub: "Chemistry // Inorganic Ligand Field Theory",
-      weightage: "11.1%",
-      negativeRate: "-2: 36.3%",
-      trapNotes: "Jahn-Teller distortion geometry traps in high-spin d4 and low-spin d7 complexes.",
-      link: "/materials",
-    },
-    {
-      name: "Chemical & Ionic Equilibrium",
-      sub: "Chemistry // Solubility Products & Buffer pH",
-      weightage: "9.5%",
-      negativeRate: "-2: 31.9%",
-      trapNotes: "Ignoring water auto-ionization in ultra-dilute strong acid calculations.",
-      link: "/materials",
-    },
-  ],
-  Mathematics: [
-    {
-      name: "Definite Integrals & Riemann Summations",
-      sub: "Mathematics // Integral Calculus & Leibniz Rule",
-      weightage: "15.0%",
-      negativeRate: "-2: 38.5%",
-      trapNotes: "Differentiating integral limits without accounting for integrand discontinuities.",
-      link: "/materials",
-    },
-    {
-      name: "Probability & Bayes Matrix Formulation",
-      sub: "Mathematics // Combinatorics & Markov Events",
-      weightage: "11.4%",
-      negativeRate: "-2: 42.1%",
-      trapNotes: "Confounding conditional probability P(A|B) with joint distribution P(A and B).",
-      link: "/materials",
-    },
-    {
-      name: "Coordinate Geometry & Conic Sections",
-      sub: "Mathematics // Parabola & Hyperbola Loci",
-      weightage: "13.2%",
-      negativeRate: "-2: 35.8%",
-      trapNotes: "Assuming director circle tangents are real when point lies within auxiliary ellipse.",
-      link: "/materials",
-    },
-  ],
-};
-
-const peerRoster = [
-  { id: "#1092 [IITB EE]", time: "2h 14m", target: "JEE ADV" },
-  { id: "#0421 [AIIMS D]", time: "1h 48m", target: "NEET '26" },
-  { id: "#8819 [IITD CS]", time: "3h 22m", target: "JEE ADV" },
-];
-
-export default function Index() {
+const Index = () => {
+  const scrollRef = useScrollReveal();
   const { profile } = useProfile();
-  const navigate = useNavigate();
-  const firstName = profile?.display_name?.trim().split(/\s+/)[0] || "Aspirant";
+  const firstName = profile?.display_name?.trim().split(/\s+/)[0] || "";
 
-  // ───── Signature Live Study Desk Carrel State ─────
-  const [timerSeconds, setTimerSeconds] = useState(9971); // 02:46:11 default
-  const [isCarrelActive, setIsCarrelActive] = useState(false);
-  const [activeLedgerTab, setActiveLedgerTab] = useState<"Physics" | "Chemistry" | "Mathematics">("Physics");
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | null = null;
-    if (isCarrelActive) {
-      interval = setInterval(() => {
-        setTimerSeconds((prev) => prev + 1);
-      }, 1000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isCarrelActive]);
-
-  const formatTimer = (totalSeconds: number) => {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  };
-
-  const handleCarrelAction = () => {
-    if (!isCarrelActive) {
-      setIsCarrelActive(true);
-      if (typeof navigator !== "undefined" && navigator.vibrate) {
-        navigator.vibrate(30);
-      }
-      toast.success("Joined Live Silent Carrel (Desk #85)", {
-        description: "Focus telemetry synchronized with IITB study cohort.",
-      });
-    } else {
-      navigate("/ypt");
-    }
+  const handleCopyCoupon = () => {
+    navigator.clipboard.writeText("9906DZRL");
+    toast.success("Code copied: 9906DZRL");
   };
 
   return (
     <Layout>
-      <div className="w-full text-foreground overflow-x-hidden selection:bg-amber-500/20 selection:text-foreground">
-        
-        {/* Subtle Archival Subheader Strip */}
-        <div className="w-full border-b border-border/80 bg-muted/40 py-1.5 px-4">
-          <div className="max-w-5xl mx-auto flex justify-between items-center text-xs font-mono tracking-wider text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>BOOKIE ACADEMIC INK // JEE ADVANCED &amp; NEET ARCHIVAL REPOSITORY</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-3 text-[11px]">
-              <span>TCS iON MIRROR V4.81</span>
-              <span>•</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">12MS LATENCY</span>
-            </div>
-          </div>
-        </div>
-
-        <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 md:py-12 space-y-16">
+      <div ref={scrollRef} className="w-full bg-background blueprint-grid text-on-surface overflow-x-hidden selection:bg-brand-yellow selection:text-brand-dark dark:selection:bg-brand-blue dark:selection:text-white min-h-screen relative">
+        <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-16">
           
-          {/* ───── 1. HERO SECTION: Split Screen Academic Desk ───── */}
-          <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start pt-2" id="home">
-            
-            {/* Left Column: Clear Typographic Hierarchy & Primary Action */}
-            <div className="lg:col-span-7 space-y-5">
+          {/* ───── HERO ───── */}
+          <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-4" id="home">
+            {/* Left Column: Hero Banter & CTAs */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* Welcome Pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50/80 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-brand-blue dark:text-blue-400 text-xs font-mono font-bold">
+                <span className="w-2 h-2 rounded-full bg-brand-blue animate-ping"></span>
+                {firstName ? `WELCOME BACK, ${firstName.toUpperCase()} • ` : ""}JEE 2027 TARGET
+              </div>
               
-              {/* Eyebrow Slug */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-card font-mono text-[11px] font-semibold tracking-wider uppercase text-muted-foreground">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span>§ ACADEMIC REGISTER // ARCHIVE REF: 2026-04 • JEE ADV</span>
+              {/* Big Headline */}
+              <div className="space-y-1">
+                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-display tracking-tight leading-[1.05] text-brand-dark dark:text-white uppercase">
+                  SURVIVE THE <br/>
+                  <span className="text-brand-blue italic wavy-underline">SYLLABUS.</span><br/>
+                  RULE THE RANKS.
+                </h1>
               </div>
 
-              {/* Display H1 Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal font-serif tracking-tight leading-[1.08] text-foreground">
-                Survive the <em className="italic text-primary font-normal">syllabus.</em><br />
-                Rule the ranks<span className="text-primary font-bold">.</span>
-              </h1>
-
-              {/* Subhead Lead */}
-              <p className="font-sans text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
-                Engineered exclusively for JEE Advanced and NEET aspirants who refuse to let 10-hour grinds derail into passive distraction. Verbatim TCS iON test engines, deconstructed Kota archival notes, direct peer proctor carrels, and zero vanity gamification.
+              <p className="text-slate-600 dark:text-slate-300 text-base sm:text-xl font-medium leading-relaxed max-w-xl">
+                Your single platform for <strong className="text-slate-900 dark:text-white font-bold">JEE materials</strong>, savagely honest mocks, and test strategies — engineered with clarity, zero fluff, and anti-burnout humor.
               </p>
 
-              {/* 3 Academic Metrics Pills */}
-              <div className="grid grid-cols-3 gap-2.5 pt-1">
-                <div className="p-3 rounded-xl border border-border bg-card shadow-xs">
-                  <div className="font-mono text-base sm:text-lg font-bold text-foreground">3,420+</div>
-                  <div className="text-[11px] text-muted-foreground font-sans mt-0.5 leading-snug">Deconstructed PYQs</div>
-                </div>
-                <div className="p-3 rounded-xl border border-border bg-card shadow-xs">
-                  <div className="font-mono text-base sm:text-lg font-bold text-foreground">100%</div>
-                  <div className="text-[11px] text-muted-foreground font-sans mt-0.5 leading-snug">Verbatim CBT Format</div>
-                </div>
-                <div className="p-3 rounded-xl border border-border bg-card shadow-xs">
-                  <div className="font-mono text-base sm:text-lg font-bold text-foreground">0%</div>
-                  <div className="text-[11px] text-muted-foreground font-sans mt-0.5 leading-snug">Vanity Clutter</div>
-                </div>
-              </div>
-
-              {/* Single Primary Action + Secondary Outline */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <Link
-                  to="/ypt"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-sans font-medium text-sm shadow-sm hover:bg-primary/90 transition-all active:scale-[0.98]"
-                >
-                  <span>Enter Proctored Chamber</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-
+              {/* CTA Buttons Row */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
                 <Link
                   to="/materials"
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-border bg-card hover:bg-muted text-foreground font-sans font-medium text-sm shadow-xs transition-all active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 rounded-full bg-brand-blue text-white font-bold text-sm sm:text-base hover:bg-blue-600 transition-all shadow-brutal-blue hover:-translate-y-0.5 active:translate-y-0 text-center"
                 >
-                  <BookOpen className="w-4 h-4 text-muted-foreground" />
-                  <span>Inspect 10-Yr Syllabus Ledger</span>
+                  <BookOpen className="w-5 h-5" />
+                  BROWSE MATERIALS →
                 </Link>
-              </div>
-
-              {/* Micro Trust Note */}
-              <p className="text-[11px] font-mono text-muted-foreground/80 pt-1">
-                Strict Proctor Protocol: Zero telemetry sold. Free academic utility for dedicated candidates.
-              </p>
-            </div>
-
-            {/* Right Column: Live Proctored Focus Carrel (Elevated Card) */}
-            <div className="lg:col-span-5">
-              <div className="rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] space-y-4">
-                
-                {/* Carrel Header */}
-                <div className="flex items-center justify-between border-b border-border pb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-foreground">
-                      CARREL ACTIVE #84
-                    </span>
-                  </div>
-                  <span className="font-mono text-[11px] text-muted-foreground uppercase">
-                    LATENCY: 14MS
-                  </span>
-                </div>
-
-                {/* Active Subject Dossier */}
-                <div className="space-y-1">
-                  <div className="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">
-                    ADVANCED PHYSICS // ROTATIONAL MECH
-                  </div>
-                  <h3 className="font-serif text-lg font-medium text-foreground leading-snug">
-                    Rigid Body Dynamics: Variable Mass Systems &amp; Non-Inertial Torque
-                  </h3>
-                  <div className="text-xs text-muted-foreground font-sans">
-                    Paper-II Standard Reference Problems • HC Verma Vol 1 Ch 10
-                  </div>
-                </div>
-
-                {/* Signature Tabular Live Countdown */}
-                <div className="p-4 rounded-xl border border-border bg-muted/40 text-center space-y-1">
-                  <div className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
-                    CURRENT IMMERSION SPRINT
-                  </div>
-                  <div className="font-mono text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-                    {formatTimer(timerSeconds)}
-                  </div>
-                  <div className="text-[11px] font-mono text-muted-foreground">
-                    ACCURACY: 98.4% • PACE: 2.4 MIN/Q
-                  </div>
-                </div>
-
-                {/* Live Peer Carrel Roster */}
-                <div className="space-y-2 pt-1">
-                  <div className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-                    CONCURRENT CARREL CANDIDATES
-                  </div>
-                  <div className="space-y-1.5">
-                    {peerRoster.map((peer, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between px-3 py-1.5 rounded-lg border border-border/80 bg-card text-xs font-mono"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                          <span className="text-foreground">{peer.id}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <span>{peer.time}</span>
-                          <span>•</span>
-                          <span className="text-primary font-semibold">{peer.target}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Primary CTA */}
-                <button
-                  type="button"
-                  onClick={handleCarrelAction}
-                  className="w-full py-3 px-4 rounded-xl bg-[#B91C1C] hover:bg-[#991B1B] text-white font-sans font-medium text-sm shadow-sm transition-all active:scale-[0.98] cursor-pointer"
-                >
-                  {isCarrelActive ? "Open Cockpit Station →" : "Join Live Silent Carrel (Desk #85)"}
-                </button>
-
-                <div className="text-center text-[10px] font-mono text-muted-foreground">
-                  PEER VIDEO PROTOCOL // SILENT CO-STUDY // ZERO AUDIO
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* ───── 2. METRIC BANNER (4 Columns) ───── */}
-          <section className="border-y border-border py-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div className="space-y-1">
-                <div className="font-serif text-3xl sm:text-4xl font-normal text-primary">1:1</div>
-                <div className="text-xs font-sans text-muted-foreground">CBT Exam Mirror Accuracy</div>
-              </div>
-              <div className="space-y-1">
-                <div className="font-serif text-3xl sm:text-4xl font-normal text-primary">99.4%</div>
-                <div className="text-xs font-sans text-muted-foreground">Top-1000 Conversion Cohort</div>
-              </div>
-              <div className="space-y-1">
-                <div className="font-serif text-3xl sm:text-4xl font-normal text-primary">0%</div>
-                <div className="text-xs font-sans text-muted-foreground">Vanity Points &amp; Streaks</div>
-              </div>
-              <div className="space-y-1">
-                <div className="font-serif text-3xl sm:text-4xl font-normal text-primary">14,200+</div>
-                <div className="text-xs font-sans text-muted-foreground">Hours Logged in Strict Silence</div>
-              </div>
-            </div>
-          </section>
-
-          {/* ───── 3. ARCHITECTURE OF MASTERY: The 3 Pillars ───── */}
-          <section className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-              <div>
-                <div className="text-xs font-mono uppercase tracking-wider text-primary font-semibold">
-                  ARCHITECTURE OF MASTERY
-                </div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-medium text-foreground tracking-tight mt-1">
-                  The Three Pillars of Sovereign Preparation
-                </h2>
-              </div>
-              <p className="font-sans text-xs sm:text-sm text-muted-foreground max-w-md">
-                Disciplined academic tools to anchor your focus, build deep algorithmic intuition, and eliminate exam day cognitive shock.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {/* Pillar 1 */}
-              <div className="p-6 rounded-2xl border border-border bg-card shadow-xs space-y-4 flex flex-col justify-between">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-primary font-semibold">PILLAR // 01</span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  </div>
-                  <h3 className="font-serif text-xl font-medium text-foreground">
-                    Silent Proctored Study Chambers
-                  </h3>
-                  <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                    Zero chat channels, no memes, no distraction traps. Synchronized pomodoros and optional peer webcams simulate authentic examination hall pressure.
-                  </p>
-                  <ul className="space-y-1.5 text-xs text-muted-foreground font-sans pt-1">
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Continuous acoustic focus masking</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Automatic active session ledger logging</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Peer study room capacity limits</span>
-                    </li>
-                  </ul>
-                </div>
-                <Link
-                  to="/ypt"
-                  className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold text-primary hover:underline pt-2"
-                >
-                  <span>Audit Study Carrel</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-
-              {/* Pillar 2 */}
-              <div className="p-6 rounded-2xl border border-border bg-card shadow-xs space-y-4 flex flex-col justify-between">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-primary font-semibold">PILLAR // 02</span>
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  </div>
-                  <h3 className="font-serif text-xl font-medium text-foreground">
-                    10-Year Deconstructed PYQ Matrix
-                  </h3>
-                  <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                    Every single problem from 2014 to 2024 deconstructed by error-frequency, first-principle proofs, and faculty marginalia.
-                  </p>
-                  <ul className="space-y-1.5 text-xs text-muted-foreground font-sans pt-1">
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Step-by-step calculus vs symmetry proofs</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Multiple solutions per JEE Adv problem</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Direct vector OCR &amp; KaTeX rendering</span>
-                    </li>
-                  </ul>
-                </div>
-                <Link
-                  to="/materials"
-                  className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold text-primary hover:underline pt-2"
-                >
-                  <span>Open Archival Vault</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-
-              {/* Pillar 3 */}
-              <div className="p-6 rounded-2xl border border-border bg-card shadow-xs space-y-4 flex flex-col justify-between">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-primary font-semibold">PILLAR // 03</span>
-                    <span className="w-2 h-2 rounded-full bg-blue-500" />
-                  </div>
-                  <h3 className="font-serif text-xl font-medium text-foreground">
-                    Verbatim TCS iON Exam Engine
-                  </h3>
-                  <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                    Practice under the exact visual and physical interface you will face on test day. Color palette, question palette keys, and negative mark audits.
-                  </p>
-                  <ul className="space-y-1.5 text-xs text-muted-foreground font-sans pt-1">
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Instant negative marking audit upon submit</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Exact NTA screen layout &amp; font rendering</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-primary font-bold">✓</span>
-                      <span>Percentile prediction from verified cohort</span>
-                    </li>
-                  </ul>
-                </div>
                 <Link
                   to="/tests"
-                  className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold text-primary hover:underline pt-2"
+                  className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-full bg-white dark:bg-slate-900 text-brand-dark dark:text-white font-bold text-sm sm:text-base border-2 border-slate-900 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-brutal dark:shadow-none hover:-translate-y-0.5 text-center"
                 >
-                  <span>Launch Test Simulator</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <FileText className="w-5 h-5" />
+                  PRACTICE TESTS
+                </Link>
+                <Link
+                  to="/support"
+                  className="inline-flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-brand-blue dark:hover:text-blue-400 font-mono font-bold text-xs sm:text-sm underline underline-offset-4 decoration-2 decoration-blue-200 dark:decoration-blue-800 hover:decoration-brand-blue transition-colors px-2 py-2 text-center"
+                >
+                  <span>🎧</span> CHAT SUPPORT
                 </Link>
               </div>
+
+              {/* Sticky Note Banter Box */}
+              <div className="relative mt-8 pt-4 max-w-lg">
+                <div className="sticker-tape"></div>
+                <div className="bg-brand-softYellow dark:bg-amber-950/40 border-2 border-amber-300/80 dark:border-amber-700/60 rounded-2xl p-4 shadow-sm relative rotate-[-1deg] hover:rotate-0 transition-transform">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">✨</span>
+                    <div>
+                      <p className="font-mono text-xs font-extrabold text-amber-900 dark:text-amber-300 tracking-wide uppercase">
+                        BATCH REALITY CHECK
+                      </p>
+                      <p className="text-sm font-semibold text-amber-950 dark:text-amber-200 mt-1 leading-snug">
+                        <span className="italic font-bold">Kuchuuu Puchuuu!</span> MathonGo, Allen aur PW ke naye test series questions upload ho chuke hain. 
+                        Ab website pe jao aur test do, warna rank goodnight bol degi!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Promo Card + Live Stats Dashboard */}
+            <div className="lg:col-span-5 space-y-5">
+              <div className="bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-6 shadow-brutal dark:shadow-none relative overflow-hidden">
+                <div className="absolute top-4 right-4">
+                  <span className="bg-brand-blue text-white text-[11px] font-mono font-extrabold px-2.5 py-1 rounded-md tracking-wider">
+                    LIMITED
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[11px] font-mono font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">PROMO ACTIVE</span>
+                  <div className="text-3xl font-black font-display text-brand-dark dark:text-white">10% OFF</div>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">On any PW batch with the community code below.</p>
+                </div>
+                
+                <div className="mt-4 flex items-center justify-between bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 hover:border-brand-blue transition-colors">
+                  <span className="font-mono font-extrabold text-brand-blue tracking-wider text-base select-all">9906DZRL</span>
+                  <button onClick={handleCopyCoupon} className="text-slate-500 dark:text-slate-400 hover:text-brand-blue transition-colors p-1" title="Copy coupon code">
+                    <Copy className="w-5 h-5" />
+                  </button>
+                </div>
+                
+                <a href="https://physicswallah.onelink.me/ZAZB/km5qwl9y" target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-1 text-xs font-mono font-extrabold text-brand-blue hover:underline tracking-wider">
+                  GET DISCOUNT <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+
+              {/* Advertise Callout */}
+              <div className="px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-dashed border-slate-300 dark:border-slate-700 text-center shadow-xs">
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                  You can advertise yourself here, contact owner through{" "}
+                  <Link to="/support" className="text-brand-blue font-bold underline hover:text-brand-dark dark:hover:text-white transition-colors">
+                    support
+                  </Link>{" "}
+                  for it.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
+                  <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">FREE</div>
+                  <div className="text-sm font-black text-brand-dark dark:text-white mt-0.5">Full Access</div>
+                </div>
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
+                  <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">NO</div>
+                  <div className="text-sm font-black text-brand-dark dark:text-white mt-0.5">Credit Card</div>
+                </div>
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
+                  <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">DAILY</div>
+                  <div className="text-sm font-black text-brand-dark dark:text-white mt-0.5">PYQ Drop</div>
+                </div>
+              </div>
             </div>
           </section>
 
-          {/* ───── 4. HIGH-YIELD CHAPTER LEDGER & TRAP FREQUENCY ───── */}
-          <section className="space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* ───── JEE COUNTDOWN ───── */}
+          <JEECountdown />
+
+          {/* ───── THE 3 PILLARS ───── */}
+          <section className="space-y-6" id="materials">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-4">
               <div>
-                <div className="text-xs font-mono uppercase tracking-wider text-primary font-semibold">
-                  SYLLABUS DECONSTRUCTION LEDGER
+                <div className="font-mono text-xs font-extrabold text-brand-blue tracking-wider uppercase">CURATED FOR CLARITY</div>
+                <h2 className="text-3xl sm:text-4xl font-display font-black text-brand-dark dark:text-white tracking-tight mt-1">
+                  The 3 Pillars of Prep.
+                </h2>
+                <p className="font-mono text-xs text-slate-500 dark:text-slate-400 mt-1">(and how we survive them without emotional breakdown)</p>
+              </div>
+              <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1 rounded-full self-start sm:self-auto">
+                Updated with 2024-2015 PYQs
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Physics */}
+              <article className="bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-6 shadow-brutal dark:shadow-none flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[11px] font-mono font-extrabold text-brand-blue tracking-wider">01 / PHYSICS CORE</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-brand-blue dark:text-blue-400">94% High-Yield</span>
+                  </div>
+                  <h3 className="text-2xl font-display font-black leading-snug text-brand-dark dark:text-white group-hover:text-brand-blue transition-colors">
+                    When you finally hit that flow state...
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm mt-3 leading-relaxed">
+                    Master Irodov traps, rotational motion inertia shortcuts, and ray diagrams that actually make sense. No 4-page derivations when a 2-line impulse-momentum trick works.
+                  </p>
                 </div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-medium text-foreground tracking-tight mt-1">
-                  High-Yield Chapter Ledger &amp; Trap Frequency
+                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-slate-500 dark:text-slate-400">HC Verma + DC Pandey drills</span>
+                  <Link to="/materials" className="w-8 h-8 rounded-full bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center font-mono hover:bg-brand-blue transition-colors">→</Link>
+                </div>
+              </article>
+
+              {/* Chemistry */}
+              <article className="bg-brand-yellow dark:bg-amber-950/40 border-2 border-slate-900 dark:border-amber-700/60 rounded-2xl p-6 shadow-brutal dark:shadow-none flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[11px] font-mono font-extrabold text-amber-950 dark:text-amber-200 tracking-wider">02 / THE 3 AM DELUSION</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white dark:bg-slate-900 text-amber-900 dark:text-amber-300">Organic Chemistry</span>
+                  </div>
+                  <h3 className="text-2xl font-display font-black leading-snug text-amber-950 dark:text-amber-200">
+                    The 3 AM motivation spike.
+                  </h3>
+                  <div className="bg-white/90 dark:bg-slate-900/80 rounded-xl p-3.5 mt-3 border border-amber-900/20 dark:border-amber-600/30 text-xs font-mono text-amber-900 dark:text-amber-200 font-semibold italic shadow-sm">
+                    "Organic Chem at 3 AM makes total sense until you wake up next morning and can't name a single ketone."
+                  </div>
+                  <p className="text-amber-950 dark:text-amber-200/90 text-sm mt-3 font-medium leading-relaxed">
+                    Reaction mechanism flowcharts, GOC acidity orders, and MS Chouhan question banks indexed with hints.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-amber-400 dark:border-amber-700/60 flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-amber-900 dark:text-amber-300">Named Reactions Cheat Sheet</span>
+                  <Link to="/materials" className="w-8 h-8 rounded-full bg-amber-950 dark:bg-amber-900 text-white flex items-center justify-center font-mono hover:bg-white hover:text-amber-950 transition-colors">→</Link>
+                </div>
+              </article>
+
+              {/* Mathematics */}
+              <article className="bg-slate-900 dark:bg-slate-950 text-white border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-6 shadow-brutal dark:shadow-none flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[11px] font-mono font-extrabold text-blue-400 tracking-wider">03 / REALITY CHECK</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-800 text-blue-300">Calculus & Vectors</span>
+                  </div>
+                  <h3 className="text-2xl font-display font-black leading-snug text-white group-hover:text-blue-400 transition-colors">
+                    Facing the calculus reality.
+                  </h3>
+                  <div className="bg-slate-800 rounded-xl p-3.5 mt-3 border border-slate-700 text-xs font-mono text-slate-300 font-medium leading-relaxed">
+                    My pending revision pile staring at me while I calculate the absolute minimum marks needed to clear the cutoff.
+                  </div>
+                  <p className="text-slate-400 text-sm mt-3 leading-relaxed">
+                    Definite Integrals King's property templates, 3D Geometry vector lines, and probability speed cards.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-slate-400">Black Book Solution Bank</span>
+                  <Link to="/materials" className="w-8 h-8 rounded-full bg-brand-blue text-white flex items-center justify-center font-mono hover:bg-white hover:text-slate-900 transition-colors">→</Link>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          {/* ───── COMMUNITY BANTER ───── */}
+          <section className="space-y-6" id="banter">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div>
+                <div className="font-mono text-xs font-extrabold text-brand-blue uppercase tracking-wider">COMMUNITY DOSSIER</div>
+                <h2 className="text-3xl font-display font-black text-brand-dark dark:text-white tracking-tight mt-0.5">
+                  Batch Buzz & Relatable Trauma
                 </h2>
               </div>
-
-              {/* Subject Filter Tabs */}
-              <div className="inline-flex items-center rounded-full border border-border bg-muted/60 p-1 font-sans text-xs">
-                {(["Physics", "Chemistry", "Mathematics"] as const).map((sub) => (
-                  <button
-                    key={sub}
-                    type="button"
-                    onClick={() => setActiveLedgerTab(sub)}
-                    className={cn(
-                      "px-3.5 py-1 rounded-full transition-all cursor-pointer font-medium",
-                      activeLedgerTab === sub
-                        ? "bg-card text-foreground font-semibold shadow-xs"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    {sub}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Table Container */}
-            <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-xs">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/40 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-                      <th className="py-3 px-4 sm:px-6">Chapter Index &amp; Module</th>
-                      <th className="py-3 px-3 text-center">Exam Weight</th>
-                      <th className="py-3 px-3 text-center">Trap Rate</th>
-                      <th className="py-3 px-4 hidden md:table-cell">Primary Trap Architecture</th>
-                      <th className="py-3 px-4 text-right">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border text-xs">
-                    {chaptersBySubject[activeLedgerTab].map((ch, idx) => (
-                      <tr key={idx} className="hover:bg-muted/30 transition-colors">
-                        <td className="py-3.5 px-4 sm:px-6">
-                          <div className="font-medium text-foreground text-sm">{ch.name}</div>
-                          <div className="text-[11px] text-muted-foreground font-mono">{ch.sub}</div>
-                        </td>
-                        <td className="py-3.5 px-3 text-center font-mono font-semibold text-foreground">
-                          {ch.weightage}
-                        </td>
-                        <td className="py-3.5 px-3 text-center">
-                          <span className="inline-block px-2 py-0.5 rounded font-mono text-[11px] font-semibold bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">
-                            {ch.negativeRate}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-muted-foreground hidden md:table-cell leading-relaxed">
-                          {ch.trapNotes}
-                        </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <Link
-                            to={ch.link}
-                            className="inline-flex items-center gap-1 font-mono text-xs font-semibold text-primary hover:underline"
-                          >
-                            <span>Deconstruct</span>
-                            <span>↗</span>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </section>
-
-          {/* ───── 5. JEE COUNTDOWN INTEGRATION ───── */}
-          <section className="space-y-4">
-            <JEECountdown />
-          </section>
-
-          {/* ───── 6. THE BOOKIE COVENANT ───── */}
-          <section className="rounded-2xl border border-border bg-muted/30 p-8 sm:p-12 text-center space-y-6">
-            <div className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-              THE BOOKIE COVENANT
+              <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 hidden md:block">Live Aspirant Feed</span>
             </div>
             
-            <blockquote className="font-serif italic text-xl sm:text-2xl lg:text-3xl text-foreground font-normal max-w-3xl mx-auto leading-relaxed">
-              &ldquo;Exams of this magnitude are never won through cheap dopamine or colorful badge streaks. They are won through quiet, relentless conviction and thousands of solitary hours spent wrestling with the unsolved page.&rdquo;
-            </blockquote>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Post 1 */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 hover:border-slate-400 dark:hover:border-slate-700 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-amber-500 text-white font-mono font-bold text-xs flex items-center justify-center">TT</div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white leading-none">@topper_translator</div>
+                      <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">TOPPER LOGIC • 2m ago</div>
+                    </div>
+                  </div>
+                  <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded">▲ 7.4K</span>
+                </div>
+                <div className="bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/80 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-amber-950 dark:text-amber-200 leading-relaxed italic">
+                  “Kuch nahi padha” ka matlab: Sirf NCERT, 15 saal ke PYQs, coaching modules aur 14 mock tests.
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-base text-slate-900 dark:text-white leading-tight">Topper: “Bhai kuch nahi padha.”</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Also topper: 99.8 percentile in first attempt with neat color-coded notes.</p>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span className="flex items-center gap-1"><MessageSquareText className="w-3.5 h-3.5"/> 603 comments</span>
+                  <button className="hover:text-brand-blue font-bold">Share with batch ↗</button>
+                </div>
+              </div>
 
-            <div className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
-              The Board of Academic Review // BOOKIE SCHOLARS COMMITTEE • EST. 2024
+              {/* Post 2 */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 hover:border-slate-400 dark:hover:border-slate-700 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-rose-500 text-white font-mono font-bold text-xs flex items-center justify-center">PR</div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white leading-none">@paper_review_expert</div>
+                      <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">DAMAGE CONTROL • 18m ago</div>
+                    </div>
+                  </div>
+                  <span className="font-mono text-xs font-bold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded">▲ 5.9K</span>
+                </div>
+                <div className="bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-800/80 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-rose-950 dark:text-rose-200 leading-relaxed italic">
+                  Marks discuss nahi karenge. User experience solid tha. Invigilator bhi chill the.
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-base text-slate-900 dark:text-white leading-tight">Mummy: “Beta paper kaisa gaya?”</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Me: Paper ka font bohot readable tha aur exam hall mein AC sahi temperature pe chal raha tha.</p>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span className="flex items-center gap-1"><MessageSquareText className="w-3.5 h-3.5"/> 447 comments</span>
+                  <button className="hover:text-brand-blue font-bold">Share with batch ↗</button>
+                </div>
+              </div>
+
+              {/* Post 3 */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 hover:border-slate-400 dark:hover:border-slate-700 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-emerald-600 text-white font-mono font-bold text-xs flex items-center justify-center">PA</div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white leading-none">@pyq_archaeologist</div>
+                      <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">JEE + CET • 1h ago</div>
+                    </div>
+                  </div>
+                  <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">▲ 4.6K</span>
+                </div>
+                <div className="bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/80 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-emerald-950 dark:text-emerald-200 leading-relaxed italic">
+                  Chapter: “Main toh bilkul easy hoon.” <br/>First PYQ: “Toh ab prove karke dikhao.”
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-base text-slate-900 dark:text-white leading-tight">Easy chapter bolke start kiya tha...</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Do questions baad confidence, calculator aur Sunday — teeno missing report mein hain.</p>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span className="flex items-center gap-1"><MessageSquareText className="w-3.5 h-3.5"/> 318 comments</span>
+                  <button className="hover:text-brand-blue font-bold">Share with batch ↗</button>
+                </div>
+              </div>
             </div>
+          </section>
 
-            <div className="pt-2">
-              <Link
-                to="/ypt"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#B91C1C] hover:bg-[#991B1B] text-white font-sans font-medium text-sm shadow-sm transition-all active:scale-[0.98]"
-              >
-                <span>Claim Candidate Register &amp; Begin</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+          {/* ───── PUNCHLINE CTA ───── */}
+          <section className="bg-brand-softYellow dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-700 rounded-3xl p-6 sm:p-10 shadow-brutal dark:shadow-none">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-2 text-center md:text-left">
+                <div className="inline-block px-3 py-1 bg-amber-300 dark:bg-amber-900/60 rounded-md text-[11px] font-mono font-black text-amber-950 dark:text-amber-200 tracking-wider uppercase">
+                  PLOT TWIST
+                </div>
+                <h3 className="text-2xl sm:text-4xl font-display font-black text-slate-950 dark:text-white tracking-tight leading-tight">
+                  Itna scroll kar hi liya? Ab ek test bhi de hi do.
+                </h3>
+                <p className="text-amber-950 dark:text-slate-300 font-medium text-sm sm:text-base">
+                  Memes marks nahi badhaate. Honest timed mocks kabhi-kabhi badha dete hain.
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <Link to="/tests" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-slate-950 dark:bg-brand-blue text-white font-display font-black text-base tracking-wide hover:bg-brand-blue dark:hover:bg-blue-600 transition-all shadow-md hover:scale-105 active:scale-95">
+                  OPEN BOOKIE MOCK →
+                </Link>
+              </div>
             </div>
           </section>
 
@@ -592,4 +345,6 @@ export default function Index() {
       </div>
     </Layout>
   );
-}
+};
+
+export default Index;

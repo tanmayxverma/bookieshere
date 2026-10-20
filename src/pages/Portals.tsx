@@ -4,7 +4,7 @@ import { Layout } from "@/components/Layout";
 import type { Portal } from "@/data/portals";
 import { usePortals } from "@/hooks/usePortals";
 import { BookieLoader } from "@/components/BookieLoader";
-import { Heart, ArrowUpRight, Zap, Info, Rocket, Flame, Pin, ShieldCheck, Search, X } from "lucide-react";
+import { Heart, ArrowUpRight, Sparkles, Info, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isSafeUrl } from "@/lib/urlValidation";
 import { toast } from "@/hooks/use-toast";
@@ -31,7 +31,7 @@ function useFavorites() {
   return { favs, toggle, isFav: (id: string) => favs.includes(id) };
 }
 
-function PortalLogo({ portal, size = 44, className }: { portal: Portal; size?: number; className?: string }) {
+function PortalLogo({ portal, size = 56, className }: { portal: Portal; size?: number, className?: string }) {
   return (
     <InstituteLogo
       id={portal.id}
@@ -39,7 +39,7 @@ function PortalLogo({ portal, size = 44, className }: { portal: Portal; size?: n
       logo={portal.logo}
       accent={portal.accent}
       size={size}
-      className={cn("rounded-xl border border-border/80 shadow-xs", className)}
+      className={cn("rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]", className)}
     />
   );
 }
@@ -49,36 +49,16 @@ export default function Portals() {
   const { favs, toggle, isFav } = useFavorites();
   const { portals } = usePortals();
   const [launching, setLaunching] = useState<{ portal: Portal; url: string } | null>(null);
-  const [search, setSearch] = useState("");
-  const [filterTag, setFilterTag] = useState<string>("all");
 
-  const filteredPortals = useMemo(() => {
-    let list = portals || [];
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.tagline?.toLowerCase().includes(q) ||
-          p.links.some((l) => l.label.toLowerCase().includes(q))
-      );
-    }
-    if (filterTag !== "all") {
-      list = list.filter((p) => {
-        if (filterTag === "pw") return p.id.includes("pw") || p.name.toLowerCase().includes("physics wallah");
-        if (filterTag === "unacademy") return p.id.includes("unacademy") || p.name.toLowerCase().includes("unacademy");
-        if (filterTag === "allen") return p.id.includes("allen") || p.name.toLowerCase().includes("allen");
-        return true;
-      });
-    }
-
+  const orderedPortals = useMemo(() => {
+    const list = portals || [];
     const favSet = new Set(favs);
     return [...list].sort((a, b) => {
       const af = favSet.has(a.id) ? 0 : 1;
       const bf = favSet.has(b.id) ? 0 : 1;
       return af - bf;
     });
-  }, [portals, favs, search, filterTag]);
+  }, [portals, favs]);
 
   const favPortals = useMemo(() => {
     const list = portals || [];
@@ -103,113 +83,65 @@ export default function Portals() {
 
   return (
     <Layout>
-      <div className="w-full bg-academic-grid text-foreground min-h-screen pb-24">
-        {/* Sub-bar Telemetry Ticker (Stitch Screen 09) */}
-        <div className="w-full border-b border-border/80 bg-background/60 py-2.5 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-              <span>Aspirant Workspace: <span className="text-foreground font-semibold">JEE 2027 TARGET</span></span>
-            </div>
-            <div className="hidden sm:flex items-center gap-3">
-              <span>ZERO TAB CLUTTER</span>
-              <span>•</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{(portals || []).length} SYSTEMS OPERATIONAL</span>
-            </div>
-          </div>
-        </div>
-
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 space-y-8 w-full">
-          {/* Hero Section (Stitch Screen 09) */}
-          <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2">
-            {/* Left Column: Dossier Headline & Value Proposition */}
-            <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-primary/10 border border-primary/20 text-primary tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                <span>STUDY PORTALS // ZERO TAB CLUTTER • DIRECT MIRROR CDN</span>
+      <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen">
+        <main className="max-w-7xl mx-auto px-margin lg:px-margin-desktop py-space-xl space-y-space-xl w-full">
+          
+          {/* Hero Section */}
+          <section className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+            {/* Left Column: Copy & Meta */}
+            <div className="lg:col-span-7 space-y-space-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary-container/20 border-2 border-on-surface text-label-code-sm font-label-code-sm font-bold text-primary shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                🚀 STUDY PORTALS // ZERO TAB CLUTTER
               </div>
-
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-5xl font-bold text-foreground tracking-tight leading-[1.12]">
-                All your study apps. <br />
-                <span className="font-serif italic font-normal text-primary">One launcher.</span>
+              <h1 className="font-headline-xl text-[40px] sm:text-[48px] xl:text-[60px] font-extrabold text-on-surface tracking-tight leading-[1.08]">
+                All your study apps. <br className="hidden sm:block" />
+                <span className="font-extrabold text-primary tracking-tight">One launcher.</span>
               </h1>
-
-              <p className="font-sans text-muted-foreground text-sm sm:text-base max-w-xl leading-relaxed">
-                Curated mirrors, authenticated access points, and direct bots for premier coaching platforms. Zero gaslighting, zero broken links, engineered for non-stop focus.
+              <p className="text-on-surface-variant text-body-lg max-w-xl font-body-lg leading-relaxed pt-2">
+                Curated mirrors, direct bots, and authenticated access points for popular coachings. Zero gaslighting, no broken links.
               </p>
-
-              {/* Status Badges Strip */}
-              <div className="flex flex-wrap items-center gap-2.5 pt-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  {(portals || []).length} Systems Operational
+              
+              <div className="flex flex-wrap items-center gap-3 pt-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-label-code-sm font-semibold bg-tertiary-container/30 border border-tertiary-container text-tertiary rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-tertiary"></span> {(portals || []).length} Systems Operational
                 </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
-                  <Zap className="w-3.5 h-3.5 text-amber-600" />
-                  Direct Mirror CDN
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono text-muted-foreground bg-card border border-border/80">
-                  🔒 End-to-End Auth Tokens
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-label-code-sm font-semibold bg-secondary-container/50 border border-secondary text-on-secondary-container rounded-full">
+                  ⚡ Direct Mirror CDN
                 </span>
               </div>
             </div>
 
-            {/* Right Column: Interactive Cockpit Schematic Card (Stitch Screen 09) */}
-            <div className="lg:col-span-5">
-              <div className="bg-card rounded-2xl border border-border/80 shadow-xs overflow-hidden transition-all hover:border-primary/40">
-                {/* Academic Window Header */}
-                <div className="px-4 py-2.5 bg-muted/40 border-b border-border/80 flex items-center justify-between">
+            {/* Right Column: Illustrated Cockpit Launcher & Pinned Portals */}
+            <div className="lg:col-span-5 relative" data-purpose="hero-illustration">
+              <div className="relative bg-surface-container-lowest border-2 border-on-surface rounded-2xl p-space-sm shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] overflow-hidden group">
+                {/* Window Header Bar */}
+                <div className="flex items-center justify-between pb-2 mb-2 border-b border-outline-variant/30">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30 inline-block"></span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30 inline-block"></span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30 inline-block"></span>
+                    <span className="w-3 h-3 rounded-full bg-error border border-on-surface"></span>
+                    <span className="w-3 h-3 rounded-full bg-secondary border border-on-surface"></span>
+                    <span className="w-3 h-3 rounded-full bg-tertiary border border-on-surface"></span>
                   </div>
-                  <span className="font-mono text-[11px] font-semibold text-muted-foreground tracking-wider">
-                    COCKPIT_LAUNCHER_VIEW.SYS
-                  </span>
-                  <span className="font-mono text-[10px] text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
-                    PING: 14ms
+                  <span className="font-label-code-sm text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">
+                    Cockpit_Launcher_View.sys
                   </span>
                 </div>
 
-                {/* Schematic Canvas */}
-                <div className="p-5 space-y-4">
-                  {/* Simulated Cockpit Stream UI */}
-                  <div className="relative w-full h-36 rounded-xl bg-gradient-to-br from-slate-900 via-neutral-900 to-sky-950 p-3.5 text-white border border-neutral-800 flex flex-col justify-between overflow-hidden shadow-inner">
-                    <div className="flex justify-between items-center text-[10px] font-mono text-neutral-400">
-                      <span>STATION // ALPHA-01</span>
-                      <span className="text-emerald-400 flex items-center gap-1">● SYNCED</span>
-                    </div>
+                {/* Comic / Cockpit Graphic Container */}
+                <div className="rounded-xl overflow-hidden border border-on-surface/40 relative bg-slate-900 group">
+                  <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkb1OV-1M73siQ7ku7B6iI0odUq5ewudnxSyovBPbKcw7xqbSaCkXPUxLG3RdXNxwerTh6HlRP39-dMBAa7c7nbLRm-KNPw9Iv2nUu8GcIHKGPmNq1ZeJ4H7PGLFpjafw1HB_lEqBnJzJZMfkAXMUNIWMr0pMdIIrApp6YHkGbHmnDQgCgr5XTulUVx7XDbhtpfKulK5c98Eo86YjPI_4oSuKW_VhUL62zu7CxlLi2l-aSYXR2EkXpMQ"
+                    alt="Study Command Center Cockpit Illustration"
+                    className="w-full h-44 sm:h-52 object-cover object-center transform group-hover:scale-[1.02] transition duration-300"
+                    loading="lazy"
+                  />
 
-                    <div className="grid grid-cols-3 gap-2 my-auto">
-                      <div className="bg-white/10 backdrop-blur-xs rounded-lg p-1.5 text-center border border-white/10">
-                        <span className="text-[9px] block text-neutral-300 font-mono">PW KHAZANA</span>
-                        <span className="text-xs font-semibold text-amber-300">4K 60FPS</span>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-xs rounded-lg p-1.5 text-center border border-white/10">
-                        <span className="text-[9px] block text-neutral-300 font-mono">COMPETISHUN</span>
-                        <span className="text-xs font-semibold text-sky-300">BOT ACTIVE</span>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-xs rounded-lg p-1.5 text-center border border-white/10">
-                        <span className="text-[9px] block text-neutral-300 font-mono">VIBRANT PDF</span>
-                        <span className="text-xs font-semibold text-emerald-300">MIRROR 02</span>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center text-[10px] font-mono text-neutral-400">
-                      <span>BUFFER: 0.02s</span>
-                      <span className="text-neutral-300 font-sans">Aspirant Focus Mode</span>
-                    </div>
-                  </div>
-
-                  {/* Pinned Portals Bar */}
+                  {/* Pinned Quick-Launch Overlay / Badge Bar */}
                   {favPortals.length > 0 ? (
-                    <div className="p-2.5 bg-muted/40 rounded-xl border border-border/80 space-y-2">
-                      <div className="flex items-center justify-between text-[10px] font-mono font-semibold uppercase text-muted-foreground">
-                        <span className="flex items-center gap-1 text-primary">
-                          <Heart className="w-3 h-3 fill-primary" /> Pinned Mirrors ({favPortals.length})
-                        </span>
-                        <span>1-Click Launch</span>
+                    <div className="absolute inset-x-2 bottom-2 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border border-on-surface p-2.5 rounded-xl shadow-md">
+                      <div className="text-[10px] uppercase tracking-wider text-on-surface font-mono font-bold mb-1.5 flex items-center gap-1.5">
+                        <Heart className="h-3 w-3 text-error fill-error" />
+                        <span>PINNED PORTALS ({favPortals.length})</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto">
                         {favPortals.map((p) => (
@@ -217,157 +149,111 @@ export default function Portals() {
                             key={p.id}
                             type="button"
                             onClick={() => navigate(`/portals/${p.id}`)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-border/80 bg-card px-2.5 py-1 text-xs font-semibold hover:border-primary transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-on-surface bg-surface-container-lowest px-2 py-1 shadow-xs hover:bg-surface-container active:translate-y-[1px] transition-all text-left"
                           >
-                            <PortalLogo portal={p} size={16} className="border-0 shadow-none rounded" />
-                            <span>{(p.name || "").split(" ")[0]}</span>
+                            <PortalLogo portal={p} size={18} className="border border-on-surface shadow-none" />
+                            <span className="text-[11px] font-bold font-label-ui">{(p.name || "").split(" ")[0]}</span>
                           </button>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-between text-xs font-sans bg-muted/30 rounded-xl p-3 border border-border/80">
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Pin className="w-3.5 h-3.5 text-primary shrink-0" />
-                        <span className="text-xs">Favorite any portal below to pin it here</span>
+                    <div className="absolute bottom-2 left-2 right-2 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border border-on-surface p-2 rounded-lg shadow-sm flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-sm">📌</span>
+                        <p className="text-[11px] font-label-code-sm text-on-surface-variant truncate">
+                          Favorite any portal below to pin it here for 1-click launch.
+                        </p>
                       </div>
-                      <span className="font-mono text-[10px] uppercase font-semibold text-foreground bg-card px-2 py-0.5 rounded border border-border/80 shrink-0">
+                      <span className="text-[10px] font-mono font-bold bg-primary text-on-primary px-2 py-0.5 rounded shrink-0">
                         1-CLICK
                       </span>
                     </div>
                   )}
+                </div>
 
-                  {/* Terminal Footnote */}
-                  <div className="flex items-center justify-between font-mono text-[10px] text-muted-foreground pt-1 border-t border-border/80">
-                    <span>● COCKPIT HUB // {(portals || []).length} PORTALS</span>
-                    <span>ZERO CLUTTER ENGINE</span>
+                {/* Bottom Cockpit Tag */}
+                <div className="mt-3 pt-2 border-t border-outline-variant/30 flex items-center justify-between text-xs font-label-code-sm">
+                  <div className="flex items-center gap-1.5 font-bold text-on-surface">
+                    <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                    <span>COCKPIT HUB // {(portals || []).length} PORTALS</span>
                   </div>
+                  <span className="text-[10px] text-on-surface-variant uppercase tracking-wider font-mono">
+                    {favPortals.length > 0 ? `${favPortals.length} PINNED` : 'ZERO CLUTTER'}
+                  </span>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Legal Disclaimer Banner (Stitch Screen 09) */}
-          <section className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-4 text-xs font-sans text-amber-900 dark:text-amber-200 flex items-start gap-3 shadow-xs">
-            <div className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 flex items-center justify-center shrink-0 mt-0.5 font-mono font-bold text-[11px]">
+          {/* Disclaimer */}
+          <div className="bg-primary-container/20 border-2 border-on-surface rounded-xl px-4 py-3 flex items-center gap-3 shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]">
+            <div className="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-code-sm font-bold text-xs shrink-0">
               i
             </div>
-            <div className="leading-relaxed">
-              <strong className="font-semibold text-foreground">Bookie Archival Protocol: </strong>
-              Bookie does not own or host proprietary video lectures, test files, or copyrighted coaching materials. All intellectual properties belong exclusively to their respective faculty, educators, and institutes. Bookie functions solely as an aggregated, authenticated link index and direct mirror relay for serious JEE & NEET aspirants.
-            </div>
-          </section>
+            <p className="text-xs sm:text-sm text-on-surface-variant font-medium">
+              <strong className="text-on-surface font-bold">Bookie does not own or host any content.</strong> All resources belong to their respective owners. Bookie only aggregates publicly shared links for JEE aspirants.
+            </p>
+          </div>
 
-          {/* Portals Matrix Section (Stitch Screen 09) */}
-          <section className="space-y-4 pt-2">
-            {/* Header & Filter Controls */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-border/80">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-primary font-bold">⚡</span>
-                  <h2 className="font-mono text-sm uppercase tracking-wider font-bold text-foreground">
-                    ACTIVE COACHING PORTALS
-                  </h2>
-                </div>
-                <span className="font-mono text-xs text-muted-foreground bg-card px-2 py-0.5 rounded-full border border-border/80">
-                  {filteredPortals.length} available
+          {/* Portals Grid */}
+          <section className="space-y-space-md">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">⚡</span>
+                <h2 className="font-headline-md text-headline-md font-bold text-on-surface uppercase tracking-tight">Active Coaching Portals</h2>
+                <span className="text-[11px] font-label-code-sm font-bold bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full border border-outline-variant/50">
+                  {(portals || []).length} available
                 </span>
               </div>
-
-              {/* Filter Tabs & Search */}
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="flex items-center bg-card rounded-xl border border-border/80 p-0.5 text-xs font-medium">
-                  {[
-                    { id: "all", label: "All Portals" },
-                    { id: "pw", label: "PW Mirrors" },
-                    { id: "unacademy", label: "Unacademy" },
-                    { id: "allen", label: "Allen / Kota" },
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setFilterTag(tab.id)}
-                      className={cn(
-                        "px-3 py-1 rounded-lg text-xs font-sans font-semibold transition-colors cursor-pointer",
-                        filterTag === tab.id
-                          ? "bg-slate-900 text-white shadow-xs"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Quick Search */}
-                <div className="relative">
-                  <input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search portals..."
-                    className="text-xs bg-card border border-border/80 rounded-xl pl-8 pr-8 py-1.5 focus:border-primary focus:outline-none w-44 sm:w-52 placeholder:text-muted-foreground"
-                  />
-                  <Search className="w-3.5 h-3.5 text-muted-foreground absolute left-2.5 top-2.5" />
-                  {search && (
-                    <button onClick={() => setSearch("")} className="absolute right-2.5 top-2 text-muted-foreground hover:text-foreground">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-              </div>
             </div>
 
-            {/* Portal Cards Grid (3 Columns) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
-              {filteredPortals.map((p) => {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md">
+              {orderedPortals.map((p) => {
                 const fav = isFav(p.id);
                 return (
                   <article
                     key={p.id}
-                    className="bg-card rounded-2xl border border-border/80 p-5 shadow-xs hover:border-primary/40 transition-all flex flex-col justify-between space-y-4 group relative"
+                    className={cn(
+                      "bg-surface-container-lowest border-2 border-on-surface rounded-2xl p-space-md shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] transition-all duration-200 flex flex-col justify-between relative group overflow-hidden"
+                    )}
                   >
+                    <div className={cn("absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-br", p.accent)}></div>
+                    
                     <div>
-                      {/* Card Header: Monogram, Title & Heart */}
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-3 relative z-10">
                         <div className="flex items-center gap-3">
-                          <PortalLogo portal={p} size={46} />
+                          <PortalLogo portal={p} size={48} className={p.accent.includes('purple') ? 'bg-purple-100 text-purple-900' : p.accent.includes('amber') ? 'bg-amber-100 text-amber-900' : ''} />
                           <div>
-                            <h3 className="font-serif font-bold text-base text-foreground leading-tight group-hover:text-primary transition-colors">
-                              {p.name}
-                            </h3>
-                            <p className="text-xs font-sans text-muted-foreground mt-0.5 line-clamp-1">
-                              {p.tagline}
-                            </p>
+                            <h3 className="font-headline-md font-bold text-base text-on-surface leading-tight">{p.name}</h3>
+                            <p className="text-xs text-on-surface-variant mt-0.5">{p.tagline}</p>
                           </div>
                         </div>
                         <button
                           onClick={() => toggle(p.id)}
                           aria-label={fav ? "Remove favorite" : "Add favorite"}
-                          className="w-8 h-8 rounded-lg border border-border/80 bg-muted/30 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-destructive transition shrink-0 cursor-pointer"
+                          className="w-8 h-8 rounded-full border-2 border-outline hover:border-on-surface bg-surface-container-lowest flex items-center justify-center text-on-surface-variant hover:text-error transition shrink-0 active:scale-90"
                         >
-                          <Heart className={cn("w-4 h-4", fav && "fill-destructive text-destructive")} />
+                          <Heart className={cn("w-4 h-4", fav && "fill-error text-error")} />
                         </button>
                       </div>
 
-                      {/* Traffic & Link Telemetry */}
-                      <div className="mt-4 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        <span>{p.links.length} LINK{p.links.length > 1 ? "S" : ""} ACTIVE</span>
+                      <div className="mt-4 flex items-center gap-2 font-label-code-sm text-[11px] font-bold text-on-surface-variant tracking-wider uppercase relative z-10">
+                        <span className="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                        {p.links.length} LINK{p.links.length > 1 ? "S" : ""} AVAILABLE
                         {p.links.length > 5 && (
-                          <span className="ml-auto bg-primary/10 text-primary px-2 py-0.5 rounded-full text-[9px] font-mono font-semibold border border-primary/20 flex items-center gap-1">
-                            <Flame className="w-2.5 h-2.5" /> High Traffic
-                          </span>
+                          <span className="ml-auto bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-sans font-bold border border-secondary">🔥 Mass Favorite</span>
                         )}
                       </div>
                     </div>
 
-                    {/* Launch Action */}
-                    <div className="pt-3 border-t border-border/60">
+                    <div className="mt-5 pt-3 border-t border-outline-variant/30 relative z-10">
                       <button
                         onClick={() => navigate(`/portals/${p.id}`)}
-                        className="w-full bg-slate-900 hover:bg-black text-white font-sans font-semibold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-xs transition cursor-pointer"
+                        className="w-full bg-on-surface hover:bg-primary text-background font-label-code-sm font-bold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition duration-150 shadow-sm active:scale-[0.98]"
                       >
-                        <span>Open Portal Hub</span>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-sky-400" />
+                        <span>Open Portal</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </article>
@@ -376,32 +262,32 @@ export default function Portals() {
             </div>
           </section>
 
-          {/* Bottom Reality Check Callout */}
-          <section className="mt-8 bg-card border border-border/80 rounded-2xl p-6 shadow-xs relative overflow-hidden">
+          {/* Bottom Banter Banner */}
+          <section className="mt-12 bg-surface-container-lowest border-2 border-on-surface rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] relative overflow-hidden">
+            <div className="absolute -right-8 -bottom-8 text-surface-container-high font-headline-xl font-extrabold text-[120px] select-none pointer-events-none opacity-50">
+              JEE
+            </div>
             <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
-              <div className="space-y-1.5 text-center lg:text-left">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-primary/20 bg-primary/10 font-mono text-xs font-semibold text-primary">
-                  <Zap className="w-3.5 h-3.5" />
-                  <span>ASPIRANT REALITY CHECK</span>
+              <div className="space-y-2 text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-secondary-container text-on-secondary-container border border-secondary font-label-code-sm text-[11px] font-bold">
+                  🚨 ASPIRANT REALITY CHECK
                 </div>
-                <h4 className="font-serif text-xl sm:text-2xl font-bold text-foreground leading-tight">
-                  Portal save kar liya, ab lecture play karke formula revision shuru karo!
+                <h4 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface leading-tight">
+                  PLOT TWIST: Portal bookmark kar liye, ab lecture play karke notes bhi bana lo!
                 </h4>
-                <p className="text-xs sm:text-sm text-muted-foreground font-sans max-w-2xl">
-                  Hoarding 50 coaching portals won't solve Rotational Dynamics. Choose your primary faculty and complete one test series honestly.
+                <p className="text-xs sm:text-sm text-on-surface-variant font-medium max-w-2xl">
+                  Collecting 47 gigabytes of coaching batches won't solve Rotational Dynamics. Choose one teacher and stick to the plan.
                 </p>
               </div>
               <div className="shrink-0 flex items-center gap-3">
-                <button
-                  onClick={() => navigate('/ypt')}
-                  className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-sans text-xs font-semibold shadow-xs hover:bg-primary/90 transition flex items-center gap-2 whitespace-nowrap cursor-pointer"
-                >
-                  <Zap className="w-3.5 h-3.5" />
-                  <span>Launch Study Carrel</span>
+                <button onClick={() => navigate('/ypt')} className="px-5 py-3 rounded-xl bg-primary text-on-primary border-2 border-on-surface font-label-code-sm text-xs font-bold shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition flex items-center gap-2 whitespace-nowrap">
+                  <span>⚡ Launch Study Session</span>
+                  <ArrowUpRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
           </section>
+
         </main>
       </div>
     </Layout>

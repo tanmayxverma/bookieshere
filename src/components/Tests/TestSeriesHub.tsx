@@ -1,19 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Search,
-  Target,
-  ChevronDown,
-  CheckCircle,
-  ExternalLink,
-  Activity,
-  Flame,
-  Swords,
-  Zap,
-  BookOpen,
-  ArrowRight,
-  ShieldCheck,
-} from "lucide-react";
+import { Search, Sparkles, Target, Settings, ChevronDown, CheckCircle, ExternalLink, Activity, Plus } from "lucide-react";
 import type { TestSeriesProvider, TestSeriesResource } from "@/data/testSeries";
 import { useTestSeries } from "@/hooks/useTestSeries";
 import { isSafeUrl } from "@/lib/urlValidation";
@@ -26,150 +13,106 @@ function ProviderCard({
   expanded,
   onToggle,
   query,
-}: {
-  provider: TestSeriesProvider;
-  expanded: boolean;
-  onToggle: () => void;
-  query: string;
-}) {
+}: { provider: TestSeriesProvider; expanded: boolean; onToggle: () => void; query: string }) {
   const navigate = useNavigate();
   const open = (r: TestSeriesResource, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isSafeUrl(r.url)) {
-      toast({
-        title: "Link blocked",
-        description: "This URL isn't on the allowed list.",
-        variant: "destructive",
-      });
+      toast({ title: "Link blocked", description: "This URL isn't on the allowed list.", variant: "destructive" });
       return;
     }
     window.open(r.url, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <article className="group relative flex flex-col rounded-xl border border-border/80 bg-card shadow-xs hover:border-primary/40 hover:shadow-sm transition-all duration-200 overflow-hidden">
-      <div
-        className="p-5 space-y-3 cursor-pointer"
+    <div className="test-card group relative flex flex-col bg-surface-container-lowest rounded-2xl shadow-[0_4px_16px_-2px_rgba(19,27,46,0.06)] hover:shadow-[0_8px_24px_-4px_rgba(19,27,46,0.12)] transition-all duration-200 brutal-border overflow-hidden">
+      <div 
+        className="p-space-md space-y-space-sm cursor-pointer"
         onClick={onToggle}
       >
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <InstituteLogo
               id={provider.id}
               name={provider.name}
               logo={provider.logo}
               accent={provider.accent}
-              className="w-11 h-11 text-sm rounded-lg border border-border/70 shrink-0"
+              className="w-12 h-12 text-base rounded-xl border-2 border-slate-900 shadow-sm"
             />
             <div>
-              <span className="font-serif text-base font-semibold text-foreground leading-tight block truncate max-w-[190px] sm:max-w-[240px]">
+              <span className="font-headline-md text-[16px] font-bold text-on-surface leading-tight block truncate max-w-[200px] sm:max-w-[250px]">
                 {provider.name}
               </span>
-              <span className="font-mono text-[11px] text-muted-foreground">
-                {provider.resources.length} {provider.resources.length === 1 ? "Paper" : "Papers"}
+              <span className="font-label-code-sm text-label-code-sm text-on-surface-variant font-medium">
+                {provider.resources.length} {provider.resources.length === 1 ? "Resource" : "Resources"}
               </span>
             </div>
           </div>
-          <button
-            type="button"
-            aria-label="Toggle resources list"
-            className="p-1 rounded-md border border-border/60 hover:bg-muted/50 text-muted-foreground transition-colors"
-          >
-            <ChevronDown
-              className={cn(
-                "w-4 h-4 transition-transform duration-200",
-                expanded ? "rotate-180" : ""
-              )}
-            />
-          </button>
+          <ChevronDown className={cn("text-on-surface-variant transition-transform duration-300", expanded ? "rotate-180" : "")} size={20} />
         </div>
 
-        <p className="font-mono text-xs text-muted-foreground leading-relaxed line-clamp-2">
+        <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-2 mt-2">
           {provider.description}
         </p>
 
-        <div className="flex flex-wrap items-center gap-1.5 pt-1">
-          <span className="px-2 py-0.5 rounded-md border border-border/60 bg-muted/40 font-mono text-[10px] font-semibold text-muted-foreground">
-            MAINS + ADV
-          </span>
-          <span className="px-2 py-0.5 rounded-md border border-primary/20 bg-primary/10 font-mono text-[10px] font-semibold text-primary">
-            VERIFIED
-          </span>
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          <span className="px-2 py-0.5 rounded bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold">Mains + Adv</span>
+          <span className="px-2 py-0.5 rounded bg-tertiary/10 font-label-code-sm text-label-code-sm text-tertiary font-bold">Verified</span>
         </div>
       </div>
-
+      
       {/* Expanded resources inline */}
-      <div
-        className={cn(
-          "grid transition-all duration-200 ease-out border-t border-border/60",
-          expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-        )}
-      >
+      <div className={cn("grid transition-all duration-300 ease-out border-t border-outline-variant/30", expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
         <div className="overflow-hidden">
-          <div className="bg-muted/30 p-2.5 grid gap-1.5">
+          <div className="bg-surface-container-low/50 p-space-xs grid gap-1">
             {provider.resources.map((r, i) => (
               <button
                 key={i}
                 onClick={(e) => open(r, e)}
-                className="flex items-center justify-between p-2 rounded-lg border border-border/50 bg-card hover:bg-muted/50 hover:border-primary/40 shadow-xs transition-colors text-left group/res cursor-pointer"
+                className="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-lowest hover:shadow-sm transition-colors text-left group/res"
               >
                 <div className="min-w-0 pr-2">
-                  <div className="font-mono text-xs text-foreground font-medium truncate">
+                  <div className="font-label-ui text-label-ui text-on-surface font-bold truncate">
                     {r.name}
                   </div>
-                  <div className="font-mono text-[10px] text-muted-foreground truncate">
-                    {(() => {
-                      try {
-                        return new URL(r.url).hostname.replace(/^www\./, "");
-                      } catch {
-                        return "External Portal";
-                      }
-                    })()}
+                  <div className="font-label-code-sm text-[10px] text-on-surface-variant truncate">
+                    {(() => { try { return new URL(r.url).hostname.replace(/^www\./, ""); } catch { return "External Link"; } })()}
                   </div>
                 </div>
-                <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover/res:text-primary transition-colors shrink-0" />
+                <ExternalLink className="w-4 h-4 text-on-surface-variant group-hover/res:text-primary transition-colors flex-shrink-0" />
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="px-5 py-3 border-t border-border/60 flex items-center justify-between bg-muted/20 mt-auto">
-        <div className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
-          <CheckCircle className="w-3.5 h-3.5 text-primary" />
-          <span>Active Feed</span>
+      <div className="px-space-md py-space-sm border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/30">
+        <div className="flex items-center gap-1 font-label-code-sm text-[11px] text-on-surface-variant">
+          <CheckCircle className="w-[15px] h-[15px] text-tertiary" />
+          <span>Active</span>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/test-series/${provider.id}`);
-          }}
-          className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-mono text-xs font-semibold shadow-xs active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+        <button 
+          onClick={(e) => { e.stopPropagation(); navigate(`/test-series/${provider.id}`); }}
+          className="px-3.5 py-1.5 rounded-lg bg-primary text-on-primary font-headline-md text-label-ui shadow-[0_3px_0_0_#131b2e] hover:bg-primary-container active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1"
         >
           <span>Enter Portal</span>
-          <ArrowRight className="w-3 h-3" />
+          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
         </button>
       </div>
-    </article>
+    </div>
   );
 }
 
 export function TestSeriesHub() {
   const { testSeries } = useTestSeries();
   const [query, setQuery] = useState("");
-  const [filterType, setFilterType] = useState<"all" | "full" | "battle">("all");
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [time, setTime] = useState("");
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setTime(
-        now.toLocaleTimeString("en-US", {
-          hour12: false,
-          timeZone: "Asia/Kolkata",
-        })
-      );
+      setTime(now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'Asia/Kolkata' }));
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
@@ -183,12 +126,10 @@ export function TestSeriesHub() {
     return list
       .map((p) => {
         const nameMatch =
-          (p.name || "").toLowerCase().includes(q) ||
-          (p.description || "").toLowerCase().includes(q) ||
-          (p.id || "").toLowerCase().includes(q);
-        const matchedResources = (p.resources || []).filter((r) =>
-          (r.name || "").toLowerCase().includes(q)
-        );
+          (p.name || '').toLowerCase().includes(q) ||
+          (p.description || '').toLowerCase().includes(q) ||
+          (p.id || '').toLowerCase().includes(q);
+        const matchedResources = (p.resources || []).filter((r) => (r.name || '').toLowerCase().includes(q));
         if (nameMatch) return p;
         if (matchedResources.length > 0) return { ...p, resources: matchedResources };
         return null;
@@ -197,86 +138,76 @@ export function TestSeriesHub() {
   }, [testSeries, query]);
 
   const isSearching = query.trim().length > 0;
-  const totalResources = (testSeries || []).reduce(
-    (sum, p) => sum + (p.resources?.length || 0),
-    0
-  );
+  const totalResources = (testSeries || []).reduce((sum, p) => sum + (p.resources?.length || 0), 0);
 
   return (
-    <div className="w-full pt-6 flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-foreground pb-20 space-y-7">
-      <div className="flex flex-col w-full space-y-7">
+    <div className="w-full pt-16 flex-1 max-w-7xl mx-auto px-margin lg:px-margin-desktop bg-background blueprint-grid text-on-surface">
+      <div className="flex flex-col w-full pb-space-xl">
+        
         {/* Hero Header Section */}
-        <section className="relative w-full rounded-2xl border border-border/80 bg-card p-6 md:p-8 shadow-xs mt-2 overflow-hidden">
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-7 flex flex-col items-start gap-4">
-              <div className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-primary">
-                <span>§ 04 // Dossier</span>
-                <span className="text-border">|</span>
-                <span className="text-muted-foreground">Test Series & Mock Arena</span>
+        <section className="relative w-full rounded-2xl bg-surface-container-lowest p-space-md lg:p-space-lg shadow-[0_4px_20px_-2px_rgba(19,27,46,0.06)] mt-space-md mb-space-lg overflow-hidden brutal-border">
+          <div className="absolute -right-8 -bottom-10 pointer-events-none select-none text-surface-container-highest/60 font-headline-xl text-[120px] font-black opacity-30 leading-none">
+            TESTS
+          </div>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+            <div className="lg:col-span-8 flex flex-col items-start gap-space-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container/50 text-primary font-label-code-sm text-label-code-sm tracking-wider uppercase font-bold">
+                <Target className="w-[15px] h-[15px] text-primary" />
+                <span>TEST SERIES & MOCK ARENA</span>
               </div>
-
-              <div>
-                <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-medium tracking-tight text-foreground leading-[1.15]">
-                  Test Series <em className="italic text-primary font-serif font-normal">Arena.</em>
+              <div className="relative mt-1">
+                <h1 className="font-headline-xl text-headline-xl lg:text-[44px] lg:leading-[50px] tracking-tight font-extrabold text-on-surface italic">
+                  Test Series <span className="relative inline-block text-primary not-italic">Hub.
+                    <span className="absolute -bottom-1 left-0 right-0 h-2.5 bg-secondary-container/70 -z-10 transform -rotate-1 rounded-full"></span>
+                  </span>
                 </h1>
               </div>
-
-              <p className="font-mono text-xs sm:text-sm text-muted-foreground max-w-xl leading-relaxed">
-                Access curated coaching test series, chapterwise drills, NTA-style 1v1 battle arena, and full syllabus papers from across the premier JEE ecosystem — deconstructed mocks with honest percentile curves.
+              <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl pt-1">
+                Access curated coaching test series, chapterwise mocks, NTA-style 1v1 battle arena, and full syllabus papers from across the entire JEE ecosystem — zero gaslighting, honest percentile curves.
               </p>
-
-              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs font-mono">
-                <span className="inline-flex items-center gap-1.5 bg-muted/40 border border-border/60 text-foreground px-2.5 py-1 rounded-md">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>{(testSeries || []).length} Master Providers</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5 bg-muted/40 border border-border/60 text-foreground px-2.5 py-1 rounded-md">
-                  <BookOpen className="w-3.5 h-3.5 text-primary" />
+              <div className="flex flex-wrap items-center gap-space-sm pt-2">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-tertiary"></span>
+                  <span>{(testSeries || []).length} Providers</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
+                  <span className="material-symbols-outlined text-primary text-[15px]">inventory_2</span>
                   <span>{totalResources} Live Resources</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/20 text-primary px-2.5 py-1 rounded-md font-semibold">
-                  <ShieldCheck className="w-3.5 h-3.5" />
+                </div>
+                <div className="hidden sm:inline-flex items-center gap-1 text-on-surface-variant font-label-code-sm text-label-code-sm">
+                  <span className="material-symbols-outlined text-[14px] text-tertiary">verified</span>
                   <span>100% NTA Scoring Engine</span>
-                </span>
+                </div>
               </div>
             </div>
 
             {/* Test Reality Widget */}
-            <div className="lg:col-span-5 w-full">
-              <div className="relative w-full bg-[#faf7f3] dark:bg-muted/30 text-foreground rounded-xl p-5 border border-border/80 shadow-xs flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-border/60">
-                    <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-foreground">
-                      <span className="text-primary">◈</span>
-                      <span>Test Reality Check</span>
-                    </div>
-                    <span className="font-mono text-[10px] text-muted-foreground bg-card border border-border/60 px-1.5 py-0.5 rounded-md">
-                      JAN 2027 TARGET
-                    </span>
+            <div className="lg:col-span-4 w-full">
+              <div className="relative w-full bg-secondary-fixed dark:bg-amber-950/40 text-on-secondary-fixed-variant dark:text-amber-100 rounded-xl p-space-md shadow-[0_8px_18px_-3px_rgba(113,63,18,0.18)] transform rotate-1 hover:rotate-0 transition-transform duration-200 brutal-border border-secondary-fixed dark:border-amber-700/60">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/80 backdrop-blur-sm rounded-sm shadow-sm transform -rotate-1 border-t border-b border-dashed border-secondary/40 sticker-tape"></div>
+                <div className="flex items-center justify-between pb-2 mb-2">
+                  <div className="flex items-center gap-1.5 font-label-code-sm text-label-code-sm font-extrabold uppercase tracking-wider text-on-secondary-fixed-variant dark:text-amber-200">
+                    <span className="material-symbols-outlined text-[16px]">psychology_alt</span>
+                    <span>TEST REALITY CHECK</span>
                   </div>
-                  <div className="space-y-2 font-mono text-xs">
-                    <div className="flex items-center justify-between py-1 border-b border-border/40">
-                      <span className="text-muted-foreground text-[11px]">Average Aspirant Score</span>
-                      <span className="font-semibold text-foreground font-mono">142 / 300</span>
-                    </div>
-                    <div className="flex items-center justify-between py-1 border-b border-border/40">
-                      <span className="text-muted-foreground text-[11px]">Safe 99%ile Benchmark</span>
-                      <span className="font-bold text-primary font-mono">210+ Marks</span>
-                    </div>
-                  </div>
-                  <div className="mt-3.5 pt-1">
-                    <div className="flex justify-between text-[10px] font-mono text-muted-foreground mb-1">
-                      <span>CALIBRATION</span>
-                      <span>70% TARGET MARGIN</span>
-                    </div>
-                    <div className="w-full bg-muted/60 h-1.5 rounded-full overflow-hidden border border-border/40">
-                      <div className="bg-primary h-full rounded-full w-[70%]" />
-                    </div>
-                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-[10px] font-bold">JAN 2027</span>
                 </div>
-                <div className="mt-4 pt-3 border-t border-border/60 text-[11px] font-serif italic text-muted-foreground">
-                  “Mock se darr nahi lagta sahab, analysis se lagta hai.”
-                  <div className="font-mono not-italic text-[10px] text-muted-foreground/80 mt-0.5 text-right">
+                <div className="space-y-2 font-body-sm text-body-sm">
+                  <div className="flex items-center justify-between font-label-code-sm">
+                    <span className="text-secondary dark:text-amber-300">Average Aspirant Score</span>
+                    <span className="font-extrabold text-on-secondary-container bg-secondary-container px-2 py-0.5 rounded">142 / 300</span>
+                  </div>
+                  <div className="flex items-center justify-between font-label-code-sm">
+                    <span className="text-secondary dark:text-amber-300">Safe 99%ile Benchmark</span>
+                    <span className="font-extrabold text-tertiary bg-tertiary-container/30 px-2 py-0.5 rounded">210+ Marks</span>
+                  </div>
+                  <div className="w-full bg-secondary-container/50 h-2 rounded-full overflow-hidden my-1">
+                    <div className="bg-primary h-full rounded-full" style={{ width: '67%' }}></div>
+                  </div>
+                  <div className="pt-2 text-center italic font-headline-md text-[13px] leading-tight text-on-secondary-fixed-variant dark:text-amber-200">
+                    “Mock se darr nahi lagta sahab, analysis se lagta hai.”
+                  </div>
+                  <div className="text-right font-label-code-sm text-[10px] text-secondary dark:text-amber-300/80 font-semibold">
                     — Kota Hostel Bathroom Wisdom
                   </div>
                 </div>
@@ -286,180 +217,166 @@ export function TestSeriesHub() {
         </section>
 
         {/* Interactive Search & Instant Filter Bar */}
-        <section className="w-full flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <section className="w-full flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md mb-space-lg">
           <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted-foreground">
-              <Search className="w-4 h-4" />
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+              <Search className="w-5 h-5 text-on-surface-variant" />
             </div>
-            <input
+            <input 
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-10 pr-24 py-2.5 bg-card text-foreground rounded-xl border border-border/80 font-mono text-xs placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-xs transition-all"
-              placeholder="Search test series, institutes, MathOnGo, Narayana, Allen, PW, FIITJEE..."
-              type="text"
+              className="w-full pl-10 pr-24 py-3 bg-surface-container-lowest text-on-surface rounded-xl font-body-md text-body-md shadow-sm placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all brutal-border" 
+              placeholder="Search test series, institutes, MathonGo, Narayana..." 
+              type="text" 
             />
             <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1">
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded border border-border/60 bg-muted/50 text-muted-foreground font-mono text-[10px]">
-                CTRL + K
-              </kbd>
+              <kbd className="hidden sm:inline-block px-2 py-1 rounded bg-surface-container text-on-surface-variant font-label-code-sm text-[10px]">CTRL + K</kbd>
             </div>
           </div>
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-            <button
-              onClick={() => setFilterType("all")}
-              className={cn(
-                "px-3.5 py-2 rounded-lg font-mono text-xs font-medium border transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer",
-                filterType === "all"
-                  ? "bg-primary text-primary-foreground border-primary shadow-xs"
-                  : "bg-card text-foreground hover:bg-muted/50 border-border/70"
-              )}
-            >
+            <button className="px-3.5 py-2 rounded-xl bg-primary text-on-primary font-label-ui text-label-ui shadow-[0_3px_0_0_#131b2e] active:translate-y-0.5 active:shadow-none transition-all duration-100 flex items-center gap-1 whitespace-nowrap">
               <span>All Tests</span>
-              <span className="px-1 py-0.2 rounded bg-white/20 text-[10px] font-bold">
-                {(testSeries || []).length}
-              </span>
+              <span className="px-1.5 py-0.2 rounded-full bg-surface-container-lowest/20 font-label-code-sm text-[10px]">{(testSeries || []).length}</span>
             </button>
-            <button
-              onClick={() => setFilterType("full")}
-              className={cn(
-                "px-3.5 py-2 rounded-lg font-mono text-xs font-medium border transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer",
-                filterType === "full"
-                  ? "bg-primary text-primary-foreground border-primary shadow-xs"
-                  : "bg-card text-foreground hover:bg-muted/50 border-border/70"
-              )}
-            >
-              <Flame className="w-3.5 h-3.5 text-primary" />
+            <button className="px-3.5 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-ui text-label-ui shadow-sm active:translate-y-0.5 transition-all duration-100 flex items-center gap-1 whitespace-nowrap brutal-border">
+              <span className="text-error">🔥</span>
               <span>Full Mocks</span>
             </button>
-            <button
-              onClick={() => {
-                setFilterType("battle");
-                const arena = document.getElementById("battle-arena");
-                arena?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className={cn(
-                "px-3.5 py-2 rounded-lg font-mono text-xs font-medium border transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer",
-                filterType === "battle"
-                  ? "bg-primary text-primary-foreground border-primary shadow-xs"
-                  : "bg-card text-foreground hover:bg-muted/50 border-border/70"
-              )}
-            >
-              <Swords className="w-3.5 h-3.5 text-primary" />
+            <button className="px-3.5 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-ui text-label-ui shadow-sm active:translate-y-0.5 transition-all duration-100 flex items-center gap-1 whitespace-nowrap brutal-border">
+              <span>⚔️</span>
               <span>1v1 Battle</span>
             </button>
           </div>
         </section>
 
         {/* Featured 1v1 Mock Battle Arena Card */}
-        <section
-          id="battle-arena"
-          className="relative w-full rounded-2xl border border-border/80 bg-card p-6 md:p-8 shadow-xs overflow-hidden"
-        >
-          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            <div className="flex-1 space-y-2.5">
+        <section className="relative w-full rounded-2xl bg-gradient-to-r from-primary-fixed to-primary-container/20 dark:from-slate-900 dark:via-blue-950/40 dark:to-slate-900 p-space-md lg:p-space-lg shadow-sm mb-space-xl overflow-hidden brutal-border border-primary-fixed dark:border-slate-800">
+          <div className="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-primary/20 blur-3xl pointer-events-none"></div>
+          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
+            <div className="flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2 py-0.5 rounded-md bg-primary text-primary-foreground font-mono text-[10px] font-semibold uppercase tracking-wider">
-                  1v1 Multiplayer Arena
+                <span className="px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-code-sm text-label-code-sm uppercase font-bold tracking-wider flex items-center gap-1">
+                  <Activity className="w-[13px] h-[13px]" />
+                  <span>MULTIPLAYER ARENA • LIVE CONFLICT</span>
                 </span>
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-border/60 bg-muted/40 text-foreground font-mono text-[11px] font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-label-code-sm text-label-code-sm font-bold">
+                  <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
                   <span>348 aspirants queuing</span>
                 </span>
-                <span className="text-muted-foreground font-mono text-[11px]">Instant Match Ready</span>
               </div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-medium text-foreground tracking-tight">
-                Head-to-Head Mock Conflict
+              <h2 className="font-headline-lg text-headline-lg font-black text-on-surface tracking-tight flex items-center gap-2">
+                <span>1v1 Mock Test Battle</span>
+                <span className="px-2 py-0.5 text-[11px] rounded bg-secondary-container text-on-secondary-container font-label-code-sm uppercase font-extrabold">Instant Match</span>
               </h2>
-              <p className="font-mono text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
-                NTA-style real-time 1v1 speed drills — challenge batchmates head-to-head in a calibrated 15-minute combat. Winner takes verified percentile gains and <strong className="text-foreground font-semibold">+50 Bookie Karma Points</strong>.
+              <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                NTA-style real-time 1v1 mock test battles — challenge batchmates head-to-head in a 15-minute speed drill. Winner takes rank bragging rights and +50 Bookie Karma Points.
               </p>
-              <div className="flex flex-wrap items-center gap-2 pt-1 font-mono text-[11px]">
-                <span className="bg-muted/40 border border-border/60 text-muted-foreground px-2 py-0.5 rounded-md">
-                  ⏱ 15 Mins / 12 MCQs
-                </span>
-                <span className="bg-muted/40 border border-border/60 text-muted-foreground px-2 py-0.5 rounded-md">
-                  ⚖ +4 / -1 Marking
-                </span>
-                <span className="bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded-md font-semibold">
-                  🎯 Rotational Motion & Calculus
-                </span>
+              <div className="flex flex-wrap items-center gap-space-md pt-2 text-on-surface-variant font-label-code-sm text-label-code-sm">
+                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-primary text-[16px]">timer</span> 15 Mins / 12 MCQs</span>
+                <span>•</span>
+                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-error text-[16px]">balance</span> +4 / -1 Marking</span>
               </div>
             </div>
-
-            <div className="w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-3 shrink-0">
-              <div className="flex items-center gap-3 bg-muted/40 px-4 py-2.5 rounded-xl border border-border/60 shadow-xs">
-                <div className="flex items-center -space-x-1.5 font-mono text-[10px] font-bold">
-                  <div className="h-6 w-6 rounded-full border border-background bg-foreground text-background flex items-center justify-center">
-                    TK
-                  </div>
-                  <div className="h-6 w-6 rounded-full border border-background bg-primary text-primary-foreground flex items-center justify-center">
-                    VS
-                  </div>
-                  <div className="h-6 w-6 rounded-full border border-background bg-muted text-foreground flex items-center justify-center">
-                    AG
-                  </div>
+            
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-space-md">
+              <div className="flex items-center gap-3 bg-surface-container-lowest/90 px-4 py-2.5 rounded-xl shadow-sm brutal-border border-surface-container-lowest">
+                <div className="flex items-center -space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-primary text-on-primary font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">TK</div>
+                  <div className="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">VS</div>
+                  <div className="w-8 h-8 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">AG</div>
                 </div>
-                <div className="flex flex-col text-left font-mono text-[11px]">
-                  <span className="text-muted-foreground text-[10px] uppercase tracking-wider">Concluded Just Now</span>
-                  <span className="text-foreground font-medium"><strong className="text-primary font-semibold">Tanmay (+36)</strong> beat Aniket (+28)</span>
+                <div className="flex flex-col text-left font-label-code-sm text-[11px]">
+                  <span className="font-bold text-on-surface">Last Match Just Concluded</span>
+                  <span className="text-tertiary font-bold">Tanmay (+36) beat Aniket (+28)</span>
                 </div>
               </div>
-              <button
-                onClick={() =>
-                  window.open(
-                    "https://www.ovibattle.in/",
-                    "_blank",
-                    "noopener,noreferrer"
-                  )
-                }
-                className="px-5 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-mono text-xs font-semibold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
-              >
-                <Swords className="w-4 h-4" />
-                <span>Enter 1v1 Arena →</span>
+              <button onClick={() => window.open("https://www.ovibattle.in/", "_blank", "noopener,noreferrer")} className="px-space-lg py-3.5 rounded-xl bg-primary text-on-primary font-headline-md text-body-md font-bold shadow-[0_4px_0_0_#131b2e] hover:bg-primary-container active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+                <span className="material-symbols-outlined text-[20px]">sports_martial_arts</span>
+                <span>Challenge an Aspirant Now →</span>
               </button>
             </div>
           </div>
         </section>
 
         {/* Section Title & Grid Counter */}
-        <div className="flex items-center justify-between border-b border-border/60 pb-3">
+        <div className="flex items-center justify-between mb-space-md">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <h3 className="font-serif text-lg font-medium text-foreground tracking-tight">
-              Verified Test Portals & Series
-            </h3>
-            <span className="px-2 py-0.5 rounded-md border border-border/60 bg-muted/40 text-muted-foreground font-mono text-xs font-medium">
-              {(testSeries || []).length} Master Providers
-            </span>
+            <div className="w-3 h-3 rounded-full bg-primary"></div>
+            <h3 className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Verified Test Portals & Series</h3>
+            <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-label-code-sm font-semibold">{(testSeries || []).length} Master Providers</span>
           </div>
         </div>
 
         {/* Test Series Provider Cards Grid */}
         {filtered.length === 0 ? (
-          <div className="text-center py-16 px-6 bg-card rounded-2xl border border-border/80 shadow-xs">
-            <Search className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-            <h3 className="font-serif text-base font-medium text-foreground mb-1">
-              No test series found
-            </h3>
-            <p className="font-mono text-xs text-muted-foreground">
-              Try searching by coaching name (e.g. Allen, MathOnGo, Narayana, PW).
-            </p>
+          <div className="text-center py-20 px-6 bg-surface-container-lowest rounded-2xl brutal-border">
+            <Search className="w-12 h-12 text-outline-variant mx-auto mb-4" />
+            <h3 className="font-headline-md text-headline-md font-bold text-on-surface mb-2">No test series found</h3>
+            <p className="font-body-sm text-body-sm text-on-surface-variant">Try a different search term.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md mb-space-xl">
             {filtered.map((p) => (
               <ProviderCard
                 key={p.id}
                 provider={p}
-                expanded={!!expanded[p.id]}
-                onToggle={() =>
-                  setExpanded((prev) => ({ ...prev, [p.id]: !prev[p.id] }))
-                }
                 query={query}
+                expanded={isSearching ? true : !!expanded[p.id]}
+                onToggle={() => setExpanded((s) => ({ ...s, [p.id]: !s[p.id] }))}
               />
             ))}
           </div>
         )}
+
+        {/* Real Exam Schedule & AYJR Countdown Mini Banner */}
+        <section className="w-full bg-surface-container-high rounded-2xl p-space-md lg:p-space-lg mb-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md brutal-border">
+          <div className="flex items-center gap-space-md">
+            <div className="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center font-headline-md text-headline-md shadow-[0_3px_0_0_#5c4300] brutal-border border-secondary-container">
+              ⚡
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-headline-md text-body-lg font-bold text-on-surface">Next Synchronized All-India Mock: AYJR Jan Shift 1</span>
+                <span className="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-code-sm text-[10px] font-extrabold uppercase">Live in 3 Days</span>
+              </div>
+              <p className="font-body-sm text-body-sm text-on-surface-variant">Simulating shift timings: Morning 09:00 AM - 12:00 PM. Registered aspirants: 68,400+.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-space-sm w-full md:w-auto justify-end">
+            <button className="px-space-md py-2 rounded-xl bg-primary text-on-primary font-headline-md text-label-ui shadow-[0_3px_0_0_#131b2e] hover:bg-primary-container active:translate-y-0.5 active:shadow-none transition-all">
+              Book Free Slot
+            </button>
+          </div>
+        </section>
+
+        {/* Relatable Bottom Punchline / Reality Callout */}
+        <section className="relative w-full rounded-2xl bg-secondary-fixed dark:bg-amber-950/40 text-on-secondary-fixed-variant dark:text-amber-100 p-space-lg lg:p-space-xl shadow-[0_8px_24px_-4px_rgba(69,26,3,0.08)] mb-space-xl overflow-hidden brutal-border border-secondary-fixed dark:border-amber-700/60">
+          <div className="absolute -top-3 left-8 w-28 h-6 bg-secondary-container transform -rotate-2 rounded shadow-sm opacity-80 sticker-tape"></div>
+          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
+            <div className="space-y-space-xs max-w-3xl">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-code-sm text-label-code-sm font-extrabold tracking-wider uppercase">
+                <span className="material-symbols-outlined text-[15px]">psychology</span>
+                <span>PLOT TWIST // REAL TALK</span>
+              </div>
+              <h3 className="font-headline-lg text-headline-lg font-black text-on-secondary-fixed-variant dark:text-amber-100 tracking-tight pt-1">
+                “Itna test series collect kar liya? Ab ek mock test de bhi do.”
+              </h3>
+              <p className="font-body-lg text-body-lg text-secondary dark:text-amber-200/90 leading-relaxed">
+                Drive folder mein 400 GB test papers hoard karne se AIR 1 nahi aati. Give one honest 45-minute timed mock right now without checking answers midway.
+              </p>
+            </div>
+            <div className="w-full lg:w-auto flex flex-col items-stretch sm:items-end">
+              <button className="px-space-lg py-4 rounded-xl bg-inverse-surface dark:bg-slate-800 text-inverse-on-surface dark:text-white font-headline-md text-body-md font-extrabold shadow-[0_4px_0_0_#000000] hover:opacity-90 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+                <span className="material-symbols-outlined text-secondary-container text-[20px]">bolt</span>
+                <span>Start Immediate 45-Min Physics Mock →</span>
+              </button>
+              <span className="font-label-code-sm text-[11px] text-secondary dark:text-amber-300 text-center sm:text-right mt-1.5 font-bold">
+                Includes Rotational Motion + Thermodynamics MCQs
+              </span>
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import {
   Send, Paperclip, ShieldCheck, X, Loader2, Search,
   CheckCheck, RefreshCw, Bug, BookOpen, HelpCircle,
-  Sparkles, ExternalLink, Coffee, Clock, Terminal, Zap, Check
+  Sparkles, ExternalLink, ChevronUp, Coffee
 } from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
 import { cn, safeRandomUUID } from '@/lib/utils';
@@ -26,7 +26,7 @@ export default function SupportPage() {
   const [isDragging, setIsDragging] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -131,277 +131,286 @@ export default function SupportPage() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-academic-grid text-foreground flex flex-col pb-24">
-        {/* Contextual Candidate Sub-header Bar (Stitch Screen 11) */}
-        <div className="w-full border-b border-border/80 bg-background/60 py-2.5 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex items-center justify-between text-xs font-mono text-muted-foreground">
-            <div className="flex items-center gap-2.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-              <span className="uppercase tracking-wider font-semibold text-foreground">Direct Dispatch</span>
-              <span className="text-muted-foreground/40">/</span>
-              <span className="text-muted-foreground">JEE Target Line</span>
+      <div className="min-h-screen bg-background blueprint-grid text-on-surface flex flex-col">
+        
+        {/* Status Banner Ticker */}
+        <aside className="bg-brand-blue text-white border-b border-blue-700 py-1.5 px-4 sm:px-8 shrink-0" data-purpose="live-status-ticker">
+          <div className="max-w-7xl mx-auto flex items-center justify-between font-mono text-[11px] tracking-wide">
+            <div className="flex items-center gap-2">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
+              </span>
+              <span className="font-bold tracking-wider uppercase">SOLO CREATOR DIRECT INBOX</span>
+              <span className="text-blue-100">• Direct line to the solo developer of BOOKIE</span>
             </div>
-            <div className="flex items-center gap-3 text-[11px]">
-              <span className="hidden sm:inline">Encrypted P2P Line</span>
-              <span className="hidden sm:inline text-muted-foreground/40">•</span>
-              <span className="text-foreground font-semibold">Solo Architect Desk</span>
+            <div className="hidden md:flex items-center gap-4 text-blue-100 text-[10px] font-mono tracking-wider">
+              <span>NO BOTS</span>
+              <span>·</span>
+              <span>100% PRIVATE</span>
+              <span>·</span>
+              <span className="text-amber-200 font-bold">REPLIED IN FREE TIME</span>
             </div>
           </div>
-        </div>
+        </aside>
 
         {/* Main Content Area */}
-        <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
-          {/* Hero Dossier Intro (Stitch Screen 11) */}
-          <div className="max-w-3xl mb-8 pt-2">
-            <div className="font-mono text-xs uppercase tracking-widest text-primary font-semibold mb-2">
-              Direct Correspondence • Archival 1v1
-            </div>
-            <h1 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight text-foreground leading-tight">
-              Aspirant Direct <span className="font-serif italic font-normal text-primary">Desk.</span>
-            </h1>
-            <p className="font-sans text-sm sm:text-base text-muted-foreground mt-3 leading-relaxed max-w-2xl">
-              A direct, private line with the site architect. Flag broken mirrors, submit missing chapter notes, challenge key discrepancies, or request specialized academic tooling without ticketing friction.
-            </p>
-          </div>
-
-          {/* Two-Column Disciplined Layout Frame (Stitch Screen 11) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* ───── LEFT COLUMN: SIDEBAR DOSSIER (4 Cols) ───── */}
-            <aside className="lg:col-span-4 space-y-5">
-              {/* Card 1: Private Channel & Search */}
-              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs">
-                <div className="flex items-center justify-between pb-4 border-b border-border/80">
-                  <div>
-                    <span className="font-mono text-[10px] uppercase font-semibold tracking-wider text-primary block mb-0.5">
-                      Private Channel
+        <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 flex-1 items-stretch bg-surface-container-lowest border-2 border-slate-900 rounded-3xl shadow-[6px_6px_0px_0px_rgba(15,23,42,0.95)] overflow-hidden min-h-[640px]">
+            
+            {/* ───── LEFT SIDEBAR: INBOX & DIRECT LINE INFO ───── */}
+            <aside className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex flex-col bg-slate-50/70 dark:bg-slate-900/50">
+              
+              {/* Header: SLA Status & Direct Line Tag */}
+              <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white font-display">
+                      DIRECT INBOX
                     </span>
-                    <h2 className="font-serif text-base font-bold text-foreground">Aspirant Dispatch</h2>
+                    <span className="bg-blue-100 dark:bg-blue-950 text-brand-blue text-[11px] font-bold px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-900 font-mono">
+                      1v1
+                    </span>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono text-muted-foreground bg-muted/60 border border-border/80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    Recess Active
+                  <span className="text-[10px] font-mono text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-300 dark:border-amber-800 font-bold flex items-center gap-1.5 shadow-xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    Replies in Free Time
                   </span>
                 </div>
-                <div className="mt-4 relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-4 w-4 text-muted-foreground" />
-                  </div>
+
+                {/* Search Bar */}
+                <div className="relative flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl px-3 py-2 border border-slate-200 dark:border-slate-700 focus-within:border-brand-blue focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+                  <Search className="w-3.5 h-3.5 text-slate-400 mr-2 shrink-0" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search past correspondence..."
-                    className="w-full text-xs font-sans pl-9 pr-14 py-2.5 bg-background rounded-xl border border-border/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
+                    placeholder="Search messages or doubts..."
+                    className="bg-transparent border-none text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none w-full p-0"
                   />
-                  {searchQuery ? (
-                    <button
-                      onClick={() => setSearchQuery('')}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground"
-                    >
-                      <X className="h-3.5 w-3.5" />
+                  {searchQuery && (
+                    <button onClick={() => setSearchQuery('')} className="text-slate-400 hover:text-slate-600 text-xs">
+                      <X className="w-3 h-3" />
                     </button>
-                  ) : (
-                    <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
-                      <kbd className="font-mono text-[10px] text-muted-foreground bg-muted border border-border/80 px-1.5 py-0.5 rounded shadow-2xs">⌘K</kbd>
-                    </div>
                   )}
                 </div>
               </div>
 
-              {/* Card 2: Solo Dev & Aspirant Manifesto */}
-              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs">
-                <div className="flex items-center gap-3 mb-3.5">
-                  <div className="w-9 h-9 rounded-xl bg-muted border border-border/80 flex items-center justify-center text-foreground font-serif font-bold text-xs">
-                    BA
+              {/* Sidebar Cards Area */}
+              <div className="p-3.5 flex-1 overflow-y-auto space-y-3">
+                {/* Card 1: Solo Dev & Fellow Aspirant */}
+                <div className="p-3.5 bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900/60 rounded-2xl shadow-xs space-y-2.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-brand-blue text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+                      💻
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-black text-slate-900 dark:text-white truncate font-display">
+                        Solo Dev &amp; Fellow Aspirant
+                      </h4>
+                      <p className="text-[10px] text-cyan-600 dark:text-cyan-400 font-mono font-medium truncate">
+                        Not a 24/7 corporate team
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-serif font-bold text-sm text-foreground leading-tight">
-                      Solo Dev & Aspirant
-                    </h3>
-                    <p className="font-mono text-[11px] text-muted-foreground">
-                      Non-corporate • Personal Terminal
-                    </p>
-                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                    Hey! I build and run BOOKIE alone alongside my own studies. I'm not always online, but I read every single message and reply during study breaks and free time. Drop your message below!
+                  </p>
                 </div>
-                <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                  Built independently alongside daily mock routines. Messages land directly in my study terminal and are replied to during recess. Zero automated bot filtering.
-                </p>
-                <div className="mt-4 pt-3.5 border-t border-border/80 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
-                  <span>TLS 1.3 Verified</span>
+
+                {/* Card 2: Buy Me a Chai (Encouraging banner) */}
+                <div className="p-3.5 bg-amber-50/90 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-700/80 rounded-2xl shadow-xs space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base leading-none">☕</span>
+                      <h4 className="text-xs font-black text-slate-900 dark:text-amber-100 font-display">
+                        Buy Me a Chai
+                      </h4>
+                    </div>
+                    <span className="text-[9px] font-mono font-black tracking-wider uppercase px-2 py-0.5 rounded-md bg-amber-200/90 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
+                      SUPPORT
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-amber-950/80 dark:text-amber-200/90 leading-relaxed font-normal">
+                    BOOKIE is 100% free with zero ads. If the notes, mock tools, or YPT timer help your prep, buying a cup of chai keeps the servers alive and fuels late-night coding!
+                  </p>
                   <button
+                    type="button"
                     onClick={() => navigate('/donate')}
-                    className="text-foreground hover:text-primary transition-colors flex items-center gap-1 font-semibold cursor-pointer"
+                    className="w-full py-2 px-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.99] text-slate-950 font-black text-xs rounded-xl shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer font-display"
                   >
-                    <span>Archival Sustenance</span>
-                    <span className="text-xs">☕</span>
+                    <span>☕ Buy Me a Chai ❤️</span>
                   </button>
                 </div>
-              </div>
 
-              {/* Card 3: Dispatch Categories */}
-              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs">
-                <div className="font-mono text-[10px] uppercase font-semibold tracking-wider text-muted-foreground mb-3.5">
-                  Dispatch Categories
-                </div>
-                <div className="space-y-1.5">
-                  {[
-                    { num: "01", label: "Broken Mirror or Link Error", prefix: "[Broken Link]: " },
-                    { num: "02", label: "Curated Coaching Material", prefix: "[Material Request]: " },
-                    { num: "03", label: "Key Discrepancy & Doubt", prefix: "[Doubt / Key Issue]: " },
-                    { num: "04", label: "Tool & Platform Proposal", prefix: "[Platform Suggestion]: " },
-                  ].map((cat) => (
+                {/* Card 3: Quick Topic Starters */}
+                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                      QUICK TOPIC STARTERS
+                    </span>
+                    <span className="text-slate-400 text-[10px]">▲</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
                     <button
-                      key={cat.num}
                       type="button"
-                      onClick={() => handleQuickTopic(cat.prefix)}
-                      className="w-full text-left py-2.5 px-3 rounded-xl border border-transparent hover:border-border/80 hover:bg-muted/40 transition-all flex items-center justify-between group cursor-pointer"
+                      onClick={() => handleQuickTopic('[Broken Link]: ')}
+                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-600 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
                     >
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-xs text-muted-foreground font-mono">{cat.num}</span>
-                        <span className="font-sans text-xs font-medium text-foreground group-hover:text-primary transition-colors">
-                          {cat.label}
-                        </span>
-                      </div>
-                      <span className="font-mono text-[11px] text-muted-foreground/60 group-hover:text-primary transition-colors">
-                        →
-                      </span>
+                      <span className="text-sm">💥</span>
+                      <span className="truncate">Broken Link</span>
                     </button>
-                  ))}
+                    <button
+                      type="button"
+                      onClick={() => handleQuickTopic('[Book Request]: ')}
+                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
+                    >
+                      <span className="text-sm">📖</span>
+                      <span className="truncate">Book Request</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickTopic('[Study Doubt]: ')}
+                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
+                    >
+                      <span className="text-sm">❓</span>
+                      <span className="truncate">Study Doubt</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickTopic('[Suggest Idea]: ')}
+                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-purple-50 dark:hover:bg-purple-950/40 hover:text-purple-600 dark:hover:text-purple-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
+                    >
+                      <span className="text-sm">✨</span>
+                      <span className="truncate">Suggest Idea</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </aside>
 
-            {/* ───── RIGHT COLUMN: 1v1 DIRECT DISPATCH TERMINAL (8 Cols) ───── */}
+            {/* ───── RIGHT MAIN CHAT CONVERSATION CANVAS ───── */}
             <section
-              className={cn(
-                "lg:col-span-8 bg-card rounded-2xl border border-border/80 shadow-xs flex flex-col h-[740px] overflow-hidden relative transition-all",
-                isDragging && "border-primary ring-2 ring-primary/20"
-              )}
+              className={cn("lg:col-span-8 flex flex-col h-full bg-white dark:bg-slate-950 relative transition-all", isDragging && "ring-2 ring-brand-blue ring-inset")}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
               {isDragging && (
-                <div className="absolute inset-0 z-50 bg-background/85 backdrop-blur-xs flex flex-col items-center justify-center pointer-events-none border-2 border-dashed border-primary m-3 rounded-xl">
-                  <Paperclip className="w-8 h-8 text-primary animate-bounce mb-2" />
-                  <p className="text-sm font-serif font-bold text-foreground">Drop image to attach</p>
-                  <p className="text-[11px] text-muted-foreground font-mono mt-0.5">Will be uploaded to secure support thread</p>
+                <div className="absolute inset-0 z-50 bg-blue-900/40 backdrop-blur-xs flex flex-col items-center justify-center pointer-events-none border-2 border-dashed border-white m-3 rounded-2xl">
+                  <div className="p-4 bg-slate-900/90 text-white rounded-2xl flex items-center gap-3 shadow-2xl border border-blue-500/40">
+                    <Paperclip className="w-6 h-6 text-brand-blue animate-bounce" />
+                    <div>
+                      <p className="text-sm font-bold font-display">Drop image here to attach</p>
+                      <p className="text-[11px] text-slate-300 font-mono">Will be sent directly to site owner</p>
+                    </div>
+                  </div>
                 </div>
               )}
 
-              {/* Terminal Header (Stitch Screen 11) */}
-              <div className="px-6 py-4 border-b border-border/80 bg-background/50 flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
+              {/* Chat Canvas Header */}
+              <div className="bg-slate-900 text-white px-5 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+                <div className="flex items-center gap-3">
                   <div className="relative">
-                    <div className="w-9 h-9 rounded-full bg-muted border border-border/80 flex items-center justify-center text-foreground font-serif font-bold text-sm">
-                      BK
+                    <div className="w-10 h-10 rounded-xl bg-brand-blue border border-white/20 flex items-center justify-center font-bold text-white shadow-inner">
+                      💻
                     </div>
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-card"></span>
                   </div>
-                  <div>
+                  <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="font-serif font-bold text-sm text-foreground">Lead Architect Desk</span>
-                      <span className="hidden sm:inline-flex px-2 py-0.5 text-[10px] font-mono font-semibold rounded bg-muted text-muted-foreground border border-border/80">
-                        SECURE 1V1
+                      <h3 className="font-bold text-sm tracking-tight text-white font-display">
+                        Site Owner (Solo Creator)
+                      </h3>
+                      <span className="bg-amber-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded font-mono uppercase tracking-wide flex items-center gap-1">
+                        <span>⏳</span>
+                        <span>REPLIES IN FREE TIME</span>
                       </span>
                     </div>
-                    <div className="font-mono text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                      <span>Direct Aspirant Terminal</span>
-                      <span>•</span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">Turnaround 2–4 hrs</span>
-                    </div>
+                    <p className="text-[11px] text-slate-400 font-mono">
+                      Direct 1v1 Aspirant Inbox • Real Human Reply
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Right actions: Buy Me a Chai + Refresh */}
+                <div className="flex items-center gap-2.5">
                   <button
                     type="button"
                     onClick={() => navigate('/donate')}
-                    className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 hover:bg-amber-500/20 transition-all cursor-pointer"
+                    className="bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer font-display"
                   >
-                    <span>Chai</span>
                     <span>☕</span>
+                    <span>Buy Me a Chai</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => refetch()}
-                    className="p-1.5 text-muted-foreground hover:text-foreground rounded-lg border border-border/80 hover:bg-muted transition-colors cursor-pointer"
-                    title="Refresh connection"
+                    className="p-1.5 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+                    title="Refresh chat"
                   >
-                    <RefreshCw className="w-3.5 h-3.5" />
+                    <RefreshCw className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              {/* Confidentiality notice sub-strip */}
-              <div className="px-6 py-2.5 bg-muted/30 border-b border-border/80 flex items-center justify-between text-xs font-mono text-muted-foreground">
-                <span>Direct peer-to-peer line — Confidential & unmoderated by third parties.</span>
-                <span className="hidden sm:inline text-primary text-[11px] font-semibold">Strict Academic Privacy</span>
+              {/* Sub-header Ribbon */}
+              <div className="bg-slate-50 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 px-4 py-1.5 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium text-[11px]">
+                  <span>🛡️</span>
+                  <span>Direct 1v1 thread with Site Owner — No middleman, no bots.</span>
+                </div>
+                <span className="text-rose-500 dark:text-rose-400 font-mono text-xs font-semibold">
+                  Replies during study breaks
+                </span>
               </div>
 
-              {/* Thread Messages Feed */}
-              <div ref={scrollerRef} className="flex-1 p-6 md:p-8 overflow-y-auto space-y-4 bg-card">
+              {/* Messages Thread Feed */}
+              <div ref={scrollerRef} className="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/50">
                 {loading ? (
-                  <div className="h-full flex items-center justify-center p-10 text-xs font-mono text-muted-foreground gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                    <span>Connecting to Direct Terminal Line…</span>
+                  <div className="h-full flex items-center justify-center p-10 text-sm font-mono text-slate-500 gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin text-brand-blue" />
+                    <span>Connecting to Direct Line…</span>
                   </div>
                 ) : error ? (
                   <div className="h-full flex flex-col items-center justify-center gap-3 p-8 text-center max-w-md mx-auto">
-                    <div className="bg-destructive/10 text-destructive border border-destructive/30 p-4 rounded-xl text-xs font-mono">
+                    <div className="bg-rose-50 text-rose-700 border border-rose-200 p-4 rounded-2xl text-xs font-mono">
                       {error}
                     </div>
                     <button
                       onClick={() => refetch()}
-                      className="px-4 py-2 bg-foreground text-background rounded-xl text-xs font-semibold font-mono"
+                      className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold font-mono"
                     >
                       Retry Connection
                     </button>
                   </div>
                 ) : filteredMessages.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto space-y-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-xs">
-                      <ShieldCheck className="w-6 h-6" />
+                  <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto space-y-3">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-100 text-brand-blue flex items-center justify-center shadow-xs border border-blue-200 dark:border-blue-900 dark:bg-blue-950/80">
+                      <ShieldCheck className="w-6 h-6 text-brand-blue" />
                     </div>
                     <div>
-                      <h3 className="font-serif text-2xl font-bold text-foreground tracking-tight">
-                        Direct 1v1 Archival Desk
-                      </h3>
-                      <p className="font-sans text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
-                        Engineered by an aspirant for serious candidates. Dispatch broken mirrors, submit verified high-yield notes, or request analytical tooling directly.
+                      <h4 className="text-sm font-bold text-slate-800 dark:text-white uppercase font-display tracking-wider">
+                        DIRECT 1v1 WITH SITE OWNER
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Solo project run by an aspirant for aspirants. Drop your doubt, bug report, or book request directly. No formal "hi/hello" needed.
                       </p>
                     </div>
-
-                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-lg pt-2">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
                       <button
                         type="button"
-                        onClick={() => handleQuickTopic('PW Varun Advanced Test #04 mirror reports 404 error')}
-                        className="w-full sm:w-1/2 p-3.5 rounded-xl border border-border/80 bg-background hover:border-primary text-left transition-all group cursor-pointer shadow-xs"
+                        onClick={() => handleQuickTopic('Check broken test link: ')}
+                        className="text-xs font-mono px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full hover:border-brand-blue text-slate-700 dark:text-slate-300 shadow-xs transition-colors"
                       >
-                        <div className="font-mono text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                          Broken Mirror Prompt
-                        </div>
-                        <p className="font-sans text-xs text-foreground group-hover:text-primary leading-snug">
-                          "PW Varun Advanced Test #04 mirror reports 404 error"
-                        </p>
+                        ⚡ "Check broken test link"
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleQuickTopic('Deconstructed 2024 JEE Adv rotational notes request')}
-                        className="w-full sm:w-1/2 p-3.5 rounded-xl border border-border/80 bg-background hover:border-primary text-left transition-all group cursor-pointer shadow-xs"
+                        onClick={() => handleQuickTopic('Request Coaching Notes: ')}
+                        className="text-xs font-mono px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full hover:border-brand-blue text-slate-700 dark:text-slate-300 shadow-xs transition-colors"
                       >
-                        <div className="font-mono text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                          Archival Request
-                        </div>
-                        <p className="font-sans text-xs text-foreground group-hover:text-primary leading-snug">
-                          "Deconstructed 2024 JEE Adv rotational notes"
-                        </p>
+                        📚 "Request Coaching Notes"
                       </button>
-                    </div>
-
-                    <div className="pt-2 font-mono text-[11px] text-muted-foreground flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                      <span>Awaiting candidate dispatch • Queue index: <span className="font-semibold text-foreground">#01 (Immediate)</span></span>
                     </div>
                   </div>
                 ) : (
@@ -411,49 +420,49 @@ export default function SupportPage() {
                     const isMine = m.author_role === 'user';
                     
                     return (
-                      <div key={m.id} className="space-y-2">
+                      <div key={m.id} className="space-y-3">
                         {showDate && (
-                          <div className="text-center my-3">
-                            <span className="text-[10px] font-mono font-semibold uppercase tracking-wider bg-muted/60 border border-border/80 rounded px-2.5 py-0.5 text-muted-foreground">
+                          <div className="text-center my-4">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full px-3 py-1 text-slate-500 shadow-xs">
                               {format(new Date(m.created_at), 'MMM d, yyyy')}
                             </span>
                           </div>
                         )}
                         
-                        <div className={cn("flex items-end gap-2 max-w-[85%] sm:max-w-[75%]", isMine ? "ml-auto justify-end" : "justify-start")}>
+                        <div className={cn("flex items-end gap-2.5 max-w-[85%] sm:max-w-[78%]", isMine ? "ml-auto justify-end" : "justify-start")}>
                           {!isMine && (
-                            <div className="w-6 h-6 rounded-lg border border-border/80 bg-muted text-primary flex items-center justify-center text-[9px] font-mono font-bold shrink-0 mb-1">
+                            <div className="w-7 h-7 rounded-lg bg-brand-blue text-white flex items-center justify-center text-[10px] font-black shrink-0 mb-1 font-mono shadow-xs">
                               DEV
                             </div>
                           )}
                           
                           <div className="space-y-1">
                             <div className={cn(
-                              "p-3 rounded-2xl text-xs sm:text-sm leading-relaxed border shadow-xs",
+                              "p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-sm",
                               isMine
-                                ? "bg-primary text-primary-foreground border-primary rounded-br-none"
-                                : "bg-card border-border/80 text-foreground rounded-bl-none"
+                                ? "bg-brand-blue text-white rounded-br-sm shadow-blue-500/10"
+                                : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-sm"
                             )}>
                               {m.image_url && (
                                 <a
                                   href={m.image_url}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="block mb-2 rounded-xl overflow-hidden border border-border/80 bg-muted max-w-sm group"
+                                  className="block mb-2 rounded-xl overflow-hidden border border-white/20 bg-slate-950/20 max-w-sm group"
                                 >
-                                  <img src={m.image_url} alt="Attachment" className="max-h-52 w-auto object-cover group-hover:opacity-90" />
+                                  <img src={m.image_url} alt="Attachment" className="max-h-56 w-auto object-cover group-hover:opacity-90" />
                                 </a>
                               )}
-                              <p className="whitespace-pre-wrap break-words font-sans">{m.body}</p>
+                              <p className="whitespace-pre-wrap break-words font-medium">{m.body}</p>
                             </div>
-                            <div className={cn("flex items-center gap-1 text-[10px] font-mono text-muted-foreground px-1", isMine ? "justify-end" : "justify-start")}>
+                            <div className={cn("flex items-center gap-1 text-[10px] font-mono text-slate-400 px-1", isMine ? "justify-end" : "justify-start")}>
                               <span>{format(new Date(m.created_at), 'h:mm a')}</span>
-                              {isMine && <CheckCheck className="w-3 h-3 text-primary" />}
+                              {isMine && <CheckCheck className="w-3 h-3 text-brand-blue" />}
                             </div>
                           </div>
 
                           {isMine && (
-                            <div className="w-6 h-6 rounded-lg border border-border/80 bg-muted/60 text-foreground flex items-center justify-center text-[9px] font-mono font-bold shrink-0 mb-1">
+                            <div className="w-7 h-7 rounded-lg bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center text-[10px] font-black shrink-0 mb-1 font-mono shadow-xs">
                               YOU
                             </div>
                           )}
@@ -464,18 +473,19 @@ export default function SupportPage() {
                 )}
               </div>
 
-              {/* Enhanced Rich Input Bar (Stitch Screen 11) */}
-              <footer className="p-4 sm:p-5 border-t border-border/80 bg-background/50 shrink-0">
+              {/* Enhanced Rich Input Bar */}
+              <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-3 sm:p-4 shrink-0">
+                
                 {/* Math Symbol Helper Ribbon */}
                 {showSymbolBar && (
-                  <div className="flex items-center gap-1 pb-2 overflow-x-auto scrollbar-none animate-in fade-in duration-100">
-                    <span className="text-[10px] font-mono font-semibold text-muted-foreground uppercase pr-1">Symbols:</span>
+                  <div className="flex items-center gap-1.5 pb-2.5 overflow-x-auto scrollbar-none animate-in fade-in duration-150">
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase pr-1">JEE Symbols:</span>
                     {MATH_SYMBOLS.map((sym) => (
                       <button
                         key={sym}
                         type="button"
                         onClick={() => insertSymbol(sym)}
-                        className="px-1.5 py-0.5 rounded bg-muted hover:bg-card text-xs font-mono font-bold border border-border/80 text-foreground transition-colors cursor-pointer"
+                        className="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 hover:text-brand-blue text-xs font-mono font-bold border border-slate-200 dark:border-slate-700 transition-colors"
                       >
                         {sym}
                       </button>
@@ -483,103 +493,89 @@ export default function SupportPage() {
                   </div>
                 )}
 
-                {/* Preview Thumbnail */}
+                {/* Preview Thumbnail if image chosen */}
                 {preview && (
-                  <div className="relative inline-block mb-2 rounded-xl overflow-hidden border border-border/80 bg-muted p-1">
-                    <img src={preview} className="h-14 w-auto rounded-lg" alt="Upload Preview" />
+                  <div className="relative inline-block mb-2 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-slate-100 p-1">
+                    <img src={preview} className="h-16 w-auto rounded-lg" alt="Upload Preview" />
                     <button
                       type="button"
                       onClick={() => setImage(null)}
-                      className="absolute top-1 right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer"
+                      className="absolute top-1 right-1 h-5 w-5 rounded-full bg-rose-500 text-white flex items-center justify-center hover:bg-rose-600 transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </div>
                 )}
 
-                <div className="rounded-xl border border-border/80 bg-card shadow-xs focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-                  <textarea
+                <form onSubmit={submit} onPaste={handlePaste} className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-2xl px-3 py-2 border border-slate-200 dark:border-slate-700 focus-within:border-brand-blue focus-within:bg-white dark:focus-within:bg-slate-900 focus-within:ring-2 focus-within:ring-brand-blue/20 transition-all">
+                  <div className="flex items-center gap-1 text-slate-500">
+                    <button
+                      type="button"
+                      onClick={() => fileRef.current?.click()}
+                      disabled={!canSend}
+                      className="p-1.5 hover:text-brand-blue hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                      title="Attach question screenshot (or drag & drop / Ctrl+V)"
+                    >
+                      <Paperclip className="w-4 h-4 transform -rotate-45" />
+                    </button>
+                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] ?? null)} />
+
+                    <button
+                      type="button"
+                      onClick={() => handleQuickTopic('Formula verification: ')}
+                      className="p-1.5 hover:text-brand-blue hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors font-mono text-xs font-bold"
+                      title="Insert Formula Note"
+                    >
+                      fx
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowSymbolBar(!showSymbolBar)}
+                      className={cn(
+                        "p-1.5 rounded-lg transition-colors text-xs font-mono font-bold",
+                        showSymbolBar ? "bg-blue-100 text-brand-blue" : "hover:text-brand-blue hover:bg-slate-200 dark:hover:bg-slate-700"
+                      )}
+                      title="Toggle Math / Physics Symbols (θ, π, μ, λ)"
+                    >
+                      Ω
+                    </button>
+                  </div>
+
+                  <input
                     ref={inputRef}
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
                     onPaste={handlePaste}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        submit();
-                      }
-                    }}
                     maxLength={4000}
                     disabled={!canSend}
-                    placeholder={canSend ? "Draft your dispatch directly to the site architect (doubts, broken mirrors, PYQ requests)..." : "Conversation closed"}
-                    className="w-full border-0 focus:ring-0 text-xs sm:text-sm font-sans placeholder:text-muted-foreground text-foreground p-3.5 resize-none bg-transparent focus:outline-none"
-                    rows={2}
+                    placeholder={canSend ? "Message the site owner directly (doubts, broken links, book requests)..." : "This conversation is closed"}
+                    className="flex-1 bg-transparent border-none text-xs sm:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0 px-2 py-1"
                   />
 
-                  <div className="px-3.5 py-2 border-t border-border/60 flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-muted-foreground">
-                      <button
-                        type="button"
-                        onClick={() => fileRef.current?.click()}
-                        disabled={!canSend}
-                        className="p-1.5 rounded-lg hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer"
-                        title="Attach question screenshot or notes"
-                      >
-                        <Paperclip className="w-4 h-4" />
-                      </button>
-                      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] ?? null)} />
+                  <button
+                    type="submit"
+                    disabled={!canSend || busy || (!draft.trim() && !image)}
+                    className="bg-brand-blue hover:bg-blue-600 disabled:opacity-50 text-white px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5 text-xs font-bold cursor-pointer shrink-0"
+                  >
+                    {busy ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <span>Send</span>
+                        <Send className="w-3.5 h-3.5 ml-0.5" />
+                      </>
+                    )}
+                  </button>
+                </form>
 
-                      <button
-                        type="button"
-                        onClick={() => handleQuickTopic('Formula query: ')}
-                        className="p-1.5 rounded-lg hover:text-foreground hover:bg-muted/60 transition-colors font-serif font-semibold text-xs cursor-pointer"
-                        title="Formula notation"
-                      >
-                        fx
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setShowSymbolBar(!showSymbolBar)}
-                        className={cn(
-                          "p-1.5 rounded-lg transition-colors font-mono text-xs cursor-pointer",
-                          showSymbolBar ? "bg-primary text-primary-foreground" : "hover:text-foreground hover:bg-muted/60"
-                        )}
-                        title="Toggle symbols"
-                      >
-                        Ω
-                      </button>
-
-                      <span className="text-muted-foreground/30 mx-1">|</span>
-                      <span className="text-[11px] font-mono text-muted-foreground hidden sm:inline">
-                        Markdown & Math supported
-                      </span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => submit()}
-                      disabled={!canSend || busy || (!draft.trim() && !image)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold tracking-wide transition-all shadow-xs disabled:opacity-50 cursor-pointer"
-                    >
-                      {busy ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <>
-                          <span>Send Dispatch</span>
-                          <Send className="w-3.5 h-3.5" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="mt-2.5 px-1 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
-                  <span>Encrypted TLS 1.3 • Direct Terminal Dispatch</span>
-                  <span className="hidden sm:inline">Non-commercial • Pure academic utility</span>
+                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono mt-2 px-1">
+                  <span>Press Enter ↵ to send • Shift + Enter for new line</span>
+                  <span className="hidden sm:inline">100% Solo Aspirant Built &amp; Maintained • Zero Bots</span>
                 </div>
               </footer>
             </section>
+
           </div>
         </main>
       </div>

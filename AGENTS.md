@@ -1,39 +1,7 @@
-# Repository Instructions: Interaction Physics, Structural Topology & Supabase Budget Rules
+# Repository Instructions & Supabase Budget Rules
 
-## 1. Design & Interaction Authority — Physical Dynamics & Topology
-
-The Stitch design in `docs/DESIGN.md` is the visual authority; `apple-design` contributes interaction physics and topology only (springs, interruptible motion, press feedback, hierarchy, restraint, accessibility), never fonts, colors or materials. The visual aesthetic is a premium, distinctive, disciplined academic journal product identity (not generic, not vibe-coded, not templated).
-
-### 1.1 Structural Topology
-- **Clear Hierarchy:** One primary action per view, strong navigation model, progressive disclosure, and quiet surfaces.
-- **Form & Navigation:** Large clear titles, grouped content, bottom tab bar on mobile phones for primary destinations, sheets for secondary tasks.
-- **Restraint:** One element draws the eye at any given moment. Remove competing decorative noise.
-
-### 1.2 Fluid Interaction & Motion Principles
-1. **Instant Response (<16ms feedback):**
-   - Respond immediately on `pointerdown`, never waiting for `pointerup` or `click`.
-   - Never introduce artificial latency, debounces, or transit waits on direct input paths.
-   - Feedback must be continuous throughout the gesture (1:1 tracking with the pointer).
-2. **Interruptibility (Highest Priority):**
-   - Every animation must be interruptible and redirectable mid-flight without glitching or snapping.
-   - Always animate from the live *presentation* (current on-screen) value, never the logical target value.
-   - Use velocity-aware springs rather than linear or hard-coded duration easings for user-driven interactions.
-3. **Physical Springs & Velocity Handoff:**
-   - Think in **damping ratio** and **response**, not arbitrary durations.
-   - Default to critically damped springs (`damping: 1.0`, `response: 0.35s`) for clean, non-distracting settlements.
-   - Apply slight bounce (`damping: ~0.8`) strictly when a physical momentum flick or throw preceded release.
-   - Seamlessly transfer release pointer velocity into the initial spring velocity.
-4. **Spatial Consistency & Origin Anchoring:**
-   - Enter and exit along symmetric paths (e.g., sheets slide in from bottom and dismiss to bottom).
-   - Anchor sheets, popovers, and menus to their trigger element via proper `transform-origin`.
-5. **Depth, Surfaces & Performance:**
-   - Distinctive elevation language tailored to the product identity: solid surfaces, hairline rules, or crisp offset layers rather than stacked frosted glass.
-   - Limit backdrop-filter to at most 1–2 small chrome layers; always provide solid fallbacks.
-   - Never animate layout properties (`width`, `height`, `top`, `left`). Animate only `transform` and `opacity`.
-6. **Restraint & Reduced Motion:**
-   - Respect `prefers-reduced-motion: reduce`: gracefully swap springs/slides for immediate opacity cross-fades without vestibular disturbance.
-   - Respect `prefers-reduced-transparency: reduce` by replacing blurred surfaces with solid high-contrast backgrounds.
-   - Avoid unmotivated motion. Restraint produces elegance.
+## 1. Design Authority
+Preserve the existing site design; do not restyle without being asked.
 
 ---
 

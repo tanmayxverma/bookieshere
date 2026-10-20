@@ -1483,45 +1483,40 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   const customRooms = rooms.filter(r => !r.is_permanent);
 
   return (
-    <div className="space-y-6 pop-in">
+    <div className="space-y-5 pop-in">
       {/* ───── ENCOURAGE CREATE STUDY ROOM BANNER ───── */}
-      <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="relative overflow-hidden rounded-3xl border-2 border-slate-900 dark:border-slate-700 bg-gradient-to-r from-blue-500/10 via-indigo-500/5 to-surface-container-lowest p-5 sm:p-6 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-2xl border border-primary/20 shrink-0">
-            🏛️
+          <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center font-black text-2xl shadow-sm border-2 border-slate-900 shrink-0">
+            ✨
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">
-                Aspirant Syndicate
+              <span className="text-[10px] font-mono font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-950/80 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
+                Study With Friends / Batch
               </span>
-              <span className="text-xs text-muted-foreground hidden sm:inline font-mono">· Private PIN & Live Telemetry</span>
+              <span className="text-xs text-muted-foreground hidden sm:inline font-mono">· Private PIN & Custom Limits</span>
             </div>
-            <h4 className="text-base sm:text-lg font-serif font-medium tracking-tight text-foreground mt-1">
-              Host Your Own Academic Focus Chamber
+            <h4 className="text-base sm:text-lg font-black font-display text-foreground mt-0.5">
+              Host Your Own JEE Focus Room
             </h4>
             <p className="text-xs text-muted-foreground font-mono mt-0.5">
-              Assemble a private cohort for focused problem solving, test debriefs, or nocturnal revision.
+              Create a custom room for your batch, mock discussion, or late-night shift.
             </p>
           </div>
         </div>
         <Button
           onClick={() => setShowCreate(true)}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-mono font-semibold text-xs rounded-lg shadow-xs shrink-0 flex items-center gap-1.5 self-stretch sm:self-auto h-10 px-5 active:scale-95 transition-all"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-mono font-bold text-xs rounded-xl shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] shrink-0 flex items-center gap-1.5 self-stretch sm:self-auto h-11 px-5 active:scale-95 transition-transform border-2 border-slate-900"
         >
           <Plus className="w-4 h-4" />
           <span>Create Study Room</span>
         </Button>
       </div>
 
-      <div className="pt-1 flex items-baseline justify-between">
-        <div>
-          <h3 className="text-base font-serif font-medium text-foreground">Active Focus Chambers</h3>
-          <p className="text-xs text-muted-foreground font-mono mt-0.5">Join a verified chamber to synchronize deep-work hours with peers</p>
-        </div>
-        <span className="text-[11px] font-mono text-muted-foreground">
-          {permanentRooms.length + customRooms.length} Chambers Live
-        </span>
+      <div className="pt-1">
+        <h3 className="text-base font-bold text-foreground">Live Study Rooms</h3>
+        <p className="text-sm text-muted-foreground mt-0.5">Join a live room to study alongside fellow aspirants</p>
       </div>
 
       <div className="space-y-3">
@@ -1532,8 +1527,8 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
       </div>
 
       {customRooms.length > 0 && (
-        <div className="space-y-3 pt-2">
-          <h3 className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider">Candidate-Created Chambers</h3>
+        <div className="space-y-3">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Custom Rooms</h3>
           {customRooms.map((room, idx) => (
             <RoomCard key={room.id} room={room} index={idx + permanentRooms.length} currentUserId={currentUser.id}
               onJoin={() => attemptJoin(room)}
@@ -1543,30 +1538,30 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
         </div>
       )}
 
-      {/* ───── CREATE STUDY ROOM DIALOG ───── */}
+      {/* ───── CREATE STUDY ROOM DIALOG (CLEAN & NON-CORRUPTED) ───── */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="w-[95vw] max-w-md p-6 rounded-2xl border border-border/80 bg-card shadow-md max-h-[90vh] overflow-y-auto ypt-scroll">
+        <DialogContent className="w-[95vw] max-w-md p-5 sm:p-6 rounded-3xl border-2 border-slate-900 dark:border-slate-700 bg-surface-container-lowest shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] max-h-[90vh] overflow-y-auto ypt-scroll">
           <DialogHeader>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20 font-bold text-lg shrink-0">
-                🏛️
+            <div className="flex items-center gap-2.5 mb-1">
+              <div className="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center border-2 border-slate-900 dark:border-slate-700 font-bold text-lg shrink-0">
+                ✨
               </div>
               <div>
-                <DialogTitle className="text-lg font-serif font-medium text-foreground">
-                  Charter Focus Chamber
+                <DialogTitle className="text-xl font-black font-display text-on-surface">
+                  Create Study Room
                 </DialogTitle>
-                <DialogDescription className="text-xs font-mono text-muted-foreground">
-                  Host an encrypted focus chamber for your syndicate
+                <DialogDescription className="text-xs font-mono text-on-surface-variant">
+                  Host an interactive study room for your batch
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
 
-          <div className="space-y-4 pt-2 w-full min-w-0">
+          <div className="space-y-4 pt-1 w-full min-w-0">
             {/* Room Icon Picker */}
             <div>
-              <label className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
-                Chamber Sigil
+              <label className="text-[11px] font-mono font-bold text-on-surface-variant uppercase tracking-wider mb-2 block">
+                Choose Room Icon
               </label>
               <div className="grid grid-cols-8 gap-1.5 sm:gap-2 w-full">
                 {ROOM_ICONS.map(ic => (
@@ -1575,10 +1570,10 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                     type="button"
                     onClick={() => setNewEmoji(ic)}
                     className={cn(
-                      "h-10 w-full rounded-lg text-lg flex items-center justify-center border transition-all active:scale-95",
+                      "h-10 w-full rounded-xl text-lg flex items-center justify-center border-2 transition-all active:scale-95",
                       newEmoji === ic
-                        ? "border-primary bg-primary/15 text-primary shadow-xs scale-105"
-                        : "border-border/70 hover:bg-muted/50 text-foreground"
+                        ? "border-slate-900 bg-primary/15 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] scale-105"
+                        : "border-slate-300 dark:border-slate-700 hover:bg-muted/50"
                     )}
                   >
                     {ic}
@@ -1588,34 +1583,34 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider block">
-                Chamber Title
+              <label className="text-[11px] font-mono font-bold text-on-surface-variant uppercase tracking-wider block">
+                Room Name
               </label>
               <Input
                 placeholder="e.g. JEE 2026 Rankers Grind"
                 value={newName}
                 onChange={e => setNewName(e.target.value)}
                 maxLength={40}
-                className="h-10 text-sm font-medium border border-border/80 rounded-lg w-full focus-visible:ring-1 focus-visible:ring-primary"
+                className="h-11 text-sm font-medium border-2 border-slate-900 dark:border-slate-700 rounded-xl w-full"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider block">
-                Mission / Target (Optional)
+              <label className="text-[11px] font-mono font-bold text-on-surface-variant uppercase tracking-wider block">
+                Description (Optional)
               </label>
               <Input
                 placeholder="e.g. Daily intense problem solving & revision"
                 value={newDesc}
                 onChange={e => setNewDesc(e.target.value)}
                 maxLength={100}
-                className="h-10 text-sm font-medium border border-border/80 rounded-lg w-full focus-visible:ring-1 focus-visible:ring-primary"
+                className="h-11 text-sm font-medium border-2 border-slate-900 dark:border-slate-700 rounded-xl w-full"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[11px] font-mono font-semibold text-muted-foreground uppercase tracking-wider block">
-                Participant Limit (Optional)
+              <label className="text-[11px] font-mono font-bold text-on-surface-variant uppercase tracking-wider block">
+                Max Participants (Optional)
               </label>
               <Input
                 placeholder="Unlimited (or enter 2-50)"
@@ -1624,14 +1619,14 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                 onChange={e => setNewMax(e.target.value)}
                 min={2}
                 max={50}
-                className="h-10 text-sm font-mono border border-border/80 rounded-lg w-full focus-visible:ring-1 focus-visible:ring-primary"
+                className="h-11 text-sm font-medium border-2 border-slate-900 dark:border-slate-700 rounded-xl w-full"
               />
             </div>
 
-            <div className="rounded-xl border border-border/70 bg-muted/20 p-3.5 space-y-3 w-full">
+            <div className="rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-muted/20 p-3.5 space-y-3 w-full">
               <label className="flex items-center justify-between text-sm cursor-pointer select-none">
-                <span className="flex items-center gap-2 font-mono text-xs font-medium text-foreground">
-                  <Lock className="h-4 w-4 text-primary" /> Lock with 4-Digit Access PIN
+                <span className="flex items-center gap-2 font-bold font-mono text-xs">
+                  <Lock className="h-4 w-4 text-primary" /> Lock room with 4-Digit PIN
                 </span>
                 <input
                   type="checkbox"
@@ -1648,26 +1643,26 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
                     maxLength={4}
                     value={newPin}
                     onChange={e => setNewPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                    className="h-10 text-base tracking-[0.4em] text-center font-mono font-bold border border-border/80 rounded-lg w-full"
+                    className="h-11 text-base tracking-[0.4em] text-center font-mono font-bold border-2 border-slate-900 dark:border-slate-700 rounded-xl w-full"
                   />
                   <p className="text-[11px] text-muted-foreground font-mono">
-                    Only members with this 4-digit PIN can enter this focus chamber.
+                    Only members with this 4-digit PIN can enter this study room.
                   </p>
                 </div>
               )}
             </div>
 
             <p className="text-[11px] font-mono text-muted-foreground">
-              ⚡ Custom chambers auto-decommission after 1 hr of inactivity. Room chats persist for 24 hours.
+              ⚡ Custom rooms auto-delete after 1 hr of inactivity. Room chats live for 24 hours.
             </p>
 
             <Button
               onClick={createRoom}
               disabled={!newName.trim() || isCreatingRoom}
-              className="w-full h-10 text-xs font-mono font-semibold rounded-lg active:scale-95 transition-all bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
+              className="w-full h-11 text-sm font-mono font-bold rounded-xl active:scale-95 transition-transform bg-primary text-primary-foreground border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]"
             >
               {isCreatingRoom ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
-              {isCreatingRoom ? 'Chartering Chamber...' : 'Charter Chamber & Enter'}
+              {isCreatingRoom ? 'Creating...' : 'Create Room & Join'}
             </Button>
           </div>
         </DialogContent>
@@ -1675,15 +1670,15 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
 
       {/* PIN prompt when joining a locked room */}
       <Dialog open={!!pinPromptRoom} onOpenChange={(o) => { if (!o) { setPinPromptRoom(null); setPinInput(''); } }}>
-        <DialogContent className="w-[95vw] max-w-sm rounded-2xl border border-border/80 bg-card p-6 shadow-md">
+        <DialogContent className="w-[95vw] max-w-sm rounded-3xl border-2 border-slate-900 dark:border-slate-700 bg-surface-container-lowest p-6 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-serif text-base font-medium">
-              <Lock className="h-4 w-4 text-primary" /> Access PIN Required
+            <DialogTitle className="flex items-center gap-2 font-display text-lg font-bold">
+              <Lock className="h-4 w-4 text-primary" /> Enter room PIN
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <p className="text-xs font-mono text-muted-foreground">
-              <span className="font-semibold text-foreground">{pinPromptRoom?.name}</span> is protected. Request the 4-digit PIN from the chamber creator.
+              <span className="font-bold text-foreground">{pinPromptRoom?.name}</span> is locked. Ask the creator for the 4-digit PIN.
             </p>
             <Input
               autoFocus
@@ -1693,14 +1688,14 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
               value={pinInput}
               onChange={e => setPinInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
               onKeyDown={e => { if (e.key === 'Enter') submitPin(); }}
-              className="h-11 text-xl tracking-[0.4em] text-center font-mono font-bold border border-border/80 rounded-lg"
+              className="h-12 text-2xl tracking-[0.5em] text-center font-mono font-bold border-2 border-slate-900 dark:border-slate-700 rounded-xl"
             />
             <Button
               onClick={submitPin}
               disabled={pinChecking || pinInput.length !== 4}
-              className="w-full h-10 font-mono font-semibold text-xs rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
+              className="w-full h-11 font-mono font-bold text-xs rounded-xl bg-primary text-primary-foreground border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]"
             >
-              {pinChecking ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Authorize & Enter'}
+              {pinChecking ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Unlock & Join'}
             </Button>
           </div>
         </DialogContent>
@@ -1716,33 +1711,33 @@ function RoomCard({ room, index, currentUserId, onJoin, onDelete }: {
 
   return (
     <div
-      className="group rounded-xl border border-border/80 bg-card hover:border-primary/40 hover:shadow-xs transition-all duration-200 overflow-hidden pop-in"
-      style={{ animationDelay: `${index * 0.04}s` }}
+      className="group rounded-2xl border border-border/30 bg-card/50 hover:border-border/60 hover:shadow-md transition-all duration-300 overflow-hidden pop-in"
+      style={{ animationDelay: `${index * 0.06}s` }}
     >
       <div className="p-4 sm:p-5 flex items-center gap-4">
-        <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform duration-200">
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/8 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform duration-300">
           {getRoomEmoji(room.emoji, room.name)}
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-serif font-medium text-base text-foreground tracking-tight flex items-center gap-2">
+          <h4 className="font-bold text-[15px] flex items-center gap-2">
             {room.name}
             {room.is_permanent && <Crown className="h-4 w-4 text-primary shrink-0" />}
             {room.is_locked && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-mono font-semibold uppercase tracking-wider border border-primary/20">
-                <Lock className="w-2.5 h-2.5" />
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider">
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                 Locked
               </span>
             )}
           </h4>
-          <p className="text-xs text-muted-foreground font-mono truncate mt-0.5">
-            {room.description || 'Open academic focus chamber'}
+          <p className="text-sm text-muted-foreground truncate">
+            {room.description || 'Open study room'}
           </p>
         </div>
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <span className={cn(
-            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-medium",
+            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold font-mono",
             room.memberCount > 0 
-              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
               : "bg-muted/40 text-muted-foreground border border-border/40"
           )}>
             <span className={cn(
@@ -1753,10 +1748,7 @@ function RoomCard({ room, index, currentUserId, onJoin, onDelete }: {
           </span>
           <Button
             variant={room.is_permanent ? 'default' : 'outline'}
-            className={cn(
-              "h-9 px-4 text-xs font-mono font-semibold rounded-lg active:scale-95 transition-all shadow-xs",
-              room.is_permanent ? "bg-primary hover:bg-primary/90 text-primary-foreground" : "border-border/80"
-            )}
+            className="h-9 px-4 text-sm font-semibold active:scale-95 transition-transform"
             onClick={onJoin}
             disabled={isFull}
           >

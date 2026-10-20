@@ -1,13 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { MaterialCard } from "@/components/MaterialCard";
 import { MaterialFilters } from "@/components/MaterialFilters";
 import { useMaterials } from "@/hooks/useMaterials";
 import { SubjectType, ResourceType } from "@/types/materials";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import { Search, BookOpen, ShieldCheck, Sparkles, Filter, X } from "lucide-react";
 
 const Materials = () => {
   const { data: materials, isLoading } = useMaterials();
@@ -37,12 +35,11 @@ const Materials = () => {
     });
   }, [materials, search, selectedSubjects, selectedTypes]);
 
-  const hasActiveFilters = selectedSubjects.length > 0 || selectedTypes.length > 0 || search !== "";
+  const hasActiveFilters = selectedSubjects.length > 0 || selectedTypes.length > 0;
 
   const clearFilters = () => {
     setSelectedSubjects([]);
     setSelectedTypes([]);
-    setSearch("");
   };
 
   const subjectStats = useMemo(() => {
@@ -62,35 +59,42 @@ const Materials = () => {
 
   return (
     <Layout>
-      <div className="w-full flex-1 max-w-7xl mx-auto px-4 sm:px-8 py-8 text-foreground">
-        <div className="flex flex-col w-full pb-16 space-y-8">
+      <div className="w-full pt-16 flex-1 max-w-7xl mx-auto px-margin lg:px-margin-desktop bg-background blueprint-grid text-on-surface">
+        <div className="flex flex-col w-full pb-space-xl">
+          
+
 
           {/* Hero Section */}
-          <section className="w-full relative">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <section className="w-full mt-space-md relative">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
               {/* Left Hero Column */}
-              <div className="lg:col-span-8 flex flex-col items-start space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-primary/20 bg-primary/10 text-primary font-mono text-[11px] font-semibold tracking-wider uppercase">
-                  <span>Archival Vault</span>
-                  <span>·</span>
-                  <span>10-Year PYQ & Module Dossier</span>
+              <div className="lg:col-span-8 flex flex-col items-start">
+                <div className="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high text-on-surface font-label-code-sm text-label-code-sm tracking-wider uppercase mb-space-sm shadow-sm">
+                  <span>📚 STUDY ARSENAL</span>
+                  <span className="text-primary font-bold">//</span>
+                  <span className="text-primary font-bold">CURATED FOR JEE ADVANCED 2027</span>
                 </div>
-                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-foreground leading-tight">
-                  Curated Academic Materials.
+                <h1 className="font-headline-xl text-headline-xl lg:text-[54px] lg:leading-[60px] tracking-tight text-on-surface font-extrabold uppercase italic mt-1 mb-space-sm">
+                  MATERIALS <span className="relative inline-block text-primary">LIBRARY.
+                    <svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary-container" fill="none" preserveAspectRatio="none" viewBox="0 0 250 12">
+                      <path d="M3 8.5C45 3.5 130 1.5 247 7.5" stroke="currentColor" strokeLinecap="round" strokeWidth="5"></path>
+                    </svg>
+                  </span>
                 </h1>
-                <p className="font-mono text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
-                  Coaching modules, standard reference classics, chapter notes and verified PYQs — hand-curated for serious aspirants. Zero clutter, pure signal.
+                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed mt-space-xs">
+                  Modules, books, PYQs, test series and reference works — every single resource hand-picked, zero filler, organized for serious rankers without the emotional damage.
                 </p>
-                <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-border/60 bg-card text-muted-foreground font-mono text-[11px]">
-                    <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-                    <span>Verified drives</span>
-                    <span>·</span>
+                <div className="flex flex-wrap items-center gap-space-sm mt-space-md">
+                  <div className="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-code-sm text-label-code-sm">
+                    <span className="material-symbols-outlined text-[16px] text-tertiary">verified_user</span>
+                    <span>External verified drives</span>
+                    <span className="text-outline-variant">•</span>
                     <span>BOOKIE does not host files</span>
-                    <span>·</span>
-                    <span className="text-foreground font-medium">Pure signal</span>
+                    <span className="text-outline-variant">•</span>
+                    <span className="text-tertiary font-bold">Pure signal, zero rot</span>
                   </div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-primary/20 bg-primary/10 text-primary font-mono text-[11px] font-medium">
+                  <div className="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-ui text-label-ui">
+                    <span className="material-symbols-outlined text-[15px]">auto_stories</span>
                     <span>Clean OCR PDF Only</span>
                   </div>
                 </div>
@@ -98,194 +102,134 @@ const Materials = () => {
 
               {/* Right Floating Snapshot Card */}
               <div className="lg:col-span-4 w-full">
-                <div className="relative bg-card rounded-2xl p-6 border border-border/80 shadow-xs flex flex-col gap-4">
+                <div className="relative bg-surface-container-lowest rounded-xl p-space-md shadow-[0_10px_25px_-5px_rgba(19,27,46,0.06)] flex flex-col gap-space-md brutal-border">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-5 bg-secondary-container/60 rotate-1 backdrop-blur-sm sticker-tape pointer-events-none"></div>
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase flex items-center gap-2 font-semibold">
-                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                      Inventory Audit
+                    <span className="font-label-code-sm text-label-code-sm tracking-wider text-on-surface-variant uppercase flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-primary"></span>
+                      LIBRARY SNAPSHOT
                     </span>
-                    <span className="px-2 py-0.5 rounded-md border border-border/60 bg-muted/40 font-mono text-[10px] text-muted-foreground font-medium">
-                      v2026.10
-                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-label-code-sm text-label-code-sm font-bold">v2026.04</span>
                   </div>
                   <div>
-                    <div className="font-mono font-bold text-4xl sm:text-5xl text-foreground tracking-tight">
-                      {isLoading ? "..." : `${subjectStats.total}`}<span className="text-primary font-serif font-normal">+</span>
+                    <div className="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight">
+                      {isLoading ? "..." : `${subjectStats.total}`}<span className="text-primary">+</span>
                     </div>
-                    <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-wider mt-1">
-                      Combat-Ready Resources
+                    <p className="font-label-code-sm text-label-code-sm text-on-surface-variant uppercase tracking-wider">
+                      TOTAL COMBAT-READY RESOURCES
                     </p>
                   </div>
-                  <div className="flex flex-col gap-2 pt-1">
-                    <div className="h-2 w-full bg-muted/60 border border-border/40 rounded-full overflow-hidden flex p-0.5">
-                      <div className="bg-primary h-full rounded-full" style={{ width: subjectStats.physicsPercentage }} title={`Physics: ${subjectStats.physicsPercentage}`} />
-                      <div className="bg-amber-500 h-full" style={{ width: subjectStats.chemistryPercentage }} title={`Chemistry: ${subjectStats.chemistryPercentage}`} />
-                      <div className="bg-emerald-500 h-full rounded-full" style={{ width: subjectStats.mathematicsPercentage }} title={`Mathematics: ${subjectStats.mathematicsPercentage}`} />
+                  <div className="flex flex-col gap-1.5">
+                    <div className="h-2.5 w-full bg-surface-container rounded-full overflow-hidden flex">
+                      <div className="bg-primary h-full" style={{ width: subjectStats.physicsPercentage }} title={`Physics: ${subjectStats.physicsPercentage}`}></div>
+                      <div className="bg-secondary h-full" style={{ width: subjectStats.chemistryPercentage }} title={`Chemistry: ${subjectStats.chemistryPercentage}`}></div>
+                      <div className="bg-tertiary h-full" style={{ width: subjectStats.mathematicsPercentage }} title={`Mathematics: ${subjectStats.mathematicsPercentage}`}></div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 font-mono text-[11px] mt-1">
-                      <div className="bg-muted/30 border border-border/50 rounded-lg p-2 flex flex-col">
-                        <span className="text-muted-foreground font-semibold">[PHY]</span>
-                        <span className="font-medium text-foreground">{isLoading ? "-" : subjectStats.physics} Items</span>
+                    <div className="grid grid-cols-3 gap-space-xs font-label-code-sm text-label-code-sm mt-1">
+                      <div className="bg-surface-container-low rounded-lg p-2 flex flex-col">
+                        <span className="text-on-surface-variant flex items-center gap-1">⚛️ PHY</span>
+                        <span className="font-bold text-on-surface">{isLoading ? "-" : subjectStats.physics} Items</span>
                       </div>
-                      <div className="bg-muted/30 border border-border/50 rounded-lg p-2 flex flex-col">
-                        <span className="text-muted-foreground font-semibold">[CHEM]</span>
-                        <span className="font-medium text-foreground">{isLoading ? "-" : subjectStats.chemistry} Items</span>
+                      <div className="bg-surface-container-low rounded-lg p-2 flex flex-col">
+                        <span className="text-on-surface-variant flex items-center gap-1">🧪 CHEM</span>
+                        <span className="font-bold text-on-surface">{isLoading ? "-" : subjectStats.chemistry} Items</span>
                       </div>
-                      <div className="bg-muted/30 border border-border/50 rounded-lg p-2 flex flex-col">
-                        <span className="text-muted-foreground font-semibold">[MATH]</span>
-                        <span className="font-medium text-foreground">{isLoading ? "-" : subjectStats.mathematics} Items</span>
+                      <div className="bg-surface-container-low rounded-lg p-2 flex flex-col">
+                        <span className="text-on-surface-variant flex items-center gap-1">∑ MATH</span>
+                        <span className="font-bold text-on-surface">{isLoading ? "-" : subjectStats.mathematics} Items</span>
                       </div>
                     </div>
                   </div>
-                  <div className="pt-2 flex items-center justify-between text-muted-foreground font-mono text-[11px] border-t border-border/60">
-                    <span className="font-medium text-foreground">Strict Curation:</span>
-                    <span className="italic">Zero low-quality scans.</span>
+                  <div className="pt-space-xs flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+                    <span className="material-symbols-outlined text-error text-[18px]">verified</span>
+                    <span className="font-label-ui text-label-ui text-on-surface">Strict Curation:</span>
+                    <span className="italic text-on-surface-variant">No 800-page useless PDFs allowed.</span>
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* 14-Day Revision Dossier Banner */}
-          <section className="w-full relative">
-            <div className="rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-start sm:items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-xl border border-primary/20 shrink-0 mt-0.5 sm:mt-0">
-                  <Sparkles className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">
-                      Revision Protocol
+          {/* Relatable Sticky Note Banner */}
+          <section className="w-full mt-space-lg relative flex justify-center">
+            <div className="w-full max-w-3xl relative bg-secondary-fixed text-on-secondary-fixed rounded-lg p-space-md shadow-[0_8px_18px_-2px_rgba(92,67,0,0.12)] rotate-[-0.6deg] hover:rotate-0 transition-transform duration-200 brutal-border border-secondary-fixed">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-surface-container-lowest/80 backdrop-blur-sm -rotate-2 sticker-tape pointer-events-none flex items-center justify-center">
+                <span className="font-label-code-sm text-[9px] uppercase tracking-widest text-outline">KOTA_DESK_MEMO</span>
+              </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm pt-1">
+                <div className="flex items-start gap-space-sm">
+                  <span className="text-[24px] leading-none select-none">📌</span>
+                  <div>
+                    <span className="font-label-code-sm text-label-code-sm font-bold text-secondary uppercase tracking-wider block">
+                      BATCH REALITY PROTOCOL
                     </span>
-                    <span className="text-xs text-muted-foreground hidden sm:inline font-mono">· Active JEE Cycle</span>
+                    <p className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight mt-0.5">
+                      "Cengage download kar li, ab bas padhna baki hai!"
+                    </p>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                      Day 42 of staring at the Irodov cover page waiting for momentum to appear by Osmosis.
+                    </p>
                   </div>
-                  <p className="font-serif text-base sm:text-lg font-medium text-foreground tracking-tight mt-1">
-                    "Finish the 14-day PYQ loop before starting another reference book."
-                  </p>
-                  <p className="font-mono text-xs text-muted-foreground mt-0.5">
-                    Solve one 2019–2024 paper per subject under timed cockpit conditions before hoarding new PDFs.
-                  </p>
                 </div>
-              </div>
-              <div className="self-end sm:self-center shrink-0">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-border/60 bg-muted/40 text-muted-foreground font-mono text-xs font-medium">
-                  3,842 Aspirants Active
-                </span>
-              </div>
-            </div>
-          </section>
-
-          {/* Search & Quick Filter Pills */}
-          <section className="w-full">
-            <div className="bg-card rounded-2xl p-4 sm:p-5 border border-border/80 shadow-xs flex flex-col gap-3.5">
-              <div className="relative w-full flex items-center">
-                <Search className="absolute left-3.5 w-4 h-4 text-muted-foreground" />
-                <input 
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-16 py-2.5 rounded-xl bg-background border border-border/80 text-foreground font-mono text-xs placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" 
-                  placeholder="Search modules, PYQs, Allen sheets, Cengage, MS Chouhan, Black Book..." 
-                  type="text" 
-                />
-                <div className="absolute right-3 flex items-center gap-2">
-                  <span className="text-[11px] font-mono font-semibold text-muted-foreground bg-muted/60 px-2 py-0.5 rounded border border-border/60">
-                    ⌘K
+                <div className="self-end sm:self-center shrink-0">
+                  <span className="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-code-sm text-label-code-sm font-bold shadow-[0_2px_0_0_#5c4300]">
+                    🔥 3,842 Aspirants Felt This
                   </span>
                 </div>
               </div>
-              
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                <button 
-                  onClick={clearFilters} 
-                  className={cn(
-                    "px-3.5 py-1.5 rounded-lg font-mono text-xs font-medium whitespace-nowrap transition-all border cursor-pointer",
-                    !hasActiveFilters 
-                      ? "bg-primary text-primary-foreground border-primary shadow-xs" 
-                      : "bg-card hover:bg-muted/50 border-border/70 text-foreground"
-                  )} 
-                  type="button"
-                >
+            </div>
+          </section>
+
+          {/* Search & Quick Navigation Bar */}
+          <section className="w-full mt-space-lg">
+            <div className="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_4px_16px_-4px_rgba(19,27,46,0.06)] flex flex-col gap-space-md brutal-border">
+              <div className="relative w-full flex items-center">
+                <span className="absolute left-space-md material-symbols-outlined text-primary text-[22px] pointer-events-none">search</span>
+                <input 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-12 pr-28 py-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all duration-150 shadow-inner brutal-border" 
+                  placeholder="Search modules, PYQs, Allen sheets, Cengage, MS Chouhan, Black Book..." 
+                  type="text" 
+                />
+                <div className="absolute right-space-sm flex items-center gap-1.5">
+                  <kbd className="px-2 py-1 rounded bg-surface-container-highest text-on-surface-variant font-label-code-sm text-label-code-sm font-bold tracking-wider shadow-xs">
+                    ⌘K
+                  </kbd>
+                  <button className="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center shadow-[0_2px_0_0_#00174b] active:translate-y-0.5 active:shadow-none transition-all" type="button">
+                    <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center gap-space-xs overflow-x-auto pb-1 scrollbar-none">
+                <button onClick={clearFilters} className={`px-space-md py-1.5 rounded-full font-label-ui text-label-ui whitespace-nowrap transition-colors flex items-center gap-1 ${!hasActiveFilters ? 'bg-primary text-on-primary shadow-[0_2px_0_0_#00174b] active:translate-y-0.5' : 'bg-surface-container-low hover:bg-surface-container text-on-surface'}`} type="button">
                   All ({subjectStats.total})
                 </button>
-                <button 
-                  onClick={() => setSelectedSubjects(['physics'])} 
-                  className={cn(
-                    "px-3.5 py-1.5 rounded-lg font-mono text-xs font-medium whitespace-nowrap transition-all border cursor-pointer",
-                    selectedSubjects.length === 1 && selectedSubjects[0] === 'physics'
-                      ? "bg-primary text-primary-foreground border-primary shadow-xs" 
-                      : "bg-card hover:bg-muted/50 border-border/70 text-foreground"
-                  )} 
-                  type="button"
-                >
-                  [PHY] Physics
+                <button onClick={() => setSelectedTypes(['pyqs'])} className={`px-space-md py-1.5 rounded-full font-label-ui text-label-ui whitespace-nowrap transition-colors flex items-center gap-1 ${selectedTypes.includes('pyqs') ? 'bg-primary text-on-primary shadow-[0_2px_0_0_#00174b] active:translate-y-0.5' : 'bg-surface-container-low hover:bg-surface-container text-on-surface'}`} type="button">
+                  <span>⚡</span> PYQ Archives
                 </button>
-                <button 
-                  onClick={() => setSelectedSubjects(['chemistry'])} 
-                  className={cn(
-                    "px-3.5 py-1.5 rounded-lg font-mono text-xs font-medium whitespace-nowrap transition-all border cursor-pointer",
-                    selectedSubjects.length === 1 && selectedSubjects[0] === 'chemistry'
-                      ? "bg-primary text-primary-foreground border-primary shadow-xs" 
-                      : "bg-card hover:bg-muted/50 border-border/70 text-foreground"
-                  )} 
-                  type="button"
-                >
-                  [CHEM] Chemistry
-                </button>
-                <button 
-                  onClick={() => setSelectedSubjects(['mathematics'])} 
-                  className={cn(
-                    "px-3.5 py-1.5 rounded-lg font-mono text-xs font-medium whitespace-nowrap transition-all border cursor-pointer",
-                    selectedSubjects.length === 1 && selectedSubjects[0] === 'mathematics'
-                      ? "bg-primary text-primary-foreground border-primary shadow-xs" 
-                      : "bg-card hover:bg-muted/50 border-border/70 text-foreground"
-                  )} 
-                  type="button"
-                >
-                  [MATH] Mathematics
-                </button>
-                <button 
-                  onClick={() => setSelectedTypes(['pyqs'])} 
-                  className={cn(
-                    "px-3.5 py-1.5 rounded-lg font-mono text-xs font-medium whitespace-nowrap transition-all border cursor-pointer",
-                    selectedTypes.includes('pyqs') 
-                      ? "bg-primary text-primary-foreground border-primary shadow-xs" 
-                      : "bg-card hover:bg-muted/50 border-border/70 text-foreground"
-                  )} 
-                  type="button"
-                >
-                  [PYQ] Archives
-                </button>
-                <button 
-                  onClick={() => setSelectedTypes(['modules'])} 
-                  className={cn(
-                    "px-3.5 py-1.5 rounded-lg font-mono text-xs font-medium whitespace-nowrap transition-all border cursor-pointer",
-                    selectedTypes.includes('modules') 
-                      ? "bg-primary text-primary-foreground border-primary shadow-xs" 
-                      : "bg-card hover:bg-muted/50 border-border/70 text-foreground"
-                  )} 
-                  type="button"
-                >
-                  [MOD] Coaching Modules
+                <button onClick={() => setSelectedTypes(['modules'])} className={`px-space-md py-1.5 rounded-full font-label-ui text-label-ui whitespace-nowrap transition-colors flex items-center gap-1 ${selectedTypes.includes('modules') ? 'bg-primary text-on-primary shadow-[0_2px_0_0_#00174b] active:translate-y-0.5' : 'bg-surface-container-low hover:bg-surface-container text-on-surface'}`} type="button">
+                  <span>📘</span> Coaching Modules
                 </button>
               </div>
             </div>
           </section>
 
           {/* Main Content Layout */}
-          <section className="w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <section className="w-full mt-space-lg">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
               
               {/* Filter Sidebar */}
-              <aside className="lg:col-span-4 xl:col-span-3 flex flex-col gap-4 sticky top-24">
-                <div className="bg-card rounded-2xl p-5 border border-border/80 shadow-xs flex flex-col gap-4">
-                  <div className="flex items-center justify-between pb-2 border-b border-border/60">
-                    <span className="font-mono text-xs uppercase tracking-wider text-foreground font-semibold">
-                      Refine Catalog
+              <aside className="lg:col-span-4 xl:col-span-3 flex flex-col gap-space-md sticky top-20">
+                <div className="bg-surface-container-lowest rounded-xl p-space-md flex flex-col gap-space-md brutal-border">
+                  <div className="flex items-center justify-between">
+                    <span className="font-headline-md text-label-ui uppercase tracking-wider text-on-surface font-bold flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[18px] text-primary">tune</span>
+                      REFINE CATALOG
                     </span>
                     {hasActiveFilters && (
-                      <button onClick={clearFilters} className="font-mono text-[11px] text-primary hover:underline font-semibold uppercase cursor-pointer flex items-center gap-1" type="button">
-                        <X className="w-3 h-3" /> Reset
+                      <button onClick={clearFilters} className="font-label-code-sm text-label-code-sm text-primary hover:underline font-bold uppercase" type="button">
+                        RESET
                       </button>
                     )}
                   </div>
@@ -298,56 +242,50 @@ const Materials = () => {
                     onResourceTypeSelect={() => {}}
                   />
                   
-                  <div className="p-3 rounded-lg border border-border/60 bg-muted/30 text-muted-foreground font-mono text-[11px] leading-relaxed">
-                    <span className="font-semibold text-foreground block mb-0.5">Focus Rule:</span>
-                    Pick 1 core coaching module + 1 reference standard per subject. Do not hoard 15 PDFs you won't touch.
+                  <div className="p-space-sm rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-[12px] flex items-start gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-secondary shrink-0">tips_and_updates</span>
+                    <span>Focus rule: Pick 1 core coaching module + 1 reference standard per subject. Do not hoarde 15 PDFs you won't touch!</span>
                   </div>
                 </div>
                 
-                <div className="p-3.5 rounded-xl border border-border/80 bg-card shadow-xs flex items-center justify-between">
+                <div className="p-space-sm rounded-xl bg-surface-container-high flex items-center justify-between brutal-border">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="font-mono text-[11px] font-semibold text-foreground">Drive Mirror: High Bandwidth</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
+                    <span className="font-label-code-sm text-label-code-sm font-bold text-on-surface">DRIVE MIRROR: HIGH-BANDWIDTH</span>
                   </div>
-                  <span className="font-mono text-[10px] text-muted-foreground">0s Latency</span>
+                  <span className="font-label-code-sm text-[11px] text-on-surface-variant">0 SEC WAIT</span>
                 </div>
               </aside>
 
               {/* Right Catalog Cards Grid */}
-              <main className="lg:col-span-8 xl:col-span-9 flex flex-col gap-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-border/60">
-                  <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
-                    <span className="uppercase tracking-wider font-semibold">Showing:</span>
-                    <span className="text-primary font-medium">
-                      {search ? `"${search}"` : "Standard Academic Vault"}
+              <main className="lg:col-span-8 xl:col-span-9 flex flex-col gap-space-md">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+                  <div className="flex items-center gap-space-xs">
+                    <span className="font-label-code-sm text-label-code-sm text-on-surface-variant uppercase tracking-wider">SHOWING:</span>
+                    <span className="font-label-ui text-label-ui text-primary font-bold uppercase">
+                      {search ? `"${search}"` : "ALLEN + STANDARD REFERENCE CLASSICS"}
                     </span>
-                    <span>({filteredMaterials.length} Resources)</span>
+                    <span className="text-on-surface-variant font-label-code-sm text-label-code-sm uppercase">({filteredMaterials.length} RESOURCES)</span>
                   </div>
                 </div>
 
                 {isLoading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
                     {[...Array(4)].map((_, i) => (
-                      <div key={i} className="h-56"><Skeleton className="h-full w-full rounded-xl" /></div>
+                      <div key={i} className="h-56"><Skeleton className="h-full w-full rounded-2xl" /></div>
                     ))}
                   </div>
                 ) : filteredMaterials.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
                     {filteredMaterials.map((material) => (
                       <MaterialCard key={material.id} material={material} />
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-16 px-6 bg-card rounded-2xl border border-border/80 shadow-xs">
-                    <BookOpen className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-                    <h3 className="font-serif text-lg font-medium text-foreground mb-1">No archives match this filter</h3>
-                    <p className="font-mono text-xs text-muted-foreground max-w-sm mx-auto mb-4">Try broader search terms or reset your subject/category filters to inspect the full library.</p>
-                    <button
-                      onClick={clearFilters}
-                      className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-mono text-xs font-semibold shadow-xs hover:bg-primary/90 transition-all cursor-pointer"
-                    >
-                      Reset All Filters
-                    </button>
+                  <div className="text-center py-20 px-6 bg-surface-container-lowest rounded-2xl brutal-border">
+                    <span className="material-symbols-outlined text-[48px] text-on-surface-variant opacity-50 mb-4">search_off</span>
+                    <h3 className="font-headline-md text-headline-md font-bold text-on-surface mb-2">Nothing matches that yet</h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant max-w-sm mx-auto">Try a broader keyword or clear your filters to see the full library.</p>
                   </div>
                 )}
               </main>

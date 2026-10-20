@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Zap, Loader2, UserCircle2, Mail, Lock, ChevronLeft } from "lucide-react";
+import { Sparkles, Loader2, UserCircle2, Mail, Lock, ChevronLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
-import { BookieEmblem } from "@/components/Brand/BookieEmblem";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import logo from "@/assets/logo.png";
+import { cn } from "@/lib/utils";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5">
-    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+    <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.9 1.5l2.7-2.6C16.9 3.3 14.7 2.4 12 2.4 6.6 2.4 2.2 6.8 2.2 12.1s4.4 9.7 9.8 9.7c5.7 0 9.4-4 9.4-9.6 0-.6-.1-1.1-.2-1.5H12z"/>
   </svg>
 );
 
@@ -28,6 +24,8 @@ export default function Welcome() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Only auto-redirect authenticated users away from /welcome.
+  // Guests stay so they can upgrade to a real account, and signed-out users see sign-in options.
   useEffect(() => {
     if (loading) return;
     if (!isAuthenticated) return;
@@ -68,153 +66,154 @@ export default function Welcome() {
       const r = await signIn(email, password);
       if (r.error) {
         toast({ variant: "destructive", title: "Sign in failed", description: String(r.error?.message || r.error) });
+      } else {
+        // Successful login will be handled by the useEffect above
       }
     }
     setBusy(null);
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-12 bg-academic-grid text-foreground">
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-10 bg-background blueprint-grid text-on-surface">
       <div className="relative w-full max-w-md z-10">
         {/* Brand */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-8 group">
-          <BookieEmblem size={38} className="transition-transform group-hover:scale-105" />
-          <div className="flex items-baseline">
-            <span className="font-serif tracking-tight text-3xl font-bold text-foreground">BOOKIE</span>
-            <span className="text-[10px] font-mono text-primary font-bold ml-0.5">®</span>
-          </div>
+        <Link to="/" className="flex items-center justify-center gap-3 mb-8">
+          <img
+            src={logo}
+            alt="BOOKIE"
+            className="h-12 w-12 rounded-xl border-2 border-on-surface shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] object-cover"
+            onError={(e) => {
+              e.currentTarget.src = "/logo.png";
+            }}
+          />
+          <span className="font-headline-xl text-3xl font-black tracking-tight text-on-surface">
+            BOOKIE<span className="text-primary">.</span>
+          </span>
         </Link>
 
-        <div className="rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-xs relative overflow-hidden">
+        <div className="rounded-2xl border-2 border-on-surface bg-surface-container-lowest p-7 md:p-8 shadow-[8px_8px_0px_0px_rgba(19,27,46,1)] relative overflow-hidden transition-all duration-300">
           {mode === 'main' ? (
-            <div className="animate-in fade-in duration-200">
-              <div className="text-center mb-6">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-[10px] font-mono uppercase tracking-wider font-semibold text-primary">
-                  <Zap className="h-3 w-3 text-primary" /> ASPIRANT DISPATCH GATE
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="text-center mb-8">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-on-surface bg-secondary-container text-[11px] font-label-code-sm uppercase tracking-wider font-bold text-on-secondary-container shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]">
+                  <Sparkles className="h-3 w-3" /> Welcome
                 </span>
-                <h1 className="mt-3 font-serif text-3xl font-bold tracking-tight text-foreground">
+                <h1 className="mt-4 font-headline-xl text-3xl font-black tracking-tight text-on-surface">
                   Step into Bookie
                 </h1>
-                <p className="mt-1.5 text-xs font-sans text-muted-foreground">
-                  Choose your scholar passport to enter focus carrels.
+                <p className="mt-2 text-sm font-body-md font-medium text-on-surface-variant">
+                  Pick how you'd like to continue.
                 </p>
               </div>
 
-              <div className="space-y-3">
-                <button
-                  onClick={handleGoogle}
-                  disabled={busy === "google"}
-                  className="w-full inline-flex items-center justify-center gap-3 px-5 h-12 rounded-xl border border-border/80 bg-card hover:bg-muted text-foreground font-sans font-semibold text-xs transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
-                >
-                  {busy === "google" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
-                  <span>Continue with Google</span>
-                </button>
-
-                <button
-                  onClick={() => setMode('email-login')}
-                  className="w-full inline-flex items-center justify-center gap-2.5 h-12 rounded-xl border border-border/80 bg-card hover:bg-muted text-foreground font-sans font-semibold text-xs transition-colors shadow-xs cursor-pointer"
-                >
-                  <Mail className="h-4 w-4 text-primary" />
-                  <span>Continue with Email</span>
-                </button>
-
-                <div className="relative py-2">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border/70" />
+              <div className="space-y-4">
+                  <div className="relative">
+                    <button
+                      onClick={handleGoogle}
+                      disabled={busy === "google"}
+                      className="w-full inline-flex items-center justify-center gap-3 px-5 h-14 rounded-xl border-2 border-on-surface bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md font-bold text-base transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] disabled:opacity-50 disabled:shadow-none cursor-pointer"
+                    >
+                      {busy === "google" ? <Loader2 className="h-5 w-5 animate-spin" /> : <GoogleIcon />}
+                      <span>Continue with Google</span>
+                    </button>
                   </div>
-                  <div className="relative flex justify-center text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                    <span className="px-3 bg-card font-semibold">or instant guest entry</span>
+
+                  <button
+                    onClick={() => setMode('email-login')}
+                    className="w-full inline-flex items-center justify-center gap-3 h-12 rounded-xl border-2 border-on-surface bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md font-bold text-sm transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]"
+                  >
+                    <Mail className="h-4 w-4" />
+                    Continue with Email
+                  </button>
+
+                  <div className="relative py-1">
+                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t-2 border-on-surface border-dashed" /></div>
+                    <div className="relative flex justify-center text-[10px] font-label-code-sm font-bold uppercase tracking-wider text-on-surface-variant">
+                      <span className="px-3 bg-surface-container-lowest">or</span>
+                    </div>
                   </div>
-                </div>
 
-                <button
-                  onClick={handleGuest}
-                  className="w-full inline-flex items-center justify-center gap-2.5 h-12 rounded-xl bg-slate-900 hover:bg-black text-white font-sans font-semibold text-xs transition-colors shadow-xs cursor-pointer"
-                >
-                  <UserCircle2 className="h-4 w-4 text-sky-400" />
-                  <span>Enter as Guest Aspirant</span>
-                </button>
+                  <button
+                    onClick={handleGuest}
+                    className="w-full inline-flex items-center justify-center gap-3 h-12 rounded-xl border-2 border-on-surface bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md font-bold text-sm transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] cursor-pointer"
+                  >
+                    <UserCircle2 className="h-4 w-4" />
+                    Continue with guest
+                  </button>
 
-                <p className="text-[11px] font-sans text-muted-foreground text-center pt-3 leading-relaxed">
-                  By continuing you agree to Bookie's{" "}
-                  <Link to="/privacy-policy" className="underline hover:text-foreground">
-                    Privacy
-                  </Link>{" "}
-                  &{" "}
-                  <Link to="/copyright-terms" className="underline hover:text-foreground">
-                    Terms
-                  </Link>.
-                </p>
+                  <p className="text-[11px] font-body-sm font-medium text-on-surface-variant text-center pt-1 leading-relaxed">
+                    By continuing you agree to Bookie's <Link to="/privacy-policy" className="underline hover:text-on-surface font-bold">Privacy</Link> & <Link to="/copyright-terms" className="underline hover:text-on-surface font-bold">Terms</Link>.
+                  </p>
               </div>
             </div>
           ) : (
-            <div className="animate-in fade-in duration-200">
+            <div className="animate-in fade-in slide-in-from-right-8 duration-300">
               <button 
                 onClick={() => {
                   setMode('main');
                   setEmail('');
                   setPassword('');
                 }}
-                className="absolute top-5 left-5 h-8 w-8 rounded-lg border border-border/80 bg-card flex items-center justify-center text-foreground hover:bg-muted transition-colors shadow-xs"
+                className="absolute top-5 left-5 h-8 w-8 rounded-full border-2 border-on-surface bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-[2px] active:translate-x-[2px] active:shadow-none"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               
-              <div className="text-center mb-6 mt-4">
-                <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl border border-primary/20 bg-primary/10 shadow-xs mb-3">
-                  <Mail className="h-5 w-5 text-primary" />
+              <div className="text-center mb-8 mt-4">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl border-2 border-on-surface bg-primary-container shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] mb-4">
+                  <Mail className="h-6 w-6 text-on-primary-container" />
                 </div>
-                <h2 className="font-serif text-2xl font-bold tracking-tight text-foreground">
-                  {mode === 'email-login' ? 'Welcome Back' : 'Create an Account'}
+                <h2 className="font-headline-xl text-2xl font-black tracking-tight text-on-surface">
+                  {mode === 'email-login' ? 'Welcome back' : 'Create an account'}
                 </h2>
-                <p className="mt-1 text-xs font-sans text-muted-foreground">
-                  {mode === 'email-login' ? 'Enter credentials to access your study carrel.' : 'Enter details to start tracking progress.'}
+                <p className="mt-2 text-sm font-body-md font-medium text-on-surface-variant">
+                  {mode === 'email-login' ? 'Enter your details to sign in.' : 'Enter your details to get started.'}
                 </p>
               </div>
 
-              <form onSubmit={handleEmailAuth} className="space-y-4">
-                <div className="space-y-3">
+              <form onSubmit={handleEmailAuth} className="space-y-5">
+                <div className="space-y-4">
                   <div className="relative">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input 
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface-variant" />
+                    <input 
                       type="email" 
                       placeholder="Email address" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full h-11 pl-10 pr-4 rounded-xl border-border/80 text-xs font-sans"
+                      className="w-full h-12 pl-12 pr-4 rounded-xl border-2 border-on-surface bg-surface-container-low text-on-surface text-sm font-body-md font-medium focus:outline-none focus:border-primary shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] transition-all"
                       required
                     />
                   </div>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input 
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface-variant" />
+                    <input 
                       type="password" 
                       placeholder="Password" 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full h-11 pl-10 pr-4 rounded-xl border-border/80 text-xs font-sans"
+                      className="w-full h-12 pl-12 pr-4 rounded-xl border-2 border-on-surface bg-surface-container-low text-on-surface text-sm font-body-md font-medium focus:outline-none focus:border-primary shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] transition-all"
                       required
                     />
                   </div>
                 </div>
 
-                <Button
+                <button
                   type="submit"
                   disabled={busy === "email"}
-                  className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-sans font-semibold text-xs shadow-xs"
+                  className="w-full inline-flex items-center justify-center gap-2 h-14 rounded-xl border-2 border-on-surface bg-primary text-on-primary font-headline-md font-bold text-base transition-all active:translate-y-[2px] active:translate-x-[2px] active:shadow-none shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] disabled:opacity-50 disabled:shadow-none mt-2"
                 >
-                  {busy === "email" ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  <span>{mode === 'email-login' ? 'Sign in to Carrel' : 'Create Account'}</span>
-                </Button>
+                  {busy === "email" ? <Loader2 className="h-5 w-5 animate-spin" /> : null}
+                  {mode === 'email-login' ? 'Sign in' : 'Create account'}
+                </button>
               </form>
 
-              <div className="mt-6 text-center text-xs font-sans text-muted-foreground">
-                <span>
-                  {mode === 'email-login' ? "Don't have an account? " : "Already registered? "}
+              <div className="mt-8 text-center text-sm font-body-md font-medium">
+                <span className="text-on-surface-variant">
+                  {mode === 'email-login' ? "Don't have an account? " : "Already have an account? "}
                 </span>
                 <button 
                   onClick={() => setMode(mode === 'email-login' ? 'email-register' : 'email-login')}
-                  className="font-semibold text-primary hover:underline ml-1"
+                  className="font-bold text-primary hover:text-primary-hover underline decoration-2 underline-offset-2 transition-colors ml-1"
                 >
                   {mode === 'email-login' ? 'Sign up' : 'Sign in'}
                 </button>

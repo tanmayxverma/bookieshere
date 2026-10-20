@@ -1,227 +1,142 @@
-import React, { useState } from "react";
+import React from "react";
 import { Layout } from "@/components/Layout";
-import { Coffee, ArrowUpRight, Copy, Check, Server, BookOpen, Lock, ShieldCheck, Dns, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Coffee, Heart, Sparkles, ArrowUpRight, BookOpen, Server, Users } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const DONATE_URL = "https://bookieupi.lovable.app/";
-const UPI_HANDLE = "bookieupi.lovable.app";
 
-export default function Donate() {
-  const [copied, setCopied] = useState(false);
+const Donate = () => {
+  return (
+    <Layout>
+      <section className="bg-background blueprint-grid min-h-screen text-on-surface relative overflow-hidden">
+        <div className="container mx-auto px-4 py-16 md:py-24 relative max-w-5xl">
+          <div className="flex flex-col items-center">
+            {/* Eyebrow */}
+            <div className="flex justify-center mb-6 animate-fade-in">
+              <span className="inline-flex items-center gap-2 rounded-full border-2 border-on-surface bg-secondary-container px-3.5 py-1.5 text-[11px] font-label-code-sm uppercase tracking-wider font-bold text-on-secondary-container shadow-[2px_2px_0px_0px_rgba(19,27,46,1)]">
+                <span className="text-sm">☕</span>
+                Fuel The Late Night Hustle
+              </span>
+            </div>
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(UPI_HANDLE);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+            {/* Headline */}
+            <h1 className="font-headline-xl text-4xl md:text-6xl font-black tracking-tight text-on-surface text-center leading-tight mb-5 animate-fade-in">
+              BUY US A <span className="italic relative z-10 font-headline-xl">chai.</span>
+            </h1>
+            <p className="text-base md:text-lg font-body-lg text-on-surface-variant font-medium text-center max-w-2xl mx-auto leading-relaxed animate-fade-in">
+              BOOKIE is a one-person, fully free project — built late at night, fueled by cutting chai and stubborn refusal to let education cost a fortune. If it's helped you in your JEE prep, a small contribution keeps the servers alive.
+            </p>
+
+            {/* The Card */}
+            <div className="mt-12 w-full max-w-2xl group animate-fade-in mx-auto">
+              <div className="relative overflow-hidden rounded-3xl border-2 border-on-surface bg-surface-container-lowest shadow-[8px_8px_0px_0px_rgba(19,27,46,1)] p-8 md:p-12 text-center transition-transform hover:-translate-y-1">
+                
+                {/* Decorative cutouts */}
+                <div aria-hidden className="absolute -top-6 -right-6 w-24 h-24 rounded-full border-2 border-on-surface bg-secondary shadow-[inset_4px_4px_0_0_rgba(255,255,255,0.4)] opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+                <div aria-hidden className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full border-2 border-on-surface bg-primary shadow-[inset_-4px_-4px_0_0_rgba(0,0,0,0.2)] opacity-10 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+
+                <div className="relative z-10">
+                  {/* Animated chai cup */}
+                  <div className="relative inline-flex mb-8">
+                    <div className="h-20 w-20 rounded-2xl border-2 border-on-surface bg-primary-container text-on-primary-container flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] group-hover:rotate-[-6deg] transition-transform duration-500">
+                      <Coffee className="h-10 w-10" />
+                      {/* Steam */}
+                      <span aria-hidden className="absolute -top-4 left-1/2 -translate-x-1/2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <span className="block w-1.5 h-4 rounded-full bg-on-surface animate-pulse" />
+                        <span className="block w-1.5 h-6 rounded-full bg-on-surface animate-pulse [animation-delay:0.15s]" />
+                        <span className="block w-1.5 h-4 rounded-full bg-on-surface animate-pulse [animation-delay:0.3s]" />
+                      </span>
+                    </div>
+                  </div>
+
+                  <h2 className="font-headline-lg text-2xl md:text-3xl font-bold text-on-surface tracking-tight mb-3">
+                    Support BOOKIE on{" "}
+                    <span className="text-primary block sm:inline">Buy Me a Chai</span>
+                  </h2>
+                  <p className="text-sm font-body-md font-medium text-on-surface-variant max-w-md mx-auto mb-10">
+                    A homegrown Indian alternative to Buy Me a Coffee. Quick, secure via UPI, no account needed.
+                  </p>
+
+                  {/* CTA */}
+                  <a
+                    href={DONATE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/cta inline-flex items-center gap-3 px-8 py-4 rounded-2xl border-2 border-on-surface bg-primary text-on-primary font-bold font-headline-md text-lg shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] hover:shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all"
+                  >
+                    <span className="text-xl">☕</span>
+                    Buy me a Chai
+                    <ArrowUpRight className="h-5 w-5 transition-transform group-hover/cta:rotate-45 group-hover/cta:translate-x-1 group-hover/cta:-translate-y-1" />
+                  </a>
+
+                  <div className="mt-6 flex items-center justify-center gap-2 text-[11px] font-label-code-sm uppercase tracking-wider font-bold text-primary">
+                    <Sparkles className="h-4 w-4" />
+                    bookieupi.lovable.app
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Where the chai goes */}
+            <div className="mt-16 w-full max-w-4xl">
+              <h3 className="font-headline-md font-bold text-xl text-center mb-8 text-on-surface">Where your support goes</h3>
+              <div className="grid sm:grid-cols-3 gap-5">
+                <PerkCard icon={Server} title="Server Costs" desc="High-speed Redis cache, PostgreSQL DB, and APIs running 24/7." variant="blue" />
+                <PerkCard icon={BookOpen} title="Test Scanners" desc="Digitizing top Kota mock tests and generating instant solutions." variant="amber" />
+                <PerkCard icon={Users} title="Free Forever" desc="No ₹2.5 Lakh paywalls, no predatory subscriptions. Ever." variant="green" />
+              </div>
+            </div>
+
+            {/* Closing note */}
+            <div className="mt-16 text-center">
+              <p className="text-xs font-label-code-sm font-bold text-on-surface-variant uppercase tracking-wider flex items-center justify-center gap-2 border-2 border-on-surface border-dashed rounded-full px-6 py-2 bg-surface-container-low max-w-fit mx-auto">
+                <span>Even ₹20 means the world. Thank you.</span>
+                <span className="text-base">🍵</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </Layout>
+  );
+};
+
+function PerkCard({ icon: Icon, title, desc, variant }: { icon: React.ElementType; title: string; desc: string, variant: 'blue' | 'amber' | 'green' }) {
+  const variants = {
+    blue: {
+      bg: "bg-primary-container",
+      icon: "text-on-primary-container",
+      hover: "hover:bg-primary-fixed"
+    },
+    amber: {
+      bg: "bg-secondary-container",
+      icon: "text-on-secondary-container",
+      hover: "hover:bg-secondary-fixed"
+    },
+    green: {
+      bg: "bg-tertiary-container",
+      icon: "text-on-tertiary-container",
+      hover: "hover:bg-tertiary-fixed"
+    }
   };
 
   return (
-    <Layout>
-      <div className="bg-academic-grid min-h-screen text-foreground relative overflow-hidden pb-24">
-        {/* Archival Volume Strip (Stitch Screen 12) */}
-        <div className="w-full bg-background/60 border-b border-border/80 text-muted-foreground py-1 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex justify-between items-center text-[10px] font-mono uppercase tracking-widest">
-            <div className="flex items-center space-x-3">
-              <span className="text-primary font-bold">VOL. IX — ISSUE 4</span>
-              <span className="text-muted-foreground/30">|</span>
-              <span>EST. 2024</span>
-              <span className="hidden sm:inline text-muted-foreground/30">|</span>
-              <span className="hidden sm:inline">ARCHIVAL REGISTER: ACAD-JEE-NEET-771</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-              <span className="text-foreground font-semibold">SYS STATUS: ALL ARCHIVES OPERATIONAL</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Editorial Container */}
-        <div className="relative w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-20 flex flex-col items-center">
-          {/* Overline Badge (Scholarly Seal Pill) */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-muted/60 text-muted-foreground rounded-full border border-border/80 shadow-xs mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-foreground font-semibold">
-              § Archival Patronage // Fuel The Late Night Sprint
-            </span>
-          </div>
-
-          {/* Editorial Masthead Headline */}
-          <h1 className="text-center font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-4">
-            BUY US A <span className="font-serif italic text-primary underline decoration-primary/40 underline-offset-8">chai.</span>
-          </h1>
-
-          {/* Manifesto / Subtitle */}
-          <p className="max-w-2xl text-center font-sans text-sm sm:text-base text-muted-foreground leading-relaxed mb-12">
-            <strong className="text-foreground font-semibold">BOOKIE</strong> is an independent, non-commercial archival project — forged in late-night sessions over cutting chai, anchored by an uncompromising refusal to let rank preparation cost a fortune. If this journal aids your JEE or NEET discipline, an offering keeps the indexers and compute nodes awake.
-          </p>
-
-          {/* Central Patronage Sheet (Hero Donation Card - Stitch Screen 12) */}
-          <div className="w-full max-w-2xl bg-card rounded-2xl border border-border/80 shadow-xs overflow-hidden relative mb-16">
-            {/* Card Top Archival Header Bar */}
-            <div className="w-full bg-muted/40 px-6 py-3 flex justify-between items-center text-[11px] font-mono text-muted-foreground uppercase tracking-widest border-b border-border/80">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-primary"></span>
-                <span>LEDGER ID: CHAI-IND-2025</span>
-              </div>
-              <div className="flex items-center gap-1.5 lowercase text-muted-foreground">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                <span>zero-fee peer payment</span>
-              </div>
-            </div>
-
-            {/* Card Inner Body */}
-            <div className="p-8 sm:p-12 flex flex-col items-center text-center">
-              {/* Tea Glass Emblem */}
-              <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-5 shadow-xs">
-                <Coffee className="w-8 h-8" />
-              </div>
-
-              {/* Card Title & Pitch */}
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-2">
-                Support BOOKIE on <span className="font-serif italic text-primary">Buy Me a Chai</span>
-              </h2>
-              <p className="font-sans text-xs sm:text-sm text-muted-foreground max-w-md mb-8 leading-relaxed">
-                A homegrown Indian alternative for scholarly solidarity. Direct, instant via UPI — zero brokerage, zero accounts, pure student-to-server sustenance.
-              </p>
-
-              {/* Primary Action Trigger */}
-              <a
-                href={DONATE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2.5 bg-primary text-primary-foreground px-8 py-3.5 rounded-xl shadow-xs hover:bg-primary/90 active:scale-[0.99] transition-all font-sans font-semibold text-sm group"
-              >
-                <Coffee className="w-4 h-4" />
-                <span>Offer a Chai (₹20 / ₹50 / ₹100)</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-
-              {/* Monospace UPI Registry Line & Copy Micro-interaction */}
-              <div className="mt-6 flex flex-col sm:flex-row items-center gap-2.5">
-                <div className="flex items-center gap-2 bg-muted/60 px-3.5 py-1.5 rounded-lg border border-border/80 font-mono text-xs text-foreground">
-                  <span className="text-muted-foreground">UPI:</span>
-                  <span className="font-semibold">{UPI_HANDLE}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleCopy}
-                  className="px-3 py-1.5 bg-card hover:bg-muted text-muted-foreground hover:text-foreground rounded-lg border border-border/80 font-mono text-xs uppercase tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
-                >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? "Copied!" : "Copy Link"}</span>
-                </button>
-              </div>
-
-              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mt-6">
-                Verified VPA Target • 100% Directed to Infrastructure
-              </p>
-            </div>
-
-            {/* Card Ledger Bottom Rule */}
-            <div className="bg-muted/40 px-6 py-2.5 flex justify-between items-center font-mono text-[11px] text-muted-foreground border-t border-border/80">
-              <span>STATUS: OPEN COHORTS</span>
-              <span className="text-foreground font-semibold">LAST CHAI: 18m AGO</span>
-            </div>
-          </div>
-
-          {/* Section Heading: Where Your Support Goes (Stitch Screen 12) */}
-          <div className="w-full flex flex-col items-center mb-8">
-            <div className="w-12 h-px bg-border/80 mb-4"></div>
-            <h3 className="font-serif text-2xl font-bold text-foreground text-center tracking-tight">
-              Where your support goes
-            </h3>
-            <p className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest mt-1">
-              Quarterly Ledger Breakdown & Maintenance Costs
-            </p>
-          </div>
-
-          {/* 3-Column Architectural Cards (Stitch Screen 12) */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Column 1: Compute & Cache */}
-            <div className="bg-card p-6 rounded-2xl border border-border/80 shadow-xs flex flex-col justify-between hover:border-primary/40 transition-colors">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-muted border border-border/80 flex items-center justify-center text-primary mb-4">
-                  <Server className="w-5 h-5" />
-                </div>
-                <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
-                  Compute & DB Nodes
-                </div>
-                <h4 className="font-serif text-lg font-bold text-foreground mb-2">
-                  Server Costs
-                </h4>
-                <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                  High-speed caching instances, PostgreSQL problem sets, and unthrottled API replicas operating 24/7 during test-taking hours.
-                </p>
-              </div>
-              <div className="mt-6 pt-3.5 bg-muted/40 -mx-6 -mb-6 px-6 py-2.5 rounded-b-2xl border-t border-border/80 flex items-center justify-between font-mono text-xs text-muted-foreground">
-                <span>Target Load</span>
-                <span className="text-foreground font-semibold">99.98% Uptime</span>
-              </div>
-            </div>
-
-            {/* Column 2: Test Digitization */}
-            <div className="bg-card p-6 rounded-2xl border border-border/80 shadow-xs flex flex-col justify-between hover:border-primary/40 transition-colors">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-muted border border-border/80 flex items-center justify-center text-sky-600 dark:text-sky-400 mb-4">
-                  <BookOpen className="w-5 h-5" />
-                </div>
-                <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
-                  Archival Ingestion
-                </div>
-                <h4 className="font-serif text-lg font-bold text-foreground mb-2">
-                  Test Scanners
-                </h4>
-                <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                  Optical indexing of premier Kota mock test archives, rigorous diagram vectorization, and step-by-step first-principle derivations.
-                </p>
-              </div>
-              <div className="mt-6 pt-3.5 bg-muted/40 -mx-6 -mb-6 px-6 py-2.5 rounded-b-2xl border-t border-border/80 flex items-center justify-between font-mono text-xs text-muted-foreground">
-                <span>Bank Volume</span>
-                <span className="text-foreground font-semibold">34,000+ Items</span>
-              </div>
-            </div>
-
-            {/* Column 3: Unconditional Freedom */}
-            <div className="bg-card p-6 rounded-2xl border border-border/80 shadow-xs flex flex-col justify-between hover:border-primary/40 transition-colors">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-muted border border-border/80 flex items-center justify-center text-primary mb-4">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
-                  Public Good
-                </div>
-                <h4 className="font-serif text-lg font-bold text-foreground mb-2">
-                  Free Forever
-                </h4>
-                <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                  No ₹2.5 Lakh coach paywalls, zero predatory retention algorithms, and no gated solutions. Complete academic transparency without advertisements.
-                </p>
-              </div>
-              <div className="mt-6 pt-3.5 bg-muted/40 -mx-6 -mb-6 px-6 py-2.5 rounded-b-2xl border-t border-border/80 flex items-center justify-between font-mono text-xs text-muted-foreground">
-                <span>Tuition Wall</span>
-                <span className="text-primary font-semibold">₹0.00 Guaranteed</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Academic Integrity Quote Banner (Stitch Screen 12) */}
-          <div className="w-full mt-12 bg-card border border-border/80 p-6 rounded-2xl shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="font-serif font-bold text-sm text-foreground">The Academic Non-Commercial Guarantee</div>
-                <div className="font-sans text-xs text-muted-foreground mt-0.5">
-                  All contributions cover domain renewals, server bills, and LaTeX processing compute. Bookie takes zero private profit.
-                </div>
-              </div>
-            </div>
-            <span className="shrink-0 font-mono text-[11px] text-primary uppercase tracking-wider font-semibold">
-              Pure Academic Utility
-            </span>
-          </div>
-        </div>
+    <div className={cn(
+      "group relative rounded-2xl border-2 border-on-surface bg-surface-container-lowest p-6 transition-all duration-300",
+      "shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] hover:shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] hover:-translate-y-1"
+    )}>
+      <div className={cn(
+        "h-12 w-12 rounded-xl border-2 border-on-surface flex items-center justify-center mb-4 transition-colors",
+        variants[variant].bg,
+        variants[variant].hover
+      )}>
+        <Icon className={cn("h-6 w-6", variants[variant].icon)} />
       </div>
-    </Layout>
+      <h3 className="font-bold text-base font-headline-md text-on-surface mb-2">{title}</h3>
+      <p className="text-sm font-body-sm font-medium text-on-surface-variant leading-relaxed">{desc}</p>
+    </div>
   );
 }
+
+export default Donate;

@@ -48,6 +48,7 @@ export const EXAM_OPTIONS: { id: TargetKey; label: string; shortLabel: string }[
 
 const STORAGE_KEY = "bookie_jee_countdown_target";
 
+/** Get next upcoming timestamp for a target (advances year if date already passed) */
 function getTargetTimestamp(targetDateISO: string): number {
   const target = new Date(targetDateISO).getTime();
   const now = Date.now();
@@ -69,14 +70,14 @@ function getDiff(target: number) {
   return { days, hours, minutes, seconds };
 }
 
-function Cell({ value, label, colorClass = "text-foreground" }: { value: number; label: string; colorClass?: string }) {
+function Cell({ value, label, colorClass = "text-brand-dark dark:text-white" }: { value: number; label: string; colorClass?: string }) {
   const padded = String(value).padStart(2, "0");
   return (
-    <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-2.5 sm:p-5 text-center shadow-xs">
-      <div className={`font-mono font-bold text-2xl sm:text-4xl tracking-tight font-tabular ${colorClass}`}>
+    <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-blue-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl p-2 sm:p-5 text-center shadow-xs">
+      <div className={`font-display font-black text-2xl sm:text-5xl tracking-tight ${colorClass}`}>
         {padded}
       </div>
-      <div className="font-mono text-[9px] sm:text-xs font-semibold tracking-widest text-muted-foreground uppercase mt-1">
+      <div className="font-mono text-[9px] sm:text-xs font-extrabold tracking-widest text-slate-500 dark:text-slate-400 uppercase mt-0.5 sm:mt-1">
         {label}
       </div>
     </div>
@@ -84,6 +85,7 @@ function Cell({ value, label, colorClass = "text-foreground" }: { value: number;
 }
 
 export function JEECountdown() {
+  // Default for everyone is JEE Main Session 1; restores user choice from localStorage
   const [selectedTarget, setSelectedTarget] = useState<TargetKey>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as TargetKey;
@@ -112,14 +114,14 @@ export function JEECountdown() {
   };
 
   return (
-    <section className="relative bg-card border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] transition-all">
+    <section className="bg-gradient-to-r from-blue-50/90 via-sky-50/70 to-blue-100/50 dark:from-slate-900/90 dark:via-blue-950/30 dark:to-slate-900/90 border-2 border-blue-200/80 dark:border-blue-900/60 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-card-clean transition-all">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
         {/* Target Info & Selector */}
         <div className="lg:col-span-5 space-y-3 sm:space-y-4">
           {/* Selector with 3 Options */}
-          <div className="w-full sm:w-auto inline-flex items-center gap-1 p-1 bg-muted/60 rounded-full border border-border">
-            <span className="px-2.5 py-1 text-xs font-mono font-semibold text-muted-foreground hidden sm:flex items-center gap-1.5 shrink-0">
-              <Flame className="w-3.5 h-3.5 text-primary" />
+          <div className="w-full sm:w-auto inline-flex items-center gap-1 p-1 bg-white/95 dark:bg-slate-900/95 rounded-xl sm:rounded-full border border-blue-200/90 dark:border-blue-900/80 shadow-xs">
+            <span className="px-2 py-1 text-xs font-mono font-bold text-blue-700 dark:text-blue-400 hidden sm:flex items-center gap-1.5 shrink-0">
+              <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-pulse" />
               <span>LIVE</span>
             </span>
             <div className="grid grid-cols-3 sm:flex items-center gap-1 w-full sm:w-auto">
@@ -131,10 +133,10 @@ export function JEECountdown() {
                     type="button"
                     onClick={() => handleSelect(opt.id)}
                     className={cn(
-                      "px-2 sm:px-3 py-1 text-xs font-sans font-medium rounded-full transition-all duration-150 cursor-pointer whitespace-nowrap text-center select-none",
+                      "px-2 sm:px-3 py-1.5 sm:py-1 text-xs font-display font-extrabold rounded-lg sm:rounded-full transition-all duration-150 active:scale-95 cursor-pointer whitespace-nowrap text-center",
                       isSelected
-                        ? "bg-card text-foreground font-semibold shadow-xs border border-border/80"
-                        : "text-muted-foreground hover:text-foreground border border-transparent"
+                        ? "bg-brand-blue text-white shadow-sm ring-1 ring-blue-600"
+                        : "text-slate-600 dark:text-slate-300 hover:text-brand-blue hover:bg-blue-50/80 dark:hover:bg-slate-800"
                     )}
                   >
                     <span className="sm:hidden">{opt.shortLabel}</span>
@@ -146,26 +148,26 @@ export function JEECountdown() {
           </div>
 
           <div>
-            <h2 className="text-2xl sm:text-3xl font-serif font-medium text-foreground tracking-tight">
-              {active.label} <span className="text-primary font-mono font-bold text-xl sm:text-2xl">{active.year}</span>
+            <h2 className="text-2xl sm:text-4xl font-display font-black text-brand-dark dark:text-white tracking-tight">
+              {active.label} <span className="text-brand-blue font-mono">{active.year}</span>
             </h2>
-            <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-muted-foreground mt-1 sm:mt-1.5">
-              <span className="inline-flex items-center gap-1 text-primary font-semibold">
-                <Calendar className="w-3.5 h-3.5" />
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold text-slate-600 dark:text-slate-300 mt-1 sm:mt-2">
+              <span className="inline-flex items-center gap-1 text-brand-blue dark:text-blue-400">
+                <Calendar className="w-4 h-4" />
                 {active.displayDate}
               </span>
-              <span className="hidden sm:inline">•</span>
-              <span className="italic text-[11px] sm:text-xs block sm:inline">{active.note}</span>
+              <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+              <span className="text-slate-500 dark:text-slate-400 italic text-[11px] sm:text-xs block sm:inline">{active.note}</span>
             </div>
           </div>
         </div>
 
-        {/* Counter Numbers */}
-        <div className="lg:col-span-7 grid grid-cols-4 gap-2 sm:gap-3">
-          <Cell value={t.days} label="DAYS" colorClass="text-foreground" />
-          <Cell value={t.hours} label="HOURS" colorClass="text-foreground" />
-          <Cell value={t.minutes} label="MINUTES" colorClass="text-primary" />
-          <Cell value={t.seconds} label="SECONDS" colorClass="text-[#B91C1C]" />
+        {/* Giant Counter Numbers */}
+        <div className="lg:col-span-7 grid grid-cols-4 gap-1.5 sm:gap-4">
+          <Cell value={t.days} label="DAYS" colorClass="text-brand-dark dark:text-white" />
+          <Cell value={t.hours} label="HOURS" colorClass="text-brand-dark dark:text-white" />
+          <Cell value={t.minutes} label="MINUTES" colorClass="text-brand-blue dark:text-blue-400" />
+          <Cell value={t.seconds} label="SECONDS" colorClass="text-rose-500 dark:text-rose-400" />
         </div>
       </div>
     </section>

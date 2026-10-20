@@ -77,33 +77,32 @@ export default function YPT() {
         }}
       />
 
-      <div className="w-full text-foreground min-h-screen">
-        <main className="max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 sm:py-8 space-y-6 flex-1">
+      <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen">
+        <main className="max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 flex-1">
             
             {/* Header section with tabs */}
-            <section className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border/50" data-purpose="sub-navigation">
+            <section className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 pb-2 border-b border-outline-variant/50" data-purpose="sub-navigation">
               <div>
-                <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-medium text-muted-foreground uppercase tracking-wide">
-                  <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span className="text-foreground font-semibold">{onlineCount} online</span>
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-mono font-medium text-on-surface-variant uppercase tracking-wide">
+                  <span className="inline-block w-2 h-2 rounded-full bg-tertiary animate-ping"></span>
+                  <span className="inline-block w-2 h-2 -ml-3 sm:-ml-3 rounded-full bg-tertiary"></span>
+                  <span className="text-tertiary font-semibold">{onlineCount} online</span>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <span className="truncate max-w-[120px] sm:max-w-none text-foreground font-medium">{user.name}</span>
+                    <span className="truncate max-w-[120px] sm:max-w-none">{user.name}</span>
                     <YPTNameChange user={user} onChangeName={changeName} />
                   </span>
-                  <span>|</span>
-                  <span className="flex items-center gap-1 text-foreground">
+                  <span className="text-on-surface-variant/50">|</span>
+                  <span className="flex items-center gap-1">
                     <span>{user.jee_focus_year}</span>
                     <YPTYearChange user={user} onChangeYear={changeJeeYear} />
                   </span>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-foreground mt-1">
-                  Bookie YPT Immersion Cockpit
-                </h1>
+                <h1 className="text-xl sm:text-2xl md:text-[28px] font-headline-lg font-black tracking-tight text-on-surface mt-1">Bookie YPT Cockpit</h1>
               </div>
 
-              {/* Segmented Module Selector based on Editorial Ink Academic Spec */}
-              <div className="flex items-center bg-muted/40 border border-border/60 rounded-xl p-1 text-xs font-medium overflow-x-auto scrollbar-none gap-1 max-w-full touch-pan-x">
+              {/* Segmented Module Selector based on YPT Reference */}
+              <div className="flex items-center bg-surface-container-lowest border-2 border-on-surface rounded-xl p-1 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-xs font-bold overflow-x-auto scrollbar-none gap-1 max-w-full touch-pan-x">
                 {TABS.map((t) => {
                   const Icon = t.icon;
                   const isActive = tab === t.id;
@@ -113,22 +112,22 @@ export default function YPT() {
                       key={t.id}
                       onClick={() => switchTab(t.id)}
                       className={cn(
-                        "px-3.5 py-1.5 rounded-lg font-mono text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap relative shrink-0 min-h-[38px] cursor-pointer",
+                        "px-3 sm:px-3.5 py-2 sm:py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-all whitespace-nowrap relative shrink-0 min-h-[40px] sm:min-h-0",
                         isActive 
                           ? isLeaderboard
-                            ? "bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-800 shadow-xs"
-                            : "bg-background text-foreground border border-border/60 shadow-xs" 
+                            ? "bg-amber-500 text-white shadow-sm font-bold"
+                            : "bg-primary text-on-primary shadow-sm font-bold" 
                           : isLeaderboard
-                            ? "text-amber-800 dark:text-amber-300 hover:bg-amber-500/10 border border-transparent"
-                            : "text-muted-foreground hover:text-foreground border border-transparent"
+                            ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 font-bold border border-amber-500/30"
+                            : "text-on-surface-variant hover:text-on-surface"
                       )}
                     >
-                      <Icon className="w-3.5 h-3.5" />
+                      <Icon className={cn("w-3.5 h-3.5", isLeaderboard && !isActive && "text-amber-500 animate-bounce")} />
                       <span>{t.label}</span>
                       {isLeaderboard && (
                         <span className={cn(
-                          "ml-0.5 px-1.5 py-0.2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider",
-                          isActive ? "bg-amber-900 text-amber-100 dark:bg-amber-200 dark:text-amber-950" : "bg-primary text-primary-foreground animate-pulse"
+                          "ml-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-black uppercase tracking-wider",
+                          isActive ? "bg-amber-700 text-white" : "bg-amber-500 text-white animate-pulse"
                         )}>
                           LIVE
                         </span>
@@ -141,20 +140,20 @@ export default function YPT() {
 
             {/* Floating Room Indicator - shows when in a room but NOT on rooms tab */}
             {roomSession.activeRoomId && tab !== 'rooms' && (
-              <div className="mb-4 pop-in bg-card border border-border/80 rounded-xl p-3 shadow-xs">
+              <div className="mb-4 pop-in brutal-border bg-surface-container-high rounded-xl p-3 shadow-sm border-2 border-on-surface">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <span className="text-xl shrink-0">{roomSession.activeRoomEmoji || '📖'}</span>
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold truncate font-display">{roomSession.activeRoomName}</p>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1.5 font-mono">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <p className="text-sm font-semibold truncate font-headline-md">{roomSession.activeRoomName}</p>
+                      <p className="text-xs text-on-surface-variant flex items-center gap-1.5 font-label-code-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse" />
                         {roomSession.presenceMembers.length} online
                         {timer.isActive && (
                           <>
-                            <span className="text-muted-foreground/40 mx-1">·</span>
+                            <span className="text-on-surface-variant/30 mx-1">·</span>
                             <span className="tabular-nums text-primary font-bold">{formatTime(timer.elapsedSeconds)}</span>
-                            <span className="text-muted-foreground">({timer.subject})</span>
+                            <span className="text-on-surface-variant/60">({timer.subject})</span>
                           </>
                         )}
                       </p>
@@ -164,7 +163,7 @@ export default function YPT() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-8 px-3 text-xs font-semibold rounded-lg"
+                      className="h-8 px-3 text-xs font-bold brutal-border"
                       onClick={() => switchTab('rooms')}
                     >
                       Open
@@ -172,7 +171,7 @@ export default function YPT() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
+                      className="h-8 w-8 p-0 text-error hover:bg-error-container"
                       onClick={roomSession.leaveRoom}
                     >
                       <X className="h-4 w-4" />

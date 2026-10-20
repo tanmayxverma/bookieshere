@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
-  Calendar, Mail, Save, LogOut, Loader2, Target,
+  Calendar, Mail, Sparkles, Save, LogOut, Loader2, Target,
   BookOpen, Trophy, BarChart3, Clock, Flame, ShieldCheck,
-  AlertTriangle, Trash2, ArrowRight, Zap, CheckCircle2, User,
-  Check
+  AlertTriangle, Trash2, CheckCircle2, ArrowRight, X, User
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -26,15 +25,10 @@ import { useUserStudyStats, formatStudyTime } from "@/hooks/useUserStudyStats";
 import { AvatarUploader } from "@/components/Profile/AvatarUploader";
 import { validateName } from "@/types/ypt";
 import { UpgradeModal } from "@/components/Auth/UpgradeModal";
-import { BookieEmblem } from "@/components/Brand/BookieEmblem";
-import { cn } from "@/lib/utils";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0">
-    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+    <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.9 1.5l2.7-2.6C16.9 3.3 14.7 2.4 12 2.4 6.6 2.4 2.2 6.8 2.2 12.1s4.4 9.7 9.8 9.7c5.7 0 9.4-4 9.4-9.6 0-.6-.1-1.1-.2-1.5H12z"/>
   </svg>
 );
 
@@ -57,8 +51,9 @@ export default function Profile() {
 
   const { signInWithGoogle, linkGoogleIdentity, signUp } = useAuth();
   const { todaySeconds, totalSeconds, todaySessionsCount, streak: statsStreak } = useUserStudyStats();
-  const { streak: streakFromHook } = useUserStreak();
+  const { streak: streakFromHook, longestStreak } = useUserStreak();
 
+  // Pick the streak that is greater or available
   const streak = Math.max(statsStreak || 0, streakFromHook || 0);
 
   const [name, setName] = useState("");
@@ -95,7 +90,7 @@ export default function Profile() {
       <Layout>
         <div className="container mx-auto px-4 py-20 flex flex-col items-center justify-center gap-3">
           <Loader2 className="h-7 w-7 animate-spin text-primary" />
-          <span className="text-xs font-mono text-muted-foreground">Cataloging Aspirant Dossier...</span>
+          <span className="text-xs font-mono text-muted-foreground">Loading Cockpit Profile...</span>
         </div>
       </Layout>
     );
@@ -124,6 +119,7 @@ export default function Profile() {
     navigate("/welcome", { replace: true });
   };
 
+  // 1. Upgrade Guest to Google
   const handleUpgradeToGoogle = async () => {
     setUpgrading(true);
     const r = await signInWithGoogle(`${window.location.origin}/profile`);
@@ -133,6 +129,7 @@ export default function Profile() {
     }
   };
 
+  // 2. Upgrade Email user to Google (Link identity)
   const handleLinkGoogle = async () => {
     setUpgrading(true);
     const { error } = await linkGoogleIdentity();
@@ -144,6 +141,7 @@ export default function Profile() {
     }
   };
 
+  // 3. Upgrade Guest to Email
   const handleUpgradeToEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!upgradeEmail || !upgradePassword) {
@@ -165,6 +163,7 @@ export default function Profile() {
     }
   };
 
+  // 4. Permanent Account and Data Deletion
   const handleDeleteEverything = async () => {
     if (deleteConfirmText.trim().toUpperCase() !== "DELETE") {
       toast({ variant: "destructive", title: "Please type DELETE to confirm" });
@@ -189,27 +188,26 @@ export default function Profile() {
 
   const todayFormatted = formatStudyTime(todaySeconds);
   const totalFormatted = formatStudyTime(totalSeconds);
+  // Daily target is standard 6 hours for aspirants
   const dailyTargetHours = 6;
   const dailyTargetSeconds = dailyTargetHours * 3600;
   const targetPercent = Math.min(100, Math.round((todaySeconds / dailyTargetSeconds) * 100));
-  const todayHoursNumeric = (todaySeconds / 3600).toFixed(1);
-  const totalHoursNumeric = (totalSeconds / 3600).toFixed(1);
+  const todayHoursNumeric = `${(todaySeconds / 3600).toFixed(1)}h`;
+  const totalHoursNumeric = `${(totalSeconds / 3600).toFixed(1)}h`;
 
   return (
     <Layout>
-      <div className="w-full bg-academic-grid text-foreground min-h-screen py-6 sm:py-10 px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="max-w-5xl mx-auto space-y-6">
+      <div className="w-full bg-background blueprint-grid text-on-surface min-h-screen py-6 sm:py-10 px-3 sm:px-6">
+        <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
 
-          {/* ───── 1. HERO PROFILE DOSSIER (Stitch Screen 13) ───── */}
-          <section className="bg-card border border-border/80 rounded-2xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
-            {/* Watermark Background Seal */}
-            <div className="absolute -right-8 -top-8 opacity-[0.04] pointer-events-none select-none">
-              <BookieEmblem size={240} />
-            </div>
+          {/* ───── 1. HERO COCKPIT CARD ───── */}
+          <Card className="relative overflow-hidden border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl">
+            <div aria-hidden className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
+            <div aria-hidden className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start relative z-10">
-              {/* Left Column: Portrait Frame & Preset Picker */}
-              <div className="md:col-span-4 flex flex-col items-center text-center">
+            <div className="relative flex flex-col md:flex-row gap-6 md:items-center justify-between">
+              
+              <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center min-w-0 flex-1">
                 <AvatarUploader
                   avatarUrl={avatarUrl}
                   displayName={name || profile.display_name}
@@ -226,355 +224,310 @@ export default function Profile() {
                   streak={streak}
                   showPresets={true}
                 />
-              </div>
 
-              {/* Right Column: Aspirant Dossier Metadata */}
-              <div className="md:col-span-8 flex flex-col justify-between h-full space-y-5">
-                <div>
-                  {/* Status Badges & Quick Action */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      {isGuest && (
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 font-semibold">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
-                          Guest Account
-                        </span>
-                      )}
-                      {isGoogle && (
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded bg-muted border border-border/80 text-foreground font-semibold">
-                          <GoogleIcon /> Google Verified
-                        </span>
-                      )}
-                      {isEmail && (
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded bg-muted border border-border/80 text-foreground font-semibold">
-                          <Mail className="h-3.5 w-3.5 text-primary" /> Email Account
-                        </span>
-                      )}
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/20 text-sky-700 dark:text-sky-300 font-semibold">
-                        <Target className="h-3 w-3" /> {profile.target_category}
+                <div className="min-w-0 space-y-2 flex-1">
+                  {/* Account Type Badges */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {isGoogle && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-emerald-100 dark:bg-emerald-950/80 text-[11px] font-mono font-black text-emerald-800 dark:text-emerald-300 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        <GoogleIcon /> Google Verified
                       </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-muted/60 border border-border/80 text-muted-foreground font-semibold">
-                        🔥 {streak}d streak
+                    )}
+                    {isEmail && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-blue-100 dark:bg-blue-950/80 text-[11px] font-mono font-black text-blue-800 dark:text-blue-300 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        <Mail className="h-3 w-3" /> Email Account
                       </span>
-                    </div>
-
-                    {/* Top Action: Link Cloud or Sign Out */}
-                    <div>
-                      {isGuest ? (
-                        <Button
-                          onClick={() => setUpgradeModalOpen(true)}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-semibold tracking-wide shadow-xs"
-                        >
-                          <Zap className="w-3.5 h-3.5 text-sky-400" />
-                          <span>Link Cloud</span>
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          onClick={() => setShowSignOutModal(true)}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border-border/80 text-xs font-mono font-semibold hover:text-destructive"
-                        >
-                          <LogOut className="w-3.5 h-3.5" />
-                          <span>Sign Out</span>
-                        </Button>
-                      )}
-                    </div>
+                    )}
+                    {isGuest && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-brand-softYellow dark:bg-amber-950/80 text-[11px] font-mono font-black text-amber-900 dark:text-amber-300 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        <Sparkles className="h-3 w-3" /> Guest Account
+                      </span>
+                    )}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-[11px] font-mono font-bold text-slate-800 dark:text-slate-200 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                      <Target className="h-3.5 w-3.5 text-primary" /> {profile.target_category}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-slate-900 dark:border-slate-700 bg-orange-100 dark:bg-orange-950/80 text-[11px] font-mono font-black text-orange-800 dark:text-orange-300 shadow-[1px_1px_0px_0px_rgba(19,27,46,1)] dark:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                      <Flame className="h-3.5 w-3.5 text-orange-500" /> {streak}d streak
+                    </span>
                   </div>
 
-                  {/* Aspirant Name */}
-                  <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground tracking-tight mb-1">
+                  <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white break-words">
                     {profile.display_name}
-                    <span className="font-serif italic font-normal text-muted-foreground text-xl sm:text-2xl ml-2 block sm:inline">
-                      — Academic Candidate
-                    </span>
                   </h1>
 
-                  {/* Candidate Cataloging Date */}
-                  <div className="flex flex-wrap items-center gap-4 text-xs font-sans text-muted-foreground mt-3">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground font-mono">
                     <span className="inline-flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-primary" />
-                      <span>Aspirant cataloged since <strong className="text-foreground font-semibold">{joinDate}</strong></span>
+                      <Calendar className="h-3.5 w-3.5 text-primary" /> Aspirant since {joinDate}
                     </span>
                     {user?.email && (
-                      <span className="inline-flex items-center gap-1.5 font-mono text-[11px]">
-                        <Mail className="w-3.5 h-3.5 text-primary shrink-0" />
-                        <span>{user.email}</span>
+                      <span className="inline-flex items-center gap-1.5 break-all">
+                        <Mail className="h-3.5 w-3.5 text-primary shrink-0" /> {user.email}
                       </span>
                     )}
                   </div>
                 </div>
+              </div>
 
-                {/* Quick Academic Tip / Focus Banner */}
-                <div className="pt-3 border-t border-border/60 text-xs text-muted-foreground flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-primary font-serif font-bold">Bookie Codex:</span>
-                    <span>Daily reset activates strictly at 3:00 AM IST to safeguard midnight study sprints.</span>
-                  </div>
-                  <Link to="/ypt" className="text-primary hover:underline font-mono text-[11px] shrink-0 hidden sm:inline">
-                    Carrel Desk →
-                  </Link>
-                </div>
+              {/* Quick Action Buttons */}
+              <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto justify-end">
+                {isGuest && (
+                  <Button
+                    onClick={() => setUpgradeModalOpen(true)}
+                    className="border-2 border-slate-900 dark:border-slate-700 bg-primary text-white hover:bg-primary/90 font-bold text-xs h-10 px-4 rounded-xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] dark:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5"
+                  >
+                    <Sparkles className="h-3.5 w-3.5 mr-1.5 text-amber-300" /> Link Cloud
+                  </Button>
+                )}
+                {isAuthenticated && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSignOutModal(true)}
+                    className="border-2 border-slate-900 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-red-600 font-bold text-xs h-10 px-4 rounded-xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] dark:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5"
+                  >
+                    <LogOut className="h-3.5 w-3.5 mr-1.5" /> Sign Out
+                  </Button>
+                )}
               </div>
             </div>
-          </section>
+          </Card>
 
-          {/* ───── 2. PERFORMANCE LEDGER (Stitch Screen 13) ───── */}
-          <section className="bg-card border border-border/80 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-border/80 gap-3">
+          {/* ───── 2. DAILY STUDY HOURS & METRICS (FOR EVERYONE) ───── */}
+          <Card className="border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800/80 pb-4">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-sky-500/10 border border-sky-500/20 text-[10px] font-mono uppercase tracking-wider text-sky-700 dark:text-sky-300 font-semibold mb-2">
-                  <Clock className="w-3 h-3 text-sky-600 dark:text-sky-400" />
-                  <span>DAILY STUDY METRIC // CANDIDATE TELEMETRY</span>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-blue-400/40 bg-blue-50 dark:bg-blue-950/60 text-brand-blue dark:text-blue-300 text-[10.5px] font-mono font-bold uppercase tracking-wider mb-1">
+                  <Clock className="h-3 w-3" /> DAILY STUDY METRIC
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground tracking-tight">
-                  Today’s Study Performance
+                <h2 className="font-display text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+                  Today's Study Performance
                 </h2>
-                <p className="text-xs text-muted-foreground font-sans mt-0.5">
-                  Measured live across YPT study sessions, desk stopwatches, and active timers
+                <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                  Measured live across YPT study sessions and active timers
                 </p>
               </div>
+
               <Link
-                to="/ypt?tab=stats"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 border border-primary/20 hover:border-primary/40 bg-primary/5 hover:bg-primary/10 px-3.5 py-2 rounded-xl transition self-start sm:self-auto"
+                to="/ypt"
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-brand-blue bg-blue-50/80 dark:bg-blue-950/80 hover:bg-blue-100 dark:hover:bg-blue-900/60 px-4 py-2 rounded-xl border border-blue-200 dark:border-blue-800 transition-all self-start sm:self-auto shadow-xs active:scale-95 shrink-0"
               >
                 <span>View Full Stats</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
 
-            {/* 4 Telemetry Metrics Tiles */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
-              {/* Tile 1: Today Studied */}
-              <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 transition hover:border-amber-500/35">
-                <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-amber-800 dark:text-amber-300 font-semibold mb-1">
-                  <Clock className="w-3.5 h-3.5 text-amber-600" />
-                  <span>TODAY STUDIED</span>
+            {/* Metric Highlights Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              {/* Box 1: Today Studied */}
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-brand-softYellow dark:bg-amber-950/30 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-1">
+                <span className="text-[11px] font-mono font-bold text-amber-900 dark:text-amber-300 uppercase flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5" /> TODAY STUDIED
+                </span>
+                <div className="text-2xl sm:text-3xl font-display font-black text-amber-950 dark:text-amber-100">
+                  {todayHoursNumeric}
                 </div>
-                <div className="text-3xl font-mono font-bold text-foreground mt-2">
-                  {todayHoursNumeric}<span className="text-lg font-serif italic font-normal text-muted-foreground">h</span>
-                </div>
-                <div className="text-xs text-muted-foreground font-sans mt-1">
-                  {todaySessionsCount} session{todaySessionsCount !== 1 ? "s" : ""} logged today
-                </div>
+                <p className="text-[10px] font-mono text-amber-800/80 dark:text-amber-300/80">
+                  {todaySessionsCount} session{todaySessionsCount !== 1 ? 's' : ''} logged today
+                </p>
               </div>
 
-              {/* Tile 2: Study Streak */}
-              <div className="bg-card border border-border/80 rounded-xl p-4 transition hover:border-border">
-                <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-semibold mb-1">
-                  <span>🔥</span>
-                  <span>STUDY STREAK</span>
+              {/* Box 2: Study Streak */}
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-orange-50 dark:bg-orange-950/30 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-1">
+                <span className="text-[11px] font-mono font-bold text-orange-700 dark:text-orange-300 uppercase flex items-center gap-1.5">
+                  <Flame className="h-3.5 w-3.5 text-orange-500" /> STUDY STREAK
+                </span>
+                <div className="text-2xl sm:text-3xl font-display font-black text-orange-950 dark:text-orange-100">
+                  {streak} <span className="text-base font-bold">days</span>
                 </div>
-                <div className="text-3xl font-mono font-bold text-foreground mt-2">
-                  {streak} <span className="text-lg font-serif italic font-normal text-muted-foreground">days</span>
-                </div>
-                <div className="text-xs text-amber-600 dark:text-amber-400 font-sans font-medium mt-1 flex items-center gap-1">
-                  <span>🔥</span> {streak > 0 ? "Active streak recorded" : "Start streak today"}
-                </div>
+                <p className="text-[10px] font-mono text-orange-800/80 dark:text-orange-300/80">
+                  {streak > 0 ? "🔥 Streak alive" : "🔥 Start streak today"}
+                </p>
               </div>
 
-              {/* Tile 3: Daily Goal */}
-              <div className="bg-sky-500/5 border border-sky-500/20 rounded-xl p-4 transition hover:border-sky-500/35">
-                <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-sky-800 dark:text-sky-300 font-semibold mb-1">
-                  <Target className="w-3.5 h-3.5 text-sky-600" />
-                  <span>DAILY GOAL ({dailyTargetHours}H)</span>
+              {/* Box 3: Daily Goal Target */}
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-blue-50 dark:bg-blue-950/30 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-1">
+                <span className="text-[11px] font-mono font-bold text-blue-700 dark:text-blue-300 uppercase flex items-center gap-1.5">
+                  <Target className="h-3.5 w-3.5 text-brand-blue" /> DAILY GOAL ({dailyTargetHours}H)
+                </span>
+                <div className="text-2xl sm:text-3xl font-display font-black text-blue-950 dark:text-blue-100">
+                  {targetPercent}%
                 </div>
-                <div className="text-3xl font-mono font-bold text-foreground mt-2">
-                  {targetPercent}<span className="text-lg font-mono font-normal text-muted-foreground">%</span>
-                </div>
-                <div className="text-xs text-muted-foreground font-sans mt-1">
-                  {todayHoursNumeric}h of {dailyTargetHours}h completed
-                </div>
+                <p className="text-[10px] font-mono text-blue-800/80 dark:text-blue-300/80">
+                  {(todaySeconds / 3600).toFixed(1)}h of {dailyTargetHours}h completed
+                </p>
               </div>
 
-              {/* Tile 4: Total Hours */}
-              <div className="bg-card border border-border/80 rounded-xl p-4 transition hover:border-border">
-                <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-semibold mb-1">
-                  <span>⏳</span>
-                  <span>TOTAL HOURS</span>
+              {/* Box 4: Total Lifetime Study */}
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-1">
+                <span className="text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300 uppercase flex items-center gap-1.5">
+                  <Trophy className="h-3.5 w-3.5 text-amber-500" /> TOTAL HOURS
+                </span>
+                <div className="text-2xl sm:text-3xl font-display font-black text-slate-900 dark:text-slate-100">
+                  {totalHoursNumeric}
                 </div>
-                <div className="text-3xl font-mono font-bold text-foreground mt-2">
-                  {totalHoursNumeric}<span className="text-lg font-serif italic font-normal text-muted-foreground">h</span>
-                </div>
-                <div className="text-xs text-muted-foreground font-sans mt-1">
+                <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
                   All-time Bookie focus time
-                </div>
+                </p>
               </div>
             </div>
 
-            {/* Daily 6-Hour Target Progress Gauge */}
-            <div className="pt-4 border-t border-border/70">
-              <div className="flex items-center justify-between text-xs font-mono text-muted-foreground mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full bg-primary"></span>
-                  <span className="font-semibold text-foreground">Daily 6-Hour Target Progress</span>
-                  <span className="font-normal">
-                    • {targetPercent >= 100 ? "Goal Fulfilled" : `${Math.max(0, dailyTargetHours - (todaySeconds / 3600)).toFixed(1)}h remaining`}
+            {/* Daily Goal Visual Progress Bar */}
+            <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+              <div className="flex justify-between items-center text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                <span className="flex items-center gap-1.5">
+                  <span>🎯 Daily 6-Hour Target Progress</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    {targetPercent >= 100 ? "Goal Crushed! 🚀" : `${Math.max(0, dailyTargetHours - (todaySeconds / 3600)).toFixed(1)}h remaining`}
                   </span>
-                </div>
-                <div className="font-bold text-foreground">
-                  {targetPercent}% <span className="font-normal text-muted-foreground">({todayHoursNumeric}h / {dailyTargetHours}h)</span>
-                </div>
+                </span>
+                <span>{targetPercent}% ({todayFormatted.formatted} / {dailyTargetHours}h)</span>
               </div>
-              <div className="w-full bg-muted/60 h-2.5 rounded-full overflow-hidden p-0.5 border border-border/80">
+              <div className="h-3.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border-2 border-slate-900 dark:border-slate-700 p-0.5">
                 <div
-                  className="bg-gradient-to-r from-primary to-amber-600 h-full rounded-full transition-all duration-300"
-                  style={{ width: `${Math.max(2, Math.min(100, targetPercent))}%` }}
+                  className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-primary rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(100, targetPercent)}%` }}
                 />
               </div>
             </div>
-          </section>
+          </Card>
 
-          {/* ───── 3. UPGRADE BANNER (FOR GUESTS) (Stitch Screen 13) ───── */}
+          {/* ───── 3. ACCOUNT UPGRADATION CARD ───── */}
           {isGuest && (
-            <section className="bg-card border border-border/80 rounded-2xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-primary to-slate-900"></div>
-              <div className="flex flex-col md:flex-row gap-6 items-start">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex-shrink-0 flex items-center justify-center text-amber-600 shadow-xs">
-                  <ShieldCheck className="w-6 h-6" />
+            <Card className="border-2 border-slate-900 dark:border-slate-700 bg-gradient-to-br from-brand-softYellow/60 via-amber-50/40 to-white dark:from-amber-950/20 dark:to-slate-900 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl space-y-4">
+              <div className="flex items-start gap-3.5">
+                <div className="h-10 w-10 rounded-2xl bg-amber-400 text-slate-900 border-2 border-slate-900 flex items-center justify-center shrink-0 shadow-xs">
+                  <Sparkles className="h-5 w-5" />
                 </div>
-                <div className="flex-1 space-y-4">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-wider bg-amber-500/15 text-amber-800 dark:text-amber-300 font-bold">
-                      ⚡ GUEST MODE ACTIVE
+                <div className="space-y-1.5 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 text-[10px] font-mono font-black uppercase tracking-wider">
+                      ⚡ Guest Mode Active
                     </span>
-                    <span className="text-xs text-emerald-600 font-medium flex items-center gap-1 font-mono">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      100% Free • Saved Data is Safe
+                    <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5" /> 100% Free · Saved Data is Safe
                     </span>
                   </div>
-
-                  <div>
-                    <h3 className="text-2xl font-serif font-bold text-foreground tracking-tight">
-                      Upgrade Account <span className="font-serif italic font-normal text-primary">(Zero Data Loss)</span>
-                    </h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 leading-relaxed">
-                      You are currently using a guest device account. Everything is saved locally. Upgrade to a permanent account with Google or email so your study sessions <strong className="text-foreground font-mono">({todayFormatted.formatted})</strong>, streak <strong className="text-foreground font-mono">({streak}d)</strong>, and syllabus bookmarks follow you across all your devices seamlessly.
-                    </p>
-                  </div>
-
-                  {/* 4 Pillars Checkmarks Matrix */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-muted-foreground pt-1 font-sans">
+                  <h3 className="font-display text-lg font-black text-slate-900 dark:text-slate-100">
+                    Upgrade Account (Zero Data Loss)
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    You are currently using a guest device account. Everything is saved locally. Upgrade to a permanent account with Google or email so your <strong>study sessions ({todayFormatted.formatted})</strong>, <strong>streak ({streak}d)</strong>, and syllabus bookmarks follow you across all your devices seamlessly.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs text-slate-700 dark:text-slate-300 font-mono">
                     <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span><strong className="text-foreground font-semibold">100% Free:</strong> Timers, tests, notes & stats</span>
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span><strong>100% Free:</strong> Timers, tests, notes &amp; stats</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span><strong className="text-foreground font-semibold">Custom Identity:</strong> Free avatar photo & name</span>
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span><strong>Custom Identity:</strong> Free avatar photo &amp; name</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span><strong className="text-foreground font-semibold">Zero Data Loss:</strong> Streaks & sessions saved</span>
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span><strong>Zero Data Loss:</strong> Streaks &amp; sessions saved</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span><strong className="text-foreground font-semibold">Optional Cloud:</strong> Sync phone, tab & laptop</span>
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span><strong>Optional Cloud:</strong> Sync phone, tab &amp; PC</span>
                     </div>
-                  </div>
-
-                  {/* Upgrade Actions */}
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <Button
-                      onClick={handleUpgradeToGoogle}
-                      disabled={upgrading}
-                      className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-semibold tracking-wide shadow-xs transition"
-                    >
-                      {upgrading ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
-                      <span>Upgrade with Google</span>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowEmailUpgrade(true)}
-                      disabled={upgrading}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-border/80 text-foreground text-xs font-semibold tracking-wide shadow-xs"
-                    >
-                      <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span>Upgrade with Email</span>
-                    </Button>
                   </div>
                 </div>
               </div>
-            </section>
+
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Button
+                  onClick={handleUpgradeToGoogle}
+                  disabled={upgrading}
+                  className="bg-slate-900 text-white hover:bg-slate-800 border-2 border-slate-900 font-bold text-xs h-11 px-5 rounded-2xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-0.5"
+                >
+                  {upgrading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <GoogleIcon />}
+                  <span className="ml-2">Upgrade with Google</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowEmailUpgrade(true)}
+                  disabled={upgrading}
+                  className="bg-white dark:bg-slate-900 border-2 border-slate-900 text-slate-900 dark:text-slate-100 font-bold text-xs h-11 px-5 rounded-2xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-0.5"
+                >
+                  <Mail className="h-4 w-4 mr-2" /> Upgrade with Email
+                </Button>
+              </div>
+            </Card>
           )}
 
           {isEmail && (
-            <section className="bg-card border border-border/80 rounded-2xl p-6 sm:p-7 shadow-xs space-y-4">
+            <Card className="border-2 border-slate-900 dark:border-slate-700 bg-blue-50/70 dark:bg-blue-950/20 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl space-y-4">
               <div className="flex items-start gap-3.5">
-                <div className="h-10 w-10 rounded-xl bg-muted border border-border/80 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="h-5 w-5 text-primary" />
+                <div className="h-10 w-10 rounded-2xl bg-brand-blue text-white border-2 border-slate-900 flex items-center justify-center shrink-0 shadow-xs">
+                  <ShieldCheck className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="font-serif text-xl font-bold text-foreground">
-                    Link Google Account
+                  <h3 className="font-display text-lg font-bold text-slate-900 dark:text-slate-100">
+                    Upgrade to Google Account
                   </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                     You are signed in via Email. Link your Google account to enable instant one-click login and automated profile picture sync. Your study hours, streak, and history remain 100% intact.
                   </p>
                 </div>
               </div>
 
-              <div className="pt-1">
+              <div className="pt-2">
                 <Button
                   onClick={handleLinkGoogle}
                   disabled={upgrading}
-                  className="bg-slate-900 hover:bg-black text-white font-sans font-semibold text-xs h-10 px-5 rounded-xl shadow-xs"
+                  className="bg-slate-900 text-white hover:bg-slate-800 border-2 border-slate-900 font-bold text-xs h-11 px-5 rounded-2xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] active:translate-y-0.5"
                 >
                   {upgrading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <GoogleIcon />}
                   <span className="ml-2">Link Google Account</span>
                 </Button>
               </div>
-            </section>
+            </Card>
           )}
 
-          {/* ───── 4. PROFILE SETTINGS & NAVIGATION (Stitch Screen 13) ───── */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left: Profile Dossier Settings (7 Cols) */}
-            <section className="lg:col-span-7 bg-card border border-border/80 rounded-2xl p-6 sm:p-8 shadow-xs space-y-5">
-              <div className="flex items-center justify-between pb-4 border-b border-border/80">
-                <div>
-                  <h3 className="text-xl font-serif font-bold text-foreground">Profile Settings</h3>
-                  <p className="text-xs text-muted-foreground">Update your public aspirant identity and target focus</p>
-                </div>
-                <span className="text-[10px] font-mono uppercase bg-muted/60 border border-border/80 px-2 py-0.5 rounded text-muted-foreground font-semibold">
-                  Editable
-                </span>
+          {/* ───── 4. EDIT PROFILE SETTINGS & SHORTCUTS ───── */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Edit form */}
+            <Card className="md:col-span-2 border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(19,27,46,1)] dark:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl space-y-5">
+              <div>
+                <h2 className="font-display text-xl font-bold text-slate-900 dark:text-slate-100">
+                  Profile Settings
+                </h2>
+                <p className="text-xs font-mono text-muted-foreground mt-0.5">
+                  Update your public aspirant identity and exam focus
+                </p>
               </div>
 
-              <div className="space-y-4 pt-1">
-                {/* Display Name */}
+              <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-muted-foreground font-semibold mb-1.5">
-                    DISPLAY NAME
+                  <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    Display Name
                   </label>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     maxLength={30}
-                    placeholder="Candidate Name"
-                    className="h-10 border-border/80 text-sm rounded-xl focus:border-primary"
+                    className="mt-1.5 h-11 border-2 border-slate-900 dark:border-slate-700 font-mono text-sm rounded-xl focus-visible:border-primary"
+                    placeholder="Your Name"
                   />
-                  <span className="text-[11px] text-muted-foreground mt-1 block">
-                    Visible to cohort peers in carrels and leaderboard telemetry.
-                  </span>
+                  <p className="text-[11px] font-mono text-muted-foreground mt-1">
+                    Visible across community discussions, doubts, and leaderboards.
+                  </p>
                 </div>
 
-                {/* Target Exam Category */}
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-muted-foreground font-semibold mb-1.5">
-                    TARGET EXAM & YEAR
+                  <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    Target Exam Category
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {TARGET_CATEGORIES.map((c) => (
                       <button
                         key={c}
                         type="button"
                         onClick={() => setTarget(c)}
-                        className={cn(
-                          "h-10 px-2 rounded-xl border text-xs font-mono font-semibold transition-all cursor-pointer flex items-center justify-center",
+                        className={`h-11 px-2.5 rounded-xl border-2 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center ${
                           target === c
-                            ? "border-primary bg-primary text-primary-foreground shadow-xs"
-                            : "border-border/80 bg-background hover:bg-muted/60 text-foreground"
-                        )}
+                            ? "border-2 border-slate-900 bg-brand-blue text-white shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] scale-[1.02]"
+                            : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-slate-400 text-slate-700 dark:text-slate-300"
+                        }`}
                       >
                         {c}
                       </button>
@@ -582,12 +535,11 @@ export default function Profile() {
                   </div>
                 </div>
 
-                {/* Save CTA */}
-                <div className="pt-3 flex flex-wrap gap-2.5">
+                <div className="pt-2 flex flex-wrap gap-2.5">
                   <Button
                     onClick={handleSave}
                     disabled={saving}
-                    className="h-10 px-5 bg-primary text-primary-foreground font-sans font-semibold text-xs rounded-xl shadow-xs hover:bg-primary/90"
+                    className="h-11 px-6 bg-slate-900 text-white font-bold text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] hover:bg-slate-800 active:translate-y-0.5 rounded-xl cursor-pointer"
                   >
                     {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
                     Save Changes
@@ -596,17 +548,17 @@ export default function Profile() {
                     <Button
                       variant="outline"
                       onClick={() => setUpgradeModalOpen(true)}
-                      className="h-10 px-4 font-sans font-semibold text-xs border-border/80 rounded-xl"
+                      className="h-11 px-4 font-bold text-xs border-2 border-slate-900 dark:border-slate-700 rounded-xl shadow-[2px_2px_0px_0px_rgba(19,27,46,1)] dark:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
                     >
-                      <Zap className="h-4 w-4 mr-1.5 text-primary" /> Upgrade with Google
+                      <Sparkles className="h-4 w-4 mr-1.5 text-primary" /> Upgrade with Google
                     </Button>
                   )}
                 </div>
               </div>
-            </section>
+            </Card>
 
-            {/* Right: Quick Portals & Trackers (5 Cols) */}
-            <div className="lg:col-span-5 space-y-4">
+            {/* Quick Nav Cards */}
+            <div className="space-y-4">
               <StatCard
                 icon={BookOpen}
                 title="Study Tracker (YPT)"
@@ -631,18 +583,18 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* ───── 5. DANGER ZONE: DATA DELETION (Screen 13) ───── */}
-          <section className="border border-destructive/30 bg-destructive/5 rounded-2xl p-6 sm:p-7 shadow-xs space-y-4">
-            <div className="flex items-start gap-3.5">
-              <div className="h-10 w-10 rounded-xl bg-destructive/15 text-destructive border border-destructive/30 flex items-center justify-center shrink-0">
+          {/* ───── 5. DANGER ZONE: PERMANENT DATA DELETION ───── */}
+          <Card className="border-2 border-red-500 bg-red-50/50 dark:bg-red-950/20 p-6 sm:p-7 shadow-[4px_4px_0px_0px_rgba(239,68,68,0.5)] rounded-3xl space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="h-10 w-10 rounded-2xl bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 border-2 border-red-500 flex items-center justify-center shrink-0 shadow-xs">
                 <AlertTriangle className="h-5 w-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-serif text-lg font-bold text-foreground">
-                  Danger Zone: Permanent Account & Data Deletion
+                <h3 className="font-display text-lg font-bold text-red-950 dark:text-red-100">
+                  Danger Zone: Permanent Account &amp; Data Deletion
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-sans">
-                  Permanently purge all data regarding your account from our database. This immediately wipes your <strong>study sessions</strong>, <strong>study streak</strong>, <strong>profile details</strong>, <strong>community questions & comments</strong>, and <strong>support conversations</strong>. This action is irreversible.
+                <p className="text-xs sm:text-sm text-red-800/90 dark:text-red-300/90 leading-relaxed font-mono">
+                  Permanently purge all data regarding your account from our database. This immediately wipes your <strong>study sessions</strong>, <strong>study streak</strong>, <strong>profile details</strong>, <strong>community questions &amp; comments</strong>, and <strong>support conversations</strong>. This action is irreversible.
                 </p>
               </div>
             </div>
@@ -654,13 +606,14 @@ export default function Profile() {
                   setDeleteConfirmText("");
                   setShowDeleteModal(true);
                 }}
-                className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-sans font-semibold text-xs h-10 px-5 rounded-xl shadow-xs cursor-pointer"
+                className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs border-2 border-red-900 shadow-[2px_2px_0px_0px_rgba(153,27,27,1)] active:translate-y-0.5 h-11 px-5 rounded-xl cursor-pointer"
               >
                 <Trash2 className="h-3.5 w-3.5 mr-1.5" />
                 Permanently Delete All My Data
               </Button>
             </div>
-          </section>
+          </Card>
+
         </div>
 
         <UpgradeModal
@@ -672,19 +625,19 @@ export default function Profile() {
 
       {/* ───── MODAL: UPGRADE WITH EMAIL ───── */}
       <Dialog open={showEmailUpgrade} onOpenChange={setShowEmailUpgrade}>
-        <DialogContent className="max-w-md border border-border/80 bg-card rounded-2xl shadow-floating p-6">
+        <DialogContent className="max-w-md border-2 border-slate-900 bg-white dark:bg-slate-900 rounded-3xl shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] p-6">
           <DialogHeader>
-            <DialogTitle className="font-serif font-bold text-xl flex items-center gap-2 text-foreground">
+            <DialogTitle className="font-display font-black text-xl flex items-center gap-2">
               <Mail className="h-5 w-5 text-primary" /> Upgrade with Email
             </DialogTitle>
-            <DialogDescription className="text-xs font-mono text-muted-foreground">
+            <DialogDescription className="text-xs font-mono text-slate-500">
               Your existing guest study hours ({todayFormatted.formatted}), streak ({streak}d), and settings will be preserved completely.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleUpgradeToEmail} className="space-y-4 pt-2">
             <div>
-              <label className="text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Email Address
               </label>
               <Input
@@ -693,12 +646,12 @@ export default function Profile() {
                 placeholder="name@example.com"
                 value={upgradeEmail}
                 onChange={(e) => setUpgradeEmail(e.target.value)}
-                className="mt-1 h-10 border-border/80 text-sm rounded-xl"
+                className="mt-1 h-11 border-2 border-slate-300 focus-visible:border-slate-900 text-sm rounded-xl"
               />
             </div>
 
             <div>
-              <label className="text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+              <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Create Password
               </label>
               <Input
@@ -708,15 +661,15 @@ export default function Profile() {
                 placeholder="At least 6 characters"
                 value={upgradePassword}
                 onChange={(e) => setUpgradePassword(e.target.value)}
-                className="mt-1 h-10 border-border/80 text-sm rounded-xl"
+                className="mt-1 h-11 border-2 border-slate-300 focus-visible:border-slate-900 text-sm rounded-xl"
               />
             </div>
 
-            <DialogFooter className="gap-2 pt-2 border-t border-border/80">
-              <Button type="button" variant="outline" onClick={() => setShowEmailUpgrade(false)} className="h-10 rounded-xl border-border/80">
+            <DialogFooter className="gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={() => setShowEmailUpgrade(false)} className="h-11 rounded-xl">
                 Cancel
               </Button>
-              <Button type="submit" disabled={upgrading} className="h-10 bg-primary text-primary-foreground font-semibold rounded-xl shadow-xs">
+              <Button type="submit" disabled={upgrading} className="h-11 bg-slate-900 text-white font-bold rounded-xl">
                 {upgrading ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : null}
                 Upgrade Account
               </Button>
@@ -727,23 +680,23 @@ export default function Profile() {
 
       {/* ───── MODAL: SIGN OUT CONFIRMATION ───── */}
       <AlertDialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
-        <AlertDialogContent className="border border-border/80 rounded-2xl bg-card shadow-floating max-w-md p-6">
+        <AlertDialogContent className="border-2 border-slate-900 rounded-3xl bg-white dark:bg-slate-900 shadow-[6px_6px_0px_0px_rgba(19,27,46,1)] max-w-md p-6">
           <AlertDialogHeader>
-            <div className="flex items-center gap-2 mb-1 text-foreground">
+            <div className="flex items-center gap-2 mb-1 text-slate-900 dark:text-slate-100">
               <LogOut className="h-5 w-5 text-primary" />
-              <AlertDialogTitle className="font-serif font-bold text-xl">
+              <AlertDialogTitle className="font-display font-black text-xl">
                 Log Out of Bookie?
               </AlertDialogTitle>
             </div>
-            <AlertDialogDescription className="text-xs font-mono text-muted-foreground leading-relaxed">
+            <AlertDialogDescription className="text-xs font-mono text-slate-600 dark:text-slate-400 leading-relaxed">
               You will be signed out of your account on this device. Your study streak ({streak}d), logs, and progress are saved in the cloud and will be available whenever you log back in.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="gap-2 pt-3 border-t border-border/80">
-            <AlertDialogCancel className="h-10 font-mono font-medium rounded-xl border-border/80">Stay Logged In</AlertDialogCancel>
+          <AlertDialogFooter className="gap-2 pt-3">
+            <AlertDialogCancel className="h-11 font-mono font-bold rounded-xl">Stay Logged In</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleSignOut}
-              className="h-10 font-mono font-semibold bg-foreground text-background hover:bg-foreground/90 rounded-xl"
+              className="h-11 font-mono font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl"
             >
               Sign Out
             </AlertDialogAction>
@@ -751,21 +704,21 @@ export default function Profile() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* ───── MODAL: PERMANENT DATA DELETION ───── */}
+      {/* ───── MODAL: PERMANENT DATA DELETION WITH WARNING ───── */}
       <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-        <AlertDialogContent className="border border-destructive/40 rounded-2xl bg-card shadow-floating max-w-lg p-6 sm:p-7">
+        <AlertDialogContent className="border-2 border-red-600 rounded-3xl bg-white dark:bg-slate-900 shadow-[8px_8px_0px_0px_rgba(220,38,38,1)] max-w-lg p-6 sm:p-7">
           <AlertDialogHeader>
-            <div className="flex items-center gap-2.5 text-destructive mb-1">
+            <div className="flex items-center gap-2.5 text-red-600 mb-1">
               <AlertTriangle className="h-6 w-6 shrink-0" />
-              <AlertDialogTitle className="font-serif font-bold text-xl sm:text-2xl text-destructive">
+              <AlertDialogTitle className="font-display font-black text-xl sm:text-2xl text-red-600">
                 Permanent Data Deletion Warning
               </AlertDialogTitle>
             </div>
-            <AlertDialogDescription className="space-y-3 pt-2 text-xs font-mono text-foreground leading-relaxed">
-              <div className="p-3.5 rounded-xl border border-destructive/30 bg-destructive/10 text-foreground space-y-1">
-                <div className="font-bold text-sm text-destructive">This action is permanent and irreversible.</div>
+            <AlertDialogDescription className="space-y-3 pt-2 text-xs font-mono text-slate-700 dark:text-slate-300 leading-relaxed">
+              <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-900 dark:text-red-200 space-y-1">
+                <div className="font-bold text-sm">⚠️ This action is permanent and irreversible.</div>
                 <p>All data connected to this account ({isGuest ? "Guest Device" : isGoogle ? "Google Account" : "Email Account"}) will be immediately purged from our database:</p>
-                <ul className="list-disc list-inside space-y-0.5 pt-1 text-[11px] text-muted-foreground">
+                <ul className="list-disc list-inside space-y-0.5 pt-1 text-[11px]">
                   <li>All study timers and completed study sessions ({totalFormatted.formatted})</li>
                   <li>Active study streak ({streak} days)</li>
                   <li>Syllabus progress, bookmarks, and room records</li>
@@ -775,29 +728,29 @@ export default function Profile() {
               </div>
 
               <div className="space-y-1.5 pt-2">
-                <label className="font-bold text-xs uppercase tracking-wider text-foreground block">
-                  To confirm, type <span className="text-destructive font-black">DELETE</span> below:
+                <label className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-slate-100 block">
+                  To confirm, type <span className="text-red-600 font-black">DELETE</span> below:
                 </label>
                 <Input
                   value={deleteConfirmText}
                   onChange={(e) => setDeleteConfirmText(e.target.value)}
                   placeholder="Type DELETE"
-                  className="h-10 border-destructive/60 font-mono text-sm tracking-wider uppercase rounded-xl"
+                  className="h-11 border-2 border-red-300 focus-visible:border-red-600 font-mono text-sm tracking-wider uppercase rounded-xl"
                   autoFocus
                 />
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
 
-          <AlertDialogFooter className="gap-2 pt-3 border-t border-border/80">
-            <AlertDialogCancel disabled={deleting} className="h-10 font-mono font-medium rounded-xl border-border/80">
+          <AlertDialogFooter className="gap-2 pt-3">
+            <AlertDialogCancel disabled={deleting} className="h-11 font-mono font-bold rounded-xl">
               Cancel
             </AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDeleteEverything}
               disabled={deleteConfirmText.trim().toUpperCase() !== "DELETE" || deleting}
-              className="h-10 font-mono font-semibold bg-destructive hover:bg-destructive/90 text-destructive-foreground disabled:opacity-50 rounded-xl shadow-xs"
+              className="h-11 font-mono font-bold bg-red-600 hover:bg-red-700 text-white disabled:opacity-50 rounded-xl"
             >
               {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Trash2 className="h-4 w-4 mr-2" />}
               Permanently Purge All Data
@@ -805,19 +758,20 @@ export default function Profile() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
     </Layout>
   );
 }
 
 function StatCard({ icon: Icon, title, desc, cta, onClick }: { icon: any; title: string; desc: string; cta: string; onClick: () => void }) {
   return (
-    <Card className="border border-border/80 bg-card p-5 shadow-xs rounded-xl hover:border-primary/40 transition-colors">
-      <div className="h-9 w-9 rounded-lg border border-border/80 bg-muted/60 text-primary flex items-center justify-center mb-2.5">
-        <Icon className="h-4 w-4" />
+    <Card className="border-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-[3px_3px_0px_0px_rgba(19,27,46,1)] dark:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-2xl hover:-translate-y-0.5 transition-transform">
+      <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center mb-2.5">
+        <Icon className="h-4.5 w-4.5" />
       </div>
-      <h3 className="text-sm font-serif font-bold text-foreground">{title}</h3>
-      <p className="text-xs text-muted-foreground mt-1 leading-relaxed font-sans">{desc}</p>
-      <button onClick={onClick} className="mt-3 text-xs font-mono font-semibold text-primary hover:underline inline-flex items-center gap-1 cursor-pointer">
+      <h3 className="text-sm font-display font-bold text-slate-900 dark:text-slate-100">{title}</h3>
+      <p className="text-xs text-muted-foreground mt-1 leading-relaxed font-mono">{desc}</p>
+      <button onClick={onClick} className="mt-3 text-xs font-mono font-bold text-primary hover:underline inline-flex items-center gap-1 cursor-pointer">
         <span>{cta}</span> →
       </button>
     </Card>
