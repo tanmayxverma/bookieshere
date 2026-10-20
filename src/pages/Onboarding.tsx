@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useProfile, TARGET_CATEGORIES, type TargetCategory } from "@/hooks/useProfile";
 import { AvatarUploader } from "@/components/Profile/AvatarUploader";
+import { BookieEmblem } from "@/components/Brand/BookieEmblem";
 import { validateName } from "@/types/ypt";
-import logo from "@/assets/logo.png";
 import { cn } from "@/lib/utils";
 
 export default function Onboarding() {
@@ -65,30 +65,25 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-background text-foreground">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-academic-grid text-foreground">
       <div className="relative w-full max-w-lg">
+        {/* Brand */}
         <div className="flex items-center justify-center gap-2.5 mb-6">
-          <img
-            src={logo}
-            alt="BOOKIE"
-            className="h-10 w-10 rounded-xl border-2 border-border shadow-[2px_2px_0px_var(--desk-border)] object-cover"
-            onError={(e) => {
-              e.currentTarget.src = "/logo.png";
-            }}
-          />
-          <span className="font-display text-2xl font-black tracking-tight text-foreground">
-            BOOKIE<span className="text-primary">.</span>
-          </span>
+          <BookieEmblem size={34} />
+          <div className="flex items-baseline">
+            <span className="font-serif tracking-tight text-2xl font-bold text-foreground">BOOKIE</span>
+            <span className="text-[10px] font-mono text-primary font-bold ml-0.5">®</span>
+          </div>
         </div>
 
-        <div className="rounded-2xl border-2 border-border bg-card p-6 sm:p-8 shadow-[6px_6px_0px_var(--desk-border)]">
+        <div className="rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-xs">
           {/* Stepper */}
           <div className="flex items-center gap-2 mb-6">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
                 className={cn(
-                  "flex-1 h-2 rounded-full border border-border transition-colors",
+                  "flex-1 h-1.5 rounded-full transition-colors",
                   i <= step ? "bg-primary" : "bg-muted"
                 )}
               />
@@ -96,10 +91,10 @@ export default function Onboarding() {
           </div>
 
           <div className="text-center mb-6">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-border bg-muted font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border border-primary/20 bg-primary/10 font-mono text-[10px] font-semibold uppercase tracking-wider text-primary">
               <Zap className="h-3 w-3 text-primary" /> Step {step} of 3
             </span>
-            <h1 className="mt-3 font-display text-2xl font-black tracking-tight text-foreground">
+            <h1 className="mt-3 font-serif text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
               {step === 1 && "What should we call you?"}
               {step === 2 && "Pick your target exam"}
               {step === 3 && "Aspirant avatar photo"}
@@ -118,13 +113,13 @@ export default function Onboarding() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Arjun Sharma"
                 maxLength={30}
-                className="h-11 text-sm border-2 border-border font-sans"
+                className="h-11 text-sm border-border/80 font-sans rounded-xl"
                 autoFocus
               />
               <Button
                 onClick={next}
                 disabled={!name.trim()}
-                className="w-full h-11 btn-desk-primary"
+                className="w-full h-11 bg-primary text-primary-foreground font-sans font-semibold text-xs rounded-xl shadow-xs"
               >
                 <span>Continue</span>
                 <ArrowRight className="h-4 w-4 ml-1" />
@@ -143,23 +138,23 @@ export default function Onboarding() {
                       type="button"
                       onClick={() => setTarget(cat)}
                       className={cn(
-                        "relative h-11 px-3 rounded-xl border-2 text-xs font-mono font-bold transition-all flex items-center justify-center",
+                        "relative h-11 px-3 rounded-xl border text-xs font-mono font-semibold transition-all flex items-center justify-center cursor-pointer",
                         active
-                          ? "border-foreground bg-foreground text-background shadow-[2px_2px_0px_var(--desk-border)]"
-                          : "border-border bg-card hover:bg-muted text-foreground"
+                          ? "border-primary bg-primary text-primary-foreground shadow-xs"
+                          : "border-border/80 bg-background hover:bg-muted text-foreground"
                       )}
                     >
                       {cat}
-                      {active && <Check className="absolute top-1.5 right-1.5 h-3.5 w-3.5 text-primary" />}
+                      {active && <Check className="absolute top-1.5 right-1.5 h-3.5 w-3.5 text-primary-foreground" />}
                     </button>
                   );
                 })}
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={back} className="flex-1 h-11 border-border">
+              <div className="flex gap-2 pt-2">
+                <Button variant="outline" onClick={back} className="flex-1 h-11 border-border/80 rounded-xl font-sans font-semibold text-xs">
                   Back
                 </Button>
-                <Button onClick={next} className="flex-1 h-11 btn-desk-primary">
+                <Button onClick={next} className="flex-1 h-11 bg-primary text-primary-foreground rounded-xl font-sans font-semibold text-xs shadow-xs">
                   <span>Continue</span>
                   <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
@@ -187,16 +182,17 @@ export default function Onboarding() {
                 />
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={back} className="flex-1 h-11 border-border">
+                <Button variant="outline" onClick={back} className="flex-1 h-11 border-border/80 rounded-xl font-sans font-semibold text-xs">
                   Back
                 </Button>
-                <Button onClick={finish} disabled={busy} className="flex-1 h-11 btn-desk-primary">
-                  {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Finish & Enter Bookie"}
+                <Button onClick={finish} disabled={busy} className="flex-1 h-11 bg-primary text-primary-foreground rounded-xl font-sans font-semibold text-xs shadow-xs">
+                  {busy ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : null}
+                  <span>Finish & Enter Bookie</span>
                 </Button>
               </div>
               <button
                 onClick={finish}
-                className="block mx-auto font-mono text-xs text-muted-foreground hover:text-foreground"
+                className="block mx-auto font-mono text-xs text-muted-foreground hover:text-foreground cursor-pointer"
               >
                 Skip for now →
               </button>
