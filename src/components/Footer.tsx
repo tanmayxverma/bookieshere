@@ -9,42 +9,42 @@ export function Footer() {
   const [adminOpen, setAdminOpen] = useState(false);
 
   return (
-    <div className="w-full relative mt-space-xl">
-      {/* Telegram Drop Channel CTA Card (Matching Brand References) */}
-      <section className="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop py-space-sm">
-        <div className="relative bg-slate-900 dark:bg-slate-900 border-2 border-slate-800 text-white rounded-3xl p-space-lg lg:p-space-xl overflow-hidden shadow-xl">
-          {/* Subtle Engineering Graph Accent Overlay */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
-          {/* Playful Blueprint Tape on Edge */}
-          <div className="absolute -top-3 right-12 w-32 h-6 bg-secondary-container/90 -rotate-3 backdrop-blur-sm hidden sm:block"></div>
+    <div className="w-full relative mt-16 pb-16 md:pb-0">
+      {/* Telegram Drop Channel CTA Card */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-8 py-6">
+        <div className="relative bg-card border-2 border-[var(--desk-border)] text-card-foreground rounded-2xl p-6 sm:p-10 overflow-hidden shadow-[6px_6px_0px_var(--desk-border)]">
+          {/* Playful washi tape on top edge */}
+          <div className="washi-tape bg-[var(--sunflower)] text-[#0F172A] -rotate-1">
+            TELEGRAM CHANNEL // ZERO DELAY
+          </div>
           
-          <div className="relative z-10 max-w-3xl flex flex-col items-start gap-space-sm">
-            <div className="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-primary text-white font-label-code-sm text-label-code-sm font-bold uppercase tracking-wider">
-              <span className="material-symbols-outlined text-[15px]">bolt</span>
-              STAY IN THE LOOP // ZERO DELAY
+          <div className="relative z-10 max-w-3xl flex flex-col items-start gap-3 pt-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-[var(--desk-border)] bg-muted/60 font-mono text-xs font-bold uppercase tracking-wider text-foreground">
+              <span className="w-2 h-2 rounded-full bg-[var(--mint)] animate-pulse"></span>
+              INSTANT DROPS
             </div>
 
-            <h2 className="font-headline-xl text-headline-xl lg:text-[38px] lg:leading-[44px] text-white font-extrabold tracking-tight">
-              New material drops. Straight to your channel.
+            <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl text-foreground font-extrabold tracking-tight">
+              New material drops. Straight to your feed.
             </h2>
 
-            <p className="font-body-lg text-body-lg text-slate-300 max-w-2xl leading-relaxed">
-              Be the first to know when we index fresh Kota test series, PYQ video link updates, Allen milestone modules, and secret classroom notes — no spam, just pure signal.
+            <p className="font-body text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
+              Be the first to know when we index fresh Kota test series, PYQ video links, Allen milestone modules, and verified notes — no spam, just pure signal.
             </p>
 
-            <div className="flex flex-wrap items-center gap-space-md mt-space-sm pt-space-xs">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <a
                 href="https://t.me/bookieshere"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-space-lg py-3 rounded-full bg-primary text-white font-headline-md text-label-ui uppercase tracking-wide shadow-[0_4px_0_0_#00174b] active:translate-y-1 active:shadow-none transition-all hover:bg-primary/90 cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border-2 border-[var(--desk-border)] bg-primary text-primary-foreground font-body font-bold text-sm uppercase tracking-wide shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all hover:brightness-105 cursor-pointer"
               >
                 <Send className="w-4 h-4" />
                 <span>Join Telegram Channel ↗</span>
               </a>
               <Link
                 to="/support"
-                className="inline-flex items-center gap-2 px-space-lg py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-headline-md text-label-ui uppercase tracking-wide transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border-2 border-[var(--desk-border)] bg-muted/50 hover:bg-muted text-foreground font-body font-bold text-sm uppercase tracking-wide shadow-[3px_3px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
               >
                 <PlusCircle className="w-4 h-4" />
                 <span>Request a Resource ↗</span>
@@ -52,52 +52,52 @@ export function Footer() {
             </div>
 
             {/* Mini Channel Metrics */}
-            <div className="flex items-center gap-space-md mt-space-sm font-label-code-sm text-label-code-sm text-slate-400">
-              <span className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <div className="flex items-center gap-3 mt-2 font-mono text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--mint)]"></span>
                 24.8K ASPIRANTS ACTIVE
               </span>
               <span>•</span>
-              <span>AVG UPDATE RATE: 2 DROPS / WEEK</span>
+              <span>2 DROPS / WEEK</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer Strip */}
-      <footer className="w-full bg-surface-container-low dark:bg-slate-950 mt-space-xl border-t border-outline-variant/20 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-margin lg:px-margin-desktop py-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md">
-          <div className="flex flex-col items-center md:items-start gap-space-xs">
+      <footer className="w-full bg-card mt-12 border-t-2 border-[var(--desk-border)] shadow-[0px_-2px_0px_var(--desk-border)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col items-center md:items-start gap-1">
             <div className="flex items-center gap-2">
               <img
                 src={logo}
                 alt="Bookie"
-                className="w-7 h-7 rounded-lg object-cover ring-1 ring-border/50 shadow-xs"
+                className="w-7 h-7 rounded-lg object-cover border-2 border-[var(--desk-border)] shadow-[1px_1px_0px_var(--desk-border)]"
                 onError={(e) => {
                   e.currentTarget.src = "/logo.png";
                 }}
               />
-              <span className="font-headline-md text-label-ui font-extrabold text-on-surface tracking-wide">BOOKIE®</span>
+              <span className="font-heading font-extrabold text-lg text-foreground tracking-tight">BOOKIE®</span>
             </div>
-            <p className="font-body-sm text-body-sm text-on-surface-variant text-center md:text-left">
-              © {year} | Engineered for Ambitious Aspirants
+            <p className="font-body text-xs text-muted-foreground text-center md:text-left">
+              © {year} Bookie Academics. Engineered for Ambitious Aspirants.
             </p>
           </div>
           
-          <div className="flex flex-wrap items-center justify-center gap-space-md sm:gap-space-lg">
-            <div className="flex items-center gap-space-md font-label-code-sm text-label-code-sm tracking-wider text-on-surface-variant">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-3 font-mono text-xs tracking-wider text-muted-foreground font-semibold">
               <Link to="/materials" className="hover:text-primary transition-colors">PRACTICE</Link>
-              <span className="text-outline-variant">•</span>
+              <span>•</span>
               <Link to="/tests" className="hover:text-primary transition-colors">PROGRESS</Link>
-              <span className="text-outline-variant">•</span>
+              <span>•</span>
               <Link to="/ypt" className="hover:text-primary transition-colors">PERFORM</Link>
-              <span className="text-outline-variant">•</span>
+              <span>•</span>
               <Link to="/donate" className="hover:text-primary transition-colors">CHAI ☕</Link>
-              <span className="text-outline-variant">•</span>
+              <span>•</span>
               <Link to="/dmca" className="hover:text-primary transition-colors">DMCA</Link>
             </div>
-            <div className="hidden sm:flex items-center gap-space-xs font-label-code-sm text-label-code-sm px-space-sm py-1 rounded-full bg-surface-container text-tertiary font-bold">
-              <span className="w-2 h-2 rounded-full bg-tertiary"></span>
+            <div className="hidden sm:flex items-center gap-1.5 font-mono text-xs px-2.5 py-1 rounded-full border-2 border-[var(--desk-border)] bg-[var(--sunflower)] text-[#0F172A] font-bold shadow-[1.5px_1.5px_0px_var(--desk-border)]">
+              <span className="w-2 h-2 rounded-full bg-primary"></span>
               AIR TARGET 2027
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
+import { MobileTabBar } from "./MobileTabBar";
 import { BookieAIChat } from "./BookieAI";
 import { YPTFloatingTimer } from "./YPT/YPTFloatingTimer";
 import { TelegramPromoPopup } from "./TelegramPromoPopup";
@@ -14,6 +15,7 @@ export function Layout({ children }: LayoutProps) {
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
+      <MobileTabBar />
       <BookieAIChat />
       <YPTFloatingTimer />
       <TelegramPromoPopup />

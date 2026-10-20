@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bookie — Materials Library &amp; 10-Year PYQ Vault</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts for Bricolage Grotesque, Space Grotesk, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=JetBrains+Mono:ital,wght@0,400..800;1,400..800&amp;family=Space+Grotesk:wght@400..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#ffdf9f",
+            "outline": "#737686",
+            "surface-container": "#eaedff",
+            "secondary-container": "#ffc329",
+            "on-surface": "#131b2e",
+            "on-error": "#ffffff",
+            "tertiary-container": "#007d55",
+            "inverse-on-surface": "#eef0ff",
+            "on-error-container": "#93000a",
+            "surface": "#faf8ff",
+            "on-tertiary-fixed": "#002113",
+            "surface-container-highest": "#dae2fd",
+            "surface-tint": "#0053db",
+            "surface-container-high": "#e2e7ff",
+            "outline-variant": "#c3c6d7",
+            "inverse-surface": "#283044",
+            "on-secondary-fixed-variant": "#5c4300",
+            "on-secondary-fixed": "#261a00",
+            "on-background": "#131b2e",
+            "primary": "#004ac6",
+            "surface-container-low": "#f2f3ff",
+            "surface-bright": "#faf8ff",
+            "secondary": "#795900",
+            "on-primary-container": "#eeefff",
+            "background": "#faf8ff",
+            "tertiary": "#006242",
+            "surface-variant": "#dae2fd",
+            "on-tertiary-container": "#bdffdb",
+            "secondary-fixed-dim": "#f9bd22",
+            "on-primary-fixed-variant": "#003ea8",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "error": "#ba1a1a",
+            "on-primary-fixed": "#00174b",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed-variant": "#005236",
+            "tertiary-fixed-dim": "#4edea3",
+            "surface-dim": "#d2d9f4",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#2563eb",
+            "primary-fixed-dim": "#b4c5ff",
+            "on-surface-variant": "#434655",
+            "inverse-primary": "#b4c5ff",
+            "tertiary-fixed": "#6ffbbe",
+            "primary-fixed": "#dbe1ff",
+            "on-primary": "#ffffff",
+            "on-secondary-container": "#6f5100"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-sm": "0.5rem",
+            "gutter": "1.5rem",
+            "margin-mobile": "1.25rem",
+            "gutter-mobile": "1rem",
+            "space-xl": "2.5rem",
+            "space-xs": "0.25rem",
+            "margin": "2.5rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Bricolage Grotesque"],
+            "label-sm": ["JetBrains Mono"],
+            "label-md": ["JetBrains Mono"],
+            "headline-lg-mobile": ["Bricolage Grotesque"],
+            "display-lg": ["Bricolage Grotesque"],
+            "body-md": ["Space Grotesk"],
+            "headline-md": ["Bricolage Grotesque"],
+            "body-lg": ["Space Grotesk"],
+            "display-lg-mobile": ["Bricolage Grotesque"],
+            "label-lg": ["JetBrains Mono"],
+            "headline-sm": ["Bricolage Grotesque"],
+            "body-sm": ["Space Grotesk"]
+          },
+          "fontSize": {
+            "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-md": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+            "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Physical Drafting Grid pattern for the warm paper workbench ground */
+    .drafting-dot-grid {
+      background-color: #FFFDF7;
+      background-image: radial-gradient(#131b2e 0.75px, transparent 0.75px), radial-gradient(#131b2e 0.75px, #FFFDF7 0.75px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+    
+    /* Tactile Neo-Brutalist Hard Shadows */
+    .shadow-hard-sm {
+      box-shadow: 2px 2px 0px #131b2e;
+    }
+    .shadow-hard-md {
+      box-shadow: 4px 4px 0px #131b2e;
+    }
+    .shadow-hard-lg {
+      box-shadow: 6px 6px 0px #131b2e;
+    }
+    .shadow-hard-punch {
+      box-shadow: 8px 8px 0px #131b2e;
+    }
+    
+    /* Tape skew & stickers */
+    .washi-tape-yellow {
+      background-color: #ffc329;
+      transform: rotate(-1.5deg);
+      box-shadow: 2px 2px 0px #131b2e;
+    }
+    .washi-tape-mint {
+      background-color: #6ffbbe;
+      transform: rotate(1deg);
+      box-shadow: 2px 2px 0px #131b2e;
+    }
+    .sticker-badge {
+      transform: rotate(3deg);
+      box-shadow: 3px 3px 0px #131b2e;
+    }
+  </style>
+</head>
+<body class="bg-[#FFFDF7] text-on-surface antialiased min-h-screen flex flex-col font-body-md selection:bg-secondary-container selection:text-on-surface">
+<!-- ========================================================================= -->
+<!-- TOP APP BAR (From Shared Components JSON)                                 -->
+<!-- ========================================================================= -->
+<header class="sticky top-0 z-50 bg-surface-container-lowest dark:bg-inverse-surface border-b-2 border-on-surface dark:border-outline-variant [box-shadow:0px_4px_0px_#131b2e] dark:[box-shadow:0px_4px_0px_#dae2fd]">
+<div class="flex justify-between items-center w-full px-space-xl max-w-7xl mx-auto h-20">
+<!-- Logo & Academic Sprint Indicator -->
+<div class="flex items-center gap-6">
+<a class="text-headline-md font-headline-md font-extrabold text-primary dark:text-inverse-primary tracking-tight flex items-center gap-2 hover:translate-x-0.5 hover:-translate-y-0.5 transition-transform duration-150" href="#">
+<span class="inline-flex items-center justify-center w-10 h-10 bg-secondary-container text-on-surface border-2 border-on-surface shadow-hard-sm font-label-lg font-bold">
+            B
+          </span>
+<span>Bookie</span>
+</a>
+<!-- Latency / Target Pill -->
+<div class="hidden lg:flex items-center gap-2 px-3 py-1 bg-surface-container border-2 border-on-surface shadow-hard-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-label-sm font-bold text-on-surface">14ms sync</span>
+<span class="text-outline">/</span>
+<span class="font-label-sm text-label-sm font-bold text-primary">JEE Adv '25 Sprint</span>
+</div>
+</div>
+<!-- Navigation Links (Active mapping: Materials is primary destination) -->
+<nav class="hidden md:flex items-center gap-8 font-label-md text-label-md">
+<!-- Materials: ACTIVE according to JSON spec -->
+<a class="text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary font-bold py-1 hover:translate-x-0.5 hover:-translate-y-0.5 transition-transform duration-150" href="#materials">
+          Materials
+        </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface py-1 hover:translate-x-0.5 hover:-translate-y-0.5 transition-transform duration-150" href="#tests">
+          Tests
+        </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface py-1 hover:translate-x-0.5 hover:-translate-y-0.5 transition-transform duration-150" href="#peer-desks">
+          Peer Desks
+        </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface py-1 hover:translate-x-0.5 hover:-translate-y-0.5 transition-transform duration-150 flex items-center gap-1" href="#pyq-vault">
+<span>PYQ Vault</span>
+<span class="px-1.5 py-0.2 bg-secondary-container text-on-surface text-[10px] font-bold border border-on-surface shadow-[1px_1px_0px_#131b2e]">10Y</span>
+</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface py-1 hover:translate-x-0.5 hover:-translate-y-0.5 transition-transform duration-150" href="#hall-of-fame">
+          Hall of Fame
+        </a>
+</nav>
+<!-- Trailing Action Badges & Icons (Exact strings from JSON) -->
+<div class="flex items-center gap-3">
+<!-- Streak / Trailing Secondary -->
+<div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-surface border-2 border-on-surface shadow-hard-sm">
+<span class="material-symbols-outlined text-secondary-container" data-icon="local_fire_department" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">14-Day Sprint</span>
+</div>
+<!-- Trailing Primary Action -->
+<button class="hidden xl:inline-flex px-3.5 py-1.5 bg-secondary-container text-on-surface font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+          JEE Adv '25
+        </button>
+<!-- Bookmarks Icon -->
+<button class="w-10 h-10 flex items-center justify-center bg-surface-container-lowest border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all" title="Saved Formulae &amp; Traps">
+<span class="material-symbols-outlined text-on-surface" data-icon="bookmark">bookmark</span>
+</button>
+<!-- Notifications Icon -->
+<button class="relative w-10 h-10 flex items-center justify-center bg-surface-container-lowest border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all" title="Notifications">
+<span class="material-symbols-outlined text-on-surface" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2.5 h-2.5 bg-error border border-on-surface rounded-full"></span>
+</button>
+<!-- Aspirant Desk Avatar -->
+<div class="flex items-center pl-1">
+<div class="relative w-10 h-10 border-2 border-on-surface shadow-hard-sm overflow-hidden bg-primary-container">
+<img class="w-full h-full object-cover" data-alt="A focused high-school engineering aspirant desk setup viewed from an overhead architectural angle. It displays a crisp mechanical drafting pencil, a bright sunflower yellow notepad filled with organic physics equations, and a miniature ceramic mug. The scene has high-contrast graphic lighting with clean ink outlines and bold vibrant accents conforming to a sticker-pop engineering workbench aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVqL5sQPlD0aahMQKNT0etDtzUTsVJc2QwcO5ibKVuLNTyisvJm2ipkBJR0GaGNj6Os-D6qXA8wugASotqlC0H1DZieJqUGjMNKojGx2dMlLWnFhLyY4Wyp26-JGxj4IkGO9FNVT-muhiikE5d2RT_547U8XfXIkpTz36DhMDr0rVBD_0c-_4foNsoorDnqCR4baf-hiqp_lMmmjP27RnEE2mnl2-DXJvRPynF-HwVW1O8MyBYL2Y4W8ciT9PbYTx2lSxj27V7CNso"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- MAIN WORKBENCH GROUND (Paper dot grid)                                    -->
+<!-- ========================================================================= -->
+<main class="flex-1 drafting-dot-grid w-full pb-20">
+<div class="max-w-7xl mx-auto px-space-md sm:px-space-xl pt-8 space-y-8">
+<!-- HERO BANNER: STICKER POP DRAFTING BENCH -->
+<section class="relative bg-surface-container-lowest border-[2.5px] border-on-surface shadow-hard-punch p-6 sm:p-8">
+<!-- Pinned Washi Tape Accent on Top Edge -->
+<div class="absolute -top-3.5 left-10 washi-tape-yellow px-4 py-1 border-2 border-on-surface font-label-sm text-label-sm font-bold uppercase tracking-wider text-on-surface">
+          ★ Archival Vault • Spring '25 Edition
+        </div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pt-2">
+<div class="space-y-3 max-w-3xl">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm px-2.5 py-0.5 bg-primary-container text-white border-2 border-on-surface font-bold uppercase">
+                Zero Gimmicks / 100% First Principles
+              </span>
+<span class="hidden sm:inline-block font-label-sm text-label-sm text-on-surface-variant font-bold">
+                TCS iON Screen-Accurate Formats
+              </span>
+</div>
+<h1 class="text-display-lg-mobile sm:text-headline-lg font-headline-lg text-on-surface tracking-tight leading-none">
+              MATERIALS LIBRARY &amp; <span class="bg-secondary-container px-2 border-2 border-on-surface inline-block -rotate-1 shadow-hard-sm">10-YEAR PYQ</span> VAULT.
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+              Engineered for JEE Advanced &amp; NEET top rankers. Deconstructed chapter matrices, negative-mark trap vaults, annotated professor proofs, and raw physical formula sheets.
+            </p>
+</div>
+<!-- Quick Live Telemetry Sticker Badge -->
+<div class="sticker-badge bg-[#FEF9C3] border-2 border-on-surface p-4 flex flex-col items-center justify-center text-center self-start lg:self-center shrink-0 min-w-[210px]">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold">Archived Catalog</span>
+<span class="font-headline-lg text-headline-lg font-extrabold text-primary leading-none my-1">3,420</span>
+<span class="font-label-sm text-label-sm font-bold text-on-surface bg-secondary-container px-2 py-0.5 border border-on-surface">
+              100% Solved with Steps
+            </span>
+</div>
+</div>
+<!-- SEARCH BAR MODULE -->
+<div class="mt-8 pt-6 border-t-2 border-dashed border-outline-variant">
+<div class="relative flex items-center">
+<div class="absolute left-4 flex items-center pointer-events-none text-on-surface">
+<span class="material-symbols-outlined text-2xl font-bold" data-icon="search">search</span>
+</div>
+<input class="w-full bg-[#FFFFFF] border-2 border-on-surface py-3.5 pl-12 pr-28 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary focus:border-on-surface shadow-hard-sm transition-all" placeholder="Search 1,840+ deconstructed PYQ problems, formula cheat-sheets, or faculty proofs [Ctrl+K]..." type="text"/>
+<div class="absolute right-3 flex items-center gap-1.5">
+<kbd class="hidden sm:inline-flex items-center px-2 py-1 bg-surface-container border border-on-surface font-label-sm text-label-sm font-bold shadow-[1px_1px_0px_#131b2e]">
+                Ctrl + K
+              </kbd>
+<button class="px-3.5 py-1.5 bg-primary-container text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+                Search
+              </button>
+</div>
+</div>
+</div>
+<!-- SUBJECT SEGMENTED CONTROLS & DRAFTING FILTERS -->
+<div class="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<!-- Subject Selector Tabs -->
+<div class="flex flex-wrap items-center gap-2">
+<!-- Active: Physics -->
+<button class="flex items-center gap-2 px-4 py-2 bg-primary-container text-white border-2 border-on-surface shadow-hard-sm font-label-md text-label-md font-bold hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary-container border border-on-surface"></span>
+<span>Physics (32 Chapters)</span>
+</button>
+<!-- Inactive: Chemistry -->
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest text-on-surface border-2 border-on-surface shadow-hard-sm font-label-md text-label-md font-bold hover:bg-surface-container hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+<span>Chemistry (28 Chapters)</span>
+</button>
+<!-- Inactive: Mathematics -->
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest text-on-surface border-2 border-on-surface shadow-hard-sm font-label-md text-label-md font-bold hover:bg-surface-container hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+<span>Mathematics (30 Chapters)</span>
+</button>
+</div>
+<!-- Grade Level Switcher -->
+<div class="inline-flex items-center border-2 border-on-surface bg-surface-container p-1 shadow-hard-sm self-start">
+<span class="font-label-sm text-label-sm font-bold uppercase text-on-surface px-2">Grade:</span>
+<button class="px-2.5 py-1 font-label-sm text-label-sm font-bold bg-white border border-on-surface text-on-surface shadow-[1px_1px_0px_#131b2e]">
+              Both
+            </button>
+<button class="px-2.5 py-1 font-label-sm text-label-sm font-medium text-on-surface-variant hover:text-on-surface">
+              Class 11
+            </button>
+<button class="px-2.5 py-1 font-label-sm text-label-sm font-medium text-on-surface-variant hover:text-on-surface">
+              Class 12
+            </button>
+</div>
+</div>
+<!-- CONTENT TYPE PILLS / FILTER CHIPS -->
+<div class="mt-4 flex flex-wrap items-center gap-2 pt-3 border-t border-on-surface/10">
+<span class="font-label-sm text-label-sm font-bold text-on-surface-variant uppercase mr-1">Filter Archive:</span>
+<button class="px-3 py-1 bg-secondary-container text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-[2px_2px_0px_#131b2e]">
+            All Archives
+          </button>
+<button class="px-3 py-1 bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 transition-all">
+            10-Yr Solved PYQs (2014-2024)
+          </button>
+<button class="px-3 py-1 bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 transition-all">
+            Verified Formula Cheat-sheets
+          </button>
+<button class="px-3 py-1 bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 transition-all">
+            Negative-Mark Trap Vault
+          </button>
+<button class="px-3 py-1 bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 transition-all">
+            Top 100 Ranker Marginalia Notes
+          </button>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- TELEMETRY DRAWER / RAPID BATCH ACTIONS SHELF                             -->
+<!-- ========================================================================= -->
+<section class="bg-surface-container-low border-2 border-on-surface shadow-hard-md p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex flex-wrap items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary font-bold" data-icon="check_circle">check_circle</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">3,420 Verified Questions</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container font-bold" data-icon="architecture">architecture</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">Pure First-Principles Deconstruction</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary font-bold" data-icon="desktop_windows">desktop_windows</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">TCS iON CBT Exact Match</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-primary-container text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-base" data-icon="download">download</span>
+<span>Download 2024 Solved Papers [18MB]</span>
+</button>
+<button class="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-secondary-container text-on-surface font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-base" data-icon="bolt">bolt</span>
+<span>Batch Test Generator</span>
+</button>
+<button class="inline-flex items-center justify-center p-1.5 bg-surface border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all" title="Pin to Study Carrel">
+<span class="material-symbols-outlined text-on-surface" data-icon="push_pin">push_pin</span>
+</button>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- CORE WORKBENCH GRID: HIGH-YIELD CHAPTER MATRIX                           -->
+<!-- ========================================================================= -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">
+              High-Yield Chapter Matrix
+            </h2>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-secondary-container text-on-surface border border-on-surface font-bold shadow-[1px_1px_0px_#131b2e]">
+              JEE Advanced Weightage Calibrated
+            </span>
+</div>
+<div class="hidden sm:flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant font-bold">
+<span>Displaying 6 Core Bench Modules</span>
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- ==================== CARD 1: ROTATIONAL DYNAMICS ==================== -->
+<article class="relative bg-surface-container-lowest border-[2.5px] border-on-surface shadow-hard-md flex flex-col justify-between hover:-translate-y-1 hover:translate-x-0.5 transition-all duration-200">
+<!-- Washi tape label on seam -->
+<div class="absolute -top-3 left-4 washi-tape-yellow px-3 py-0.5 border border-on-surface font-label-sm text-label-sm font-bold text-on-surface">
+              Physics • Tier-1 Weightage: 11.2%
+            </div>
+<div class="p-6 pt-7 space-y-4">
+<!-- Header info & Score badge -->
+<div class="flex items-start justify-between gap-2">
+<div>
+<span class="font-label-sm text-label-sm font-bold text-primary uppercase tracking-wide">Mechanics • Ch. 07</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface mt-0.5">
+                    Rotational Dynamics &amp; Rigid Bodies
+                  </h3>
+</div>
+<!-- Mini Sticker Stamp -->
+<div class="shrink-0 w-12 h-12 rounded-full border-2 border-on-surface bg-surface-container flex flex-col items-center justify-center font-headline-sm text-xs font-black shadow-hard-sm rotate-6">
+<span>TOP</span>
+<span class="text-primary text-[9px] -mt-1 font-bold">HIGH</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Pure rolling on inclined planes, angular momentum conservation, instantaneous center of rotation, and asymmetric inertia tensors.
+              </p>
+<!-- Metrics Matrix -->
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low border-2 border-on-surface p-3 text-center">
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-on-surface">142</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Solved PYQs</div>
+</div>
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-primary">3</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Formula Sheets</div>
+</div>
+<div>
+<div class="font-label-lg text-label-lg font-extrabold text-error">18</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Trap Vaults</div>
+</div>
+</div>
+<!-- Negative Mark Warning Callout Sticky Note -->
+<div class="bg-[#FEF9C3] border-2 border-on-surface p-2.5 -rotate-1 shadow-[2px_2px_0px_#131b2e] flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-lg shrink-0 mt-0.5" data-icon="warning">warning</span>
+<span class="font-body-sm text-xs text-on-surface leading-tight font-medium">
+<strong>Watch Trap #04:</strong> Friction direction confusion during non-pure rolling with torque applied at center of mass.
+                </span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="p-4 bg-surface-container-low border-t-2 border-on-surface flex flex-col gap-2">
+<button class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-primary-container text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-base" data-icon="file_download">file_download</span>
+<span>Download Solved PDF [4.2 MB]</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+<span>Video Proofs</span>
+</button>
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="calculate">calculate</span>
+<span>Formula Drill</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ==================== CARD 2: WAVE OPTICS ==================== -->
+<article class="relative bg-surface-container-lowest border-[2.5px] border-on-surface shadow-hard-md flex flex-col justify-between hover:-translate-y-1 hover:translate-x-0.5 transition-all duration-200">
+<!-- Washi tape label on seam -->
+<div class="absolute -top-3 left-4 washi-tape-mint px-3 py-0.5 border border-on-surface font-label-sm text-label-sm font-bold text-on-surface">
+              Physics • Weightage: 8.4%
+            </div>
+<div class="p-6 pt-7 space-y-4">
+<!-- Header info & Score badge -->
+<div class="flex items-start justify-between gap-2">
+<div>
+<span class="font-label-sm text-label-sm font-bold text-primary uppercase tracking-wide">Optics • Ch. 14</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface mt-0.5">
+                    Wave Optics &amp; Interference
+                  </h3>
+</div>
+<div class="shrink-0 w-12 h-12 rounded-full border-2 border-on-surface bg-secondary-fixed flex flex-col items-center justify-center font-headline-sm text-xs font-black shadow-hard-sm -rotate-3">
+<span>8.4%</span>
+<span class="text-[8px] font-bold text-on-surface">ADV</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                YDSE with dielectric mica slabs, intensity distribution in single slit diffraction, and polarization via Brewster’s law.
+              </p>
+<!-- Metrics Matrix -->
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low border-2 border-on-surface p-3 text-center">
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-on-surface">98</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Solved PYQs</div>
+</div>
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-primary">2</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Derivations</div>
+</div>
+<div>
+<div class="font-label-lg text-label-lg font-extrabold text-error">12</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Trap Notes</div>
+</div>
+</div>
+<!-- Sticky Note -->
+<div class="bg-[#D1FAE5] border-2 border-on-surface p-2.5 rotate-1 shadow-[2px_2px_0px_#131b2e] flex items-start gap-2">
+<span class="material-symbols-outlined text-tertiary-container text-lg shrink-0 mt-0.5" data-icon="lightbulb">lightbulb</span>
+<span class="font-body-sm text-xs text-on-surface leading-tight font-medium">
+<strong>Frequent Derivation:</strong> Path difference shift with optical thickness $\Delta x = (\mu - 1)t$ on slit paths.
+                </span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="p-4 bg-surface-container-low border-t-2 border-on-surface flex flex-col gap-2">
+<button class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-primary-container text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-base" data-icon="file_download">file_download</span>
+<span>Download Solved PDF [3.1 MB]</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+<span>Video Proofs</span>
+</button>
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="calculate">calculate</span>
+<span>Formula Drill</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ==================== CARD 3: COORDINATION COMPOUNDS ==================== -->
+<article class="relative bg-surface-container-lowest border-[2.5px] border-on-surface shadow-hard-md flex flex-col justify-between hover:-translate-y-1 hover:translate-x-0.5 transition-all duration-200">
+<!-- Washi tape label on seam -->
+<div class="absolute -top-3 left-4 washi-tape-yellow px-3 py-0.5 border border-on-surface font-label-sm text-label-sm font-bold text-on-surface">
+              Chemistry • High Yield: 9.8%
+            </div>
+<div class="p-6 pt-7 space-y-4">
+<!-- Header info & Score badge -->
+<div class="flex items-start justify-between gap-2">
+<div>
+<span class="font-label-sm text-label-sm font-bold text-primary uppercase tracking-wide">Inorganic • Ch. 09</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface mt-0.5">
+                    Coordination &amp; Crystal Field
+                  </h3>
+</div>
+<div class="shrink-0 w-12 h-12 rounded-full border-2 border-on-surface bg-surface-container flex flex-col items-center justify-center font-headline-sm text-xs font-black shadow-hard-sm rotate-2">
+<span>9.8%</span>
+<span class="text-tertiary-container text-[8px] font-bold">CFSE</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Crystal Field Splitting Energies ($\Delta_o, \Delta_t$), spectrochemical series pairing rules, optical isomerism in bidentate complexes.
+              </p>
+<!-- Metrics Matrix -->
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low border-2 border-on-surface p-3 text-center">
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-on-surface">116</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Solved PYQs</div>
+</div>
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-primary">4</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Formula Sheets</div>
+</div>
+<div>
+<div class="font-label-lg text-label-lg font-extrabold text-error">22</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Color Traps</div>
+</div>
+</div>
+<!-- Sticky Note -->
+<div class="bg-[#FEF9C3] border-2 border-on-surface p-2.5 -rotate-1 shadow-[2px_2px_0px_#131b2e] flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-lg shrink-0 mt-0.5" data-icon="palette">palette</span>
+<span class="font-body-sm text-xs text-on-surface leading-tight font-medium">
+<strong>Color Trap Vault:</strong> d-d transition absorption vs complementary reflected wavelength rules in octahedral complexes.
+                </span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="p-4 bg-surface-container-low border-t-2 border-on-surface flex flex-col gap-2">
+<button class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-primary-container text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-base" data-icon="file_download">file_download</span>
+<span>Download Solved PDF [3.8 MB]</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+<span>Video Proofs</span>
+</button>
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="calculate">calculate</span>
+<span>Isomerism Drill</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ==================== CARD 4: CARBONYL COMPOUNDS ==================== -->
+<article class="relative bg-surface-container-lowest border-[2.5px] border-on-surface shadow-hard-md flex flex-col justify-between hover:-translate-y-1 hover:translate-x-0.5 transition-all duration-200">
+<!-- Washi tape label on seam -->
+<div class="absolute -top-3 left-4 washi-tape-yellow px-3 py-0.5 border border-on-surface font-label-sm text-label-sm font-bold text-on-surface">
+              Chemistry • Ultra-High: 14.8%
+            </div>
+<div class="p-6 pt-7 space-y-4">
+<!-- Header info & Score badge -->
+<div class="flex items-start justify-between gap-2">
+<div>
+<span class="font-label-sm text-label-sm font-bold text-primary uppercase tracking-wide">Organic • Ch. 12</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface mt-0.5">
+                    Carbonyls &amp; Nucleophilic Add.
+                  </h3>
+</div>
+<div class="shrink-0 w-12 h-12 rounded-full border-2 border-on-surface bg-secondary-container flex flex-col items-center justify-center font-headline-sm text-xs font-black shadow-hard-sm -rotate-6">
+<span>14.8%</span>
+<span class="text-[8px] font-bold text-on-surface">CORE</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Aldol condensation, Cannizzaro mechanisms, Grignard additions, ester cross-condensation, and multi-step synthesis pathways.
+              </p>
+<!-- Metrics Matrix -->
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low border-2 border-on-surface p-3 text-center">
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-on-surface">184</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Solved PYQs</div>
+</div>
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-primary">5</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Mechanism Maps</div>
+</div>
+<div>
+<div class="font-label-lg text-label-lg font-extrabold text-error">31</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Synthesis Traps</div>
+</div>
+</div>
+<!-- Sticky Note -->
+<div class="bg-[#FEF9C3] border-2 border-on-surface p-2.5 rotate-1 shadow-[2px_2px_0px_#131b2e] flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-lg shrink-0 mt-0.5" data-icon="bug_report">bug_report</span>
+<span class="font-body-sm text-xs text-on-surface leading-tight font-medium">
+<strong>Negative-Mark Trap:</strong> Crossed Aldol selectivity based on enolate stability versus electrophilic carbon steric hindrance.
+                </span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="p-4 bg-surface-container-low border-t-2 border-on-surface flex flex-col gap-2">
+<button class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-primary-container text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-base" data-icon="file_download">file_download</span>
+<span>Download Solved PDF [5.4 MB]</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+<span>Mechanisms</span>
+</button>
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="biotech">biotech</span>
+<span>Synthesis Map</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ==================== CARD 5: DEFINITE INTEGRALS ==================== -->
+<article class="relative bg-surface-container-lowest border-[2.5px] border-on-surface shadow-hard-md flex flex-col justify-between hover:-translate-y-1 hover:translate-x-0.5 transition-all duration-200">
+<!-- Washi tape label on seam -->
+<div class="absolute -top-3 left-4 washi-tape-mint px-3 py-0.5 border border-on-surface font-label-sm text-label-sm font-bold text-on-surface">
+              Math • Tier-1 Weightage: 12.6%
+            </div>
+<div class="p-6 pt-7 space-y-4">
+<!-- Header info & Score badge -->
+<div class="flex items-start justify-between gap-2">
+<div>
+<span class="font-label-sm text-label-sm font-bold text-primary uppercase tracking-wide">Calculus • Ch. 08</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface mt-0.5">
+                    Definite Integrals &amp; Area Under Curve
+                  </h3>
+</div>
+<div class="shrink-0 w-12 h-12 rounded-full border-2 border-on-surface bg-surface-container flex flex-col items-center justify-center font-headline-sm text-xs font-black shadow-hard-sm rotate-4">
+<span>12.6%</span>
+<span class="text-primary text-[8px] font-bold">CALC</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Leibnitz Rule of differentiation under integral sign, King’s Property transformations, limits of Riemann sums, piecewise area bounds.
+              </p>
+<!-- Metrics Matrix -->
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low border-2 border-on-surface p-3 text-center">
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-on-surface">160</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Solved PYQs</div>
+</div>
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-primary">3</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Leibnitz Sheets</div>
+</div>
+<div>
+<div class="font-label-lg text-label-lg font-extrabold text-error">15</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Shortcut Matrix</div>
+</div>
+</div>
+<!-- Sticky Note -->
+<div class="bg-[#FEF9C3] border-2 border-on-surface p-2.5 -rotate-2 shadow-[2px_2px_0px_#131b2e] flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-lg shrink-0 mt-0.5" data-icon="functions">functions</span>
+<span class="font-body-sm text-xs text-on-surface leading-tight font-medium">
+<strong>Ranker Marginalia:</strong> Symmetry shortcuts for $\int_0^{\pi/2} \frac{dx}{1 + \tan^n x} = \pi/4$ regardless of exponent $n$.
+                </span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="p-4 bg-surface-container-low border-t-2 border-on-surface flex flex-col gap-2">
+<button class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-primary-container text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-base" data-icon="file_download">file_download</span>
+<span>Download Solved PDF [4.7 MB]</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+<span>Video Proofs</span>
+</button>
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="calculate">calculate</span>
+<span>Shortcut Drill</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ==================== CARD 6: CONIC SECTIONS ==================== -->
+<article class="relative bg-surface-container-lowest border-[2.5px] border-on-surface shadow-hard-md flex flex-col justify-between hover:-translate-y-1 hover:translate-x-0.5 transition-all duration-200">
+<!-- Washi tape label on seam -->
+<div class="absolute -top-3 left-4 washi-tape-yellow px-3 py-0.5 border border-on-surface font-label-sm text-label-sm font-bold text-on-surface">
+              Math • High Yield: 10.5%
+            </div>
+<div class="p-6 pt-7 space-y-4">
+<!-- Header info & Score badge -->
+<div class="flex items-start justify-between gap-2">
+<div>
+<span class="font-label-sm text-label-sm font-bold text-primary uppercase tracking-wide">Coordinate • Ch. 05</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface mt-0.5">
+                    Coordinate: Conic Sections
+                  </h3>
+</div>
+<div class="shrink-0 w-12 h-12 rounded-full border-2 border-on-surface bg-surface-container flex flex-col items-center justify-center font-headline-sm text-xs font-black shadow-hard-sm -rotate-2">
+<span>10.5%</span>
+<span class="text-tertiary-container text-[8px] font-bold">GEOM</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Parabola tangents &amp; normals in parametric coordinates, focal chord properties, ellipse director circles, rectangular hyperbola asymptotes.
+              </p>
+<!-- Metrics Matrix -->
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low border-2 border-on-surface p-3 text-center">
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-on-surface">135</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Solved PYQs</div>
+</div>
+<div class="border-r border-on-surface/20">
+<div class="font-label-lg text-label-lg font-extrabold text-primary">4</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Conic Sheets</div>
+</div>
+<div>
+<div class="font-label-lg text-label-lg font-extrabold text-error">19</div>
+<div class="font-label-sm text-[9px] text-on-surface-variant uppercase">Normal Traps</div>
+</div>
+</div>
+<!-- Sticky Note -->
+<div class="bg-[#FEF9C3] border-2 border-on-surface p-2.5 rotate-1 shadow-[2px_2px_0px_#131b2e] flex items-start gap-2">
+<span class="material-symbols-outlined text-on-surface text-lg shrink-0 mt-0.5" data-icon="polyline">polyline</span>
+<span class="font-body-sm text-xs text-on-surface leading-tight font-medium">
+<strong>Critical Normal Trap:</strong> Point from which 3 distinct real normals can be drawn to $y^2 = 4ax$ requiring $x &gt; 2a$.
+                </span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="p-4 bg-surface-container-low border-t-2 border-on-surface flex flex-col gap-2">
+<button class="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-primary-container text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-base" data-icon="file_download">file_download</span>
+<span>Download Solved PDF [4.9 MB]</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+<span>Video Proofs</span>
+</button>
+<button class="inline-flex items-center justify-center gap-1 py-1.5 px-2 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold border-2 border-on-surface shadow-hard-sm hover:bg-white active:translate-x-0.5 active:translate-y-0.5 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="calculate">calculate</span>
+<span>Eccentricity</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- BOTTOM PINNED BATCH STUDY CARREL MODULE (Bento layout)                    -->
+<!-- ========================================================================= -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4">
+<!-- Bento Tile 1: Anti-Burnout Revision Protocol -->
+<div class="bg-surface-container-lowest border-2 border-on-surface shadow-hard-md p-6 flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed border border-on-surface font-label-sm text-label-sm font-bold">
+                Anti-Burnout System
+              </span>
+<span class="font-label-sm text-label-sm font-bold text-on-surface-variant">Spaced Recall</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+              Leitner 3-Box PYQ Re-attempt Engine
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Every flagged trap problem automatically routes into Day 1, Day 4, and Day 14 testing intervals to prevent illusion of competence.
+            </p>
+</div>
+<div class="pt-4 mt-4 border-t border-dashed border-outline-variant flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold text-primary">Active Queue: 42 Problems</span>
+<button class="px-3 py-1 bg-surface-container border border-on-surface font-label-sm text-label-sm font-bold hover:bg-white shadow-[1px_1px_0px_#131b2e]">
+              Launch Queue →
+            </button>
+</div>
+</div>
+<!-- Bento Tile 2: Faculty Proof Vault Live Stream -->
+<div class="bg-surface-container-lowest border-2 border-on-surface shadow-hard-md p-6 flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-secondary-container text-on-surface border border-on-surface font-label-sm text-label-sm font-bold">
+                Live Blackboard
+              </span>
+<span class="font-label-sm text-label-sm font-bold text-on-surface-variant">IIT Delhi &amp; Kanpur Alumni</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+              Raw Derivation Margin Notes
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              High-resolution scans of actual master problem sets with counter-examples scribbled in red drafting ink.
+            </p>
+</div>
+<div class="pt-4 mt-4 border-t border-dashed border-outline-variant flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold text-secondary">310 Marginalia Sheets</span>
+<button class="px-3 py-1 bg-surface-container border border-on-surface font-label-sm text-label-sm font-bold hover:bg-white shadow-[1px_1px_0px_#131b2e]">
+              Explore Vault →
+            </button>
+</div>
+</div>
+<!-- Bento Tile 3: Study Carrel Pin Board -->
+<div class="bg-secondary-fixed border-2 border-on-surface shadow-hard-md p-6 flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 bg-surface-container-lowest text-on-surface border border-on-surface font-label-sm text-label-sm font-bold">
+                Pinned Desk Carrel
+              </span>
+<span class="material-symbols-outlined text-on-surface" data-icon="push_pin">push_pin</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+              Quick Pack Generator
+            </h3>
+<p class="font-body-sm text-body-sm text-on-secondary-fixed-variant">
+              Generate a custom single-click PDF pack combining Formula Sheets, High Yield PYQs, and Trap Notes for tomorrow morning's revision.
+            </p>
+</div>
+<div class="pt-4 mt-4">
+<button class="w-full py-2 bg-on-surface text-white font-label-md text-label-md font-bold border-2 border-on-surface shadow-hard-sm hover:translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+              ⚡ Build Today's Sprint Pack
+            </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- ========================================================================= -->
+<!-- FOOTER (From Shared Components JSON)                                      -->
+<!-- ========================================================================= -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface border-t-2 border-on-surface dark:border-outline-variant [box-shadow:0px_-2px_0px_#131b2e] dark:[box-shadow:0px_-2px_0px_#dae2fd]">
+<div class="w-full px-space-xl py-space-xl max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-space-lg">
+<!-- Brand & Copyright from JSON -->
+<div class="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+<a class="text-headline-sm font-headline-sm font-bold text-on-surface dark:text-inverse-on-surface" href="#">
+          Bookie
+        </a>
+<span class="hidden sm:inline text-outline">•</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant max-w-md">
+          © 2025 Bookie Academics. Rigorous desks for JEE Adv &amp; NEET-UG aspirants. Built with precision &amp; anti-burnout pledge.
+        </p>
+</div>
+<!-- Links from JSON -->
+<div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-label-sm text-label-sm">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:underline transition-colors duration-150" href="#honor-code">
+          Honor Code
+        </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:underline transition-colors duration-150" href="#syllabus-breakdown">
+          Syllabus Breakdown
+        </a>
+<!-- PYQ Archive is active in footer context for this vault page -->
+<a class="text-primary dark:text-inverse-primary font-bold underline transition-colors duration-150" href="#pyq-archive">
+          PYQ Archive
+        </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:underline transition-colors duration-150" href="#formula-sheets">
+          Formula Sheets
+        </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:underline transition-colors duration-150" href="#anti-burnout-protocol">
+          Anti-Burnout Protocol
+        </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:underline transition-colors duration-150 flex items-center gap-1.5" href="#system-status">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>System Status</span>
+</a>
+</div>
+</div>
+</footer>
+</body></html>

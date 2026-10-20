@@ -70,14 +70,14 @@ function getDiff(target: number) {
   return { days, hours, minutes, seconds };
 }
 
-function Cell({ value, label, colorClass = "text-brand-dark dark:text-white" }: { value: number; label: string; colorClass?: string }) {
+function Cell({ value, label, colorClass = "text-foreground" }: { value: number; label: string; colorClass?: string }) {
   const padded = String(value).padStart(2, "0");
   return (
-    <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-blue-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl p-2 sm:p-5 text-center shadow-xs">
-      <div className={`font-display font-black text-2xl sm:text-5xl tracking-tight ${colorClass}`}>
+    <div className="bg-card border-2 border-[var(--desk-border)] rounded-xl sm:rounded-2xl p-2.5 sm:p-5 text-center shadow-[2px_2px_0px_var(--desk-border)]">
+      <div className={`font-mono font-black text-2xl sm:text-5xl tracking-tight font-tabular ${colorClass}`}>
         {padded}
       </div>
-      <div className="font-mono text-[9px] sm:text-xs font-extrabold tracking-widest text-slate-500 dark:text-slate-400 uppercase mt-0.5 sm:mt-1">
+      <div className="font-mono text-[9px] sm:text-xs font-extrabold tracking-widest text-muted-foreground uppercase mt-1">
         {label}
       </div>
     </div>
@@ -114,14 +114,19 @@ export function JEECountdown() {
   };
 
   return (
-    <section className="bg-gradient-to-r from-blue-50/90 via-sky-50/70 to-blue-100/50 dark:from-slate-900/90 dark:via-blue-950/30 dark:to-slate-900/90 border-2 border-blue-200/80 dark:border-blue-900/60 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-card-clean transition-all">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
+    <section className="relative bg-card border-2 border-[var(--desk-border)] rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-[4px_4px_0px_var(--desk-border)] transition-all">
+      {/* Washi Tape */}
+      <div className="washi-tape bg-[var(--sunflower)] text-[#0F172A] -rotate-1">
+        TARGET TIMELINE // REALTIME SYNC
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center pt-2">
         {/* Target Info & Selector */}
         <div className="lg:col-span-5 space-y-3 sm:space-y-4">
           {/* Selector with 3 Options */}
-          <div className="w-full sm:w-auto inline-flex items-center gap-1 p-1 bg-white/95 dark:bg-slate-900/95 rounded-xl sm:rounded-full border border-blue-200/90 dark:border-blue-900/80 shadow-xs">
-            <span className="px-2 py-1 text-xs font-mono font-bold text-blue-700 dark:text-blue-400 hidden sm:flex items-center gap-1.5 shrink-0">
-              <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-pulse" />
+          <div className="w-full sm:w-auto inline-flex items-center gap-1 p-1 bg-muted/40 rounded-xl border-2 border-[var(--desk-border)] shadow-[2px_2px_0px_var(--desk-border)]">
+            <span className="px-2 py-1 text-xs font-mono font-bold text-foreground hidden sm:flex items-center gap-1.5 shrink-0">
+              <Flame className="w-4 h-4 text-[var(--coral)] fill-[var(--coral)] animate-pulse" />
               <span>LIVE</span>
             </span>
             <div className="grid grid-cols-3 sm:flex items-center gap-1 w-full sm:w-auto">
@@ -133,10 +138,10 @@ export function JEECountdown() {
                     type="button"
                     onClick={() => handleSelect(opt.id)}
                     className={cn(
-                      "px-2 sm:px-3 py-1.5 sm:py-1 text-xs font-display font-extrabold rounded-lg sm:rounded-full transition-all duration-150 active:scale-95 cursor-pointer whitespace-nowrap text-center",
+                      "px-2 sm:px-3 py-1.5 sm:py-1 text-xs font-mono font-bold rounded-lg transition-all duration-100 cursor-pointer whitespace-nowrap text-center",
                       isSelected
-                        ? "bg-brand-blue text-white shadow-sm ring-1 ring-blue-600"
-                        : "text-slate-600 dark:text-slate-300 hover:text-brand-blue hover:bg-blue-50/80 dark:hover:bg-slate-800"
+                        ? "bg-primary text-primary-foreground border-2 border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)]"
+                        : "text-muted-foreground hover:text-foreground border-2 border-transparent"
                     )}
                   >
                     <span className="sm:hidden">{opt.shortLabel}</span>
@@ -148,26 +153,26 @@ export function JEECountdown() {
           </div>
 
           <div>
-            <h2 className="text-2xl sm:text-4xl font-display font-black text-brand-dark dark:text-white tracking-tight">
-              {active.label} <span className="text-brand-blue font-mono">{active.year}</span>
+            <h2 className="text-2xl sm:text-3xl font-heading font-extrabold text-foreground tracking-tight">
+              {active.label} <span className="text-primary font-mono">{active.year}</span>
             </h2>
-            <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold text-slate-600 dark:text-slate-300 mt-1 sm:mt-2">
-              <span className="inline-flex items-center gap-1 text-brand-blue dark:text-blue-400">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold text-muted-foreground mt-1 sm:mt-2">
+              <span className="inline-flex items-center gap-1 text-primary">
                 <Calendar className="w-4 h-4" />
                 {active.displayDate}
               </span>
-              <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-              <span className="text-slate-500 dark:text-slate-400 italic text-[11px] sm:text-xs block sm:inline">{active.note}</span>
+              <span className="hidden sm:inline">•</span>
+              <span className="text-muted-foreground italic text-[11px] sm:text-xs block sm:inline">{active.note}</span>
             </div>
           </div>
         </div>
 
         {/* Giant Counter Numbers */}
-        <div className="lg:col-span-7 grid grid-cols-4 gap-1.5 sm:gap-4">
-          <Cell value={t.days} label="DAYS" colorClass="text-brand-dark dark:text-white" />
-          <Cell value={t.hours} label="HOURS" colorClass="text-brand-dark dark:text-white" />
-          <Cell value={t.minutes} label="MINUTES" colorClass="text-brand-blue dark:text-blue-400" />
-          <Cell value={t.seconds} label="SECONDS" colorClass="text-rose-500 dark:text-rose-400" />
+        <div className="lg:col-span-7 grid grid-cols-4 gap-2 sm:gap-4">
+          <Cell value={t.days} label="DAYS" colorClass="text-foreground" />
+          <Cell value={t.hours} label="HOURS" colorClass="text-foreground" />
+          <Cell value={t.minutes} label="MINUTES" colorClass="text-primary" />
+          <Cell value={t.seconds} label="SECONDS" colorClass="text-[var(--coral)]" />
         </div>
       </div>
     </section>

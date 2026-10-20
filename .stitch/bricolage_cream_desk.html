@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bookie - The Focused Desk for JEE &amp; NEET Aspirants</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Bricolage Grotesque (Headlines), Inter (Body & UI), JetBrains Mono (Code/Telemetry/Badges) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms and Container Queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim to exact refined color harmonies and typography -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            paper: "#FFFDF7",
+            navy: "#0F172A",
+            cobalt: {
+              DEFAULT: "#2563EB",
+              hover: "#1D4ED8",
+              light: "#EFF6FF"
+            },
+            sunflower: {
+              DEFAULT: "#FBBF24",
+              hover: "#F59E0B",
+              light: "#FEF3C7"
+            },
+            mint: {
+              DEFAULT: "#10B981",
+              light: "#D1FAE5",
+              dark: "#065F46"
+            }
+          },
+          fontFamily: {
+            display: ['"Bricolage Grotesque"', 'sans-serif'],
+            headline: ['"Bricolage Grotesque"', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'tactile-sm': '2px 2px 0px #0F172A',
+            'tactile': '3px 3px 0px #0F172A',
+            'tactile-lg': '4px 4px 0px #0F172A',
+            'tactile-xl': '6px 6px 0px #0F172A'
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Engineering Drafting Grid Background Pattern on warm cream paper */
+    .drafting-grid {
+      background-color: #FFFDF7;
+      background-image: 
+        linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    
+    .tactile-card {
+      border: 2px solid #0F172A;
+      box-shadow: 4px 4px 0px #0F172A;
+      transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+    }
+    
+    .tactile-card:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0px #0F172A;
+    }
+
+    .tactile-btn {
+      border: 2px solid #0F172A;
+      box-shadow: 3px 3px 0px #0F172A;
+      transition: all 0.1s ease;
+    }
+
+    .tactile-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px #0F172A;
+    }
+
+    .tactile-btn:active {
+      transform: translate(3px, 3px);
+      box-shadow: 0px 0px 0px #0F172A;
+    }
+
+    .washi-tape {
+      position: absolute;
+      top: -11px;
+      left: 18px;
+      padding: 2px 10px;
+      border: 1.5px dashed #0F172A;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      z-index: 20;
+    }
+
+    .stamp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 2px solid #0F172A;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      box-shadow: 2px 2px 0px #0F172A;
+    }
+  </style>
+</head>
+<body class="drafting-grid text-navy min-h-screen flex flex-col font-body antialiased selection:bg-sunflower selection:text-navy">
+<!-- Micro Top Washi Masthead Strip -->
+<div class="w-full bg-sunflower border-b-2 border-navy py-1 px-4 flex justify-between items-center text-navy font-mono text-xs tracking-wider font-semibold overflow-hidden">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-navy animate-pulse"></span>
+<span>BOOKIE ACADEMICS • BATCH 2025 • PROCTORED IMMERSION ENGINE ACTIVE</span>
+</div>
+<div class="hidden md:flex items-center gap-4">
+<span>SERVER LATENCY: 14MS</span>
+<span class="text-navy/40">|</span>
+<span>TCS iON MIRROR V4.2</span>
+</div>
+</div>
+<!-- Navigation Bar with Crisp Neo-Brutalist Harmony -->
+<header class="bg-white sticky top-0 z-40 border-b-2 border-navy shadow-[0px_3px_0px_#0F172A]">
+<div class="flex justify-between items-center w-full px-6 md:px-10 max-w-7xl mx-auto py-3">
+<!-- Brand Logo -->
+<div class="flex items-center gap-3">
+<a class="font-display font-extrabold text-2xl md:text-3xl text-cobalt tracking-tight flex items-center gap-1.5 hover:translate-x-0.5 hover:-translate-y-0.5 transition-transform duration-150" href="#">
+<span>Bookie</span><span class="text-sunflower">.</span>
+<span class="material-symbols-outlined text-cobalt text-2xl -rotate-12" data-icon="edit">edit</span>
+</a>
+<span class="hidden sm:inline-block bg-mint-light text-mint-dark font-mono text-[11px] font-bold px-2 py-0.5 border border-navy rounded-full shadow-[1.5px_1.5px_0px_#0F172A] rotate-2">
+          v2.4 Live
+        </span>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-cobalt border-b-2 border-cobalt font-bold font-mono text-xs tracking-wide py-1" href="#">Materials</a>
+<a class="text-navy/70 hover:text-navy font-mono text-xs font-semibold tracking-wide py-1 hover:translate-x-0.5 transition-transform duration-150" href="#">Tests</a>
+<a class="text-navy/70 hover:text-navy font-mono text-xs font-semibold tracking-wide py-1 hover:translate-x-0.5 transition-transform duration-150" href="#">Peer Desks</a>
+<a class="text-navy/70 hover:text-navy font-mono text-xs font-semibold tracking-wide py-1 hover:translate-x-0.5 transition-transform duration-150" href="#">PYQ Vault</a>
+<a class="text-navy/70 hover:text-navy font-mono text-xs font-semibold tracking-wide py-1 hover:translate-x-0.5 transition-transform duration-150" href="#">Hall of Fame</a>
+</nav>
+<!-- Trailing Action Hub -->
+<div class="flex items-center gap-3">
+<!-- 14-Day Sprint Badge -->
+<div class="hidden sm:flex items-center gap-1.5 bg-sunflower text-navy px-3 py-1 rounded-full border-2 border-navy font-mono text-xs font-bold shadow-[2px_2px_0px_#0F172A] hover:translate-x-0.5 hover:-translate-y-0.5 transition-transform duration-150">
+<span class="material-symbols-outlined text-sm font-bold text-red-600" data-icon="local_fire_department">local_fire_department</span>
+<span>14-Day Sprint</span>
+</div>
+<!-- Exam Switcher Pill -->
+<button class="bg-[#FFFDF7] hover:bg-slate-100 text-navy px-3 py-1 border-2 border-navy rounded font-mono text-xs font-bold shadow-[2px_2px_0px_#0F172A] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
+          JEE Adv '25
+        </button>
+<!-- Icon Utility Actions -->
+<div class="flex items-center gap-1 text-navy">
+<button class="p-1.5 rounded hover:bg-slate-100 hover:text-cobalt transition-colors" title="Bookmarks">
+<span class="material-symbols-outlined text-xl" data-icon="bookmark">bookmark</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-100 hover:text-cobalt transition-colors relative" title="Alerts">
+<span class="material-symbols-outlined text-xl" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 border border-white"></span>
+</button>
+</div>
+<!-- Avatar with Proctor Status Indicator -->
+<div class="relative pl-1">
+<div class="w-9 h-9 rounded-full bg-cobalt-light border-2 border-navy flex items-center justify-center font-bold text-cobalt text-xs font-mono shadow-[2px_2px_0px_#0F172A]">
+<span class="material-symbols-outlined text-base" data-icon="edit">edit</span>
+</div>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-mint rounded-full border-2 border-white" title="Proctored Cam Active"></span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Workstation Layout -->
+<main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-10 py-10 space-y-14">
+<!-- HERO SECTION: Split Screen Momentum -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+<!-- Left Column: Vision & Philosophy -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Sticker Badge Pill -->
+<div class="inline-flex items-center gap-2 bg-mint-light text-mint-dark px-3.5 py-1.5 rounded-full border-2 border-navy shadow-[3px_3px_0px_#0F172A] -rotate-1">
+<span class="material-symbols-outlined text-base font-bold" data-icon="verified">verified</span>
+<span class="font-mono text-xs font-bold tracking-wider uppercase">ANTI-BURNOUT FOCUS PROTOCOL</span>
+</div>
+<!-- Chunky Display Headline with Bricolage Grotesque -->
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-display font-extrabold text-navy leading-[1.05] tracking-tight">
+          Crack the exam. <br/>
+          Keep your <span class="relative inline-block text-cobalt">
+            sanity.
+            <svg class="absolute -bottom-1.5 left-0 w-full" fill="none" height="12" viewbox="0 0 200 12" xmlns="http://www.w3.org/2000/svg">
+<path d="M3 9C50 3 150 2 197 9" stroke="#FBBF24" stroke-linecap="round" stroke-width="6"></path>
+</svg>
+</span>
+</h1>
+<!-- Subtitle -->
+<p class="text-base sm:text-lg text-navy/80 max-w-xl leading-relaxed font-normal">
+          Stripped of mindless gamification and daytime distraction loops. Engineered for uninterrupted 6-to-10 hour deep immersion blocks with verbatim TCS iON mock setups, silent desk webcams, and 10-year deconstructed PYQs.
+        </p>
+<!-- Stats Ribbon in Tactile Pill Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
+<div class="bg-white p-3.5 border-2 border-navy rounded shadow-[3px_3px_0px_#0F172A]">
+<div class="font-display font-bold text-2xl text-cobalt">4.8M+</div>
+<div class="font-mono text-xs text-navy/70 mt-0.5">Questions Solved</div>
+</div>
+<div class="bg-white p-3.5 border-2 border-navy rounded shadow-[3px_3px_0px_#0F172A]">
+<div class="font-display font-bold text-2xl text-mint-dark">99.4%</div>
+<div class="font-mono text-xs text-navy/70 mt-0.5">IIT/AIIMS Conversion</div>
+</div>
+<div class="bg-white p-3.5 border-2 border-navy rounded shadow-[3px_3px_0px_#0F172A]">
+<div class="font-display font-bold text-2xl text-navy">3,420</div>
+<div class="font-mono text-xs text-navy/70 mt-0.5">Live on Silent Desks</div>
+</div>
+</div>
+<!-- Quick Proof Quote & Stamp -->
+<div class="flex items-center gap-4 pt-2">
+<div class="w-12 h-12 rounded-full border-2 border-navy overflow-hidden shrink-0 shadow-[2px_2px_0px_#0F172A]">
+<img alt="Focused aspirant at desk" class="w-full h-full object-cover" data-alt="High key photo of a young focused Indian student sitting at an organized wooden study desk in Delhi with textbooks, highlighters, and a laptop timer in clean warm morning sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1uIugU4oka0XSq4IoaqntxwSdxndt-li2CyZL6QAsW9E77y2CJA4HhW3y-K9zgi3zrnBwmMaxzf_j3CfzwYhXwWdKW89-rRUr5ahpCBd8b89sLi1QAtrP98q9gLEmWV7KjPtkcySiPlgC6UzjWWW0TQMtVQMhnV47ZLae9ttQJ6UwFrhV9SoQnxu6ZE0TWrTQGpQm4mVWGMqHEL3IJCv8RUb-63TgYLlExwk83qHuhumZXhD9-Mym7EiEh-42Qg3whyiTjf9HYzcK"/>
+</div>
+<p class="text-sm italic text-navy/80 leading-snug">
+            “No streaks, no leaderboards, no fireworks. Just raw hours with the notebook. Scored AIR 142 in Adv 2024.”
+            <span class="block not-italic font-mono text-xs text-cobalt font-bold mt-1">— T. Karthik, IIT Bombay CSE</span>
+</p>
+</div>
+</div>
+<!-- Right Column: Interactive Tactile Study Desk Station -->
+<div class="lg:col-span-5 relative">
+<!-- Main Desk Station Box -->
+<div class="tactile-card bg-white p-6 rounded-lg relative overflow-hidden">
+<!-- Top Washi Header Indicator -->
+<div class="washi-tape bg-sunflower text-navy -rotate-1">
+            STATION: CARREL-EAST-042
+          </div>
+<div class="flex justify-between items-center pt-2 mb-4">
+<span class="font-mono text-xs font-bold flex items-center gap-1.5 text-mint-dark">
+<span class="w-2.5 h-2.5 rounded-full bg-mint animate-ping"></span>
+              PROCTOR WEBCAM ACTIVE
+            </span>
+<span class="stamp-badge bg-slate-100 font-mono text-xs font-bold text-navy">
+              SILENT MODE
+            </span>
+</div>
+<!-- Handwritten Tilted Sticky Note -->
+<div class="bg-sunflower-light p-4 border-2 border-navy rounded shadow-[3px_3px_0px_#0F172A] -rotate-1 mb-5 relative">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 text-red-600">
+<span class="material-symbols-outlined text-xl" data-icon="push_pin">push_pin</span>
+</div>
+<p class="font-mono text-xs font-bold text-navy leading-relaxed">
+              "Rotation &amp; Thermodynamics today. 45 min deep blocks, zero phone in room. We don't chase dopamine, we build rank."
+            </p>
+<div class="text-right font-mono text-[11px] text-navy/70 mt-2 font-semibold">
+              — Desk Target: 8h 30m
+            </div>
+</div>
+<!-- Chunky Navy Timer LCD Block -->
+<div class="bg-navy border-2 border-navy rounded-lg p-5 text-white shadow-inner mb-5">
+<div class="flex justify-between items-center font-mono text-xs text-slate-400 mb-1">
+<span>ELAPSED IMMERSION</span>
+<span class="text-mint font-semibold">BLOCK 03 / 05</span>
+</div>
+<div class="font-mono font-extrabold text-4xl sm:text-5xl text-mint tracking-wider py-1">
+              07:15:30
+            </div>
+<!-- Progress Meter -->
+<div class="mt-3">
+<div class="flex justify-between font-mono text-xs text-slate-300 mb-1.5">
+<span>Target: 09h 00m</span>
+<span class="font-bold text-white">80% Achieved</span>
+</div>
+<div class="w-full h-3 bg-slate-800 border border-slate-700 rounded-full overflow-hidden p-0.5">
+<div class="h-full bg-mint rounded-full w-4/5"></div>
+</div>
+</div>
+</div>
+<!-- Subject Selector Pills -->
+<div class="space-y-2 mb-6">
+<div class="font-mono text-xs font-bold text-navy/70 uppercase tracking-wider">
+              Select Immersion Module:
+            </div>
+<div class="flex flex-wrap gap-2">
+<button class="bg-sunflower text-navy px-3 py-1.5 border-2 border-navy rounded font-mono text-xs font-bold shadow-[2px_2px_0px_#0F172A] flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-navy"></span>
+                Physics: Rotational Dynamics
+              </button>
+<button class="bg-white hover:bg-slate-50 text-navy px-3 py-1.5 border-2 border-navy rounded font-mono text-xs font-medium transition-colors">
+                Chemistry: Organic Synthesis
+              </button>
+<button class="bg-white hover:bg-slate-50 text-navy px-3 py-1.5 border-2 border-navy rounded font-mono text-xs font-medium transition-colors">
+                Maths: Coordinate Geometry
+              </button>
+</div>
+</div>
+<!-- Big Tactile Push Action Button -->
+<button class="tactile-btn w-full bg-cobalt hover:bg-cobalt-hover text-white py-3.5 px-6 rounded font-display text-lg font-bold flex items-center justify-center gap-3 tracking-wide">
+<span>PUNCH IN FOR STUDY</span>
+<span class="material-symbols-outlined font-extrabold text-xl" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<p class="text-center font-mono text-xs text-navy/70 mt-3">
+            Peer feeds active • Microphones muted • 100% focused
+          </p>
+</div>
+<!-- Playful Background Desk Accessories / Stamps -->
+<div class="hidden sm:block absolute -bottom-4 -left-6 bg-white border-2 border-navy p-2 rounded rotate-6 shadow-[3px_3px_0px_#0F172A]">
+<span class="font-mono text-xs font-bold text-cobalt">⚡ 0 DISTRACTIONS LOGGED</span>
+</div>
+</div>
+</section>
+<!-- SECTION: THE THREE TACTICAL MODULES (Bento 3-Column Grid) -->
+<section class="space-y-6 pt-4">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b-2 border-navy pb-4">
+<div>
+<span class="font-mono text-xs font-bold text-cobalt tracking-widest uppercase">WORKBENCH CAPABILITIES</span>
+<h2 class="text-2xl sm:text-3xl font-display font-extrabold text-navy mt-1">Engineered for Cold, High-Scoring Precision</h2>
+</div>
+<p class="text-sm text-navy/70 max-w-md">
+          Zero vanity streaks. Every module is modeled strictly on NTA/IIT JEE examination psychology and cognitive pacing.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Module 01: Silent Study Rooms -->
+<div class="tactile-card bg-white p-6 rounded-lg relative flex flex-col justify-between">
+<div class="washi-tape bg-cobalt-light text-cobalt -rotate-2">
+            ROOM 4B • 84/100 OCCUPIED
+          </div>
+<div class="pt-4 space-y-3">
+<div class="w-10 h-10 rounded border-2 border-navy bg-cobalt-light flex items-center justify-center text-cobalt shadow-[2px_2px_0px_#0F172A]">
+<span class="material-symbols-outlined text-2xl" data-icon="videocam">videocam</span>
+</div>
+<h3 class="text-xl font-display font-bold text-navy">Interactive Silent Study Rooms</h3>
+<p class="text-sm text-navy/75 leading-relaxed">
+              Silent proctored carrels with live peer feeds &amp; zero chatter. Hear only mechanical keyboards and flipping pages.
+            </p>
+<!-- Peer Feeds Micro-List -->
+<div class="space-y-2 pt-2 border-t border-navy/10">
+<div class="flex items-center justify-between font-mono text-xs bg-slate-50 p-2 rounded border border-navy/20">
+<span class="font-bold text-navy">@anirudh_iitd</span>
+<span class="text-mint-dark">06h 12m • Wave Optics</span>
+</div>
+<div class="flex items-center justify-between font-mono text-xs bg-slate-50 p-2 rounded border border-navy/20">
+<span class="font-bold text-navy">@meera_aiims</span>
+<span class="text-mint-dark">08h 44m • Organic Chem</span>
+</div>
+<div class="flex items-center justify-between font-mono text-xs bg-slate-50 p-2 rounded border border-navy/20">
+<span class="font-bold text-navy">@kabir_air1</span>
+<span class="text-mint-dark">04h 20m • Calculus</span>
+</div>
+</div>
+</div>
+<div class="pt-6">
+<a class="tactile-btn block text-center bg-cobalt text-white py-2.5 px-4 rounded font-display text-sm font-bold hover:bg-cobalt-hover transition-colors" href="#">
+              Join Live Chamber →
+            </a>
+</div>
+</div>
+<!-- Module 02: 10-Year Solved PYQ Vault -->
+<div class="tactile-card bg-white p-6 rounded-lg relative flex flex-col justify-between">
+<div class="washi-tape bg-sunflower text-navy rotate-1">
+            2014-2024 DECONSTRUCTED
+          </div>
+<div class="pt-4 space-y-3">
+<div class="w-10 h-10 rounded border-2 border-navy bg-sunflower flex items-center justify-center text-navy shadow-[2px_2px_0px_#0F172A]">
+<span class="material-symbols-outlined text-2xl" data-icon="inventory_2">inventory_2</span>
+</div>
+<h3 class="text-xl font-display font-bold text-navy">10-Year Solved PYQ Vault</h3>
+<p class="text-sm text-navy/75 leading-relaxed">
+              Step-by-step first-principle proofs, trap taxonomy, and negative-mark danger zones documented by top 100 rankers.
+            </p>
+<!-- High Yield Matrix Tags -->
+<div class="space-y-2 pt-2 border-t border-navy/10">
+<span class="font-mono text-xs font-bold text-navy/70 block uppercase tracking-wide">HIGH YIELD WEIGHTAGE:</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="bg-slate-100 text-navy font-mono text-xs px-2 py-1 rounded border border-navy">
+                  Wave Optics 11.2%
+                </span>
+<span class="bg-sunflower text-navy font-mono text-xs px-2 py-1 rounded border border-navy font-bold">
+                  Carbonyls 14.8%
+                </span>
+<span class="bg-slate-100 text-navy font-mono text-xs px-2 py-1 rounded border border-navy">
+                  Definite Integrals 18.4%
+                </span>
+</div>
+</div>
+</div>
+<div class="pt-6">
+<a class="tactile-btn block text-center bg-sunflower hover:bg-sunflower-hover text-navy py-2.5 px-4 rounded font-display text-sm font-bold transition-colors" href="#">
+              Inspect PYQ Matrix →
+            </a>
+</div>
+</div>
+<!-- Module 03: TCS iON CBT Exam Simulator -->
+<div class="tactile-card bg-white p-6 rounded-lg relative flex flex-col justify-between">
+<div class="washi-tape bg-mint-light text-mint-dark -rotate-1">
+            VERBATIM NTA ENGINE
+          </div>
+<div class="pt-4 space-y-3">
+<div class="w-10 h-10 rounded border-2 border-navy bg-mint-light flex items-center justify-center text-mint-dark shadow-[2px_2px_0px_#0F172A]">
+<span class="material-symbols-outlined text-2xl" data-icon="computer">computer</span>
+</div>
+<h3 class="text-xl font-display font-bold text-navy">TCS iON CBT Exam Simulator</h3>
+<p class="text-sm text-navy/75 leading-relaxed">
+              Exact reproduction of the testing software down to question palette latency, button clicks, and rough-sheet pacing.
+            </p>
+<!-- Mini Question Palette Grid -->
+<div class="pt-2 border-t border-navy/10 space-y-1.5">
+<span class="font-mono text-xs font-bold text-navy/70 block uppercase tracking-wide">EXAM PALETTE KEY:</span>
+<div class="grid grid-cols-2 gap-1.5 font-mono text-xs">
+<div class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-navy/20">
+<span class="w-3 h-3 rounded-sm bg-mint"></span>
+<span>01 Ans: Green</span>
+</div>
+<div class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-navy/20">
+<span class="w-3 h-3 rounded-sm bg-red-500"></span>
+<span>02 Unans: Red</span>
+</div>
+<div class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-navy/20">
+<span class="w-3 h-3 rounded-sm bg-cobalt"></span>
+<span>03 Marked: Blue</span>
+</div>
+<div class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-navy/20">
+<span class="w-3 h-3 rounded-sm bg-sunflower"></span>
+<span>04 Review: Amber</span>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-6">
+<a class="tactile-btn block text-center bg-mint-dark text-white py-2.5 px-4 rounded font-display text-sm font-bold hover:bg-mint transition-colors" href="#">
+              Launch Test Engine →
+            </a>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION: DAILY ASPIRANT HALL OF FAME (Tabular Discipline Ledger) -->
+<section class="space-y-4 pt-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-navy pb-3">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-2xl sm:text-3xl font-display font-extrabold text-navy">Daily Aspirant Hall of Fame</h2>
+<span class="stamp-badge bg-mint-light text-mint-dark font-mono text-xs font-bold rotate-2">
+              DISCIPLINE LEDGER
+            </span>
+</div>
+<p class="text-sm text-navy/70 mt-0.5">
+            Ranked strictly by verified proctored immersion • Zero vanity XP • Synchronized 2m ago
+          </p>
+</div>
+<div class="flex items-center gap-2 font-mono text-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-mint animate-pulse"></span>
+<span class="text-navy font-semibold">Live Audit: All Feeds Clean</span>
+</div>
+</div>
+<!-- Tabular Ledger Card -->
+<div class="tactile-card bg-white rounded-lg overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-100 border-b-2 border-navy font-mono text-xs text-navy uppercase tracking-wider">
+<th class="p-3.5 pl-6">RANK</th>
+<th class="p-3.5">ASPIRANT IDENTIFIER</th>
+<th class="p-3.5">TARGET TRACK</th>
+<th class="p-3.5">TODAY'S IMMERSION</th>
+<th class="p-3.5">SPRINT ACCURACY</th>
+<th class="p-3.5">PRIMARY FOCUS DECK</th>
+<th class="p-3.5 pr-6 text-right">AUDIT BADGE</th>
+</tr>
+</thead>
+<tbody class="divide-y-2 divide-navy/10 text-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="p-3.5 pl-6 font-mono font-bold">
+<span class="inline-block bg-sunflower text-navy px-2 py-0.5 rounded border border-navy font-extrabold shadow-[1px_1px_0px_#0F172A]">
+                  #01
+                </span>
+</td>
+<td class="p-3.5 font-bold text-navy">
+                Aarav S.
+                <span class="block font-mono text-xs text-navy/60 font-normal">Kota Carrel #14</span>
+</td>
+<td class="p-3.5">
+<span class="bg-cobalt-light text-cobalt font-mono text-xs font-bold px-2 py-0.5 rounded border border-navy">
+                  IIT-B CSE Track
+                </span>
+</td>
+<td class="p-3.5 font-mono font-bold text-mint-dark">
+                11h 42m logged
+              </td>
+<td class="p-3.5 font-mono font-semibold">
+                96.4%
+              </td>
+<td class="p-3.5 text-navy/80 font-medium">
+                Thermodynamics &amp; Fluids
+              </td>
+<td class="p-3.5 pr-6 text-right">
+<span class="inline-flex items-center gap-1 bg-mint-light text-mint-dark font-mono text-xs px-2 py-0.5 rounded-full border border-navy font-bold shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+                  VERIFIED PROCTOR
+                </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="p-3.5 pl-6 font-mono font-bold">
+<span class="inline-block bg-slate-100 text-navy px-2 py-0.5 rounded border border-navy font-extrabold shadow-[1px_1px_0px_#0F172A]">
+                  #02
+                </span>
+</td>
+<td class="p-3.5 font-bold text-navy">
+                Priyanshu M.
+                <span class="block font-mono text-xs text-navy/60 font-normal">Delhi Silent Hall</span>
+</td>
+<td class="p-3.5">
+<span class="bg-slate-100 text-navy font-mono text-xs font-bold px-2 py-0.5 rounded border border-navy">
+                  AIIMS New Delhi Track
+                </span>
+</td>
+<td class="p-3.5 font-mono font-bold text-mint-dark">
+                10h 58m logged
+              </td>
+<td class="p-3.5 font-mono font-semibold">
+                98.1%
+              </td>
+<td class="p-3.5 text-navy/80 font-medium">
+                Molecular Genetics
+              </td>
+<td class="p-3.5 pr-6 text-right">
+<span class="inline-flex items-center gap-1 bg-mint-light text-mint-dark font-mono text-xs px-2 py-0.5 rounded-full border border-navy font-bold shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+                  VERIFIED PROCTOR
+                </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="p-3.5 pl-6 font-mono font-bold">
+<span class="inline-block bg-slate-100 text-navy px-2 py-0.5 rounded border border-navy font-extrabold shadow-[1px_1px_0px_#0F172A]">
+                  #03
+                </span>
+</td>
+<td class="p-3.5 font-bold text-navy">
+                Ananya V.
+                <span class="block font-mono text-xs text-navy/60 font-normal">Hyderabad Desk #09</span>
+</td>
+<td class="p-3.5">
+<span class="bg-cobalt-light text-cobalt font-mono text-xs font-bold px-2 py-0.5 rounded border border-navy">
+                  IIT-D Electrical Track
+                </span>
+</td>
+<td class="p-3.5 font-mono font-bold text-mint-dark">
+                10h 24m logged
+              </td>
+<td class="p-3.5 font-mono font-semibold">
+                94.2%
+              </td>
+<td class="p-3.5 text-navy/80 font-medium">
+                Complex Numbers &amp; Vectors
+              </td>
+<td class="p-3.5 pr-6 text-right">
+<span class="inline-flex items-center gap-1 bg-mint-light text-mint-dark font-mono text-xs px-2 py-0.5 rounded-full border border-navy font-bold shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+                  VERIFIED PROCTOR
+                </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="p-3.5 pl-6 font-mono font-bold">
+<span class="inline-block bg-slate-100 text-navy px-2 py-0.5 rounded border border-navy font-extrabold shadow-[1px_1px_0px_#0F172A]">
+                  #04
+                </span>
+</td>
+<td class="p-3.5 font-bold text-navy">
+                Rohan K.
+                <span class="block font-mono text-xs text-navy/60 font-normal">Remote Desk</span>
+</td>
+<td class="p-3.5">
+<span class="bg-slate-100 text-navy font-mono text-xs font-bold px-2 py-0.5 rounded border border-navy">
+                  JEE Adv '25 General
+                </span>
+</td>
+<td class="p-3.5 font-mono font-bold text-mint-dark">
+                09h 45m logged
+              </td>
+<td class="p-3.5 font-mono font-semibold">
+                91.0%
+              </td>
+<td class="p-3.5 text-navy/80 font-medium">
+                Chemical Kinetics
+              </td>
+<td class="p-3.5 pr-6 text-right">
+<span class="inline-flex items-center gap-1 bg-mint-light text-mint-dark font-mono text-xs px-2 py-0.5 rounded-full border border-navy font-bold shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+                  VERIFIED PROCTOR
+                </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- SECTION: HIGH-ENERGY CLOSING BANNER & CREED -->
+<section class="tactile-card bg-sunflower p-8 md:p-12 rounded-xl text-navy relative overflow-hidden shadow-[6px_6px_0px_#0F172A]">
+<!-- Top Decorative Washi Strip -->
+<div class="washi-tape bg-white text-navy -rotate-1">
+        THE BOOKIE MANIFESTO // 2025
+      </div>
+<div class="max-w-3xl space-y-6 pt-2">
+<div class="inline-block bg-navy text-white px-3 py-1 rounded font-mono text-xs font-bold tracking-wider">
+          ANTI-DOPAMINE PLEDGE
+        </div>
+<blockquote class="text-2xl sm:text-3xl md:text-4xl font-display font-extrabold text-navy leading-snug">
+          “Exams are not won through cheap dopamine. They are won through quiet, relentless conviction and thousands of solitary hours facing the unsolved page.”
+        </blockquote>
+<p class="text-base text-navy/85 max-w-xl font-medium">
+          Join 3,400+ serious aspirants logged in today. Close the algorithm. Open the drafting desk.
+        </p>
+<!-- Tactile Push Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 pt-3">
+<button class="tactile-btn bg-white hover:bg-slate-50 text-navy px-6 py-3.5 rounded font-display text-base font-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-cobalt text-xl" data-icon="meeting_room">meeting_room</span>
+<span>ENTER PROCTORED CARREL</span>
+</button>
+<button class="tactile-btn bg-cobalt hover:bg-cobalt-hover text-white px-6 py-3.5 rounded font-display text-base font-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-xl" data-icon="download">download</span>
+<span>DOWNLOAD FORMULA PACK (PDF)</span>
+</button>
+</div>
+</div>
+<!-- Watermark Badge Graphic in Background -->
+<div class="absolute -right-8 -bottom-8 opacity-10 pointer-events-none select-none">
+<span class="material-symbols-outlined text-[240px] text-navy" data-icon="architecture">architecture</span>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-white border-t-2 border-navy shadow-[0px_-2px_0px_#0F172A] mt-16">
+<div class="w-full px-6 md:px-10 py-10 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<!-- Brand & Copyright -->
+<div class="space-y-1.5 text-center md:text-left">
+<div class="text-xl font-display font-extrabold text-navy flex items-center justify-center md:justify-start gap-1">
+<span>Bookie Academics</span>
+<span class="text-cobalt">.</span>
+</div>
+<p class="text-xs text-navy/70 max-w-md">
+          © 2025 Bookie Academics. Rigorous desks for JEE Adv &amp; NEET-UG aspirants. Built with precision &amp; anti-burnout pledge.
+        </p>
+</div>
+<!-- Footer Navigation Links -->
+<div class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 font-mono text-xs">
+<a class="text-navy/70 hover:text-cobalt transition-colors" href="#">Honor Code</a>
+<a class="text-navy/70 hover:text-cobalt transition-colors" href="#">Syllabus Breakdown</a>
+<a class="text-navy/70 hover:text-cobalt transition-colors" href="#">PYQ Archive</a>
+<a class="text-navy/70 hover:text-cobalt transition-colors" href="#">Formula Sheets</a>
+<a class="text-navy/70 hover:text-cobalt transition-colors" href="#">Anti-Burnout Protocol</a>
+<a class="text-navy/70 hover:text-cobalt transition-colors" href="#">System Status</a>
+</div>
+</div>
+</footer>
+</body></html>

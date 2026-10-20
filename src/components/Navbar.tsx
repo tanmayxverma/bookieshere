@@ -67,12 +67,12 @@ export function Navbar() {
 
   return (
     <header className="sticky top-2 sm:top-4 z-50 px-2.5 sm:px-8 max-w-7xl mx-auto w-full" data-purpose="floating-navigation">
-      <nav className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-full px-3 sm:px-5 py-2 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
+      <nav className="bg-card border-2 border-[var(--desk-border)] rounded-2xl sm:rounded-full px-3 sm:px-5 py-2 shadow-[3px_3px_0px_var(--desk-border)] flex items-center justify-between transition-all">
         
         {/* Brand Logo */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden shadow-inner group-hover:scale-105 transition-transform shrink-0 border border-slate-200/80 dark:border-slate-700 bg-white flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 border-[var(--desk-border)] bg-white flex items-center justify-center shrink-0 shadow-[1.5px_1.5px_0px_var(--desk-border)] group-hover:scale-105 transition-transform">
               <img
                 src={logo}
                 alt="BOOKIE Logo"
@@ -83,16 +83,16 @@ export function Navbar() {
               />
             </div>
             <div className="flex items-baseline">
-              <span className="font-display font-black text-xl sm:text-2xl tracking-tighter text-brand-dark dark:text-white group-hover:text-brand-blue transition-colors">
+              <span className="font-heading font-extrabold text-xl sm:text-2xl tracking-tight text-foreground transition-colors">
                 BOOKIE
               </span>
-              <span className="text-brand-blue font-bold text-xs ml-0.5">®</span>
+              <span className="text-primary font-bold text-xs ml-0.5">®</span>
             </div>
           </Link>
         </div>
 
-        {/* Desktop Navigation Links with matching Symbols */}
-        <div className="hidden lg:flex items-center gap-1 text-sm font-semibold font-sans">
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex items-center gap-1.5 text-xs font-bold font-body">
           {navLinks.map((link) => {
             const active = isActive(link.path);
             const Icon = link.icon;
@@ -101,16 +101,16 @@ export function Navbar() {
                 key={link.path}
                 to={link.path}
                 className={cn(
-                  "px-3 py-1.5 rounded-full transition-all duration-150 active:scale-95 flex items-center gap-1.5 text-xs xl:text-sm",
+                  "px-3.5 py-1.5 rounded-lg border-2 transition-all duration-100 flex items-center gap-1.5 active:translate-x-0.5 active:translate-y-0.5",
                   active
-                    ? "bg-blue-50 dark:bg-blue-950/60 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
-                    : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium"
+                    ? "bg-primary text-primary-foreground border-[var(--desk-border)] shadow-[1.5px_1.5px_0px_var(--desk-border)] font-bold"
+                    : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted font-semibold"
                 )}
               >
-                <Icon className={cn("w-4 h-4", active ? "text-brand-blue dark:text-blue-400" : "text-slate-500 dark:text-slate-400")} />
+                <Icon className={cn("w-4 h-4", active ? "text-primary-foreground" : "text-muted-foreground")} />
                 <span>{link.label}</span>
                 {link.badge && (
-                  <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 px-1 py-0.2 rounded font-mono font-bold">
+                  <span className="text-[10px] bg-[var(--coral)] text-white px-1.5 py-0.2 rounded font-mono font-black border border-[var(--desk-border)]">
                     {link.badge}
                   </span>
                 )}
@@ -121,10 +121,10 @@ export function Navbar() {
 
         {/* User Actions & Compact Profile */}
         <div className="flex items-center gap-1 sm:gap-2">
-          {/* Chai Break Button (hidden on small mobile to preserve room) */}
+          {/* Chai Break Button */}
           <Link
             to="/donate"
-            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all duration-150 active:scale-95"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-[var(--sunflower)] text-[#0F172A] border-2 border-[var(--desk-border)] shadow-[2px_2px_0px_var(--desk-border)] hover:brightness-105 transition-all duration-150 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
           >
             <span>☕</span>
             <span>Chai</span>
@@ -136,15 +136,15 @@ export function Navbar() {
           {/* Theme Toggle */}
           <ThemeToggle />
 
-          {/* Compact User Profile Pill: Just User Icon with Streak badge underneath */}
-          <div className="flex items-center pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-800" data-purpose="user-pill">
+          {/* Compact User Profile Pill */}
+          <div className="flex items-center pl-1 sm:pl-2 border-l-2 border-[var(--desk-border)]" data-purpose="user-pill">
             <UserMenu compact={true} />
           </div>
 
           {/* Mobile Menu Toggle Button */}
           <button
             type="button"
-            className="p-2 text-slate-600 hover:text-brand-dark dark:text-slate-300 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden transition-colors h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
+            className="p-2 text-foreground rounded-lg border-2 border-[var(--desk-border)] bg-muted/50 hover:bg-muted lg:hidden transition-all h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer active:translate-x-0.5 active:translate-y-0.5 shrink-0 shadow-[2px_2px_0px_var(--desk-border)]"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -164,15 +164,15 @@ export function Navbar() {
           />
 
           {/* Mobile Navigation Dropdown */}
-          <div className="relative z-50 lg:hidden mt-2 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl p-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
-            {/* Mobile Profile Header Card (Click to open profile & stats) */}
+          <div className="relative z-50 lg:hidden mt-2 rounded-2xl border-2 border-[var(--desk-border)] bg-card text-foreground p-3 shadow-[4px_4px_0px_var(--desk-border)] animate-in fade-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
+            {/* Mobile Profile Header Card */}
             <Link
               to="/profile"
               onClick={() => setIsOpen(false)}
-              className="p-3 mb-2 rounded-2xl bg-slate-100/90 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 border-2 border-slate-900/10 dark:border-slate-700/80 flex items-center justify-between gap-3 group transition-all cursor-pointer shadow-xs active:scale-[0.99]"
+              className="p-3 mb-2 rounded-xl bg-muted/40 hover:bg-muted border-2 border-[var(--desk-border)] shadow-[2px_2px_0px_var(--desk-border)] flex items-center justify-between gap-3 group transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                <div className="w-11 h-11 rounded-full bg-slate-900 text-white font-mono font-bold text-sm flex items-center justify-center ring-2 ring-primary/50 overflow-hidden shrink-0 group-hover:ring-primary transition-all shadow-xs">
+                <div className="w-11 h-11 rounded-full bg-primary text-primary-foreground font-mono font-bold text-sm flex items-center justify-center border-2 border-[var(--desk-border)] overflow-hidden shrink-0 shadow-[1px_1px_0px_var(--desk-border)]">
                   {avatarUrl ? (
                     <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
                   ) : (
@@ -181,24 +181,24 @@ export function Navbar() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="font-bold text-sm text-slate-900 dark:text-white truncate group-hover:text-primary transition-colors">
+                    <span className="font-bold text-sm text-foreground truncate transition-colors">
                       {displayName}
                     </span>
-                    <span className="text-[10px] font-mono font-black px-1.5 py-0.2 rounded-full bg-primary/10 text-primary uppercase shrink-0">
+                    <span className="text-[10px] font-mono font-black px-1.5 py-0.2 rounded border border-[var(--desk-border)] bg-[var(--sunflower)] text-[#0F172A] uppercase shrink-0">
                       {accountBadge}
                     </span>
                   </div>
                   <p className="text-[11px] text-muted-foreground truncate font-mono mt-0.5">
-                    {targetCategory} · 🔥 {streakCount}d streak
+                    {targetCategory} · {streakCount}d streak
                   </p>
                 </div>
               </div>
-              <span className="px-3 py-1.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs shadow-xs transition-all shrink-0">
+              <span className="px-3 py-1.5 rounded-lg border-2 border-[var(--desk-border)] bg-primary text-primary-foreground font-bold text-xs shadow-[1.5px_1.5px_0px_var(--desk-border)] transition-all shrink-0">
                 Stats →
               </span>
             </Link>
 
-            {/* Mobile Account Buttons (Upgrade Account / Sign Out / Log Out) */}
+            {/* Mobile Account Buttons */}
             <div className="flex items-center gap-2 mb-2">
               {!isAuthenticated ? (
                 <>
@@ -208,9 +208,9 @@ export function Navbar() {
                       setIsOpen(false);
                       setUpgradeOpen(true);
                     }}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600/10 to-indigo-600/10 hover:from-blue-600/20 hover:to-indigo-600/20 border border-blue-500/30 text-blue-600 dark:text-blue-400 font-bold text-xs transition-all active:scale-[0.98] shadow-2xs cursor-pointer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border-2 border-[var(--desk-border)] bg-[var(--sunflower)] text-[#0F172A] font-bold text-xs shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                    <Sparkles className="w-3.5 h-3.5" />
                     <span>Upgrade account</span>
                   </button>
                   <button
@@ -219,7 +219,7 @@ export function Navbar() {
                       setIsOpen(false);
                       handleSignOut();
                     }}
-                    className="flex items-center justify-center gap-1.5 py-2.5 px-3.5 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50/60 dark:bg-red-950/20 text-red-600 dark:text-red-400 font-bold text-xs hover:bg-red-100/70 dark:hover:bg-red-950/40 transition-all active:scale-[0.98] cursor-pointer"
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3.5 rounded-lg border-2 border-[var(--desk-border)] bg-destructive text-destructive-foreground font-bold text-xs shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Log out</span>
@@ -232,7 +232,7 @@ export function Navbar() {
                     setIsOpen(false);
                     handleSignOut();
                   }}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50/60 dark:bg-red-950/20 text-red-600 dark:text-red-400 font-bold text-xs hover:bg-red-100/70 dark:hover:bg-red-950/40 transition-all active:scale-[0.98] cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border-2 border-[var(--desk-border)] bg-destructive text-destructive-foreground font-bold text-xs shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Sign out</span>

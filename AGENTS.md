@@ -1,12 +1,13 @@
-# Repository Instructions: Apple Design Constitution & Supabase Budget Rules
+# Repository Instructions: Interaction Physics, Structural Topology & Supabase Budget Rules
 
-## 1. Lead Design Authority — Apple Design Constitution
+## 1. Design & Interaction Authority — Physical Dynamics & Topology
 
-`apple-design` is the lead design authority across the entire codebase. When optimizing, refactoring, or adding features, you must NOT alter the visual aesthetic, layout geometry, or motion identity. Any new loading state, empty state, skeleton, or interactive element must strictly conform to the following Apple design principles:
+`apple-design` supplies interaction physics and structural topology only (springs, interruptible motion, press feedback, hierarchy, restraint, accessibility). It does NOT dictate fonts, colors, materials or visual style. The visual aesthetic is a premium, distinctive, slightly funky product identity (not generic, not vibe-coded, not templated).
 
-### 1.1 Core Philosophy
-- An interface is fluid when it behaves like the physical world: responding instantly, moving continuously, carrying momentum, resisting at soft boundaries, and allowing redirection at any microsecond.
-- Interface design serves four core human needs: **predictability/safety, understanding, achievement, and joy**.
+### 1.1 Structural Topology
+- **Clear Hierarchy:** One primary action per view, strong navigation model, progressive disclosure, and quiet surfaces.
+- **Form & Navigation:** Large clear titles, grouped content, bottom tab bar on mobile phones for primary destinations, sheets for secondary tasks.
+- **Restraint:** One element draws the eye at any given moment. Remove competing decorative noise.
 
 ### 1.2 Fluid Interaction & Motion Principles
 1. **Instant Response (<16ms feedback):**
@@ -19,16 +20,16 @@
    - Use velocity-aware springs rather than linear or hard-coded duration easings for user-driven interactions.
 3. **Physical Springs & Velocity Handoff:**
    - Think in **damping ratio** and **response**, not arbitrary durations.
-   - Default to critically damped springs (`damping: 1.0`) for clean, non-distracting settlements.
+   - Default to critically damped springs (`damping: 1.0`, `response: 0.35s`) for clean, non-distracting settlements.
    - Apply slight bounce (`damping: ~0.8`) strictly when a physical momentum flick or throw preceded release.
    - Seamlessly transfer release pointer velocity into the initial spring velocity.
 4. **Spatial Consistency & Origin Anchoring:**
    - Enter and exit along symmetric paths (e.g., sheets slide in from bottom and dismiss to bottom).
    - Anchor sheets, popovers, and menus to their trigger element via proper `transform-origin`.
-5. **Translucent Materials & Hierarchy:**
-   - Use translucent functional layers (`backdrop-filter: blur(20px) saturate(180%)`) with content scrolling underneath.
-   - Material weight encodes structural depth: darker/heavier for structural sidebars, lighter for actionable chips. Never stack light translucent surfaces directly atop one another.
-   - Pair modal interruptions with a dimming backdrop scrim; keep non-blocking parallel surfaces scrim-free.
+5. **Depth, Surfaces & Performance:**
+   - Distinctive elevation language tailored to the product identity: solid surfaces, hairline rules, or crisp offset layers rather than stacked frosted glass.
+   - Limit backdrop-filter to at most 1–2 small chrome layers; always provide solid fallbacks.
+   - Never animate layout properties (`width`, `height`, `top`, `left`). Animate only `transform` and `opacity`.
 6. **Restraint & Reduced Motion:**
    - Respect `prefers-reduced-motion: reduce`: gracefully swap springs/slides for immediate opacity cross-fades without vestibular disturbance.
    - Respect `prefers-reduced-transparency: reduce` by replacing blurred surfaces with solid high-contrast backgrounds.

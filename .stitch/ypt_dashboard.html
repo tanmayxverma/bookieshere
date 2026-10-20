@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bookie - Study Rooms &amp; Timer (Carrel Chamber 4B)</title>
+<!-- Google Fonts for Bricolage Grotesque, Space Grotesk, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms and Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary": "#004ac6",
+            "surface-dim": "#d2d9f4",
+            "on-secondary-container": "#6f5100",
+            "surface-container-high": "#e2e7ff",
+            "tertiary-fixed": "#6ffbbe",
+            "secondary-container": "#ffc329",
+            "inverse-surface": "#283044",
+            "surface-container": "#eaedff",
+            "primary-container": "#2563eb",
+            "outline": "#737686",
+            "on-secondary-fixed": "#261a00",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#faf8ff",
+            "tertiary": "#006242",
+            "on-primary-fixed": "#00174b",
+            "on-primary-container": "#eeefff",
+            "tertiary-container": "#007d55",
+            "surface": "#faf8ff",
+            "on-tertiary-fixed": "#002113",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed-variant": "#005236",
+            "secondary-fixed": "#ffdf9f",
+            "secondary-fixed-dim": "#f9bd22",
+            "on-background": "#131b2e",
+            "surface-container-highest": "#dae2fd",
+            "on-tertiary-container": "#bdffdb",
+            "on-error-container": "#93000a",
+            "error": "#ba1a1a",
+            "inverse-on-surface": "#eef0ff",
+            "on-surface": "#131b2e",
+            "on-secondary-fixed-variant": "#5c4300",
+            "surface-variant": "#dae2fd",
+            "background": "#faf8ff",
+            "on-surface-variant": "#434655",
+            "surface-tint": "#0053db",
+            "outline-variant": "#c3c6d7",
+            "primary-fixed-dim": "#b4c5ff",
+            "error-container": "#ffdad6",
+            "surface-container-lowest": "#ffffff",
+            "inverse-primary": "#b4c5ff",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#4edea3",
+            "surface-container-low": "#f2f3ff",
+            "secondary": "#795900",
+            "on-primary-fixed-variant": "#003ea8",
+            "primary-fixed": "#dbe1ff",
+            "on-error": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "1.25rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "gutter-mobile": "1rem",
+            "space-md": "1rem",
+            "margin": "2.5rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem",
+            "gutter": "1.5rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Bricolage Grotesque"],
+            "label-sm": ["JetBrains Mono"],
+            "label-lg": ["JetBrains Mono"],
+            "body-lg": ["Space Grotesk"],
+            "body-md": ["Space Grotesk"],
+            "label-md": ["JetBrains Mono"],
+            "display-lg-mobile": ["Bricolage Grotesque"],
+            "display-lg": ["Bricolage Grotesque"],
+            "headline-md": ["Bricolage Grotesque"],
+            "headline-sm": ["Bricolage Grotesque"],
+            "body-sm": ["Space Grotesk"],
+            "headline-lg": ["Bricolage Grotesque"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+            "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "headline-md": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-sm": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Technical Drafting Grid Background Texture */
+    .blueprint-desk-pattern {
+      background-color: #FFFDF7;
+      background-image: 
+        radial-gradient(#131b2e 0.75px, transparent 0.75px),
+        linear-gradient(to right, rgba(19, 27, 46, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(19, 27, 46, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px, 40px 40px, 40px 40px;
+      background-position: 0 0, 0 0, 0 0;
+    }
+    
+    /* Hard-edge Neo-Brutalist 3D ink press effects */
+    .hard-shadow-sm {
+      box-shadow: 2px 2px 0px #131b2e;
+    }
+    .hard-shadow-md {
+      box-shadow: 4px 4px 0px #131b2e;
+    }
+    .hard-shadow-lg {
+      box-shadow: 6px 6px 0px #131b2e;
+    }
+    
+    .tactile-depress:active {
+      transform: translate(3px, 3px);
+      box-shadow: 0px 0px 0px #131b2e !important;
+    }
+
+    /* Washi tape graphic strip */
+    .washi-tape-yellow {
+      background: rgba(251, 191, 36, 0.9);
+      clip-path: polygon(2% 0%, 98% 0%, 100% 100%, 0% 100%);
+    }
+
+    /* Diagonal hatch progress fill */
+    .hatch-pattern {
+      background-image: repeating-linear-gradient(
+        45deg,
+        #2563eb,
+        #2563eb 10px,
+        #004ac6 10px,
+        #004ac6 20px
+      );
+    }
+  </style>
+</head>
+<body class="blueprint-desk-pattern text-on-surface min-h-screen flex flex-col font-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- ==================== TOP NAVIGATION BAR ==================== -->
+<header class="bg-surface-container-lowest border-b-2 border-on-surface [box-shadow:0px_4px_0px_#131b2e] sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-space-md md:px-space-xl py-2 max-w-7xl mx-auto">
+<!-- Left: Logo & Build Badge -->
+<div class="flex items-center gap-space-sm md:gap-space-md">
+<a class="flex items-center gap-2 group" href="#">
+<div class="w-9 h-9 bg-secondary-container border-2 border-on-surface hard-shadow-sm flex items-center justify-center -rotate-2 group-hover:rotate-0 transition-transform">
+<span class="material-symbols-outlined text-on-surface text-[20px]" data-icon="edit">edit</span>
+</div>
+<span class="text-headline-md font-headline-md font-extrabold text-primary tracking-tight">Bookie.</span>
+</a>
+<span class="hidden sm:inline-flex items-center px-2 py-0.5 border-2 border-on-surface bg-surface-container-high text-on-surface font-label-sm text-label-sm font-bold uppercase tracking-wider hard-shadow-sm">
+          v2.4 Live
+        </span>
+</div>
+<!-- Center: Navigation Links (Shared Component Specs) -->
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors hover:translate-x-0.5 hover:-translate-y-0.5" href="#">Materials</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors hover:translate-x-0.5 hover:-translate-y-0.5" href="#">Tests</a>
+<a class="text-primary border-b-2 border-primary font-label-md text-label-md font-bold px-1 py-1" href="#">Peer Desks</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors hover:translate-x-0.5 hover:-translate-y-0.5" href="#">PYQ Vault</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors hover:translate-x-0.5 hover:-translate-y-0.5" href="#">Hall of Fame</a>
+</nav>
+<!-- Right: Trailing Actions, Badges & Aspirant Avatar -->
+<div class="flex items-center gap-space-sm md:gap-space-md">
+<!-- 14-Day Sprint Sticker Badge -->
+<div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-secondary-container border-2 border-on-surface hard-shadow-sm rotate-1">
+<span class="material-symbols-outlined text-on-surface text-[16px]" data-icon="local_fire_department">local_fire_department</span>
+<span class="font-label-sm text-label-sm font-bold text-on-surface tracking-wide">14-Day Sprint</span>
+</div>
+<!-- JEE Adv '25 Action Button -->
+<button class="flex items-center gap-1.5 px-3 py-1 bg-primary text-on-primary border-2 border-on-surface hard-shadow-sm font-label-md text-label-md font-bold tactile-depress hover:-translate-y-0.5 transition-transform">
+<span>JEE Adv '25</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+</button>
+<!-- Icon Triggers -->
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center border-2 border-on-surface bg-surface-container-lowest hover:bg-surface-container transition-colors relative hard-shadow-sm tactile-depress" title="Notifications">
+<span class="material-symbols-outlined text-on-surface text-[18px]" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-error border border-on-surface rounded-full"></span>
+</button>
+</div>
+<!-- Aspirant Desk Avatar with custom drafting pencil badge -->
+<div class="relative flex items-center">
+<div class="w-9 h-9 border-2 border-on-surface bg-surface-container-high rounded-full overflow-hidden hard-shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Close up photographic portrait of a focused South Asian student wearing wireframe glasses at an engineering drafting desk with blueprints and study lamps in warm golden lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5KK9Sr3un8draZCLqWjBCkyrox3lcjTonwGBq7YOvD-SnRKTDIGzJnOiltzBvfgud2oU781Cammd_NsexbPHK3QYttUqi9ggM5nONpvZPqJ2YeVBOpyZ703xGQ-sRE5C-_tKnF663XsHD-rSROS0sQFjyX84e7l-JBO76jINI7q2l6ogai2-RH8jC2DxfuzghVXy8bCsjjw1OW2PA5RB0gYPjR15twCokh75nWN6uQOsIMSZlWvgQOS5FKbaXs_EEgwsBh8G5Kcnm"/>
+</div>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-secondary-container border border-on-surface rounded-full flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[10px] text-on-surface" data-icon="brush">brush</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ==================== ROOM TELEMETRY STATUS BANNER ==================== -->
+<section class="border-b-2 border-on-surface bg-surface-container-low px-space-md md:px-space-xl py-2.5">
+<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+<!-- Left: Room Meta & Capacity -->
+<div class="flex flex-wrap items-center gap-3">
+<div class="flex items-center gap-2">
+<span class="inline-block w-3 h-3 bg-secondary-container border-2 border-on-surface rotate-45"></span>
+<h2 class="font-label-lg text-label-lg font-bold text-on-surface tracking-wide">ROOM 4B: JEE ADVANCED ELITE SPRINT</h2>
+</div>
+<span class="px-2 py-0.5 border-2 border-on-surface bg-surface-container-lowest font-label-sm text-label-sm font-semibold hard-shadow-sm text-on-surface">
+          48/60 OCCUPIED (HARD CAP)
+        </span>
+<div class="hidden sm:flex items-center gap-1.5 px-2.5 py-0.5 bg-tertiary-fixed border-2 border-on-surface font-label-sm text-label-sm text-on-tertiary-fixed font-bold hard-shadow-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span>HARD PROCTOR FEED: SYNCHRONIZED</span>
+</div>
+<span class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 border-2 border-on-surface bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]" data-icon="lock">lock</span>
+          ZERO DISTRACTION ENFORCED
+        </span>
+</div>
+<!-- Right: Chamber Switch Trigger -->
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-1.5 px-3 py-1 bg-surface-container-lowest border-2 border-on-surface hard-shadow-sm font-label-md text-label-md font-bold text-on-surface hover:bg-surface-container transition-colors tactile-depress">
+<span>Switch Carrel Chamber</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="unfold_more">unfold_more</span>
+</button>
+</div>
+</div>
+</section>
+<!-- ==================== MAIN CARREL WORKSPACE ==================== -->
+<main class="max-w-7xl mx-auto w-full px-space-md md:px-space-xl py-space-lg flex-1 flex flex-col gap-space-xl">
+<!-- 2-COLUMN ASYMMETRIC GRID: Core Timer & Right Rail Leaderboard/Tasks -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- ==================== LEFT / CENTER-LEFT MAIN INSTRUMENT: THE CORE IMMERSION TIMER ==================== -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- Main Carrel Desk Card -->
+<div class="relative bg-surface-container-lowest border-2 border-on-surface hard-shadow-md p-space-md md:p-space-lg flex flex-col gap-space-md">
+<!-- Top Washi Tape Pill Anchor -->
+<div class="absolute -top-3 left-8 washi-tape-yellow px-4 py-0.5 border border-on-surface font-label-sm text-label-sm font-bold uppercase tracking-wider text-on-surface shadow-xs">
+            STATION #042 // PROCTOR CAM ACTIVE
+          </div>
+<!-- Card Header & Status Info -->
+<div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-b-2 border-on-surface/10 pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 bg-tertiary-fixed-dim rounded-full border-2 border-on-surface"></span>
+<span class="font-label-md text-label-md font-bold tracking-tight uppercase">Desk Mode: Tabular Lockout</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-surface-container-high border-2 border-on-surface font-label-sm text-label-sm font-bold">
+                CAMERA: 1080P VERIFIED
+              </span>
+<span class="px-2 py-0.5 bg-secondary-fixed border-2 border-on-surface font-label-sm text-label-sm font-bold">
+                STREAM: LATENCY 14MS
+              </span>
+</div>
+</div>
+<!-- Giant Digital Chronograph Station -->
+<div class="bg-surface-container-low border-2 border-on-surface p-space-md md:p-space-lg flex flex-col items-center justify-center text-center relative overflow-hidden">
+<!-- Grid watermark accent -->
+<div class="absolute top-2 right-2 font-label-sm text-label-sm text-outline font-bold opacity-40 select-none">
+              GRID: CARREL-42-IITB
+            </div>
+<div class="font-label-sm text-label-sm font-bold text-on-surface-variant uppercase tracking-widest mb-1 flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-error rounded-full animate-ping"></span>
+              ELAPSED DEEP SPRINT
+            </div>
+<!-- TABULAR MONOSPACE CLOCK -->
+<div class="font-label-lg text-[48px] sm:text-[68px] md:text-[84px] font-bold text-on-surface tracking-tight leading-none my-2 select-all font-mono">
+              03:45:12
+            </div>
+<!-- Block Subtext & Metric -->
+<div class="flex items-center gap-3 mt-1">
+<span class="px-2.5 py-1 bg-surface-container-lowest border-2 border-on-surface font-label-md text-label-md font-bold hard-shadow-sm">
+                BLOCK 04 / 06
+              </span>
+<span class="font-label-md text-label-md text-primary font-bold">
+                CYCLE: 90m WORK + 15m AUDIT
+              </span>
+</div>
+</div>
+<!-- Progress Gauge: Chunky Technical Meter -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center font-label-sm text-label-sm font-bold">
+<span class="text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="speed">speed</span>
+                62% Achieved Toward Milestone
+              </span>
+<span class="text-on-surface-variant">Target: 08h 00m Deep Work</span>
+</div>
+<!-- Segmented Hatch Bar -->
+<div class="h-6 w-full border-2 border-on-surface bg-surface-container-high p-0.5 flex">
+<div class="h-full hatch-pattern border-r-2 border-on-surface transition-all duration-300" style="width: 62%;"></div>
+<div class="h-full bg-transparent flex-1"></div>
+</div>
+</div>
+<!-- Active Subject Selector Chips -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm font-bold text-on-surface uppercase tracking-wider">
+              Assigned Academic Target Sector:
+            </label>
+<div class="flex flex-wrap gap-2">
+<!-- Active Subject (Rotational Dynamics) -->
+<button class="px-3 py-2 bg-secondary-container text-on-surface border-2 border-on-surface hard-shadow-sm font-label-md text-label-md font-bold flex items-center gap-2 tactile-depress">
+<span class="w-2.5 h-2.5 bg-on-surface rounded-full"></span>
+<span>● Physics: Rotational Dynamics</span>
+</button>
+<!-- Inactive 1 -->
+<button class="px-3 py-2 bg-surface-container-lowest text-on-surface-variant hover:text-on-surface border-2 border-on-surface font-label-md text-label-md font-bold flex items-center gap-2 hover:bg-surface-container transition-colors tactile-depress">
+<span>Chemistry: Organic Synthesis</span>
+</button>
+<!-- Inactive 2 -->
+<button class="px-3 py-2 bg-surface-container-lowest text-on-surface-variant hover:text-on-surface border-2 border-on-surface font-label-md text-label-md font-bold flex items-center gap-2 hover:bg-surface-container transition-colors tactile-depress">
+<span>Maths: Coordinate Geometry</span>
+</button>
+</div>
+</div>
+<!-- Hard-Press Tactile Action Buttons -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+<!-- Primary Large Action Button -->
+<button class="flex-1 py-3 px-6 bg-primary text-on-primary border-2 border-on-surface hard-shadow-md hover:bg-primary-container font-headline-sm text-headline-sm font-bold flex items-center justify-center gap-3 tactile-depress transition-transform">
+<span class="material-symbols-outlined text-[24px]" data-icon="pause_circle">pause_circle</span>
+<span>PUNCH PAUSE [SPACE]</span>
+</button>
+<!-- Complete Block -->
+<button class="px-4 py-3 bg-tertiary-fixed text-on-tertiary-fixed border-2 border-on-surface hard-shadow-sm hover:bg-tertiary-fixed-dim font-label-md text-label-md font-bold flex items-center justify-center gap-1.5 tactile-depress">
+<span class="material-symbols-outlined text-[18px]" data-icon="task_alt">task_alt</span>
+<span>COMPLETE BLOCK</span>
+</button>
+</div>
+<!-- Secondary Row Buttons -->
+<div class="flex flex-wrap items-center justify-between gap-2 border-t-2 border-on-surface/10 pt-3">
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 bg-secondary-fixed text-on-secondary-fixed border-2 border-on-surface hard-shadow-sm font-label-md text-label-md font-bold flex items-center gap-1.5 tactile-depress">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit_note">edit_note</span>
+<span>LOG DRILL SESSION</span>
+</button>
+<button class="px-3 py-1.5 bg-surface-container-lowest text-on-surface border-2 border-on-surface hard-shadow-sm hover:bg-surface-container font-label-md text-label-md font-bold flex items-center gap-1.5 tactile-depress">
+<span class="material-symbols-outlined text-[16px]" data-icon="fullscreen">fullscreen</span>
+<span>FULLSCREEN CARREL MODE</span>
+</button>
+</div>
+<!-- Distraction Status Sticker -->
+<div class="px-2.5 py-1 bg-surface-container border-2 border-on-surface font-label-sm text-label-sm font-bold text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[16px]" data-icon="bolt">bolt</span>
+<span>0 DISTRACTIONS LOGGED • FOCUS LOCK ENABLED</span>
+</div>
+</div>
+</div>
+<!-- Sticky Note Callout: Academic Drafting Hint -->
+<div class="bg-yellow-100 border-2 border-on-surface hard-shadow-sm p-space-md -rotate-1 relative">
+<div class="flex items-start gap-3">
+<div class="w-7 h-7 bg-secondary-container border-2 border-on-surface flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-surface text-[18px]" data-icon="lightbulb">lightbulb</span>
+</div>
+<div>
+<div class="font-headline-sm text-[16px] font-bold text-on-surface">Proctor Desk Guidance: Rotational Equilibrium</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                Always fix an inertial coordinate frame before summing torques: <code class="font-label-sm bg-yellow-200 px-1 py-0.5 border border-on-surface font-bold text-on-surface">Στ_cm = I_cm · α</code>. Do not rush into cross-products without free-body vector sketches!
+              </p>
+</div>
+</div>
+</div>
+</div>
+<!-- ==================== RIGHT RAIL: DAILY ROOM LEADERBOARD & PROBLEM DECK ==================== -->
+<div class="lg:col-span-5 flex flex-col gap-space-lg">
+<!-- SECTION 1: LIVE CARREL LEADERBOARD -->
+<div class="bg-surface-container-lowest border-2 border-on-surface hard-shadow-md p-space-md flex flex-col gap-space-sm relative">
+<!-- Section Title with Pill Tag -->
+<div class="flex items-center justify-between border-b-2 border-on-surface pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]" data-icon="leaderboard">leaderboard</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Live Carrel Leaderboard</h3>
+</div>
+<span class="px-2 py-0.5 bg-secondary-container border border-on-surface font-label-sm text-label-sm font-bold text-on-surface">
+              CHAMBER 4B
+            </span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">
+            Ranked strictly by verified webcam proctor time today. Live audit sync.
+          </div>
+<!-- Leaderboard Rows -->
+<div class="flex flex-col gap-1.5 mt-1">
+<!-- Rank #01 -->
+<div class="p-2 border-2 border-on-surface bg-yellow-50 flex items-center justify-between hard-shadow-sm">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 bg-secondary-container border-2 border-on-surface font-label-sm text-label-sm font-bold flex items-center justify-center">01</span>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface flex items-center gap-1.5">
+                    @aarav_iitd
+                    <span class="material-symbols-outlined text-primary text-[14px]" data-icon="verified">verified</span>
+</div>
+<div class="font-body-sm text-[11px] text-on-surface-variant">IIT Bombay CSE Aspirant • Rotational Dyn</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-md text-label-md font-bold text-primary font-mono">09h 14m</div>
+<div class="font-label-sm text-[9px] text-tertiary font-bold uppercase">PROCTOR OK</div>
+</div>
+</div>
+<!-- Rank #02 -->
+<div class="p-2 border-2 border-on-surface bg-surface-container-lowest flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 bg-surface-container-high border-2 border-on-surface font-label-sm text-label-sm font-bold flex items-center justify-center">02</span>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface flex items-center gap-1.5">
+                    @ishaan_air24
+                    <span class="material-symbols-outlined text-primary text-[14px]" data-icon="verified">verified</span>
+</div>
+<div class="font-body-sm text-[11px] text-on-surface-variant">IIT Delhi EE • P-Block Chemistry</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-md text-label-md font-bold text-on-surface font-mono">08h 52m</div>
+<div class="font-label-sm text-[9px] text-tertiary font-bold uppercase">PROCTOR OK</div>
+</div>
+</div>
+<!-- Rank #03 -->
+<div class="p-2 border-2 border-on-surface bg-surface-container-lowest flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 bg-surface-container-high border-2 border-on-surface font-label-sm text-label-sm font-bold flex items-center justify-center">03</span>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface flex items-center gap-1.5">
+                    @meera_aiims
+                    <span class="material-symbols-outlined text-primary text-[14px]" data-icon="verified">verified</span>
+</div>
+<div class="font-body-sm text-[11px] text-on-surface-variant">AIIMS New Delhi • Organic Reactions</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-md text-label-md font-bold text-on-surface font-mono">07h 40m</div>
+<div class="font-label-sm text-[9px] text-tertiary font-bold uppercase">PROCTOR OK</div>
+</div>
+</div>
+<!-- Rank #04 -->
+<div class="p-2 border-2 border-on-surface bg-surface-container-lowest flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 bg-surface-container-high border-2 border-on-surface font-label-sm text-label-sm font-bold flex items-center justify-center">04</span>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface">@kabir_air1</div>
+<div class="font-body-sm text-[11px] text-on-surface-variant">IIT Kanpur Aero • Integral Calculus</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-md text-label-md font-bold text-on-surface font-mono">06h 15m</div>
+<div class="font-label-sm text-[9px] text-tertiary font-bold uppercase">PROCTOR OK</div>
+</div>
+</div>
+<!-- Current User Row (Sticky / Highlighted Position) -->
+<div class="p-2.5 border-2 border-primary bg-primary/10 flex items-center justify-between hard-shadow-sm mt-1">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 bg-primary text-on-primary border-2 border-on-surface font-label-sm text-label-sm font-bold flex items-center justify-center">14</span>
+<div>
+<div class="font-label-md text-label-md font-bold text-primary flex items-center gap-1">
+                    @you_carrel42 (Current Station)
+                    <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+</div>
+<div class="font-body-sm text-[11px] text-on-surface-variant">Rotational Dynamics Drill</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-md text-label-md font-bold text-primary font-mono">03h 45m</div>
+<div class="font-label-sm text-[9px] text-primary font-bold uppercase">PACE: TOP 25%</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 2: TODAY'S DELIBERATE PROBLEM DECK -->
+<div class="bg-surface-container-lowest border-2 border-on-surface hard-shadow-md p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between border-b-2 border-on-surface pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]" data-icon="checklist">checklist</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Deliberate Problem Deck</h3>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-on-surface bg-surface-container px-2 py-0.5 border border-on-surface">
+              2 / 4 COMPLETE
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Rigorous problem sets slotted for today's carrel sprint.
+          </p>
+<!-- Task Items List -->
+<div class="flex flex-col gap-2 mt-1">
+<!-- Item 1: Done -->
+<label class="flex items-start gap-3 p-2 bg-surface-container-low border-2 border-on-surface cursor-pointer select-none">
+<input checked="" class="mt-0.5 w-4 h-4 rounded-none border-2 border-on-surface text-primary focus:ring-0" type="checkbox"/>
+<div class="flex-1">
+<span class="font-body-md text-body-md line-through text-on-surface-variant font-medium">
+                  HC Verma Vol 1: Ch 10 Rotational Motion (Ex 1–25)
+                </span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-sm text-[10px] bg-tertiary-fixed text-on-tertiary-fixed px-1.5 py-0.2 border border-on-surface font-bold">SOLVED: 25/25</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant font-mono">TIME: 75 MINS</span>
+</div>
+</div>
+</label>
+<!-- Item 2: Done -->
+<label class="flex items-start gap-3 p-2 bg-surface-container-low border-2 border-on-surface cursor-pointer select-none">
+<input checked="" class="mt-0.5 w-4 h-4 rounded-none border-2 border-on-surface text-primary focus:ring-0" type="checkbox"/>
+<div class="flex-1">
+<span class="font-body-md text-body-md line-through text-on-surface-variant font-medium">
+                  2019-2023 PYQ JEE Adv: Rigid Body Dynamics (14 Qs)
+                </span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-sm text-[10px] bg-tertiary-fixed text-on-tertiary-fixed px-1.5 py-0.2 border border-on-surface font-bold">AUDITED</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant font-mono">ACCURACY: 92%</span>
+</div>
+</div>
+</label>
+<!-- Item 3: In Progress -->
+<label class="flex items-start gap-3 p-2 bg-yellow-50 border-2 border-on-surface hard-shadow-sm cursor-pointer select-none">
+<input class="mt-0.5 w-4 h-4 rounded-none border-2 border-on-surface text-primary focus:ring-0" type="checkbox"/>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md font-bold text-on-surface">
+                    Irodov Problem 1.240 to 1.255 (Momentum &amp; Energy)
+                  </span>
+<span class="font-label-sm text-[10px] bg-secondary-container px-1.5 py-0.5 border border-on-surface font-bold text-on-surface uppercase">
+                    IN PROGRESS
+                  </span>
+</div>
+<div class="font-label-sm text-[10px] text-primary font-bold mt-1">
+                  CURRENT FOCUS: EX 1.247 [NON-INERTIAL AXIS]
+                </div>
+</div>
+</label>
+<!-- Item 4: Queued -->
+<label class="flex items-start gap-3 p-2 bg-surface-container-lowest border-2 border-on-surface cursor-pointer select-none opacity-85">
+<input class="mt-0.5 w-4 h-4 rounded-none border-2 border-on-surface text-primary focus:ring-0" type="checkbox"/>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md font-medium text-on-surface">
+                    Inorganic Revision: Coordination Compounds (NCERT Line-by-Line)
+                  </span>
+<span class="font-label-sm text-[10px] bg-surface-container px-1.5 py-0.5 border border-on-surface font-bold text-on-surface-variant uppercase">
+                    QUEUED
+                  </span>
+</div>
+<div class="font-label-sm text-[10px] text-on-surface-variant mt-0.5">
+                  Target slot: Block 05 (Post-Dinner Sprint)
+                </div>
+</div>
+</label>
+</div>
+<!-- Add Target Problem Action -->
+<button class="mt-2 w-full py-2 bg-surface-container-lowest hover:bg-surface-container border-2 border-dashed border-on-surface font-label-md text-label-md font-bold text-on-surface flex items-center justify-center gap-1.5 transition-colors tactile-depress">
+<span class="material-symbols-outlined text-[16px]" data-icon="add_circle">add_circle</span>
+<span>Add Target Problem +</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ==================== LIVE VIRTUAL CARRELS GRID ==================== -->
+<section class="flex flex-col gap-space-md pt-space-sm border-t-2 border-on-surface">
+<!-- Section Header & Filter Controls -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-tertiary-fixed-dim border-2 border-on-surface"></div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">
+              Live Peer Carrels (6 Active In Your Chamber)
+            </h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Silent peer immersion chambers. Live ambient telemetry with proctor hardware check.
+          </p>
+</div>
+<!-- Filter Pills -->
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 bg-secondary-container border-2 border-on-surface font-label-sm text-label-sm font-bold text-on-surface hard-shadow-sm tactile-depress">
+            All Feeds (06)
+          </button>
+<button class="px-3 py-1 bg-surface-container-lowest border-2 border-on-surface font-label-sm text-label-sm font-bold text-on-surface-variant hover:text-on-surface tactile-depress">
+            Silent Video On
+          </button>
+<button class="px-3 py-1 bg-surface-container-lowest border-2 border-on-surface font-label-sm text-label-sm font-bold text-on-surface-variant hover:text-on-surface tactile-depress">
+            Mic Muted
+          </button>
+</div>
+</div>
+<!-- 6-Tile Carrel Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md">
+<!-- CARREL CARD 1 -->
+<div class="bg-surface-container-lowest border-2 border-on-surface hard-shadow-md flex flex-col">
+<!-- Carrel Header -->
+<div class="p-2.5 bg-surface-container-low border-b-2 border-on-surface flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold px-1.5 py-0.5 bg-surface-container-lowest border border-on-surface">
+              CARREL #09
+            </span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-[10px] font-bold text-tertiary uppercase">PROCTOR ACTIVE</span>
+</div>
+</div>
+<!-- Simulated Study Feed Box -->
+<div class="relative h-44 bg-inverse-surface border-b-2 border-on-surface overflow-hidden flex flex-col justify-between p-3 text-inverse-on-surface">
+<!-- Simulated desk silhouette / technical grid overlay -->
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<div class="flex justify-between items-start z-10">
+<span class="px-2 py-0.5 bg-on-surface/80 text-surface font-mono text-[11px] font-bold border border-outline">
+                06h 42m VERIFIED
+              </span>
+<span class="px-1.5 py-0.5 bg-tertiary text-on-tertiary font-label-sm text-[9px] font-bold uppercase">
+                CAM SYNC
+              </span>
+</div>
+<!-- Stylized Ambient Graphic / Soundwave Visualizer -->
+<div class="z-10 flex items-end justify-between gap-1 h-8 opacity-75 px-4">
+<div class="w-1.5 bg-tertiary-fixed h-3"></div>
+<div class="w-1.5 bg-tertiary-fixed h-5"></div>
+<div class="w-1.5 bg-tertiary-fixed h-2"></div>
+<div class="w-1.5 bg-tertiary-fixed h-6"></div>
+<div class="w-1.5 bg-tertiary-fixed h-4"></div>
+<div class="w-1.5 bg-tertiary-fixed h-7"></div>
+<div class="w-1.5 bg-tertiary-fixed h-3"></div>
+</div>
+<div class="z-10 font-label-sm text-[10px] text-surface-variant flex items-center justify-between">
+<span>LATENCY: 12ms</span>
+<span class="font-mono">FPS: 30 LOCK</span>
+</div>
+</div>
+<!-- Aspirant Footer Details -->
+<div class="p-space-sm flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-secondary-fixed border border-on-surface flex items-center justify-center font-bold text-[11px]">
+                  AN
+                </div>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface">@anirudh_iitd</div>
+<div class="font-body-sm text-[11px] text-primary font-semibold">Physics // Wave Optics</div>
+</div>
+</div>
+<span class="font-label-sm text-[10px] bg-surface-container px-2 py-0.5 border border-on-surface font-bold">
+                4th Session
+              </span>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-on-surface/10 font-label-sm text-[10px] text-on-surface-variant">
+<span>MIC MUTED [HARDWARE]</span>
+<span class="text-tertiary font-bold">STREAK: 12 DAYS</span>
+</div>
+</div>
+</div>
+<!-- CARREL CARD 2 -->
+<div class="bg-surface-container-lowest border-2 border-on-surface hard-shadow-md flex flex-col">
+<div class="p-2.5 bg-surface-container-low border-b-2 border-on-surface flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold px-1.5 py-0.5 bg-surface-container-lowest border border-on-surface">
+              CARREL #14
+            </span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-[10px] font-bold text-tertiary uppercase">PROCTOR ACTIVE</span>
+</div>
+</div>
+<div class="relative h-44 bg-inverse-surface border-b-2 border-on-surface overflow-hidden flex flex-col justify-between p-3 text-inverse-on-surface">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<div class="flex justify-between items-start z-10">
+<span class="px-2 py-0.5 bg-on-surface/80 text-surface font-mono text-[11px] font-bold border border-outline">
+                07h 18m VERIFIED
+              </span>
+<span class="px-1.5 py-0.5 bg-tertiary text-on-tertiary font-label-sm text-[9px] font-bold uppercase">
+                CAM SYNC
+              </span>
+</div>
+<div class="z-10 flex items-end justify-between gap-1 h-8 opacity-75 px-4">
+<div class="w-1.5 bg-secondary-container h-4"></div>
+<div class="w-1.5 bg-secondary-container h-2"></div>
+<div class="w-1.5 bg-secondary-container h-6"></div>
+<div class="w-1.5 bg-secondary-container h-8"></div>
+<div class="w-1.5 bg-secondary-container h-5"></div>
+<div class="w-1.5 bg-secondary-container h-3"></div>
+<div class="w-1.5 bg-secondary-container h-6"></div>
+</div>
+<div class="z-10 font-label-sm text-[10px] text-surface-variant flex items-center justify-between">
+<span>LATENCY: 18ms</span>
+<span class="font-mono">FPS: 30 LOCK</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-primary-fixed border border-on-surface flex items-center justify-center font-bold text-[11px]">
+                  ME
+                </div>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface">@meera_aiims</div>
+<div class="font-body-sm text-[11px] text-primary font-semibold">Bio // Molecular Genetics</div>
+</div>
+</div>
+<span class="font-label-sm text-[10px] bg-surface-container px-2 py-0.5 border border-on-surface font-bold">
+                6th Session
+              </span>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-on-surface/10 font-label-sm text-[10px] text-on-surface-variant">
+<span>MIC MUTED [HARDWARE]</span>
+<span class="text-tertiary font-bold">STREAK: 18 DAYS</span>
+</div>
+</div>
+</div>
+<!-- CARREL CARD 3 -->
+<div class="bg-surface-container-lowest border-2 border-on-surface hard-shadow-md flex flex-col">
+<div class="p-2.5 bg-surface-container-low border-b-2 border-on-surface flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold px-1.5 py-0.5 bg-surface-container-lowest border border-on-surface">
+              CARREL #21
+            </span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-[10px] font-bold text-tertiary uppercase">PROCTOR ACTIVE</span>
+</div>
+</div>
+<div class="relative h-44 bg-inverse-surface border-b-2 border-on-surface overflow-hidden flex flex-col justify-between p-3 text-inverse-on-surface">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<div class="flex justify-between items-start z-10">
+<span class="px-2 py-0.5 bg-on-surface/80 text-surface font-mono text-[11px] font-bold border border-outline">
+                05h 30m VERIFIED
+              </span>
+<span class="px-1.5 py-0.5 bg-tertiary text-on-tertiary font-label-sm text-[9px] font-bold uppercase">
+                CAM SYNC
+              </span>
+</div>
+<div class="z-10 flex items-end justify-between gap-1 h-8 opacity-75 px-4">
+<div class="w-1.5 bg-tertiary-fixed h-5"></div>
+<div class="w-1.5 bg-tertiary-fixed h-3"></div>
+<div class="w-1.5 bg-tertiary-fixed h-7"></div>
+<div class="w-1.5 bg-tertiary-fixed h-4"></div>
+<div class="w-1.5 bg-tertiary-fixed h-2"></div>
+<div class="w-1.5 bg-tertiary-fixed h-5"></div>
+<div class="w-1.5 bg-tertiary-fixed h-3"></div>
+</div>
+<div class="z-10 font-label-sm text-[10px] text-surface-variant flex items-center justify-between">
+<span>LATENCY: 09ms</span>
+<span class="font-mono">FPS: 30 LOCK</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-yellow-300 border border-on-surface flex items-center justify-center font-bold text-[11px]">
+                  KA
+                </div>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface">@kabir_air1</div>
+<div class="font-body-sm text-[11px] text-primary font-semibold">Maths // Complex Analysis</div>
+</div>
+</div>
+<span class="font-label-sm text-[10px] bg-surface-container px-2 py-0.5 border border-on-surface font-bold">
+                3rd Session
+              </span>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-on-surface/10 font-label-sm text-[10px] text-on-surface-variant">
+<span>MIC MUTED [HARDWARE]</span>
+<span class="text-tertiary font-bold">STREAK: 09 DAYS</span>
+</div>
+</div>
+</div>
+<!-- CARREL CARD 4 -->
+<div class="bg-surface-container-lowest border-2 border-on-surface hard-shadow-md flex flex-col">
+<div class="p-2.5 bg-surface-container-low border-b-2 border-on-surface flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold px-1.5 py-0.5 bg-surface-container-lowest border border-on-surface">
+              CARREL #28
+            </span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-[10px] font-bold text-tertiary uppercase">PROCTOR ACTIVE</span>
+</div>
+</div>
+<div class="relative h-44 bg-inverse-surface border-b-2 border-on-surface overflow-hidden flex flex-col justify-between p-3 text-inverse-on-surface">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<div class="flex justify-between items-start z-10">
+<span class="px-2 py-0.5 bg-on-surface/80 text-surface font-mono text-[11px] font-bold border border-outline">
+                04h 50m VERIFIED
+              </span>
+<span class="px-1.5 py-0.5 bg-tertiary text-on-tertiary font-label-sm text-[9px] font-bold uppercase">
+                CAM SYNC
+              </span>
+</div>
+<div class="z-10 flex items-end justify-between gap-1 h-8 opacity-75 px-4">
+<div class="w-1.5 bg-tertiary-fixed h-2"></div>
+<div class="w-1.5 bg-tertiary-fixed h-4"></div>
+<div class="w-1.5 bg-tertiary-fixed h-3"></div>
+<div class="w-1.5 bg-tertiary-fixed h-6"></div>
+<div class="w-1.5 bg-tertiary-fixed h-2"></div>
+<div class="w-1.5 bg-tertiary-fixed h-4"></div>
+<div class="w-1.5 bg-tertiary-fixed h-2"></div>
+</div>
+<div class="z-10 font-label-sm text-[10px] text-surface-variant flex items-center justify-between">
+<span>LATENCY: 22ms</span>
+<span class="font-mono">FPS: 30 LOCK</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-high border border-on-surface flex items-center justify-center font-bold text-[11px]">
+                  DP
+                </div>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface">@devika_p</div>
+<div class="font-body-sm text-[11px] text-primary font-semibold">Chemistry // Thermodynamics</div>
+</div>
+</div>
+<span class="font-label-sm text-[10px] bg-surface-container px-2 py-0.5 border border-on-surface font-bold">
+                2nd Session
+              </span>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-on-surface/10 font-label-sm text-[10px] text-on-surface-variant">
+<span>MIC MUTED [HARDWARE]</span>
+<span class="text-tertiary font-bold">STREAK: 05 DAYS</span>
+</div>
+</div>
+</div>
+<!-- CARREL CARD 5 -->
+<div class="bg-surface-container-lowest border-2 border-on-surface hard-shadow-md flex flex-col">
+<div class="p-2.5 bg-surface-container-low border-b-2 border-on-surface flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold px-1.5 py-0.5 bg-surface-container-lowest border border-on-surface">
+              CARREL #33
+            </span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-[10px] font-bold text-tertiary uppercase">PROCTOR ACTIVE</span>
+</div>
+</div>
+<div class="relative h-44 bg-inverse-surface border-b-2 border-on-surface overflow-hidden flex flex-col justify-between p-3 text-inverse-on-surface">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<div class="flex justify-between items-start z-10">
+<span class="px-2 py-0.5 bg-on-surface/80 text-surface font-mono text-[11px] font-bold border border-outline">
+                04h 12m VERIFIED
+              </span>
+<span class="px-1.5 py-0.5 bg-tertiary text-on-tertiary font-label-sm text-[9px] font-bold uppercase">
+                CAM SYNC
+              </span>
+</div>
+<div class="z-10 flex items-end justify-between gap-1 h-8 opacity-75 px-4">
+<div class="w-1.5 bg-secondary-container h-5"></div>
+<div class="w-1.5 bg-secondary-container h-7"></div>
+<div class="w-1.5 bg-secondary-container h-4"></div>
+<div class="w-1.5 bg-secondary-container h-8"></div>
+<div class="w-1.5 bg-secondary-container h-3"></div>
+<div class="w-1.5 bg-secondary-container h-6"></div>
+<div class="w-1.5 bg-secondary-container h-4"></div>
+</div>
+<div class="z-10 font-label-sm text-[10px] text-surface-variant flex items-center justify-between">
+<span>LATENCY: 15ms</span>
+<span class="font-mono">FPS: 30 LOCK</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-secondary-fixed-dim border border-on-surface flex items-center justify-center font-bold text-[11px]">
+                  RK
+                </div>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface">@rohan_k</div>
+<div class="font-body-sm text-[11px] text-primary font-semibold">Physics // Modern Physics</div>
+</div>
+</div>
+<span class="font-label-sm text-[10px] bg-surface-container px-2 py-0.5 border border-on-surface font-bold">
+                4th Session
+              </span>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-on-surface/10 font-label-sm text-[10px] text-on-surface-variant">
+<span>MIC MUTED [HARDWARE]</span>
+<span class="text-tertiary font-bold">STREAK: 14 DAYS</span>
+</div>
+</div>
+</div>
+<!-- CARREL CARD 6 -->
+<div class="bg-surface-container-lowest border-2 border-on-surface hard-shadow-md flex flex-col">
+<div class="p-2.5 bg-surface-container-low border-b-2 border-on-surface flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold px-1.5 py-0.5 bg-surface-container-lowest border border-on-surface">
+              CARREL #39
+            </span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-[10px] font-bold text-tertiary uppercase">PROCTOR ACTIVE</span>
+</div>
+</div>
+<div class="relative h-44 bg-inverse-surface border-b-2 border-on-surface overflow-hidden flex flex-col justify-between p-3 text-inverse-on-surface">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+<div class="flex justify-between items-start z-10">
+<span class="px-2 py-0.5 bg-on-surface/80 text-surface font-mono text-[11px] font-bold border border-outline">
+                03h 58m VERIFIED
+              </span>
+<span class="px-1.5 py-0.5 bg-tertiary text-on-tertiary font-label-sm text-[9px] font-bold uppercase">
+                CAM SYNC
+              </span>
+</div>
+<div class="z-10 flex items-end justify-between gap-1 h-8 opacity-75 px-4">
+<div class="w-1.5 bg-tertiary-fixed h-4"></div>
+<div class="w-1.5 bg-tertiary-fixed h-3"></div>
+<div class="w-1.5 bg-tertiary-fixed h-5"></div>
+<div class="w-1.5 bg-tertiary-fixed h-4"></div>
+<div class="w-1.5 bg-tertiary-fixed h-6"></div>
+<div class="w-1.5 bg-tertiary-fixed h-2"></div>
+<div class="w-1.5 bg-tertiary-fixed h-5"></div>
+</div>
+<div class="z-10 font-label-sm text-[10px] text-surface-variant flex items-center justify-between">
+<span>LATENCY: 11ms</span>
+<span class="font-mono">FPS: 30 LOCK</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-tertiary-fixed border border-on-surface flex items-center justify-center font-bold text-[11px]">
+                  PM
+                </div>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface">@priyanshu_m</div>
+<div class="font-body-sm text-[11px] text-primary font-semibold">Maths // Probability &amp; Stats</div>
+</div>
+</div>
+<span class="font-label-sm text-[10px] bg-surface-container px-2 py-0.5 border border-on-surface font-bold">
+                1st Session
+              </span>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-on-surface/10 font-label-sm text-[10px] text-on-surface-variant">
+<span>MIC MUTED [HARDWARE]</span>
+<span class="text-tertiary font-bold">STREAK: 03 DAYS</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- ==================== WEB FOOTER (Shared Component Source of Truth) ==================== -->
+<footer class="bg-surface-container-low border-t-2 border-on-surface [box-shadow:0px_-2px_0px_#131b2e] mt-auto">
+<div class="w-full px-space-xl py-space-xl max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-space-lg">
+<!-- Left: Logo & Legal Disclaimer -->
+<div class="flex flex-col gap-2 text-center md:text-left">
+<div class="flex items-center justify-center md:justify-start gap-2">
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface">Bookie Academics</span>
+<span class="px-2 py-0.5 bg-secondary-container border border-on-surface font-label-sm text-label-sm font-bold">EST. 2024</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+          © 2025 Bookie Academics. Rigorous desks for JEE Adv &amp; NEET-UG aspirants. Built with precision &amp; anti-burnout pledge.
+        </p>
+</div>
+<!-- Right: Mandated Anchor Links -->
+<div class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-150 active:opacity-80" href="#">Honor Code</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-150 active:opacity-80" href="#">Syllabus Breakdown</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-150 active:opacity-80" href="#">PYQ Archive</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-150 active:opacity-80" href="#">Formula Sheets</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-150 active:opacity-80" href="#">Anti-Burnout Protocol</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-150 active:opacity-80" href="#">System Status</a>
+</div>
+</div>
+</footer>
+<!-- Micro-Interactions Script for Study Room Spacebar Pause & Audio simulation -->
+<script>
+    // Lightweight keyboard handler for Study Carrel immersion
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+        const pauseBtn = document.querySelector('button:has(.material-symbols-outlined[data-icon="pause_circle"])');
+        if (pauseBtn) {
+          pauseBtn.classList.toggle('bg-error');
+          pauseBtn.classList.toggle('bg-primary');
+        }
+      }
+    });
+  </script>
+</body></html>
