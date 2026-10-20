@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Bell, MessagesSquare, Users, LogOut, ShieldCheck, Library, Megaphone, LayoutGrid, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAdminSession } from '@/hooks/useAdminSession';
+import { cn } from '@/lib/utils';
 
 const NAV = [
   { to: '/admin', label: 'Overview', icon: LayoutDashboard, exact: true },
@@ -21,35 +22,57 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const loc = useLocation();
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border/40 bg-background/80 backdrop-blur-xl sticky top-0 z-30">
+    <div className="min-h-screen bg-background text-foreground pb-20">
+      <header className="border-b-2 border-border bg-card sticky top-0 z-30 shadow-[0_2px_0px_var(--desk-border)]">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4">
-          <Link to="/admin" className="flex items-center gap-2 font-display font-bold">
+          <Link to="/admin" className="flex items-center gap-2 font-display font-bold text-foreground">
             <ShieldCheck className="h-4 w-4 text-primary" />
-            Bookie Admin
+            <span>Bookie Admin Desk</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1.5">
             {NAV.map(n => {
               const active = n.exact ? loc.pathname === n.to : loc.pathname.startsWith(n.to);
               const Icon = n.icon;
               return (
-                <Link key={n.to} to={n.to}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors ${active ? 'bg-primary/10 text-foreground border border-primary/30' : 'text-muted-foreground hover:text-foreground'}`}>
+                <Link
+                  key={n.to}
+                  to={n.to}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all border",
+                    active
+                      ? "bg-foreground text-background border-foreground shadow-[2px_2px_0px_var(--desk-border)]"
+                      : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted"
+                  )}
+                >
                   <Icon className="h-3.5 w-3.5" /> {n.label}
                 </Link>
               );
             })}
           </nav>
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={async () => { await logout(); navigate('/'); }}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 font-mono text-xs border-2 border-border shadow-[2px_2px_0px_var(--desk-border)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+            onClick={async () => { await logout(); navigate('/'); }}
+          >
             <LogOut className="h-3.5 w-3.5" /> Sign out
           </Button>
         </div>
-        <div className="md:hidden border-t border-border/40 overflow-x-auto">
-          <div className="container mx-auto px-4 flex gap-1 py-2">
+        <div className="md:hidden border-t border-border overflow-x-auto no-scrollbar">
+          <div className="container mx-auto px-4 flex gap-1.5 py-2">
             {NAV.map(n => {
               const active = n.exact ? loc.pathname === n.to : loc.pathname.startsWith(n.to);
               return (
-                <Link key={n.to} to={n.to} className={`shrink-0 text-xs px-3 py-1.5 rounded-full ${active ? 'bg-primary/10 text-foreground border border-primary/30' : 'text-muted-foreground border border-transparent'}`}>
+                <Link
+                  key={n.to}
+                  to={n.to}
+                  className={cn(
+                    "shrink-0 text-xs px-2.5 py-1 rounded-md font-mono font-bold border",
+                    active
+                      ? "bg-foreground text-background border-foreground shadow-[1px_1px_0px_var(--desk-border)]"
+                      : "text-muted-foreground border-transparent hover:bg-muted"
+                  )}
+                >
                   {n.label}
                 </Link>
               );
@@ -58,7 +81,9 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
         </div>
       </header>
       <main className="container mx-auto px-4 py-8">
-        <h1 className="font-display text-2xl font-bold mb-6">{title}</h1>
+        <div className="mb-6">
+          <h1 className="font-display text-2xl font-black text-foreground">{title}</h1>
+        </div>
         {children}
       </main>
     </div>
