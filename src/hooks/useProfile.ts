@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, createContext, useContext, useMemo, type ReactNode, createElement } from 'react';
+import { useState, useEffect, useCallback, useRef, createContext, useContext, useMemo, type ReactNode, createElement } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
 import { safeRandomUUID } from '@/lib/utils';
@@ -109,7 +109,15 @@ function useProfileInternal() {
     writeCache(next);
   }, [deviceId]);
 
-  const loadProfile = useCallback(async (sess: Session | null) => {
+  const lastLoadedSessionKeyRef = useRef<string | null>(null);
+
+  const loadProfile = useCallback(async (sess: Session | null, force = false) => {
+    const sessionKey = sess?.user?.id || `guest_${deviceId}`;
+    if (!force && lastLoadedSessionKeyRef.current === sessionKey) {
+      return;
+    }
+    lastLoadedSessionKeyRef.current = sessionKey;
+
     try {
       if (sess?.user) {
         if (deviceId) {
@@ -225,21 +233,18 @@ function useProfileInternal() {
       setSession(s);
       setUser(s?.user ?? null);
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+        lastLoadedSessionKeyRef.current = null;
         setProfile(null);
         setLoading(true);
+        loadProfile(s, true);
+      } else {
+        loadProfile(s, false);
       }
-      setTimeout(() => loadProfile(s), 0);
-    });
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s);
-      setUser(s?.user ?? null);
-      loadProfile(s);
     });
     return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loadProfile, setProfile]);
 
-  const refetch = useCallback(() => loadProfile(session), [loadProfile, session]);
+  const refetch = useCallback(() => loadProfile(session, true), [loadProfile, session]);
 
   const saveProfile = useCallback(async (input: {
     display_name: string;

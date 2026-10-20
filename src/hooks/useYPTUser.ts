@@ -50,10 +50,22 @@ export function useYPTUser() {
         const initialYear = profYear || 'JEE 2027';
         const { data: created } = await (supabase as any)
           .from('ypt_users')
-          .insert({ device_id: deviceId, name: initialName, jee_focus_year: initialYear, name_change_history: [] })
+          .upsert(
+            { device_id: deviceId, name: initialName, jee_focus_year: initialYear, name_change_history: [] },
+            { onConflict: 'device_id', ignoreDuplicates: true }
+          )
           .select()
-          .single();
-        if (created) data = created;
+          .maybeSingle();
+        if (created) {
+          data = created;
+        } else {
+          const { data: existing } = await (supabase as any)
+            .from('ypt_users')
+            .select('*')
+            .eq('device_id', deviceId)
+            .maybeSingle();
+          if (existing) data = existing;
+        }
       } catch {}
     } else if (profName && (!data.name || data.name.trim().toLowerCase() === 'aspirant')) {
       // Recover real name from profiles if ypt_users had placeholder
@@ -84,9 +96,12 @@ export function useYPTUser() {
     const cleanYear = jeeYear.trim() || 'JEE 2027';
     const { data, error } = await (supabase as any)
       .from('ypt_users')
-      .insert({ device_id: deviceId, name: trimmed, jee_focus_year: cleanYear, name_change_history: [] })
+      .upsert(
+        { device_id: deviceId, name: trimmed, jee_focus_year: cleanYear, name_change_history: [] },
+        { onConflict: 'device_id' }
+      )
       .select()
-      .single();
+      .maybeSingle();
     if (!error && data) {
       data.name_change_history = [];
       setUser(data);
