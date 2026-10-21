@@ -214,7 +214,7 @@ export default function Community() {
 
   const [activeCategory, setActiveCategory] = useState<CommunityCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"hot" | "new" | "top">("hot");
+  const [sortBy, setSortBy] = useState<"new" | "hot" | "top">("new");
   const [filterMode, setFilterMode] = useState<"all" | "bookmarks" | "mine">("all");
   const [bookmarks, setBookmarks] = useState<Set<string>>(() => {
     try {
@@ -282,7 +282,20 @@ export default function Community() {
       return rxCount * 2 + comments * 3;
     };
 
-    if (sortBy === "hot") {
+    if (sortBy === "new") {
+      // STRICT CHRONOLOGICAL: Newest posts at the top, older cascade downward
+      result.sort((a, b) => {
+        const timeA = new Date(a.created_at).getTime() || 0;
+        const timeB = new Date(b.created_at).getTime() || 0;
+        return timeB - timeA;
+      });
+    } else if (sortBy === "top") {
+      result.sort((a, b) => {
+        const diff = getEngagementScore(b) - getEngagementScore(a);
+        if (diff !== 0) return diff;
+        return (new Date(b.created_at).getTime() || 0) - (new Date(a.created_at).getTime() || 0);
+      });
+    } else if (sortBy === "hot") {
       const dayMs = 48 * 60 * 60 * 1000;
       result.sort((a, b) => {
         const ageA = Math.max(1, (Date.now() - new Date(a.created_at).getTime()) / dayMs);
@@ -291,10 +304,6 @@ export default function Community() {
         const scoreB = (getEngagementScore(b) + 1) / Math.pow(ageB, 1.2);
         return scoreB - scoreA;
       });
-    } else if (sortBy === "top") {
-      result.sort((a, b) => getEngagementScore(b) - getEngagementScore(a));
-    } else {
-      result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     }
 
     return result;
@@ -331,14 +340,14 @@ export default function Community() {
               </Button>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                  <h1 className="text-xl md:text-2xl font-ruling font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
                     <span>Aspirant Lounge</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full font-bold bg-primary/10 text-primary border border-primary/20">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-brand-blue dark:text-blue-400 border border-blue-200 dark:border-blue-800">
                       r/Bookieshere
                     </span>
                   </h1>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="font-editorial italic text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                   Connect, share memes, compare mock tests, study grind & roadmaps
                 </p>
               </div>
@@ -371,28 +380,41 @@ export default function Community() {
             </div>
           </div>
 
-          {/* Mobile Horizontal Sub-community Chips */}
-          <div className="lg:hidden border-t border-slate-100 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/70 overflow-x-auto no-scrollbar">
-            <div className="px-4 py-2 flex items-center gap-1.5">
+          {/* Horizontal Sub-community Chips (Visible on all screens with smooth hidden scrollbar) */}
+          <div className="relative border-t border-slate-100 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+            {/* Left Edge Subtle Fade */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/90 dark:from-slate-900/90 to-transparent z-10" />
+            
+            <div 
+              onWheel={(e) => {
+                if (e.deltaY !== 0) {
+                  e.currentTarget.scrollLeft += e.deltaY * 0.8;
+                }
+              }}
+              className="max-w-4xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth"
+            >
               {CATEGORIES.map(cat => {
                 const isActive = activeCategory === cat.id;
                 const count = cat.id === "all" ? posts.length : (categoryCounts.get(cat.id) || 0);
                 return (
                   <button
                     key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
+                    onClick={() => {
+                      setActiveCategory(cat.id);
+                      setFilterMode("all");
+                    }}
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-all shrink-0",
+                      "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-heading font-semibold whitespace-nowrap border transition-all shrink-0",
                       isActive
                         ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 shadow-xs"
-                        : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300"
+                        : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/70"
                     )}
                   >
                     <span>{cat.icon}</span>
                     <span>{cat.label}</span>
                     {count > 0 && (
                       <span className={cn(
-                        "text-[10px] px-1.5 py-0.2 rounded-full font-bold",
+                        "text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold",
                         isActive ? "bg-white/20 text-white dark:text-slate-900 dark:bg-slate-900/20" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
                       )}>
                         {count}
@@ -402,174 +424,94 @@ export default function Community() {
                 );
               })}
             </div>
+
+            {/* Right Edge Subtle Fade */}
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white/90 dark:from-slate-900/90 to-transparent z-10" />
           </div>
         </div>
 
-        {/* 3-Column Reddit Style Layout */}
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            
-            {/* Left Sidebar: Sub-Community Directory (Desktop) */}
-            <aside className="hidden lg:block lg:col-span-3 sticky top-24 space-y-4">
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-3.5 shadow-xs">
-                <div className="flex items-center justify-between px-2.5 py-1.5 mb-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    Communities & Flairs
-                  </span>
-                  <Compass className="h-3.5 w-3.5 text-slate-400" />
-                </div>
+        {/* Focused Central Content Layout (De-cluttered per Stitch Spec) */}
+        <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-5 flex-grow">
+          {/* Guest Upgrade Encouragement Banner */}
+          <GuestUpgradeBanner feature="community" />
 
-                <div className="space-y-1">
-                  {CATEGORIES.map(cat => {
-                    const isActive = activeCategory === cat.id;
-                    const count = cat.id === "all" ? posts.length : (categoryCounts.get(cat.id) || 0);
-                    return (
-                      <button
-                        key={cat.id}
-                        onClick={() => {
-                          setActiveCategory(cat.id);
-                          setFilterMode("all");
-                        }}
-                        className={cn(
-                          "w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all text-left",
-                          isActive
-                            ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs"
-                            : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/70 hover:text-slate-900 dark:hover:text-white"
-                        )}
-                      >
-                        <div className="flex items-center gap-2.5 truncate">
-                          <span className="text-base">{cat.icon}</span>
-                          <span className="truncate">{cat.label}</span>
-                        </div>
-                        {count > 0 && (
-                          <span className={cn(
-                            "text-[10px] px-2 py-0.5 rounded-full font-bold",
-                            isActive ? "bg-white/20 text-white dark:text-slate-900 dark:bg-slate-900/20" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
-                          )}>
-                            {count}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+          {/* Quick Post Composer Input Card */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-4 sm:p-5 shadow-xs">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10 border border-slate-200 dark:border-slate-800 shrink-0">
+                <AvatarImage src={profile?.avatar_url || ""} />
+                <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
+                  {((profile?.display_name || "A")?.[0] || "A").toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <button
+                onClick={() => openNewPostWithCat(activeCategory)}
+                className="flex-1 bg-slate-50 hover:bg-slate-100/80 dark:bg-slate-800/60 dark:hover:bg-slate-800 text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm text-slate-500 dark:text-slate-400 transition-colors border border-slate-200 dark:border-slate-800/80 truncate font-body"
+              >
+                Share a strategy, ask a doubt, post a meme or mock score...
+              </button>
+              <Button
+                onClick={() => openNewPostWithCat(activeCategory)}
+                size="sm"
+                className="rounded-xl gap-1.5 px-4 h-9 shadow-xs shrink-0 font-heading font-bold"
+              >
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Post</span>
+              </Button>
+            </div>
 
-              {/* Quick Navigation Cards */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-xs space-y-3">
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                  Quick Filters
-                </h4>
-                <div className="space-y-1.5">
-                  <button
-                    onClick={() => setFilterMode("all")}
-                    className={cn(
-                      "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-colors",
-                      filterMode === "all" ? "bg-primary/10 text-primary font-bold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
-                    )}
-                  >
-                    <Compass className="h-4 w-4" />
-                    <span>All Feed Topics</span>
-                  </button>
-                  <button
-                    onClick={() => setFilterMode("bookmarks")}
-                    className={cn(
-                      "w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-left transition-colors",
-                      filterMode === "bookmarks" ? "bg-primary/10 text-primary font-bold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
-                    )}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Bookmark className="h-4 w-4" />
-                      <span>Saved Bookmarks</span>
-                    </div>
-                    {bookmarks.size > 0 && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-primary/10 text-primary">
-                        {bookmarks.size}
-                      </span>
-                    )}
-                  </button>
-                  {profile && (
-                    <button
-                      onClick={() => setFilterMode("mine")}
-                      className={cn(
-                        "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-colors",
-                        filterMode === "mine" ? "bg-primary/10 text-primary font-bold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
-                      )}
-                    >
-                      <Award className="h-4 w-4" />
-                      <span>My Discussions</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            </aside>
-
-            {/* Center Column: Main Community Stream (lg:col-span-6) */}
-            <main className="lg:col-span-6 space-y-4">
-              {/* Guest Upgrade Encouragement Banner */}
-              <GuestUpgradeBanner feature="community" />
-
-              {/* Quick Post Composer Input Card */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-xs">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10 border border-slate-200 dark:border-slate-800 shrink-0">
-                    <AvatarImage src={profile?.avatar_url || ""} />
-                    <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
-                      {((profile?.display_name || "A")?.[0] || "A").toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <button
-                    onClick={() => openNewPostWithCat(activeCategory)}
-                    className="flex-1 bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-800 text-left px-4 py-2.5 rounded-full text-xs text-slate-500 dark:text-slate-400 transition-colors border border-transparent hover:border-slate-300 dark:hover:border-slate-700 truncate"
-                  >
-                    Share a strategy, ask a doubt, post a meme or mock score...
-                  </button>
-                  <Button
-                    onClick={() => openNewPostWithCat(activeCategory)}
-                    size="sm"
-                    className="rounded-full gap-1.5 px-4 h-9 shadow-xs shrink-0 font-bold"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span className="hidden sm:inline">Post</span>
-                  </Button>
-                </div>
-
-                {/* Quick Shortcuts */}
-                <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 overflow-x-auto text-xs text-slate-500">
-                  <button
-                    onClick={() => openNewPostWithCat("memes")}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-                  >
-                    <Laugh className="h-3.5 w-3.5 text-pink-500" />
-                    <span>Meme / Joke</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("strategy")}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-                  >
-                    <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
-                    <span>Study Strategy</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("mocks")}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-                  >
-                    <TrendingUp className="h-3.5 w-3.5 text-purple-500" />
-                    <span>Mock Scores</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("physics")}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-                  >
-                    <HelpCircle className="h-3.5 w-3.5 text-blue-500" />
-                    <span>Ask Doubt</span>
-                  </button>
-                </div>
-              </div>
+            {/* Quick Category Triggers (Stitch Screen 4 Pill Chips) */}
+            <div className="flex items-center flex-wrap gap-2 pt-2.5 mt-3 border-t border-slate-100 dark:border-slate-800/80 text-xs">
+              <span className="text-slate-400 dark:text-slate-500 text-[11px] font-heading font-semibold uppercase tracking-wider mr-1">
+                Quick Tag:
+              </span>
+              <button
+                onClick={() => openNewPostWithCat("memes")}
+                className="px-3 py-1.5 rounded-xl bg-pink-50 dark:bg-pink-950/40 hover:bg-pink-100 dark:hover:bg-pink-900/60 text-pink-700 dark:text-pink-300 font-heading text-xs font-semibold border border-pink-200/70 dark:border-pink-800/60 transition-all active:scale-95 flex items-center gap-1.5 shadow-2xs"
+              >
+                <span>🎭</span>
+                <span>Meme / Joke</span>
+              </button>
+              <button
+                onClick={() => openNewPostWithCat("strategy")}
+                className="px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 font-heading text-xs font-semibold border border-amber-200/70 dark:border-amber-800/60 transition-all active:scale-95 flex items-center gap-1.5 shadow-2xs"
+              >
+                <span>💡</span>
+                <span>Study Strategy</span>
+              </button>
+              <button
+                onClick={() => openNewPostWithCat("mocks")}
+                className="px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 dark:hover:bg-purple-900/60 text-purple-800 dark:text-purple-300 font-heading text-xs font-semibold border border-purple-200/70 dark:border-purple-800/60 transition-all active:scale-95 flex items-center gap-1.5 shadow-2xs"
+              >
+                <span>📊</span>
+                <span>Mock Scores</span>
+              </button>
+              <button
+                onClick={() => openNewPostWithCat("physics")}
+                className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-800 dark:text-blue-300 font-heading text-xs font-semibold border border-blue-200/70 dark:border-blue-800/60 transition-all active:scale-95 flex items-center gap-1.5 shadow-2xs"
+              >
+                <span>❓</span>
+                <span>Ask Doubt</span>
+              </button>
+            </div>
+          </div>
 
               {/* Reddit-Style Feed Controls: Sort Tabs + Search */}
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-2.5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-2.5">
                 <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl w-full sm:w-auto">
+                  <button
+                    onClick={() => setSortBy("new")}
+                    className={cn(
+                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                      sortBy === "new"
+                        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
+                        : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                    )}
+                  >
+                    <Clock className={cn("h-3.5 w-3.5", sortBy === "new" ? "text-blue-500" : "")} />
+                    <span>Newest</span>
+                  </button>
+
                   <button
                     onClick={() => setSortBy("hot")}
                     className={cn(
@@ -581,19 +523,6 @@ export default function Community() {
                   >
                     <Flame className={cn("h-3.5 w-3.5", sortBy === "hot" ? "text-rose-500" : "")} />
                     <span>Hot</span>
-                  </button>
-
-                  <button
-                    onClick={() => setSortBy("new")}
-                    className={cn(
-                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
-                      sortBy === "new"
-                        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
-                        : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                    )}
-                  >
-                    <Clock className={cn("h-3.5 w-3.5", sortBy === "new" ? "text-blue-500" : "")} />
-                    <span>New</span>
                   </button>
 
                   <button
@@ -679,143 +608,7 @@ export default function Community() {
                   ))}
                 </div>
               )}
-            </main>
-
-            {/* Right Sidebar: About Lounge & Rules (lg:col-span-3 Desktop) */}
-            <aside className="hidden lg:block lg:col-span-3 sticky top-24 space-y-4">
-              {/* Guest Upgrade Widget in Lounge Sidebar */}
-              {(!user || profile?.account_type === "guest") && (
-                <div className="bg-gradient-to-br from-blue-600/10 via-indigo-600/10 to-primary/10 rounded-2xl border-2 border-blue-500/30 p-4 shadow-xs space-y-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="p-1.5 rounded-lg bg-blue-500 text-white text-xs font-bold">⚡</span>
-                    <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider font-display">
-                      Unlock Full Community
-                    </h4>
-                  </div>
-                  <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-                    You're browsing as Guest. Upgrade to Google (1-Click) to post questions, solve doubts, earn flairs, and preserve your study progress.
-                  </p>
-                  <Button
-                    size="sm"
-                    onClick={() => setUpgradeModalOpen(true)}
-                    className="w-full text-xs font-bold rounded-xl h-8 gap-1.5"
-                  >
-                    <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-                    <span>Upgrade to Google</span>
-                  </Button>
-                </div>
-              )}
-
-              {/* About Box */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-xs space-y-3.5">
-                <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="p-2 rounded-xl bg-primary/10 text-primary font-bold">
-                    <Sparkles className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">About the Lounge</h3>
-                    <p className="text-[11px] text-slate-500">Aspirant Community Hub</p>
-                  </div>
-                  <p className="text-[11px] font-mono text-slate-500 font-bold">
-                    ⚡ Aspirants Only • Zero Fluff
-                  </p>
-                </div>
-
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  The unfiltered home for JEE & NEET warriors. Free from toxic coaching PR, built for real students sharing strategies, mock marks, memes & support.
-                </p>
-
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800/80">
-                    <div className="text-base font-extrabold text-slate-900 dark:text-white">{posts.length}</div>
-                    <div className="text-[10px] text-slate-500 font-medium">Discussions</div>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800/80">
-                    <div className="text-base font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <span>Online</span>
-                    </div>
-                    <div className="text-[10px] text-slate-500 font-medium">Peers Live</div>
-                  </div>
-                </div>
-
-                <Button
-                  onClick={() => openNewPostWithCat(activeCategory)}
-                  className="w-full text-xs font-bold rounded-xl h-9"
-                >
-                  <Plus className="h-3.5 w-3.5 mr-1.5" /> Start Discussion
-                </Button>
-              </div>
-
-              {/* Community Rules Box */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-xs space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                  <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                  <span>Community Rules</span>
-                </div>
-                <ul className="text-xs text-slate-600 dark:text-slate-400 space-y-2 leading-relaxed">
-                  <li className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 dark:text-white">1.</span>
-                    <span>Be polite & helpful to fellow aspirants preparing for exams.</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 dark:text-white">2.</span>
-                    <span>Use relevant flairs so questions reach the right peers.</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 dark:text-white">3.</span>
-                    <span>No promotion of paid leaks, abuse, or spam links.</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 dark:text-white">4.</span>
-                    <span>Protect your mental health — take breaks from the screen.</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Quick Links & Study Rooms */}
-              <div className="space-y-2">
-                <Link
-                  to="/ypt"
-                  className="group p-3.5 rounded-2xl border border-blue-200/80 dark:border-blue-900/60 bg-gradient-to-br from-blue-50/50 to-indigo-50/30 dark:from-blue-950/20 dark:to-indigo-950/20 hover:border-blue-300 dark:hover:border-blue-800 transition-all flex items-center gap-3"
-                >
-                  <div className="p-2 rounded-xl bg-blue-500 text-white shrink-0 group-hover:scale-105 transition-transform">
-                    <Users className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1">
-                      <span>YPT Virtual Rooms</span>
-                      <ExternalLink className="h-3 w-3 text-slate-400" />
-                    </h4>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
-                      Live timer study sessions with fellow aspirants
-                    </p>
-                  </div>
-                </Link>
-
-                <a
-                  href="https://t.me/bookieshere"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group p-3.5 rounded-2xl border border-sky-200/80 dark:border-sky-900/60 bg-gradient-to-br from-sky-50/50 to-cyan-50/30 dark:from-sky-950/20 dark:to-cyan-950/20 hover:border-sky-300 dark:hover:border-sky-800 transition-all flex items-center gap-3"
-                >
-                  <div className="p-2 rounded-xl bg-sky-500 text-white shrink-0 group-hover:scale-105 transition-transform">
-                    <Send className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1">
-                      <span>Official Telegram</span>
-                      <ExternalLink className="h-3 w-3 text-slate-400" />
-                    </h4>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
-                      Daily free PDF notes, formula sheets & updates
-                    </p>
-                  </div>
-                </a>
-              </div>
-            </aside>
-          </div>
-        </div>
+        </main>
 
         {/* Create Post Dialog */}
         <NewPostDialog
@@ -920,17 +713,17 @@ function PostCard({
 
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="font-bold text-sm text-slate-900 dark:text-white truncate">
+              <span className="font-heading font-bold text-sm text-slate-900 dark:text-white truncate">
                 {post.author_name || post.author?.display_name || "Anonymous Aspirant"}
               </span>
               {post.user_id && (
                 <BadgeCheck className="h-3.5 w-3.5 text-blue-500 inline-block shrink-0" />
               )}
-              <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-bold border ml-0.5", category.badge)}>
+              <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold border ml-0.5", category.badge)}>
                 {category.icon} {category.label}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
+            <p className="font-mono text-[11px] text-slate-400 mt-0.5">
               {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
             </p>
           </div>
@@ -977,10 +770,10 @@ function PostCard({
 
       {/* Post Body Title & Content */}
       <div className="space-y-1.5">
-        <h2 className="text-base font-bold text-slate-900 dark:text-white leading-snug">
+        <h2 className="text-base md:text-lg font-heading font-bold text-slate-900 dark:text-white leading-snug tracking-tight">
           {post.title || post.subject || "Untitled Discussion"}
         </h2>
-        <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
+        <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed font-body">
           {post.content || post.body || ""}
         </p>
 

@@ -1,0 +1,914 @@
+<!DOCTYPE html><html class="h-full bg-slate-50" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BOOKIE • Materials Library | Curated for JEE Advanced 2027</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Cabinet Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            amberSoft: '#fef3c7',
+            ink: '#0b1120',
+          },
+          boxShadow: {
+            'brutal-sm': '2px 2px 0px 0px rgba(15, 23, 42, 0.9)',
+            'brutal': '3.5px 3.5px 0px 0px rgba(15, 23, 42, 0.9)',
+            'brutal-lg': '6px 6px 0px 0px rgba(15, 23, 42, 0.9)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Technical Grid Background & Utilities -->
+<style data-purpose="background-patterns">
+    /* Subtle engineer/blueprint graph paper backdrop */
+    .blueprint-grid {
+      background-color: #f8fafc;
+      background-image: 
+        linear-gradient(to right, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .blueprint-grid-fine {
+      background-image: 
+        radial-gradient(rgba(100, 116, 139, 0.2) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+  </style>
+<style data-purpose="custom-decorations">
+    /* Subtle masking tape badge visual */
+    .masking-tape {
+      background-color: rgba(254, 240, 138, 0.85);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transform: rotate(-1.5deg);
+    }
+    /* Custom scrollbar styling for sleek catalog look */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="blueprint-grid min-h-screen text-slate-800 antialiased selection:bg-brand-500 selection:text-white flex flex-col">
+<!-- BEGIN: NavigationBar -->
+<header class="sticky top-0 z-40 w-full border-b border-slate-900/10 bg-white/90 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<!-- Brand Logo & Main Links -->
+<div class="flex items-center space-x-8">
+<!-- Logo -->
+<a class="flex items-center gap-2 group transition-transform active:scale-95" data-purpose="brand-logo" href="#">
+<div class="w-9 h-9 rounded-lg bg-slate-900 border-2 border-slate-900 flex items-center justify-center text-white shadow-brutal-sm group-hover:bg-brand-600 transition-colors">
+<!-- Book Icon -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="font-display font-black text-2xl tracking-tight text-slate-900">BOOKIE<span class="text-brand-600">.</span></span>
+</a>
+<!-- Desktop Navigation Items -->
+<nav class="hidden lg:flex items-center space-x-1" data-purpose="main-menu">
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Home
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-bold bg-brand-50 text-brand-700 border border-brand-200/60 shadow-sm flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Materials
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Tests
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-2" href="#">
+<span class="flex items-center gap-1.5">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              YPT
+            </span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-800 tracking-wider animate-pulse">LIVE</span>
+</a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Portals
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Community
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Support
+          </a>
+</nav>
+</div>
+<!-- User Stats & Quick Utilities -->
+<div class="flex items-center space-x-3">
+<!-- Chai Button -->
+<button class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-xs font-bold hover:bg-amber-100 transition-colors shadow-sm">
+<span class="">☕ Chai</span>
+</button>
+<!-- Notification Bell -->
+<button aria-label="Notifications" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors relative">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="absolute top-2 right-2 w-2 h-2 bg-brand-600 rounded-full"></span>
+</button>
+<!-- Theme Toggle -->
+<button aria-label="Toggle Theme" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Profile Streak Badge -->
+<div class="flex items-center gap-2 pl-2 border-l border-slate-200" data-purpose="streak-pill">
+<div class="w-8 h-8 rounded-full bg-slate-900 text-white font-mono font-bold text-xs flex items-center justify-center border-2 border-slate-900 shadow-brutal-sm">
+            0
+          </div>
+<span class="text-xs font-mono font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+            0d🔥
+          </span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: NavigationBar -->
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+<!-- BEGIN: HeroHeaderSection -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" data-purpose="hero-overview">
+<!-- Left Column: Title, Subtitle, Guarantees -->
+<div class="lg:col-span-7 space-y-5">
+<!-- Category Tag -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white border border-slate-900/15 font-mono text-[11px] font-bold tracking-wider text-slate-700 shadow-brutal-sm">
+<span class="w-2 h-2 rounded-full bg-brand-600"></span>
+          STUDY ARSENAL <span class="text-slate-400">//</span> CURATED FOR JEE ADVANCED 2027
+        </div>
+<!-- Main Display Headline -->
+<div class="space-y-1">
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-black font-display tracking-tight text-slate-900 leading-[1.08] uppercase">
+            MATERIALS<br>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-brand-600 to-indigo-600 underline decoration-slate-900 decoration-wavy decoration-2 underline-offset-8">LIBRARY.</span>
+</h1>
+</div>
+<!-- Subtitle -->
+<p class="font-editorial text-lg sm:text-xl text-slate-700 max-w-2xl leading-relaxed font-normal tracking-normal">
+          Modules, books, PYQs, test series and reference works — every single resource hand-picked, zero filler, organized for serious rankers <span class="text-brand-700 font-semibold">without the emotional damage.</span>
+        </p>
+<!-- Trust Badges & Policies -->
+<div class="flex flex-wrap items-center gap-3 pt-1">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50/80 border border-emerald-300 text-emerald-900 text-xs font-medium">
+<svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">External verified drives • BOOKIE does not host files • Pure signal, zero rot</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 border border-amber-300/80 text-amber-950 font-mono text-xs font-semibold">
+<svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Clean OCR PDF Only
+          </div>
+</div>
+</div>
+<!-- Right Column: Library Snapshot Tech Card -->
+<div class="lg:col-span-5 relative" data-purpose="library-snapshot-card">
+<!-- Masking tape decoration on top -->
+<div class="absolute -top-3.5 left-1/2 -translate-x-1/2 w-32 h-6 masking-tape z-20 border-t border-b border-amber-300/40 opacity-90 pointer-events-none"></div>
+<div class="bg-white border-2 border-slate-900 rounded-xl p-5 shadow-brutal relative z-10">
+<!-- Card Header -->
+<div class="flex items-center justify-between pb-3 border-b border-slate-100">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-brand-600 animate-ping"></span>
+<span class="font-mono text-xs font-extrabold uppercase tracking-widest text-slate-900">LIBRARY SNAPSHOT</span>
+</div>
+<span class="font-mono text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">v2026.04</span>
+</div>
+<!-- Total Counter -->
+<div class="py-4">
+<div class="flex items-baseline gap-2">
+<span class="text-4xl sm:text-5xl font-black font-display tracking-tight text-slate-900">190+</span>
+<span class="font-mono text-xs font-bold text-slate-500 uppercase tracking-wider">TOTAL COMBAT-READY RESOURCES</span>
+</div>
+</div>
+<!-- Segmented Progress Distribution Bar -->
+<div class="space-y-2">
+<div class="w-full h-3 rounded-md overflow-hidden bg-slate-100 flex p-0.5 border border-slate-200">
+<div class="h-full bg-indigo-500 rounded-l-sm" style="width: 25%" title="Physics (40)"></div>
+<div class="h-full bg-emerald-500 mx-0.5" style="width: 28%" title="Chemistry (42)"></div>
+<div class="h-full bg-amber-400 mx-0.5" style="width: 20%" title="Math (30)"></div>
+<div class="h-full bg-slate-700 rounded-r-sm" style="width: 27%" title="PCM Mix (78)"></div>
+</div>
+<!-- Distribution Legend Items -->
+<div class="grid grid-cols-3 gap-2 pt-2">
+<div class="bg-indigo-50/70 border border-indigo-200/80 rounded p-2 text-center">
+<span class="block text-[10px] font-mono font-bold text-indigo-700 uppercase">❄ PHY</span>
+<span class="text-xs font-bold text-slate-900 font-mono">40 Items</span>
+</div>
+<div class="bg-emerald-50/70 border border-emerald-200/80 rounded p-2 text-center">
+<span class="block text-[10px] font-mono font-bold text-emerald-700 uppercase">🧪 CHEM</span>
+<span class="text-xs font-bold text-slate-900 font-mono">42 Items</span>
+</div>
+<div class="bg-amber-50/70 border border-amber-200/80 rounded p-2 text-center">
+<span class="block text-[10px] font-mono font-bold text-amber-800 uppercase">Σ MATH</span>
+<span class="text-xs font-bold text-slate-900 font-mono">30 Items</span>
+</div>
+</div>
+</div>
+<!-- Bottom Micro-Notice -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-medium text-slate-600">
+<svg class="w-4 h-4 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class=""><strong class="font-semibold text-slate-900">Strict Curation:</strong> No 800-page useless PDFs allowed.</span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: HeroHeaderSection -->
+<!-- BEGIN: SearchAndQuickFilters -->
+<section class="space-y-3" data-purpose="search-and-controls">
+<!-- Wide Modern Search Bar -->
+<div class="relative bg-white rounded-xl border-2 border-slate-900 p-1.5 shadow-brutal flex items-center transition-all focus-within:ring-2 focus-within:ring-brand-500">
+<!-- Search Icon -->
+<div class="pl-3.5 pr-2 text-slate-400">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Input Field -->
+<input class="w-full border-0 focus:ring-0 text-sm sm:text-base font-medium text-slate-900 placeholder:text-slate-400 py-2.5 px-1 bg-transparent" id="resource-search" placeholder="Search modules, PYQs, Allen sheets, Cengage, MS Chouhan, Black Book..." type="text">
+<!-- Shortcut Key Tag -->
+<div class="hidden sm:flex items-center mr-2">
+<kbd class="px-2 py-1 font-mono text-[11px] font-semibold text-slate-500 bg-slate-100 border border-slate-300 rounded shadow-inner">⌘K</kbd>
+</div>
+<!-- Submit Button -->
+<button aria-label="Search Catalog" class="bg-brand-600 hover:bg-brand-700 text-white p-2.5 rounded-lg font-bold flex items-center justify-center transition-transform active:scale-95 shadow-sm">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+<!-- Quick Filter Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar text-xs font-bold" data-purpose="quick-pills">
+<button class="px-3.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-brutal-sm hover:bg-slate-800 transition-colors whitespace-nowrap">
+          All (190)
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-white border border-slate-900/20 text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap flex items-center gap-1">
+<span class="">⚡</span> PYQ Archives
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-white border border-slate-900/20 text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap flex items-center gap-1">
+<span class="">📘</span> Coaching Modules
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-white border border-slate-900/20 text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap flex items-center gap-1">
+<span class="">📚</span> Reference Classics
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-white border border-slate-900/20 text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap flex items-center gap-1">
+<span class="">📝</span> Formula Sheets
+        </button>
+</div>
+</section>
+<!-- END: SearchAndQuickFilters -->
+<!-- BEGIN: CatalogLayout -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
+<!-- LEFT SIDEBAR: Refine Catalog Control Panel -->
+<aside class="lg:col-span-4 xl:col-span-3 space-y-6 lg:sticky lg:top-24" data-purpose="refine-sidebar">
+<div class="bg-white border-2 border-slate-900 rounded-xl p-5 shadow-brutal space-y-6">
+<!-- Sidebar Title -->
+<div class="flex items-center justify-between pb-3 border-b border-slate-200">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+<h2 class="font-headline text-xs font-extrabold uppercase tracking-wider text-slate-900">REFINE CATALOG</h2>
+</div>
+<button class="text-[11px] font-mono text-brand-600 hover:underline">Reset</button>
+</div>
+<!-- Section 1: Subject Stream Interactive Matrix -->
+<div class="space-y-2.5">
+<h3 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">1. SUBJECT STREAM</h3>
+<div class="grid grid-cols-2 gap-2">
+<!-- Physics Pill -->
+<button class="flex items-center justify-between p-2.5 rounded-lg border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-indigo-950 transition-colors group">
+<div class="flex items-center gap-1.5 font-semibold text-xs">
+<span class="w-4 h-4 flex items-center justify-center rounded bg-indigo-200/80 text-[10px]">❄</span>
+<span class="">Phys</span>
+</div>
+<span class="font-mono text-xs font-bold text-indigo-800">40</span>
+</button>
+<!-- Chem Pill -->
+<button class="flex items-center justify-between p-2.5 rounded-lg border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100 text-emerald-950 transition-colors group">
+<div class="flex items-center gap-1.5 font-semibold text-xs">
+<span class="w-4 h-4 flex items-center justify-center rounded bg-emerald-200/80 text-[10px]">🧪</span>
+<span class="">Chem</span>
+</div>
+<span class="font-mono text-xs font-bold text-emerald-800">42</span>
+</button>
+<!-- Math Pill -->
+<button class="flex items-center justify-between p-2.5 rounded-lg border border-amber-200 bg-amber-50/60 hover:bg-amber-100 text-amber-950 transition-colors group">
+<div class="flex items-center gap-1.5 font-semibold text-xs">
+<span class="w-4 h-4 flex items-center justify-center rounded bg-amber-200/80 font-mono text-[10px]">Σ</span>
+<span class="">Math</span>
+</div>
+<span class="font-mono text-xs font-bold text-amber-900">30</span>
+</button>
+<!-- PCM Mix Pill -->
+<button class="flex items-center justify-between p-2.5 rounded-lg border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 transition-colors group">
+<div class="flex items-center gap-1.5 font-semibold text-xs">
+<span class="w-4 h-4 flex items-center justify-center rounded bg-slate-300 text-[10px]">📦</span>
+<span class="">PCM Mix</span>
+</div>
+<span class="font-mono text-xs font-bold text-slate-800">78</span>
+</button>
+</div>
+</div>
+<!-- Section 2: Arsenal Category Checkboxes -->
+<div class="space-y-2.5 pt-2 border-t border-slate-100">
+<h3 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">2. ARSENAL CATEGORY</h3>
+<div class="space-y-1.5 text-xs font-medium">
+<!-- Item -->
+<label class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-50 cursor-pointer">
+<div class="flex items-center gap-2">
+<input class="rounded border-slate-300 text-brand-600 focus:ring-0 w-3.5 h-3.5" type="checkbox">
+<span class="text-slate-800">Coaching Modules</span>
+</div>
+<span class="font-mono text-slate-400 font-semibold">48</span>
+</label>
+<!-- Item -->
+<label class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-50 cursor-pointer">
+<div class="flex items-center gap-2">
+<input checked="" class="rounded border-slate-300 text-brand-600 focus:ring-0 w-3.5 h-3.5" type="checkbox">
+<span class="text-slate-900 font-bold">Books</span>
+</div>
+<span class="font-mono text-slate-600 font-bold">63</span>
+</label>
+<!-- Item -->
+<label class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-50 cursor-pointer">
+<div class="flex items-center gap-2">
+<input class="rounded border-slate-300 text-brand-600 focus:ring-0 w-3.5 h-3.5" type="checkbox">
+<span class="text-slate-800">PYQs</span>
+</div>
+<span class="font-mono text-slate-400 font-semibold">12</span>
+</label>
+<!-- Item -->
+<label class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-50 cursor-pointer">
+<div class="flex items-center gap-2">
+<input class="rounded border-slate-300 text-brand-600 focus:ring-0 w-3.5 h-3.5" type="checkbox">
+<span class="text-slate-800">Crux / Summary</span>
+</div>
+<span class="font-mono text-slate-400 font-semibold">6</span>
+</label>
+<!-- Item -->
+<label class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-50 cursor-pointer">
+<div class="flex items-center gap-2">
+<input class="rounded border-slate-300 text-brand-600 focus:ring-0 w-3.5 h-3.5" type="checkbox">
+<span class="text-slate-800">Test Series</span>
+</div>
+<span class="font-mono text-slate-400 font-semibold">15</span>
+</label>
+<!-- Item -->
+<label class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-50 cursor-pointer">
+<div class="flex items-center gap-2">
+<input class="rounded border-slate-300 text-brand-600 focus:ring-0 w-3.5 h-3.5" type="checkbox">
+<span class="text-slate-800">Notes</span>
+</div>
+<span class="font-mono text-slate-400 font-semibold">39</span>
+</label>
+<!-- Item -->
+<label class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-slate-50 cursor-pointer">
+<div class="flex items-center gap-2">
+<input class="rounded border-slate-300 text-brand-600 focus:ring-0 w-3.5 h-3.5" type="checkbox">
+<span class="text-slate-800">Practice Sheets</span>
+</div>
+<span class="font-mono text-slate-400 font-semibold">7</span>
+</label>
+</div>
+</div>
+<!-- Focus Rule Pro-Tip Card -->
+<div class="p-3 bg-amber-50 rounded-lg border border-amber-300 text-xs text-amber-950 space-y-1" data-purpose="focus-rule">
+<div class="flex items-center gap-1.5 font-bold">
+<span class="">💡</span>
+<span class="font-mono uppercase text-[11px] tracking-wide text-amber-900">Focus Rule:</span>
+</div>
+<p class="font-editorial leading-relaxed text-sm text-amber-950 font-medium">
+              Pick 1 core coaching module + 1 reference standard per subject. Do not hoard 15 PDFs you won't touch!
+            </p>
+</div>
+</div>
+<!-- High-Bandwidth Drive Mirror Widget -->
+<div class="bg-white border-2 border-slate-900 rounded-xl p-3 shadow-brutal flex items-center justify-between text-xs" data-purpose="mirror-status">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<div>
+<span class="font-mono font-bold text-slate-900 block leading-tight text-[11px]">DRIVE MIRROR: HIGH-BANDWIDTH</span>
+<span class="text-[10px] text-slate-500 font-medium">Synced with ultra-low latency CDN</span>
+</div>
+</div>
+<span class="font-mono font-black text-emerald-700 bg-emerald-50 px-2 py-1 rounded border border-emerald-200 text-[11px]">0 SEC WAIT</span>
+</div>
+</aside>
+<!-- RIGHT MAIN: Resource Grid -->
+<section class="lg:col-span-8 xl:col-span-9 space-y-5" data-purpose="main-grid-container">
+<!-- Grid Header with Results Count & Sort Dropdown -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-slate-300/80 gap-3">
+<div class="font-mono text-xs font-bold text-slate-600">
+            SHOWING: <span class="text-brand-600 font-black">ALLEN + STANDARD REFERENCE CLASSICS</span> <span class="text-slate-400 font-semibold">(198 RESOURCES)</span>
+</div>
+<!-- Sort Selector -->
+<div class="flex items-center gap-2 text-xs">
+<span class="text-slate-500 font-medium">Sort by:</span>
+<select class="py-1 pl-2 pr-7 text-xs font-semibold bg-white border border-slate-300 rounded-lg text-slate-800 focus:ring-brand-500 focus:border-brand-500 shadow-sm">
+<option>Most Downloaded</option>
+<option>Highest Rated (AIR Choice)</option>
+<option>Recently Added</option>
+<option>Strict Advanced Relevance</option>
+</select>
+</div>
+</div>
+<!-- Resources Cards 2-Column Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="materials-catalog-grid"><!-- CARD 1: HC Verma Volume 1 & 2 -->
+<article class="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-brutal hover:shadow-brutal-lg transition-all flex flex-col justify-between group" data-purpose="resource-card">
+<div class="space-y-3">
+<!-- Top Badges -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
+                  PREMIUM
+                </span>
+<span class="font-mono text-xs text-slate-400 font-semibold">#PHY-4ba8</span>
+</div>
+<!-- Title & Subject Icon -->
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center flex-shrink-0 text-sm">
+                  ❄
+                </div>
+<h3 class="font-headline font-bold text-base text-slate-900 group-hover:text-brand-600 transition-colors leading-snug tracking-tight">
+                  HC Verma Volume 1 &amp; 2 (Concepts of Physics)
+                </h3>
+</div>
+<!-- Description -->
+<p class="font-body text-xs text-slate-600 leading-relaxed font-normal">
+                The gold-standard fundamental physics textbook for JEE aspirants by Prof. HC Verma. Complete theoretical derivation and objective questions.
+              </p>
+<!-- Tags -->
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">Books</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">PDF</span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-semibold text-slate-700 font-mono">
+<span class="text-amber-500">★</span> 4.7 <span class="text-slate-400 text-[11px] font-normal font-mono">(4.9k saves)</span>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-mono text-xs font-bold transition-all shadow-sm" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+                Download
+              </a>
+</div>
+</article>
+<!-- CARD 2: HC Verma Solutions -->
+<article class="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-brutal hover:shadow-brutal-lg transition-all flex flex-col justify-between group" data-purpose="resource-card">
+<div class="space-y-3">
+<!-- Top Badges -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-brand-100 text-brand-900 border border-brand-300">
+                  AIR
+                </span>
+<span class="font-mono text-xs text-slate-400 font-semibold">#PHY-d835</span>
+</div>
+<!-- Title & Subject Icon -->
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center flex-shrink-0 text-sm">
+                  ❄
+                </div>
+<h3 class="font-headline font-bold text-base text-slate-900 group-hover:text-brand-600 transition-colors leading-snug tracking-tight">
+                  HC Verma Solutions (Concepts of Physics)
+                </h3>
+</div>
+<!-- Description -->
+<p class="font-body text-xs text-slate-600 leading-relaxed font-normal">
+                Comprehensive step-by-step solutions for HC Verma Vol 1 and Vol 2 exercises. Verified alternative shortest pathways and hints.
+              </p>
+<!-- Tags -->
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">Books</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">PDF</span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-semibold text-slate-700 font-mono">
+<span class="text-amber-500">★</span> 4.6 <span class="text-slate-400 text-[11px] font-normal font-mono">(1k saves)</span>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-mono text-xs font-bold transition-all shadow-sm" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+                Download
+              </a>
+</div>
+</article>
+<!-- CARD 3: Cengage Physics for JEE Advanced -->
+<article class="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-brutal hover:shadow-brutal-lg transition-all flex flex-col justify-between group" data-purpose="resource-card">
+<div class="space-y-3">
+<!-- Top Badges -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
+                  PREMIUM
+                </span>
+<span class="font-mono text-xs text-slate-400 font-semibold">#PHY-0766</span>
+</div>
+<!-- Title & Subject Icon -->
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center flex-shrink-0 text-sm">
+                  ❄
+                </div>
+<h3 class="font-headline font-bold text-base text-slate-900 group-hover:text-brand-600 transition-colors leading-snug tracking-tight">
+                  Cengage Physics for JEE Advanced (BM Sharma)
+                </h3>
+</div>
+<!-- Description -->
+<p class="font-body text-xs text-slate-600 leading-relaxed font-normal">
+                Complete 6-volume Cengage Physics series covering theory, illustrations, and multi-concept questions. Mechanics to Modern Physics.
+              </p>
+<!-- Tags -->
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">Books</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">PDF</span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-semibold text-slate-700 font-mono">
+<span class="text-amber-500">★</span> 4.9 <span class="text-slate-400 text-[11px] font-normal font-mono">(2.2k saves)</span>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-mono text-xs font-bold transition-all shadow-sm" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+                Download
+              </a>
+</div>
+</article>
+<!-- CARD 4: Cengage Mathematics for JEE Advanced -->
+<article class="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-brutal hover:shadow-brutal-lg transition-all flex flex-col justify-between group" data-purpose="resource-card">
+<div class="space-y-3">
+<!-- Top Badges -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
+                  PREMIUM
+                </span>
+<span class="font-mono text-xs text-slate-400 font-semibold">#MAT-06a3</span>
+</div>
+<!-- Title & Subject Icon -->
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0 text-sm font-mono font-bold text-amber-800">
+                  Σ
+                </div>
+<h3 class="font-headline font-bold text-base text-slate-900 group-hover:text-brand-600 transition-colors leading-snug tracking-tight">
+                  Cengage Mathematics for JEE Advanced (G. Tewani)
+                </h3>
+</div>
+<!-- Description -->
+<p class="font-body text-xs text-slate-600 leading-relaxed font-normal">
+                Complete 5-volume Cengage Mathematics series with concept exercises, DPPs, and comprehensive archive questions.
+              </p>
+<!-- Tags -->
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">Books</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">PDF</span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-semibold text-slate-700 font-mono">
+<span class="text-amber-500">★</span> 5.0 <span class="text-slate-400 text-[11px] font-normal font-mono">(2.1k saves)</span>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-mono text-xs font-bold transition-all shadow-sm" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+                Download
+              </a>
+</div>
+</article>
+<!-- CARD 5: Cengage JEE Daily Practice Problems (DPPs) -->
+<article class="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-brutal hover:shadow-brutal-lg transition-all flex flex-col justify-between group" data-purpose="resource-card">
+<div class="space-y-3">
+<!-- Top Badges -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
+                  PREMIUM
+                </span>
+<span class="font-mono text-xs text-slate-400 font-semibold">#PCM-05b3</span>
+</div>
+<!-- Title & Subject Icon -->
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-slate-100 border border-slate-300 flex items-center justify-center flex-shrink-0 text-sm">
+                  📦
+                </div>
+<h3 class="font-headline font-bold text-base text-slate-900 group-hover:text-brand-600 transition-colors leading-snug tracking-tight">
+                  Cengage JEE Daily Practice Problems (DPPs)
+                </h3>
+</div>
+<!-- Description -->
+<p class="font-body text-xs text-slate-600 leading-relaxed font-normal">
+                Systematic daily practice problem booklets accompanying the Cengage series with graded difficulty tiers.
+              </p>
+<!-- Tags -->
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">Practice Sheets</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">PDF</span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-semibold text-slate-700 font-mono">
+<span class="text-amber-500">★</span> 5.0 <span class="text-slate-400 text-[11px] font-normal font-mono">(3.6k saves)</span>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-mono text-xs font-bold transition-all shadow-sm" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+                Download
+              </a>
+</div>
+</article>
+<!-- CARD 6: Cengage Chemistry Set (KS Verma) -->
+<article class="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-brutal hover:shadow-brutal-lg transition-all flex flex-col justify-between group" data-purpose="resource-card">
+<div class="space-y-3">
+<!-- Top Badges -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
+                  PREMIUM
+                </span>
+<span class="font-mono text-xs text-slate-400 font-semibold">#CHE-9971</span>
+</div>
+<!-- Title & Subject Icon -->
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 text-sm">
+                  🧪
+                </div>
+<h3 class="font-headline font-bold text-base text-slate-900 group-hover:text-brand-600 transition-colors leading-snug tracking-tight">
+                  Cengage Chemistry Set (KS Verma)
+                </h3>
+</div>
+<!-- Description -->
+<p class="font-body text-xs text-slate-600 leading-relaxed font-normal">
+                Complete Physical, Organic, and Inorganic Chemistry series for JEE Advanced with reaction path summaries.
+              </p>
+<!-- Tags -->
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">Books</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">PDF</span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-semibold text-slate-700 font-mono">
+<span class="text-amber-500">★</span> 5.0 <span class="text-slate-400 text-[11px] font-normal font-mono">(2.6k saves)</span>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-mono text-xs font-bold transition-all shadow-sm" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+                Download
+              </a>
+</div>
+</article>
+<!-- CARD 7: Cengage Organic Chemistry Blue Book -->
+<article class="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-brutal hover:shadow-brutal-lg transition-all flex flex-col justify-between group" data-purpose="resource-card">
+<div class="space-y-3">
+<!-- Top Badges -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-brand-100 text-brand-900 border border-brand-300">
+                  AIR
+                </span>
+<span class="font-mono text-xs text-slate-400 font-semibold">#CHE-357d</span>
+</div>
+<!-- Title & Subject Icon -->
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 text-sm">
+                  🧪
+                </div>
+<h3 class="font-headline font-bold text-base text-slate-900 group-hover:text-brand-600 transition-colors leading-snug tracking-tight">
+                  Cengage Organic Chemistry Blue Book (KS Verma)
+                </h3>
+</div>
+<!-- Description -->
+<p class="font-body text-xs text-slate-600 leading-relaxed font-normal">
+                Advanced mechanism breakdowns, named reactions, and multi-step synthesis roadmaps for JEE Advanced.
+              </p>
+<!-- Tags -->
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">Books</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">PDF</span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-semibold text-slate-700 font-mono">
+<span class="text-amber-500">★</span> 4.8 <span class="text-slate-400 text-[11px] font-normal font-mono">(1.9k saves)</span>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-mono text-xs font-bold transition-all shadow-sm" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+                Download
+              </a>
+</div>
+</article>
+<!-- CARD 8: Cengage Inorganic Chemistry -->
+<article class="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-brutal hover:shadow-brutal-lg transition-all flex flex-col justify-between group" data-purpose="resource-card">
+<div class="space-y-3">
+<!-- Top Badges -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-brand-100 text-brand-900 border border-brand-300">
+                  AIR
+                </span>
+<span class="font-mono text-xs text-slate-400 font-semibold">#CHE-5c27</span>
+</div>
+<!-- Title & Subject Icon -->
+<div class="flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 text-sm">
+                  🧪
+                </div>
+<h3 class="font-headline font-bold text-base text-slate-900 group-hover:text-brand-600 transition-colors leading-snug tracking-tight">
+                  Cengage Inorganic Chemistry (V Joshi Sir)
+                </h3>
+</div>
+<!-- Description -->
+<p class="font-body text-xs text-slate-600 leading-relaxed font-normal">
+                NCERT mapped coordination compounds, metallurgy, and p-block deep-dive with color reaction flowcharts.
+              </p>
+<!-- Tags -->
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">Books</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-700">PDF</span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-semibold text-slate-700 font-mono">
+<span class="text-amber-500">★</span> 4.9 <span class="text-slate-400 text-[11px] font-normal font-mono">(2.4k saves)</span>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-mono text-xs font-bold transition-all shadow-sm" href="#">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+                Download
+              </a>
+</div>
+</article></div>
+<!-- Pagination / Load More Bar -->
+<div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200">
+<p class="font-mono text-xs text-slate-500">
+            Showing <span class="font-bold text-slate-800">1-8</span> of 190 items
+          </p>
+<div class="inline-flex items-center gap-1.5">
+<button class="px-3 py-1.5 rounded-md border border-slate-300 bg-white text-xs font-mono font-semibold text-slate-500 cursor-not-allowed">
+              Prev
+            </button>
+<button class="px-3 py-1.5 rounded-md bg-slate-900 text-xs font-mono font-bold text-white shadow-sm">
+              1
+            </button>
+<button class="px-3 py-1.5 rounded-md border border-slate-300 bg-white text-xs font-mono font-semibold text-slate-700 hover:bg-slate-50">
+              2
+            </button>
+<button class="px-3 py-1.5 rounded-md border border-slate-300 bg-white text-xs font-mono font-semibold text-slate-700 hover:bg-slate-50">
+              3
+            </button>
+<span class="px-1 text-slate-400">...</span>
+<button class="px-3 py-1.5 rounded-md border border-slate-300 bg-white text-xs font-mono font-semibold text-slate-700 hover:bg-slate-50">
+              24
+            </button>
+<button class="px-3 py-1.5 rounded-md border border-slate-300 bg-white text-xs font-mono font-bold text-slate-800 hover:bg-slate-50">
+              Next
+            </button>
+</div>
+</div>
+</section>
+</section>
+<!-- END: CatalogLayout -->
+</main>
+<!-- BEGIN: MainFooter -->
+<footer class="mt-16 border-t-2 border-slate-900 bg-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200">
+<!-- Logo & Brand Vision -->
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-slate-900 flex items-center justify-center text-white text-xs font-bold">
+              B
+            </div>
+<span class="font-display font-black text-xl text-slate-900 tracking-tight">BOOKIE®</span>
+<span class="text-xs font-mono font-semibold text-brand-600 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">
+              AIR TARGET 2027
+            </span>
+</div>
+<p class="text-xs text-slate-500 max-w-md">
+            Engineered exclusively for JEE Advanced aspirants. Zero distractions, zero spam, mathematically pure signal.
+          </p>
+</div>
+<!-- Footer Navigation Links -->
+<div class="flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-slate-700 font-mono">
+<a class="hover:text-brand-600 transition-colors" href="#">Practice</a>
+<a class="hover:text-brand-600 transition-colors" href="#">Progress</a>
+<a class="hover:text-brand-600 transition-colors" href="#">Perform</a>
+<a class="hover:text-brand-600 transition-colors" href="#">YPT Room</a>
+<a class="hover:text-brand-600 transition-colors" href="#">Chai Support</a>
+<a class="hover:text-brand-600 transition-colors" href="#">DMCA / Fair Use</a>
+</div>
+</div>
+<!-- Legal / Disclaimer Notice -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] font-mono text-slate-400 gap-3">
+<p class="">© 2025 BOOKIE Systems. All materials link to public educational storage mirrors.</p>
+<p class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          All clusters operational &amp; OCR indexes green.
+        </p>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+<!-- BEGIN: InteractiveSearchFilterLogic -->
+<script data-purpose="catalog-search-filter">
+    // Simple fast search filter logic for dynamic card search demonstration
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('resource-search');
+      const cards = document.querySelectorAll('#materials-catalog-grid article');
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase().trim();
+          cards.forEach((card) => {
+            const cardText = card.textContent.toLowerCase();
+            if (cardText.includes(query)) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      // Keyboard shortcut ⌘K / Ctrl+K focus
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          searchInput && searchInput.focus();
+        }
+      });
+    });
+  </script>
+<!-- END: InteractiveSearchFilterLogic -->
+
+
+</body></html>

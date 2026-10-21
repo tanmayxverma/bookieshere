@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BOOKIE • Ultra-Premium Master Navigation Bar Component Showcase</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Typography Suite: Syne, Plus Jakarta Sans, Newsreader, JetBrains Mono, Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600;700&amp;family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet"/>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            },
+            chai: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+            },
+            obsidian: {
+              950: '#070a11',
+              900: '#0b0f19',
+              850: '#101624',
+              800: '#172033',
+            }
+          },
+          fontFamily: {
+            ruling: ['Syne', 'sans-serif'],
+            ui: ['Plus Jakarta Sans', 'sans-serif'],
+            editorial: ['Newsreader', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'pill-light': '0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8) inset, 0 1px 3px 0 rgba(0, 0, 0, 0.04)',
+            'pill-dark': '0 25px 50px -18px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 0 30px -5px rgba(37, 99, 235, 0.15)',
+            'chai-glow': '0 4px 14px 0 rgba(245, 158, 11, 0.22)',
+            'streak-glow': '0 4px 16px -2px rgba(249, 115, 22, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-grid-patterns">
+    /* Subtle Engineering Graph Paper & Blueprint Grids */
+    .blueprint-grid-light {
+      background-color: #f8fafc;
+      background-image: 
+        linear-gradient(to right, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+        linear-gradient(to right, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+      background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+    }
+
+    .blueprint-grid-dark {
+      background-color: #080c14;
+      background-image: 
+        linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+        linear-gradient(to right, rgba(99, 102, 241, 0.09) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.09) 1px, transparent 1px);
+      background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+    }
+
+    /* Custom Smooth Glass backdrop support */
+    .glass-capsule-light {
+      background: rgba(255, 255, 255, 0.90);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(226, 232, 240, 0.85);
+    }
+
+    .glass-capsule-dark {
+      background: rgba(11, 15, 25, 0.88);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+  </style>
+<style data-purpose="pulse-animations">
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.75; }
+    }
+    .pulse-live {
+      animation: subtlePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes steamFloat {
+      0% { transform: translateY(0) scaleX(1); opacity: 0.8; }
+      50% { transform: translateY(-3px) scaleX(1.1); opacity: 0.4; }
+      100% { transform: translateY(0) scaleX(1); opacity: 0.8; }
+    }
+    .tea-steam {
+      animation: steamFloat 2.4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="blueprint-grid-light text-slate-800 antialiased font-sans selection:bg-brand-500 selection:text-white min-h-screen">
+<!-- BEGIN: StickyMasterNavHeader -->
+<!-- Top Floating Sticky Container showcasing the exact Bookie Master Navigation Bar -->
+<header class="sticky top-0 z-50 w-full px-4 sm:px-6 lg:px-8 pt-4 pb-3 transition-all duration-300">
+<div class="max-w-7xl mx-auto flex items-center justify-center">
+<!-- The Capsule / Pill Navigation Master Component -->
+<nav class="glass-capsule-light rounded-full px-3 sm:px-4 py-2 shadow-pill-light flex items-center gap-1 sm:gap-2 transition-all duration-300 border border-slate-200/90 relative" data-purpose="master-navigation" id="master-navbar">
+<!-- Logo Identity Anchor -->
+<a class="group flex items-center gap-2.5 pl-1.5 pr-2 py-1 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 rounded-full" data-purpose="brand-logo" href="#home">
+<!-- Custom Bookie Grimoire Emblem SVG -->
+<div class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-amber-100 via-amber-50 to-orange-100 border border-amber-200/90 shadow-sm flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105 duration-200">
+<svg class="w-4 h-4 text-amber-800" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+<line x1="9" x2="15" y1="7" y2="7"></line>
+<line x1="9" x2="13" y1="11" y2="11"></line>
+</svg>
+<div class="absolute inset-0 bg-gradient-to-t from-amber-900/10 to-transparent pointer-events-none"></div>
+</div>
+<!-- BOOKIE Ruling Main Font Label + Dot -->
+<div class="flex items-center tracking-tight">
+<span class="font-ruling font-black text-xl text-slate-900 tracking-[-0.04em]">BOOKIE</span>
+<span class="w-2 h-2 rounded-full bg-brand-600 ml-0.5 inline-block animate-pulse shadow-sm shadow-brand-500"></span>
+</div>
+</a>
+<!-- Middle Navigation Route Tabs -->
+<div class="flex items-center gap-0.5 sm:gap-1 text-[13px] font-ui font-bold">
+<!-- 1. Home (Active State) -->
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-50 text-brand-600 shadow-sm font-bold border border-brand-100/70 transition-all duration-150" data-purpose="nav-item-home" href="#home">
+<svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+<span>Home</span>
+</a>
+<!-- 2. Materials (Interactive Dropdown Trigger) -->
+<div class="relative group/materials">
+<button class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition-colors" data-purpose="nav-item-materials" type="button">
+<svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+</svg>
+<span>Materials</span>
+</button>
+<!-- Dropdown Popover on Hover -->
+<div class="invisible group-hover/materials:visible opacity-0 group-hover/materials:opacity-100 transition-all duration-200 absolute top-full left-1/2 -translate-x-1/2 pt-2.5 w-64 z-50 pointer-events-none group-hover/materials:pointer-events-auto">
+<div class="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-2xl shadow-xl p-2 text-xs">
+<div class="px-3 py-1.5 text-[10px] font-mono font-bold tracking-wider text-slate-400 uppercase">Aspirant Vault</div>
+<a class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors" href="#materials">
+<span class="p-1 rounded-md bg-blue-50 text-blue-600">⚛️</span>
+<div>
+<div class="font-semibold text-slate-800">Physics Formulas &amp; PYQs</div>
+<div class="text-[11px] text-slate-400 font-normal">Mechanics to Modern Physics</div>
+</div>
+</a>
+<a class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors" href="#materials">
+<span class="p-1 rounded-md bg-emerald-50 text-emerald-600">🧪</span>
+<div>
+<div class="font-semibold text-slate-800">Inorganic &amp; Organic Chem</div>
+<div class="text-[11px] text-slate-400 font-normal">Reaction mechanisms &amp; NCERT line-by-line</div>
+</div>
+</a>
+<a class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors" href="#materials">
+<span class="p-1 rounded-md bg-purple-50 text-purple-600">📐</span>
+<div>
+<div class="font-semibold text-slate-800">Mathematics Archives</div>
+<div class="text-[11px] text-slate-400 font-normal">Calculus &amp; Algebra deep-dive modules</div>
+</div>
+</a>
+</div>
+</div>
+</div>
+<!-- 3. Tests -->
+<a class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition-colors" data-purpose="nav-item-tests" href="#tests">
+<svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+<span>Tests</span>
+</a>
+<!-- 4. YPT (with live badge) -->
+<a class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition-colors" data-purpose="nav-item-ypt" href="#ypt">
+<svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>YPT</span>
+<!-- Glowing emerald LIVE pill badge -->
+<span class="flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full tracking-wider leading-none border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-live"></span>
+              LIVE
+            </span>
+</a>
+<!-- 5. Portals -->
+<a class="hidden md:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition-colors" data-purpose="nav-item-portals" href="#portals">
+<svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="7" width="7" x="3" y="3"></rect>
+<rect height="7" width="7" x="14" y="3"></rect>
+<rect height="7" width="7" x="14" y="14"></rect>
+<rect height="7" width="7" x="3" y="14"></rect>
+</svg>
+<span>Portals</span>
+</a>
+<!-- 6. Community -->
+<a class="hidden lg:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition-colors" data-purpose="nav-item-community" href="#community">
+<svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<span>Community</span>
+</a>
+<!-- 7. Support -->
+<a class="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition-colors" data-purpose="nav-item-support" href="#support">
+<svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+<path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+</svg>
+<span>Support</span>
+</a>
+</div>
+<!-- Right Side Utility Controls & Special Action Buttons -->
+<div class="flex items-center gap-1 sm:gap-1.5 pl-1">
+<!-- Chai Button (Amber Warm Pill) -->
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-chai-100 hover:bg-amber-200/80 text-chai-800 border border-chai-200 text-xs font-ui font-bold shadow-sm shadow-amber-500/10 transition-all hover:scale-[1.02] active:scale-[0.98]" data-purpose="chai-button" onclick="openChaiModal()" type="button">
+<!-- Steaming Cup SVG -->
+<svg class="w-3.5 h-3.5 tea-steam text-amber-700" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+<path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+<line x1="6" x2="6" y1="2" y2="4"></line>
+<line x1="10" x2="10" y1="1" y2="4"></line>
+<line x1="14" x2="14" y1="2" y2="4"></line>
+</svg>
+<span>Chai</span>
+</button>
+<!-- Notification Bell -->
+<button aria-label="Notifications" class="relative p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors" data-purpose="notifications-toggle" type="button">
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+</svg>
+<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-amber-500 rounded-full ring-2 ring-white"></span>
+</button>
+<!-- Quick Theme Toggle (Light / Dark Morph) -->
+<button aria-label="Toggle Theme" class="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors" data-purpose="theme-toggle" id="theme-toggle-btn" type="button">
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="5"></circle>
+<line x1="12" x2="12" y1="1" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="23"></line>
+<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+<line x1="1" x2="3" y1="12" y2="12"></line>
+<line x1="21" x2="23" y1="12" y2="12"></line>
+<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+</svg>
+</button>
+<!-- Vertical Micro Divider -->
+<div aria-hidden="true" class="h-6 w-[1px] bg-slate-200 mx-0.5"></div>
+<!-- Aspirant Streak Counter Badge with Flame Indicator -->
+<div class="relative group/streak">
+<button class="flex flex-col items-center justify-center bg-slate-900 hover:bg-black text-white px-2.5 py-1 rounded-full shadow-sm hover:shadow-streak-glow transition-all duration-200" data-purpose="streak-counter" type="button">
+<span class="font-mono text-[13px] font-bold leading-tight flex items-center gap-0.5">
+<span>0</span>
+</span>
+<div class="flex items-center gap-0.5 -mt-0.5">
+<span class="text-[10px] leading-none">🔥</span>
+<span class="font-mono text-[8px] font-semibold text-amber-300 uppercase leading-none">8d</span>
+</div>
+</button>
+<!-- Tooltip showing aspirant wisdom -->
+<div class="invisible group-hover/streak:visible opacity-0 group-hover/streak:opacity-100 transition-all duration-150 absolute right-0 top-full pt-2 w-48 z-50 pointer-events-none">
+<div class="bg-slate-950 text-white rounded-xl p-2.5 text-xs shadow-2xl border border-slate-800 text-center">
+<p class="font-mono font-bold text-amber-400 text-[11px]">8 DAYS LOGGED</p>
+<p class="font-editorial italic text-slate-300 mt-1">"Consistency beats genius when genius forgets to solve PYQs."</p>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<!-- END: StickyMasterNavHeader -->
+<!-- BEGIN: InteractiveShowcaseHero -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 space-y-16">
+<!-- Hero Title Block referencing BOOKIE typography specification -->
+<section class="text-center space-y-4 max-w-3xl mx-auto pt-4" data-purpose="hero-intro">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-brand-600 text-xs font-mono font-bold">
+<span>BOOKIE DESIGN SYSTEM</span>
+<span class="text-blue-300">•</span>
+<span>SPEC #NAV-2026.4</span>
+</div>
+<h1 class="font-ruling font-black text-4xl sm:text-5xl md:text-6xl text-slate-900 tracking-[-0.04em] uppercase">
+        Ultra-Floating <span class="text-brand-600">Master Island.</span>
+</h1>
+<p class="font-editorial italic text-xl text-slate-600 max-w-2xl mx-auto">
+        "Built for JEE &amp; NEET warriors. Zero fluff, high ergonomics, live telemetry, and instant Chai support."
+      </p>
+<!-- Quick Action Badges -->
+<div class="flex flex-wrap items-center justify-center gap-3 pt-2 font-mono text-xs">
+<span class="px-3 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-sm flex items-center gap-1.5">
+<kbd class="bg-slate-100 px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-600 border border-slate-200">⌘K</kbd> Global Command
+        </span>
+<span class="px-3 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-sm flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span> 99.8% Latency Sync
+        </span>
+<span class="px-3 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-sm flex items-center gap-1.5">
+<span class="font-bold text-amber-600">Syne 900</span> Ruling Font
+        </span>
+</div>
+</section>
+<!-- BEGIN: DarkModeVariantSection -->
+<!-- Obsidian Dark Mode Navbar Variant Showcase -->
+<section class="rounded-3xl p-6 sm:p-10 blueprint-grid-dark border border-slate-800 shadow-2xl relative overflow-hidden" data-purpose="dark-mode-variant">
+<!-- Glow ambient background -->
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 space-y-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+<div>
+<span class="text-cyan-400 font-mono text-xs font-semibold tracking-wider uppercase">Variant 02 • Late Night Grind</span>
+<h2 class="text-xl font-ruling font-extrabold text-white tracking-tight uppercase">Dark Mode Floating Capsule</h2>
+</div>
+<div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+<span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+<span>Obsidian Core (#0B0F19)</span>
+</div>
+</div>
+<!-- Rendered Dark Navbar Component -->
+<div class="py-6 flex items-center justify-center">
+<nav class="glass-capsule-dark rounded-full px-3 sm:px-4 py-2 shadow-pill-dark flex items-center gap-1 sm:gap-2 border border-slate-700/60 max-w-full overflow-x-auto" data-purpose="dark-capsule-navbar">
+<!-- Dark Logo Mark -->
+<a class="group flex items-center gap-2.5 pl-1.5 pr-2 py-1 select-none" href="#dark-home">
+<div class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-amber-900/40 via-slate-800 to-amber-700/30 border border-amber-500/30 shadow-sm flex items-center justify-center">
+<svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+</svg>
+</div>
+<div class="flex items-center">
+<span class="font-ruling font-black text-xl text-white tracking-[-0.04em]">BOOKIE</span>
+<span class="w-2 h-2 rounded-full bg-blue-500 ml-0.5 inline-block shadow-sm shadow-blue-400"></span>
+</div>
+</a>
+<!-- Dark Navigation Tabs -->
+<div class="flex items-center gap-1 text-[13px] font-ui font-bold">
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30 font-bold shadow-inner" href="#dark-home">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors" href="#dark-materials">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+<span>Materials</span>
+</a>
+<a class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors" href="#dark-tests">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+<span>Tests</span>
+</a>
+<a class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors" href="#dark-ypt">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+<span>YPT</span>
+<span class="flex items-center gap-1 bg-emerald-950/80 text-emerald-400 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full border border-emerald-500/40">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span>
+                  LIVE
+                </span>
+</a>
+</div>
+<!-- Dark Right Controls -->
+<div class="flex items-center gap-1.5 pl-1">
+<!-- Dark Chai Button -->
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/60 hover:bg-amber-900/60 text-amber-300 border border-amber-600/40 text-xs font-ui font-bold shadow-sm">
+<span class="text-amber-400 tea-steam">☕</span>
+<span>Chai</span>
+</button>
+<!-- Notifications -->
+<div class="relative p-1.5 text-slate-400 hover:text-white">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-amber-400 rounded-full"></span>
+</div>
+<!-- Streak Counter -->
+<div class="flex flex-col items-center justify-center bg-slate-900 text-white px-2.5 py-1 rounded-full border border-slate-700/80 shadow-streak-glow">
+<span class="font-mono text-[13px] font-bold leading-tight">0</span>
+<div class="flex items-center gap-0.5 -mt-0.5">
+<span class="text-[10px]">🔥</span>
+<span class="font-mono text-[8px] font-semibold text-amber-400">8d</span>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</div>
+</section>
+<!-- END: DarkModeVariantSection -->
+<!-- BEGIN: InteractiveComponentPlayground -->
+<!-- Grid showcasing interactive states and telemetry popovers -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6" data-purpose="interactive-inspectors">
+<!-- Card 1: Chai Flyout Modal Preview -->
+<article class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between" data-purpose="chai-flyout-card">
+<div>
+<div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+<span>FLYOUT PREVIEW</span>
+<span class="text-amber-600 font-bold">#CHAI-SUPPORT</span>
+</div>
+<h3 class="font-ui font-bold text-lg text-slate-900 flex items-center gap-2">
+<span>☕</span>
+<span>Fuel the Developer's Chai</span>
+</h3>
+<p class="font-editorial italic text-slate-600 text-sm mt-1">
+            "Late nights debugging projectile motion simulators require 2 cups of adrak chai."
+          </p>
+<div class="mt-4 p-3 bg-amber-50/70 border border-amber-200/60 rounded-2xl space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-ui font-semibold text-amber-900">1 Kadak Cutting Chai</span>
+<span class="font-mono font-bold text-amber-700">₹20</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="font-ui font-semibold text-amber-900">Hostel Thermos Tier</span>
+<span class="font-mono font-bold text-amber-700">₹99</span>
+</div>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-ui font-bold text-xs tracking-wide transition-all shadow-chai-glow flex items-center justify-center gap-2" onclick="simulateChaiClick()">
+<span>Tap to Trigger Chai Toast</span>
+</button>
+</article>
+<!-- Card 2: Aspirant Streak & YPT Telemetry -->
+<article class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between" data-purpose="streak-telemetry-card">
+<div>
+<div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+<span>TELEMETRY SYNC</span>
+<span class="text-emerald-600 font-bold">#LIVE-STUDY</span>
+</div>
+<h3 class="font-ui font-bold text-lg text-slate-900 flex items-center gap-2">
+<span class="text-orange-500">🔥</span>
+<span>Aspirant Streak Analytics</span>
+</h3>
+<p class="text-slate-500 text-xs mt-1">
+            Real-time session time synchronised via YPT room sockets.
+          </p>
+<div class="mt-4 grid grid-cols-2 gap-2 text-center font-mono">
+<div class="bg-slate-50 border border-slate-200/70 p-3 rounded-2xl">
+<div class="text-[11px] text-slate-400">TODAY'S CLOCK</div>
+<div class="text-xl font-bold text-slate-900 mt-0.5">07:42<span class="text-xs text-slate-400">h</span></div>
+</div>
+<div class="bg-slate-50 border border-slate-200/70 p-3 rounded-2xl">
+<div class="text-[11px] text-slate-400">ACTIVE PEERS</div>
+<div class="text-xl font-bold text-emerald-600 mt-0.5">1,489</div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-3">
+<span class="font-editorial italic">Rank #42 in JEE Advanced Batch</span>
+<span class="font-mono text-emerald-600 font-bold">ONLINE</span>
+</div>
+</article>
+<!-- Card 3: Multi-Font Architecture Blueprint -->
+<article class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between" data-purpose="font-system-card">
+<div>
+<div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+<span>DOC-8 COMPLIANCE</span>
+<span class="text-indigo-600 font-bold">TYPOGRAPHY</span>
+</div>
+<h3 class="font-ui font-bold text-lg text-slate-900">
+            Design System Hierarchy
+          </h3>
+<ul class="mt-3 space-y-2 text-xs">
+<li class="flex items-start justify-between border-b border-slate-100 pb-1.5">
+<span class="text-slate-500">Ruling Main Font:</span>
+<span class="font-ruling font-black text-slate-900 uppercase">Syne (800/900)</span>
+</li>
+<li class="flex items-start justify-between border-b border-slate-100 pb-1.5">
+<span class="text-slate-500">UI &amp; Navigation:</span>
+<span class="font-ui font-bold text-slate-900">Plus Jakarta Sans (700)</span>
+</li>
+<li class="flex items-start justify-between border-b border-slate-100 pb-1.5">
+<span class="text-slate-500">Editorial Voice:</span>
+<span class="font-editorial italic text-slate-900">Newsreader (Serif)</span>
+</li>
+<li class="flex items-start justify-between">
+<span class="text-slate-500">Telemetry Data:</span>
+<span class="font-mono font-bold text-slate-900">JetBrains Mono (600)</span>
+</li>
+</ul>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-900 text-white font-mono text-[11px] flex items-center justify-between">
+<span>Letter Spacing</span>
+<span class="text-cyan-400">-0.04em geometric</span>
+</div>
+</article>
+</section>
+<!-- END: InteractiveComponentPlayground -->
+<!-- BEGIN: QuickSpecsFooterNotes -->
+<footer class="border-t border-slate-200/80 pt-8 pb-12 text-center text-xs text-slate-400 space-y-2 font-mono" data-purpose="specs-footer">
+<div class="flex items-center justify-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+<span>BOOKIE Aspirant Workspace • JEE &amp; NEET Zero-Distraction Shell</span>
+</div>
+<p class="font-editorial italic text-slate-500 text-sm">
+        Carefully proportioned floating pill navigation with sub-pixel frosted glass and active route indicators.
+      </p>
+</footer>
+<!-- END: QuickSpecsFooterNotes -->
+</main>
+<!-- BEGIN: InteractiveToastNotification -->
+<!-- Floating feedback container for user clicks -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none" id="toast">
+<div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-800 flex items-center gap-3">
+<span class="text-xl">☕</span>
+<div>
+<div class="text-xs font-ui font-bold text-amber-300" id="toast-title">Chai Sent!</div>
+<div class="text-[11px] text-slate-300 font-editorial italic" id="toast-msg">Thank you for keeping the midnight JEE code running.</div>
+</div>
+</div>
+</div>
+<!-- END: InteractiveToastNotification -->
+<!-- BEGIN: ClientSideLogic -->
+<script data-purpose="interaction-scripts">
+    // Interactive Theme Toggle helper
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    let isDark = false;
+
+    themeBtn.addEventListener('click', () => {
+      isDark = !isDark;
+      const nav = document.getElementById('master-navbar');
+      if (isDark) {
+        nav.classList.remove('glass-capsule-light', 'shadow-pill-light');
+        nav.classList.add('glass-capsule-dark', 'shadow-pill-dark', 'text-white');
+        showToast('Dark Mode Preview', 'Applied high-contrast late night blueprint.');
+      } else {
+        nav.classList.add('glass-capsule-light', 'shadow-pill-light');
+        nav.classList.remove('glass-capsule-dark', 'shadow-pill-dark', 'text-white');
+        showToast('Light Mode Preview', 'Returned to classic graphite & blueprint view.');
+      }
+    });
+
+    // Toast helper
+    function showToast(title, message) {
+      const toast = document.getElementById('toast');
+      const toastTitle = document.getElementById('toast-title');
+      const toastMsg = document.getElementById('toast-msg');
+
+      toastTitle.textContent = title;
+      toastMsg.textContent = message;
+
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3200);
+    }
+
+    function openChaiModal() {
+      showToast('Steaming Cutting Chai ☕', 'Warm ginger chai added to the developer tab!');
+    }
+
+    function simulateChaiClick() {
+      showToast('Support Verified ☕', 'Adrak cutting chai dispatched to engineering team!');
+    }
+  </script>
+<!-- END: ClientSideLogic -->
+</body></html>

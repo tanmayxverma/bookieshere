@@ -1,0 +1,66 @@
+[
+  {
+    "index": 1,
+    "id": "9783abe5b1554457a7d9278ceac5d95a",
+    "title": "BOOKIE - Premium Web Experience",
+    "slug": "01_premium_web_experience",
+    "codeFile": "01_premium_web_experience.html",
+    "imageFile": "01_premium_web_experience.png"
+  },
+  {
+    "index": 2,
+    "id": "18bdb4fe8a544179a2d5a0b04e4705e0",
+    "title": "BOOKIE - Materials Library (Web Experience)",
+    "slug": "02_materials_library",
+    "codeFile": "02_materials_library.html",
+    "imageFile": "02_materials_library.png"
+  },
+  {
+    "index": 3,
+    "id": "7f21206e1d92476586ba3e1c17f5018c",
+    "title": "BOOKIE - Test Series Hub",
+    "slug": "03_test_series_hub",
+    "codeFile": "03_test_series_hub.html",
+    "imageFile": "03_test_series_hub.png"
+  },
+  {
+    "index": 4,
+    "id": "5a48ea75aad74e56b26d93bd40ca2d52",
+    "title": "BOOKIE - Aspirant Lounge (Community)",
+    "slug": "04_aspirant_lounge",
+    "codeFile": "04_aspirant_lounge.html",
+    "imageFile": "04_aspirant_lounge.png"
+  },
+  {
+    "index": 5,
+    "id": "3fe4f63d4e33434c93d51bbbcd7fbaff",
+    "title": "BOOKIE Typography Guidelines - Ruling Main Font",
+    "slug": "05_typography_guidelines",
+    "codeFile": "05_typography_guidelines.md",
+    "imageFile": null
+  },
+  {
+    "index": 6,
+    "id": "20d3924ee8854d7ab35d4cabffb747ee",
+    "title": "BOOKIE - Direct 1v1 Support & Inbox",
+    "slug": "06_direct_support_inbox",
+    "codeFile": "06_direct_support_inbox.html",
+    "imageFile": "06_direct_support_inbox.png"
+  },
+  {
+    "index": 7,
+    "id": "68b7bd93e27544c8b173c827be1c149b",
+    "title": "BOOKIE - Ultra-Premium Master Navigation Bar",
+    "slug": "07_ultra_premium_navbar",
+    "codeFile": "07_ultra_premium_navbar.html",
+    "imageFile": "07_ultra_premium_navbar.png"
+  },
+  {
+    "index": 8,
+    "id": "592b69144d7d4af3bdfddf3dbdb86c7d",
+    "title": "BOOKIE - Bookie AI Mobile Assistant",
+    "slug": "08_ai_mobile_assistant",
+    "codeFile": "08_ai_mobile_assistant.html",
+    "imageFile": "08_ai_mobile_assistant.png"
+  }
+]

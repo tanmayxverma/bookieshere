@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-100" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Bookie AI 🤖✨ — Personal JEE &amp; NEET Mentor</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            },
+            amber: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              400: '#fbbf24',
+              500: '#f59e0b',
+            }
+          },
+          fontFamily: {
+            syne: ['Syne', 'sans-serif'],
+            jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+            newsreader: ['Newsreader', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            inter: ['Inter', 'sans-serif'],
+          },
+          backgroundImage: {
+            'grid-pattern': "radial-gradient(circle at 1px 1px, rgba(37, 99, 235, 0.08) 1.2px, transparent 0)",
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Fonts Embedding -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols for crisp mobile icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .blueprint-grid {
+      background-size: 20px 20px;
+    }
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-100/90 text-slate-800 font-inter antialiased flex items-center justify-center p-2 sm:p-4 selection:bg-brand-100 selection:text-brand-700">
+<!-- Mobile Screen / Modal Container (Portrait Mobile 390px max-width, elevated tactile card) -->
+<div class="w-full max-w-[390px] h-[720px] max-h-[96vh] flex flex-col bg-white rounded-[28px] border border-slate-200/90 shadow-[0_20px_50px_-12px_rgba(30,41,59,0.18),0_0_1px_1px_rgba(0,0,0,0.04)] overflow-hidden relative">
+<!-- Top Blueprint Accent Strip -->
+<div class="h-1.5 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-sky-400 shrink-0"></div>
+<!-- BEGIN: Compact Header -->
+<header class="px-4 py-3 bg-white/95 backdrop-blur-md border-b border-slate-100 flex items-center justify-between shrink-0 z-10" data-purpose="mobile-header">
+<div class="flex items-center gap-2.5">
+<!-- AI Bot Spark Badge -->
+<div class="relative">
+<div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/25">
+<span class="text-base select-none">🤖</span>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h1 class="font-syne font-extrabold text-base tracking-tight text-slate-900 leading-none">
+              BOOKIE AI
+            </h1>
+<span class="px-1.5 py-0.5 rounded-full text-[9px] font-mono font-semibold bg-blue-50 text-blue-600 border border-blue-200/60 leading-none">
+              v2.4
+            </span>
+</div>
+<p class="text-[11px] font-jakarta text-slate-500 font-medium tracking-tight mt-0.5 leading-tight">
+            Your personal JEE &amp; NEET study assistant
+          </p>
+</div>
+</div>
+<!-- Quick Action Controls -->
+<div class="flex items-center gap-1">
+<button aria-label="Clear Chat" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 active:scale-95 transition" title="Reset Session">
+<span class="material-symbols-outlined text-[17px]">delete_sweep</span>
+</button>
+<button aria-label="Minimize" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 active:scale-95 transition" title="Minimize">
+<span class="material-symbols-outlined text-[17px]">remove</span>
+</button>
+<button aria-label="Close" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-95 transition" title="Close">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</header>
+<!-- END: Compact Header -->
+<!-- BEGIN: Scrollable Content Body (With original subtle blueprint grid pattern) -->
+<main class="flex-1 overflow-y-auto px-3.5 py-3.5 space-y-3.5 blueprint-grid bg-grid-pattern bg-[#fafbfc]" data-purpose="chat-stream">
+<!-- Welcoming Bookie AI Greeting Bubble -->
+<section class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm relative space-y-3" data-purpose="mentor-welcome">
+<div class="flex items-start gap-2.5">
+<!-- Spark icon -->
+<div class="w-7 h-7 rounded-lg bg-amber-50 border border-amber-200 text-amber-500 flex items-center justify-center text-sm shrink-0 mt-0.5">
+            ✨
+          </div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-syne font-bold text-xs tracking-wide text-slate-900 uppercase">Bookie Mentor</span>
+<span class="font-mono text-[10px] text-slate-400">Online</span>
+</div>
+<p class="text-[13px] text-slate-700 font-inter leading-relaxed mt-1">
+              Hi 👋 I’m <strong class="text-slate-900 font-semibold">Bookie AI</strong> — your personal JEE &amp; NEET study mentor. Ask me concept doubts, exam strategy, or find any study material 📚💪
+            </p>
+</div>
+</div>
+<!-- Relatable Editorial Quote Snippet -->
+<div class="border-l-2 border-brand-500 bg-brand-50/50 rounded-r-xl px-3 py-2">
+<p class="font-newsreader italic text-[12.5px] text-slate-700 leading-snug">
+            "Rank isn't decided by how many books you download, but by clarity in concepts."
+          </p>
+<span class="font-jakarta text-[10px] font-semibold text-brand-600 block mt-1 tracking-tight">
+            — Kota Mentor Wisdom
+          </span>
+</div>
+</section>
+<!-- Quick Action Cards Section -->
+<section class="space-y-1.5" data-purpose="quick-action-cards">
+<span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold px-1">
+          Recommended Topics
+        </span>
+<div class="grid grid-cols-2 gap-2">
+<button class="p-2.5 bg-white hover:bg-blue-50/40 active:bg-blue-50 border border-slate-200/90 hover:border-blue-300 rounded-xl text-left transition flex items-center gap-2 group shadow-xs">
+<span class="w-6 h-6 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs shrink-0">❓</span>
+<div class="truncate">
+<div class="font-jakarta font-bold text-xs text-slate-800 group-hover:text-blue-600 leading-none">Ask a Doubt</div>
+<span class="text-[10px] text-slate-400 font-inter truncate block mt-0.5">Physics / Chem / Bio</span>
+</div>
+</button>
+<button class="p-2.5 bg-white hover:bg-blue-50/40 active:bg-blue-50 border border-slate-200/90 hover:border-blue-300 rounded-xl text-left transition flex items-center gap-2 group shadow-xs">
+<span class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs shrink-0">📖</span>
+<div class="truncate">
+<div class="font-jakarta font-bold text-xs text-slate-800 group-hover:text-blue-600 leading-none">Find Material</div>
+<span class="text-[10px] text-slate-400 font-inter truncate block mt-0.5">PYQs &amp; Kota Notes</span>
+</div>
+</button>
+<button class="p-2.5 bg-white hover:bg-blue-50/40 active:bg-blue-50 border border-slate-200/90 hover:border-blue-300 rounded-xl text-left transition flex items-center gap-2 group shadow-xs">
+<span class="w-6 h-6 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center text-xs shrink-0">🎓</span>
+<div class="truncate">
+<div class="font-jakarta font-bold text-xs text-slate-800 group-hover:text-blue-600 leading-none">Exam Strategy</div>
+<span class="text-[10px] text-slate-400 font-inter truncate block mt-0.5">Daily schedules &amp; mock</span>
+</div>
+</button>
+<button class="p-2.5 bg-white hover:bg-blue-50/40 active:bg-blue-50 border border-slate-200/90 hover:border-blue-300 rounded-xl text-left transition flex items-center gap-2 group shadow-xs">
+<span class="w-6 h-6 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xs shrink-0">⚡</span>
+<div class="truncate">
+<div class="font-jakarta font-bold text-xs text-slate-800 group-hover:text-blue-600 leading-none">Quick Revision</div>
+<span class="text-[10px] text-slate-400 font-inter truncate block mt-0.5">Formula flashcards</span>
+</div>
+</button>
+</div>
+</section>
+<!-- Sample Interaction: Student User Message Bubble -->
+<div class="flex justify-end pt-1">
+<div class="max-w-[85%] bg-blue-600 text-white rounded-2xl rounded-tr-sm px-3.5 py-2.5 shadow-sm text-xs font-inter leading-relaxed">
+<p>Bookie, how do I deal with backlogs in Rotational Motion before mocks?</p>
+<span class="block text-right text-[9.5px] font-mono text-blue-200 mt-1">10:42 PM</span>
+</div>
+</div>
+<!-- Bookie Response Pill -->
+<div class="flex justify-start">
+<div class="max-w-[88%] bg-white border border-slate-200/90 rounded-2xl rounded-tl-sm px-3.5 py-2.5 shadow-xs text-xs font-inter space-y-1.5">
+<div class="flex items-center gap-1.5 text-blue-600 font-syne font-bold text-[11px]">
+<span>✨</span>
+<span>BOOKIE MENTOR TIP</span>
+</div>
+<p class="text-slate-700 leading-relaxed text-[12.5px]">
+            Split into 3 modules: <span class="font-medium text-slate-900">1. MOI &amp; Parallel Axis</span>, <span class="font-medium text-slate-900">2. Torque equation (τ = Iα)</span>, and <span class="font-medium text-slate-900">3. Pure Rolling condition (v = ωR)</span>. Don't jump to Irodov immediately — master previous 5 years' JEE Main first!
+          </p>
+</div>
+</div>
+</main>
+<!-- END: Scrollable Content Body -->
+<!-- BEGIN: Clean Mobile Input Bar -->
+<footer class="p-3 bg-white border-t border-slate-100 shrink-0" data-purpose="chat-input-container">
+<form class="flex items-center gap-1.5 bg-slate-50 border border-slate-200/90 rounded-2xl px-2 py-1.5 focus-within:bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/10 transition" onsubmit="event.preventDefault();">
+<!-- Voice Input Trigger -->
+<button aria-label="Microphone" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-xl transition" title="Speak question" type="button">
+<span class="material-symbols-outlined text-[19px]">mic</span>
+</button>
+<!-- Attachment / Camera / Formula Trigger -->
+<button aria-label="Attach Photo or Formula" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-xl transition" title="Upload question / formula" type="button">
+<span class="material-symbols-outlined text-[19px]">image</span>
+</button>
+<!-- Input Field -->
+<input class="flex-1 min-w-0 bg-transparent border-0 p-0 text-[13px] text-slate-800 placeholder-slate-400 font-inter focus:ring-0 focus:outline-none" placeholder="Ask me anything about your studies..." type="text"/>
+<!-- Paper Airplane Send Button -->
+<button aria-label="Send Doubt" class="w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white flex items-center justify-center shadow-sm shadow-blue-500/30 transition duration-150 shrink-0" type="submit">
+<span class="material-symbols-outlined text-[17px] -rotate-45 -mr-0.5">send</span>
+</button>
+</form>
+<!-- Safe Area Micro Telemetry Indicator -->
+<div class="mt-1.5 flex items-center justify-between px-1 text-[10px] text-slate-400 font-mono">
+<span class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Bookie AI Online
+        </span>
+<span>Target: JEE / NEET 2026-27</span>
+</div>
+</footer>
+<!-- END: Clean Mobile Input Bar -->
+</div>
+</body></html>

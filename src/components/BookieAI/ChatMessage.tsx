@@ -164,17 +164,17 @@ export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessagePr
                  },
                   // Headings
                   h1: ({ children }) => (
-                    <h1 className="text-base font-bold mb-2 mt-4 first:mt-0 text-foreground">{children}</h1>
+                    <h1 className="font-ruling font-extrabold text-base mb-2 mt-4 first:mt-0 text-foreground tracking-tight">{children}</h1>
                   ),
                   h2: ({ children }) => (
-                    <h2 className="text-sm font-bold mb-2 mt-3 first:mt-0 text-foreground">{children}</h2>
+                    <h2 className="font-heading font-bold text-sm mb-2 mt-3 first:mt-0 text-foreground">{children}</h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="text-sm font-semibold mb-1.5 mt-2 first:mt-0 text-foreground">{children}</h3>
+                    <h3 className="font-heading font-semibold text-sm mb-1.5 mt-2 first:mt-0 text-foreground">{children}</h3>
                   ),
                   // Blockquote
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-2 border-primary/40 pl-3 my-3 text-muted-foreground italic">
+                    <blockquote className="border-l-2 border-primary/60 bg-primary/5 rounded-r-lg px-3 py-2 my-3 font-editorial italic text-foreground/80 text-xs leading-relaxed">
                       {children}
                     </blockquote>
                   ),
@@ -188,7 +188,7 @@ export function ChatMessage({ role, content, imageUrl, isLatest }: ChatMessagePr
               </ReactMarkdown>
             </div>
           ) : (
-            <p className="text-sm leading-relaxed">{content}</p>
+            <p className="font-body text-sm leading-relaxed">{content}</p>
           )}
         </div>
       </div>

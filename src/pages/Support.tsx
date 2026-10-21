@@ -165,7 +165,7 @@ export default function SupportPage() {
               <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white font-display">
+                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white font-ruling">
                       DIRECT INBOX
                     </span>
                     <span className="bg-blue-100 dark:bg-blue-950 text-brand-blue text-[11px] font-bold px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-900 font-mono">
@@ -205,7 +205,7 @@ export default function SupportPage() {
                       💻
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-xs font-black text-slate-900 dark:text-white truncate font-display">
+                      <h4 className="text-xs font-black text-slate-900 dark:text-white truncate font-ruling">
                         Solo Dev &amp; Fellow Aspirant
                       </h4>
                       <p className="text-[10px] text-cyan-600 dark:text-cyan-400 font-mono font-medium truncate">
@@ -223,7 +223,7 @@ export default function SupportPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="text-base leading-none">☕</span>
-                      <h4 className="text-xs font-black text-slate-900 dark:text-amber-100 font-display">
+                      <h4 className="text-xs font-black text-slate-900 dark:text-amber-100 font-ruling">
                         Buy Me a Chai
                       </h4>
                     </div>
@@ -237,7 +237,7 @@ export default function SupportPage() {
                   <button
                     type="button"
                     onClick={() => navigate('/donate')}
-                    className="w-full py-2 px-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.99] text-slate-950 font-black text-xs rounded-xl shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer font-display"
+                    className="w-full py-2 px-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.99] text-slate-950 font-black text-xs rounded-xl shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer font-ruling"
                   >
                     <span>☕ Buy Me a Chai ❤️</span>
                   </button>

@@ -167,11 +167,28 @@ export function useCommunity(sort: Sort = 'recent') {
       subject,
       body,
       image_url,
-    }).select().single();
+    }).select('*, author:profiles!community_posts_profile_id_fkey(display_name, avatar_url, target_category)').single();
     if (error) throw error;
+
+    // Optimistically prepend to the very top so it appears instantly
+    const newShaped: CommunityPost = {
+      ...data,
+      subject,
+      body,
+      title: subject,
+      content: body,
+      author_name: data.author?.display_name || profile?.display_name || 'You',
+      author_avatar: data.author?.avatar_url || profile?.avatar_url || null,
+      reactions: {},
+      my_reaction: null,
+      comment_count: 0,
+      comments_count: 0,
+      created_at: data.created_at || new Date().toISOString(),
+    };
+    setPosts(prev => [newShaped, ...prev.filter(p => p.id !== data.id)]);
     load();
     return data;
-  }, [user?.id, profile?.id, profile?.user_id, load]);
+  }, [user?.id, profile?.id, profile?.user_id, profile?.display_name, profile?.avatar_url, load]);
 
   const deletePost = useCallback(async (id: string) => {
     const { error } = await (supabase as any).from('community_posts').delete().eq('id', id);

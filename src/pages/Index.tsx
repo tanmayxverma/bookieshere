@@ -26,118 +26,107 @@ const Index = () => {
             {/* Left Column: Hero Banter & CTAs */}
             <div className="lg:col-span-7 space-y-6">
               {/* Welcome Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50/80 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-brand-blue dark:text-blue-400 text-xs font-mono font-bold">
-                <span className="w-2 h-2 rounded-full bg-brand-blue animate-ping"></span>
-                {firstName ? `WELCOME BACK, ${firstName.toUpperCase()} • ` : ""}JEE 2027 TARGET
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-blue-50/90 dark:bg-blue-950/70 border border-blue-200/80 dark:border-blue-800 text-brand-blue dark:text-blue-400 text-xs font-mono font-medium shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
+                <span className="font-bold tracking-wide">{firstName ? `WELCOME BACK, ${firstName.toUpperCase()} • ` : ""}JEE 2027 TARGET SYSTEM</span>
               </div>
               
               {/* Big Headline */}
               <div className="space-y-1">
-                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-display tracking-tight leading-[1.05] text-brand-dark dark:text-white uppercase">
+                <h1 className="text-4xl sm:text-5xl xl:text-6xl font-ruling font-extrabold tracking-tight leading-[1.05] text-slate-950 dark:text-white uppercase">
                   SURVIVE THE <br/>
-                  <span className="text-brand-blue italic wavy-underline">SYLLABUS.</span><br/>
+                  <span className="text-brand-blue italic relative inline-block">
+                    SYLLABUS.
+                    <span className="absolute -bottom-1 left-0 w-full h-1 bg-amber-400 rounded-full opacity-80" />
+                  </span><br/>
                   RULE THE RANKS.
                 </h1>
               </div>
 
-              <p className="text-slate-600 dark:text-slate-300 text-base sm:text-xl font-medium leading-relaxed max-w-xl">
-                Your single platform for <strong className="text-slate-900 dark:text-white font-bold">JEE materials</strong>, savagely honest mocks, and test strategies — engineered with clarity, zero fluff, and anti-burnout humor.
+              <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg font-medium leading-relaxed max-w-xl">
+                Your single unified workspace for <strong className="text-slate-900 dark:text-white font-semibold">JEE materials</strong>, savagely honest mocks, and test strategies — engineered with mathematical clarity, zero fluff, and anti-burnout humor.
               </p>
 
               {/* CTA Buttons Row */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link
                   to="/materials"
-                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 rounded-full bg-brand-blue text-white font-bold text-sm sm:text-base hover:bg-blue-600 transition-all shadow-brutal-blue hover:-translate-y-0.5 active:translate-y-0 text-center"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-brand-blue text-white font-bold text-sm hover:bg-blue-600 transition shadow-sm hover:-translate-y-0.5 active:translate-y-0 text-center"
                 >
-                  <BookOpen className="w-5 h-5" />
+                  <BookOpen className="w-4 h-4" />
                   BROWSE MATERIALS →
                 </Link>
                 <Link
                   to="/tests"
-                  className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-full bg-white dark:bg-slate-900 text-brand-dark dark:text-white font-bold text-sm sm:text-base border-2 border-slate-900 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-brutal dark:shadow-none hover:-translate-y-0.5 text-center"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white dark:bg-slate-900 text-slate-950 dark:text-white font-bold text-sm border-2 border-slate-900 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm hover:-translate-y-0.5 text-center"
                 >
-                  <FileText className="w-5 h-5" />
+                  <FileText className="w-4 h-4" />
                   PRACTICE TESTS
                 </Link>
                 <Link
                   to="/support"
-                  className="inline-flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-brand-blue dark:hover:text-blue-400 font-mono font-bold text-xs sm:text-sm underline underline-offset-4 decoration-2 decoration-blue-200 dark:decoration-blue-800 hover:decoration-brand-blue transition-colors px-2 py-2 text-center"
+                  className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-brand-blue dark:hover:text-blue-400 font-mono font-bold text-xs sm:text-sm pl-2 py-2"
                 >
                   <span>🎧</span> CHAT SUPPORT
                 </Link>
               </div>
-
-              {/* Sticky Note Banter Box */}
-              <div className="relative mt-8 pt-4 max-w-lg">
-                <div className="sticker-tape"></div>
-                <div className="bg-brand-softYellow dark:bg-amber-950/40 border-2 border-amber-300/80 dark:border-amber-700/60 rounded-2xl p-4 shadow-sm relative rotate-[-1deg] hover:rotate-0 transition-transform">
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">✨</span>
-                    <div>
-                      <p className="font-mono text-xs font-extrabold text-amber-900 dark:text-amber-300 tracking-wide uppercase">
-                        BATCH REALITY CHECK
-                      </p>
-                      <p className="text-sm font-semibold text-amber-950 dark:text-amber-200 mt-1 leading-snug">
-                        <span className="italic font-bold">Kuchuuu Puchuuu!</span> MathonGo, Allen aur PW ke naye test series questions upload ho chuke hain. 
-                        Ab website pe jao aur test do, warna rank goodnight bol degi!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            {/* Right Column: Promo Card + Live Stats Dashboard */}
-            <div className="lg:col-span-5 space-y-5">
-              <div className="bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-6 shadow-brutal dark:shadow-none relative overflow-hidden">
-                <div className="absolute top-4 right-4">
-                  <span className="bg-brand-blue text-white text-[11px] font-mono font-extrabold px-2.5 py-1 rounded-md tracking-wider">
+            {/* Right Column: Unified Promo Card */}
+            <div className="lg:col-span-5" data-purpose="promo-card">
+              <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-700 shadow-sm relative overflow-hidden transition hover:-translate-y-0.5 duration-200">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[11px] font-mono tracking-wider font-extrabold text-blue-700 dark:text-blue-400 bg-blue-50/90 dark:bg-blue-950/70 px-2.5 py-1 rounded-md border border-blue-200 dark:border-blue-800 uppercase">
+                    PROMO ACTIVE
+                  </span>
+                  <span className="text-[10px] font-mono font-bold bg-brand-blue text-white px-2.5 py-1 rounded-full uppercase tracking-wider">
                     LIMITED
                   </span>
                 </div>
-                <div className="space-y-1">
-                  <span className="text-[11px] font-mono font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">PROMO ACTIVE</span>
-                  <div className="text-3xl font-black font-display text-brand-dark dark:text-white">10% OFF</div>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">On any PW batch with the community code below.</p>
-                </div>
                 
-                <div className="mt-4 flex items-center justify-between bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 hover:border-brand-blue transition-colors">
-                  <span className="font-mono font-extrabold text-brand-blue tracking-wider text-base select-all">9906DZRL</span>
-                  <button onClick={handleCopyCoupon} className="text-slate-500 dark:text-slate-400 hover:text-brand-blue transition-colors p-1" title="Copy coupon code">
-                    <Copy className="w-5 h-5" />
+                <div className="flex items-baseline gap-2 mb-1">
+                  <h2 className="text-3xl font-display font-black text-slate-950 dark:text-white tracking-tight">10% OFF</h2>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium font-mono">community privilege</span>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mb-4">On any PW batch with the community code below.</p>
+                
+                <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 mb-4 group hover:border-brand-blue transition-colors">
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-mono font-semibold text-slate-400 uppercase tracking-widest">COUPON CODE</span>
+                    <span className="font-mono font-extrabold text-brand-blue tracking-wider text-base select-all">9906DZRL</span>
+                  </div>
+                  <button onClick={handleCopyCoupon} className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-brand-blue transition-colors rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-2xs" title="Copy coupon code">
+                    <Copy className="w-4 h-4" />
                   </button>
                 </div>
                 
-                <a href="https://physicswallah.onelink.me/ZAZB/km5qwl9y" target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-1 text-xs font-mono font-extrabold text-brand-blue hover:underline tracking-wider">
+                <a href="https://physicswallah.onelink.me/ZAZB/km5qwl9y" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-mono font-extrabold text-brand-blue hover:underline tracking-wider mb-4">
                   GET DISCOUNT <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
-              </div>
 
-              {/* Advertise Callout */}
-              <div className="px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-dashed border-slate-300 dark:border-slate-700 text-center shadow-xs">
-                <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                {/* Value Chips Strip */}
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 grid grid-cols-3 gap-2 text-left">
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
+                    <div className="text-[9px] font-mono text-slate-400 uppercase font-bold tracking-wider">FREE</div>
+                    <div className="text-xs font-extrabold text-slate-900 dark:text-white mt-0.5">Full Access</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
+                    <div className="text-[9px] font-mono text-slate-400 uppercase font-bold tracking-wider">NO</div>
+                    <div className="text-xs font-extrabold text-slate-900 dark:text-white mt-0.5">Credit Card</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
+                    <div className="text-[9px] font-mono text-slate-400 uppercase font-bold tracking-wider">DAILY</div>
+                    <div className="text-xs font-extrabold text-slate-900 dark:text-white mt-0.5">PYQ Drop</div>
+                  </div>
+                </div>
+
+                {/* Subtle Sponsor Placement */}
+                <p className="text-[11px] text-center text-slate-400 dark:text-slate-500 font-normal mt-3">
                   You can advertise yourself here, contact owner through{" "}
-                  <Link to="/support" className="text-brand-blue font-bold underline hover:text-brand-dark dark:hover:text-white transition-colors">
+                  <Link to="/support" className="text-brand-blue font-semibold underline hover:text-slate-900 dark:hover:text-white transition-colors">
                     support
-                  </Link>{" "}
-                  for it.
+                  </Link>.
                 </p>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
-                  <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">FREE</div>
-                  <div className="text-sm font-black text-brand-dark dark:text-white mt-0.5">Full Access</div>
-                </div>
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
-                  <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">NO</div>
-                  <div className="text-sm font-black text-brand-dark dark:text-white mt-0.5">Credit Card</div>
-                </div>
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm text-left">
-                  <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">DAILY</div>
-                  <div className="text-sm font-black text-brand-dark dark:text-white mt-0.5">PYQ Drop</div>
-                </div>
               </div>
             </div>
           </section>
@@ -182,30 +171,30 @@ const Index = () => {
               </article>
 
               {/* Chemistry */}
-              <article className="bg-brand-yellow dark:bg-amber-950/40 border-2 border-slate-900 dark:border-amber-700/60 rounded-2xl p-6 shadow-brutal dark:shadow-none flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+              <article className="bg-amber-100/70 dark:bg-amber-950/40 border-2 border-slate-900 dark:border-amber-700/60 rounded-2xl p-6 shadow-sm flex flex-col justify-between group hover:-translate-y-1 transition-all">
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-[11px] font-mono font-extrabold text-amber-950 dark:text-amber-200 tracking-wider">02 / THE 3 AM DELUSION</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white dark:bg-slate-900 text-amber-900 dark:text-amber-300">Organic Chemistry</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white dark:bg-slate-900 text-amber-900 dark:text-amber-300 border border-amber-900/10">Organic Chemistry</span>
                   </div>
                   <h3 className="text-2xl font-display font-black leading-snug text-amber-950 dark:text-amber-200">
                     The 3 AM motivation spike.
                   </h3>
-                  <div className="bg-white/90 dark:bg-slate-900/80 rounded-xl p-3.5 mt-3 border border-amber-900/20 dark:border-amber-600/30 text-xs font-mono text-amber-900 dark:text-amber-200 font-semibold italic shadow-sm">
+                  <div className="bg-white/85 dark:bg-slate-900/80 rounded-xl p-3.5 mt-3 border border-amber-900/15 dark:border-amber-600/30 text-xs font-serif italic text-amber-950 dark:text-amber-200 leading-relaxed shadow-xs">
                     "Organic Chem at 3 AM makes total sense until you wake up next morning and can't name a single ketone."
                   </div>
                   <p className="text-amber-950 dark:text-amber-200/90 text-sm mt-3 font-medium leading-relaxed">
                     Reaction mechanism flowcharts, GOC acidity orders, and MS Chouhan question banks indexed with hints.
                   </p>
                 </div>
-                <div className="mt-6 pt-4 border-t border-amber-400 dark:border-amber-700/60 flex items-center justify-between">
+                <div className="mt-6 pt-4 border-t border-amber-300 dark:border-amber-700/60 flex items-center justify-between">
                   <span className="font-mono text-xs font-bold text-amber-900 dark:text-amber-300">Named Reactions Cheat Sheet</span>
                   <Link to="/materials" className="w-8 h-8 rounded-full bg-amber-950 dark:bg-amber-900 text-white flex items-center justify-center font-mono hover:bg-white hover:text-amber-950 transition-colors">→</Link>
                 </div>
               </article>
 
               {/* Mathematics */}
-              <article className="bg-slate-900 dark:bg-slate-950 text-white border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-6 shadow-brutal dark:shadow-none flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+              <article className="bg-slate-900 dark:bg-slate-950 text-white border-2 border-slate-900 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col justify-between group hover:-translate-y-1 transition-all">
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-[11px] font-mono font-extrabold text-blue-400 tracking-wider">03 / REALITY CHECK</span>
@@ -238,7 +227,10 @@ const Index = () => {
                   Batch Buzz & Relatable Trauma
                 </h2>
               </div>
-              <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 hidden md:block">Live Aspirant Feed</span>
+              <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800 px-3 py-1 rounded-full">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                Live Aspirant Feed
+              </span>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -254,7 +246,7 @@ const Index = () => {
                   </div>
                   <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded">▲ 7.4K</span>
                 </div>
-                <div className="bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/80 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-amber-950 dark:text-amber-200 leading-relaxed italic">
+                <div className="bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/80 rounded-xl p-3.5 text-xs text-slate-800 dark:text-amber-100 font-serif italic leading-relaxed">
                   “Kuch nahi padha” ka matlab: Sirf NCERT, 15 saal ke PYQs, coaching modules aur 14 mock tests.
                 </div>
                 <div>
@@ -279,7 +271,7 @@ const Index = () => {
                   </div>
                   <span className="font-mono text-xs font-bold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded">▲ 5.9K</span>
                 </div>
-                <div className="bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-800/80 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-rose-950 dark:text-rose-200 leading-relaxed italic">
+                <div className="bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-800/80 rounded-xl p-3.5 text-xs text-slate-800 dark:text-rose-100 font-serif italic leading-relaxed">
                   Marks discuss nahi karenge. User experience solid tha. Invigilator bhi chill the.
                 </div>
                 <div>
@@ -304,7 +296,7 @@ const Index = () => {
                   </div>
                   <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">▲ 4.6K</span>
                 </div>
-                <div className="bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/80 rounded-xl p-4 font-mono text-xs sm:text-sm font-bold text-emerald-950 dark:text-emerald-200 leading-relaxed italic">
+                <div className="bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/80 rounded-xl p-3.5 text-xs text-slate-800 dark:text-emerald-100 font-serif italic leading-relaxed">
                   Chapter: “Main toh bilkul easy hoon.” <br/>First PYQ: “Toh ab prove karke dikhao.”
                 </div>
                 <div>

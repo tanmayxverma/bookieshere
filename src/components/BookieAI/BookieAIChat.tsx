@@ -240,8 +240,13 @@ export function BookieAIChat() {
               <Sparkles className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="font-display font-semibold text-foreground text-sm">Bookie AI 🤖</h3>
-              <p className="text-xs text-muted-foreground">Your personal study assistant</p>
+              <h3 className="font-ruling font-extrabold text-foreground text-sm tracking-tight flex items-center gap-1.5">
+                BOOKIE AI
+                <span className="text-[10px] bg-primary/10 text-primary border border-primary/25 px-1.5 py-0.5 rounded font-mono font-medium tracking-normal">
+                  v2.4
+                </span>
+              </h3>
+              <p className="text-xs text-muted-foreground">Your personal JEE &amp; NEET study assistant</p>
             </div>
           </div>
           <div className="flex items-center gap-1">
@@ -293,6 +298,18 @@ export function BookieAIChat() {
                 isLatest={i === messages.length - 1}
               />
             ))}
+
+            {/* Editorial Mentor Wisdom Quote (From Stitch Screen 8) */}
+            {messages.length <= 1 && (
+              <div className="border-l-2 border-primary/60 bg-primary/5 rounded-r-xl px-3.5 py-2.5 my-2 animate-fade-in">
+                <p className="font-editorial italic text-xs text-foreground/80 leading-snug">
+                  "Rank isn't decided by how many books you download, but by clarity in concepts."
+                </p>
+                <span className="font-heading text-[10px] font-semibold text-primary block mt-1 tracking-tight">
+                  — Kota Mentor Wisdom
+                </span>
+              </div>
+            )}
             
             {/* Typing Indicator */}
             {isLoading && messages[messages.length - 1]?.role === "user" && (

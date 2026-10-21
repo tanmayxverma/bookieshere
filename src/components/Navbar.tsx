@@ -82,11 +82,11 @@ export function Navbar() {
                 }}
               />
             </div>
-            <div className="flex items-baseline">
-              <span className="font-display font-black text-xl sm:text-2xl tracking-tighter text-brand-dark dark:text-white group-hover:text-brand-blue transition-colors">
+            <div className="flex items-center">
+              <span className="font-ruling font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white group-hover:text-brand-blue transition-colors">
                 BOOKIE
               </span>
-              <span className="text-brand-blue font-bold text-xs ml-0.5">®</span>
+              <span className="w-2 h-2 rounded-full bg-brand-blue ml-1 inline-block animate-pulse shadow-xs shadow-brand-blue" />
             </div>
           </Link>
         </div>
@@ -103,14 +103,15 @@ export function Navbar() {
                 className={cn(
                   "px-3 py-1.5 rounded-full transition-all duration-150 active:scale-95 flex items-center gap-1.5 text-xs xl:text-sm",
                   active
-                    ? "bg-blue-50 dark:bg-blue-950/60 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
+                    ? "bg-blue-50 dark:bg-blue-950/60 text-brand-blue dark:text-blue-400 font-bold shadow-xs border border-blue-100/70 dark:border-blue-800/60"
                     : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium"
                 )}
               >
                 <Icon className={cn("w-4 h-4", active ? "text-brand-blue dark:text-blue-400" : "text-slate-500 dark:text-slate-400")} />
                 <span>{link.label}</span>
                 {link.badge && (
-                  <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 px-1 py-0.2 rounded font-mono font-bold">
+                  <span className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800 leading-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     {link.badge}
                   </span>
                 )}
@@ -124,9 +125,9 @@ export function Navbar() {
           {/* Chai Break Button (hidden on small mobile to preserve room) */}
           <Link
             to="/donate"
-            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all duration-150 active:scale-95"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all duration-150 active:scale-95 shadow-xs"
           >
-            <span>☕</span>
+            <span className="text-sm">☕</span>
             <span>Chai</span>
           </Link>
 

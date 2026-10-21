@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-50" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BOOKIE - Support &amp; Direct 1v1 Inbox</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts Preconnect & Stylesheets -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;700&amp;family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet"/>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            syne: ['Syne', 'sans-serif'],
+            jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+            editorial: ['Newsreader', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            },
+            chai: {
+              50: '#fefce8',
+              100: '#fef9c3',
+              200: '#fef08a',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Blueprint & Texture Styles -->
+<style data-purpose="blueprint-texture">
+    /* Blueprint graph paper grid background */
+    .bg-blueprint {
+      background-color: #f8fafc;
+      background-image: 
+        linear-gradient(to right, rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(37, 99, 235, 0.05) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(241, 245, 249, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<!-- END: Custom Blueprint & Texture Styles -->
+</head>
+<body class="bg-blueprint text-slate-800 font-sans min-h-full flex flex-col selection:bg-brand-500 selection:text-white antialiased">
+<!-- BEGIN: TopNotificationBanner -->
+<aside class="bg-brand-600 text-white text-[11px] font-mono tracking-wider py-1 px-4 flex items-center justify-between shadow-inner border-b border-brand-700">
+<div class="flex items-center gap-2 mx-auto">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="font-bold">SOLO CREATOR STATUS:</span>
+<span class="font-sans text-brand-100">Solving Rotational Motion &amp; Mechanics • Replies scheduled during study breaks (next active in ~35 mins)</span>
+</div>
+<div class="hidden md:flex items-center gap-3 text-brand-200">
+<span>SERVER LATENCY: 14ms</span>
+<span>•</span>
+<span>VERSION: v2026.4</span>
+</div>
+</aside>
+<!-- END: TopNotificationBanner -->
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+<!-- Brand Logo -->
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2 group" href="#">
+<!-- Tactile Stamp / Logo Icon -->
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="font-syne font-black text-2xl tracking-tighter text-slate-900 leading-none">BOOKIE<span class="text-brand-600">.</span></span>
+<span class="font-mono text-[9px] text-slate-400 font-semibold tracking-widest uppercase">Aspirant Network</span>
+</div>
+</a>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden lg:flex items-center gap-1 font-sans text-sm font-medium text-slate-600">
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-slate-100 transition-colors flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Home
+        </a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-slate-100 transition-colors flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Materials
+        </a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-slate-100 transition-colors flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Tests
+        </a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-slate-100 transition-colors flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          YPT
+          <span class="bg-emerald-100 text-emerald-700 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">Live</span>
+</a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-slate-100 transition-colors flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Portals
+        </a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-slate-100 transition-colors flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Community
+        </a>
+<!-- Active Tab -->
+<a class="px-3.5 py-1.5 rounded-lg bg-brand-50 text-brand-600 font-semibold border border-brand-200 flex items-center gap-1.5 shadow-sm" href="#">
+<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path></svg>
+          Support
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+</a>
+</nav>
+<!-- Right Utility Controls -->
+<div class="flex items-center gap-2.5">
+<!-- Chai Support Button -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-chai-100 hover:bg-chai-200 border border-chai-400/60 text-amber-900 text-xs font-jakarta font-bold transition-all shadow-sm">
+<span>☕</span>
+<span>Chai</span>
+</button>
+<!-- Notification Bell -->
+<button aria-label="Notifications" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors relative">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-500 rounded-full border-2 border-white"></span>
+</button>
+<!-- Light/Dark Mode -->
+<button aria-label="Toggle Theme" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<!-- Streak Pill -->
+<div class="flex items-center gap-1.5 bg-slate-900 text-white px-2.5 py-1 rounded-full text-xs font-mono font-bold shadow-sm">
+<span class="text-amber-400">🔥</span>
+<span>8d</span>
+<span class="text-slate-400 text-[10px]">STREAK</span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContentWorkspace -->
+<main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-4 md:p-6 flex flex-col">
+<!-- Outer Card Shell -->
+<div class="flex-1 bg-white border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-200/50 flex flex-col lg:flex-row overflow-hidden min-h-[760px]">
+<!-- ===================================================================== -->
+<!-- BEGIN: LeftSidebar (Support Hub & Quick Starters, ~380px)            -->
+<!-- ===================================================================== -->
+<section class="w-full lg:w-[380px] border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col bg-slate-50/70" data-purpose="left-inbox-sidebar">
+<!-- Sidebar Header -->
+<div class="p-4 sm:p-5 border-b border-slate-200 bg-white">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<h1 class="font-syne font-black text-xl tracking-tighter uppercase text-slate-900">DIRECT INBOX</h1>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-brand-100 text-brand-700 border border-brand-200">1v1</span>
+</div>
+<!-- Status Badge -->
+<div class="flex items-center gap-1.5 bg-chai-100/80 border border-chai-400/50 px-2.5 py-1 rounded-full">
+<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+<span class="text-[11px] font-jakarta font-bold text-amber-900">Replies in Free Time</span>
+</div>
+</div>
+<!-- Tactile Search Box -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<input class="w-full pl-9 pr-14 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-sans text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all shadow-inner" placeholder="Search messages, doubts, or topics..." type="text"/>
+<span class="absolute inset-y-0 right-2 flex items-center text-[10px] font-mono text-slate-400 font-semibold pointer-events-none">⌘K</span>
+</div>
+</div>
+<!-- Scrollable Sidebar Cards -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4 custom-scroll">
+<!-- Card: Solo Dev Bio -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-500 to-indigo-600"></div>
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-900 text-brand-400 flex items-center justify-center shrink-0 border border-slate-800 shadow-sm">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<h2 class="font-jakarta font-bold text-sm text-slate-900">Solo Dev &amp; Aspirant</h2>
+<span class="text-[9px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-semibold uppercase">No bots</span>
+</div>
+<p class="text-[11px] font-mono text-brand-600 font-semibold mb-2">Not a 24/7 corporate team</p>
+<p class="font-editorial italic text-slate-600 text-[13px] leading-relaxed">
+                  “Hey! I build and run BOOKIE alone alongside my own competitive prep. I'm not always live, but I read every single message and reply during study breaks. Drop your message below!”
+                </p>
+</div>
+</div>
+<!-- Current Study Status Telemetry -->
+<div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono">
+<span class="text-slate-500 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                Studying: <strong>Mechanics (Irodov)</strong>
+</span>
+<span class="text-slate-400 font-medium">Free in ~35m</span>
+</div>
+</div>
+<!-- Card: Buy Me a Chai (Warm Amber Accent) -->
+<div class="bg-gradient-to-br from-chai-50 via-white to-amber-50/70 p-4 rounded-xl border border-amber-200/80 shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="text-xl">☕</span>
+<h2 class="font-jakarta font-bold text-sm text-slate-900">Buy Me a Chai</h2>
+</div>
+<span class="bg-amber-100 text-amber-800 border border-amber-300 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase">Support</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed mb-3">
+              BOOKIE is <strong>100% free with zero ads</strong>. If the notes, mock tools, or YPT timer help your prep, buying a cup of chai keeps the servers alive and fuels late-night coding!
+            </p>
+<button class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 active:scale-[0.98] text-slate-950 font-jakarta font-extrabold text-xs tracking-tight shadow-md shadow-amber-400/20 border border-amber-500/80 flex items-center justify-center gap-2 transition-all">
+<span>☕ Buy Me a Chai</span>
+<span class="text-rose-600 font-bold">❤️</span>
+</button>
+</div>
+<!-- Quick Topic Starters -->
+<div>
+<div class="flex items-center justify-between mb-2 px-1">
+<span class="text-[11px] font-mono uppercase font-bold text-slate-500 tracking-wider">Quick Topic Starters</span>
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 15l7-7 7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="p-2.5 bg-white border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 rounded-xl text-left transition-all group flex items-center gap-2 shadow-2xs">
+<span class="text-base group-hover:scale-110 transition-transform">💥</span>
+<span class="font-jakarta font-bold text-xs text-slate-700 group-hover:text-brand-700">Broken Link</span>
+</button>
+<button class="p-2.5 bg-white border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 rounded-xl text-left transition-all group flex items-center gap-2 shadow-2xs">
+<span class="text-base group-hover:scale-110 transition-transform">📖</span>
+<span class="font-jakarta font-bold text-xs text-slate-700 group-hover:text-brand-700">Book Request</span>
+</button>
+<button class="p-2.5 bg-white border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 rounded-xl text-left transition-all group flex items-center gap-2 shadow-2xs">
+<span class="text-base group-hover:scale-110 transition-transform">❓</span>
+<span class="font-jakarta font-bold text-xs text-slate-700 group-hover:text-brand-700">Study Doubt</span>
+</button>
+<button class="p-2.5 bg-white border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 rounded-xl text-left transition-all group flex items-center gap-2 shadow-2xs">
+<span class="text-base group-hover:scale-110 transition-transform">💡</span>
+<span class="font-jakarta font-bold text-xs text-slate-700 group-hover:text-brand-700">Suggest Idea</span>
+</button>
+</div>
+</div>
+<!-- Recent Threads Section -->
+<div>
+<div class="flex items-center justify-between mb-2 px-1">
+<span class="text-[11px] font-mono uppercase font-bold text-slate-500 tracking-wider">Your Past Requests</span>
+<span class="text-[10px] font-mono text-slate-400">2 ARCHIVED</span>
+</div>
+<div class="space-y-2">
+<div class="p-2.5 bg-white border border-slate-200 rounded-xl text-xs hover:border-slate-300 transition-colors cursor-pointer">
+<div class="flex items-center justify-between mb-1">
+<span class="font-semibold text-slate-800 truncate max-w-[180px]">MS Chouhan Solution PDF</span>
+<span class="text-[10px] font-mono text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.2 rounded">Solved</span>
+</div>
+<p class="text-slate-500 text-[11px] truncate">Updated mirror with high-res optical scan...</p>
+<span class="text-[10px] font-mono text-slate-400 mt-1 block">Yesterday • 11:20 PM</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: LeftSidebar -->
+<!-- ===================================================================== -->
+<!-- BEGIN: RightChatWorkspace (Direct 1v1 Console)                        -->
+<!-- ===================================================================== -->
+<section class="flex-1 flex flex-col bg-white overflow-hidden relative" data-purpose="chat-console">
+<!-- Chat Header -->
+<header class="p-3 sm:px-6 sm:py-3.5 border-b border-slate-200 bg-slate-900 text-white flex items-center justify-between shadow-xs">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white font-mono font-bold shadow-inner">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-900"></span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-jakarta font-extrabold text-sm sm:text-base tracking-tight text-white">Site Owner (Solo Creator)</h2>
+<span class="bg-amber-400 text-slate-950 font-mono text-[9px] font-black uppercase px-1.5 py-0.5 rounded tracking-wide">Replies In Free Time</span>
+</div>
+<p class="text-[11px] font-mono text-slate-300">Direct 1v1 Aspirant Inbox • Real Human Reply</p>
+</div>
+</div>
+<!-- Top-right Quick Actions -->
+<div class="flex items-center gap-2">
+<button class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-jakarta font-bold transition-all shadow-sm">
+<span>☕</span>
+<span>Buy Me a Chai</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors" title="Sync / Refresh Thread">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</header>
+<!-- Guarantee Sub-banner -->
+<div class="bg-slate-50 px-4 py-1.5 border-b border-slate-200 text-xs flex items-center justify-between text-slate-600 font-mono">
+<div class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-medium text-slate-700">Direct 1v1 thread with Site Owner — No middleman, no automated bot replies.</span>
+</div>
+<span class="hidden md:inline font-bold text-rose-600">Replies during study breaks</span>
+</div>
+<!-- Chat Messages & Timeline Container -->
+<div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-slate-50/40 custom-scroll flex flex-col justify-between">
+<!-- Starter Hero State Banner -->
+<div class="my-auto py-6 flex flex-col items-center text-center max-w-lg mx-auto">
+<div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-200 text-brand-600 flex items-center justify-center shadow-sm mb-4">
+<svg class="w-7 h-7" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</div>
+<h3 class="font-syne font-black text-xl sm:text-2xl text-slate-900 tracking-tight uppercase mb-2">DIRECT 1v1 WITH SITE OWNER</h3>
+<p class="font-sans text-xs sm:text-sm text-slate-600 leading-relaxed mb-5">
+              Solo project run by an aspirant for aspirants. Drop your doubt, bug report, or book request directly. No formal “hi/hello” needed.
+            </p>
+<!-- Quick Template Prompt Pills -->
+<div class="flex flex-wrap items-center justify-center gap-2">
+<button class="bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 px-3 py-1.5 rounded-full text-xs font-mono font-medium shadow-2xs transition-all flex items-center gap-1.5">
+<span class="text-amber-500">⚡</span>
+<span>"Check broken test link"</span>
+</button>
+<button class="bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 px-3 py-1.5 rounded-full text-xs font-mono font-medium shadow-2xs transition-all flex items-center gap-1.5">
+<span class="text-brand-500">📚</span>
+<span>"Request Coaching Notes"</span>
+</button>
+<button class="bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 px-3 py-1.5 rounded-full text-xs font-mono font-medium shadow-2xs transition-all flex items-center gap-1.5">
+<span class="text-rose-500">🎯</span>
+<span>"Doubt in Irodov #1.24"</span>
+</button>
+</div>
+</div>
+<!-- Sample Live Messages -->
+<div class="space-y-5 pt-4">
+<!-- Aspirant Sent Message (Right) -->
+<div class="flex flex-col items-end max-w-xl ml-auto">
+<div class="bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-md">
+<p class="text-sm font-sans leading-relaxed">
+                  Hey bro, in the Materials Library, the Cengage Physics Vol 2 Google Drive mirror is showing a <code class="bg-brand-700 px-1 py-0.5 rounded font-mono text-xs">quota exceeded</code> error. Could you re-up the mirror when you get free?
+                </p>
+</div>
+<div class="flex items-center gap-1.5 mt-1 text-[11px] font-mono text-slate-400">
+<span>04:15 PM</span>
+<span>•</span>
+<span class="text-brand-600 font-semibold">Delivered</span>
+<svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<!-- Site Owner Reply (Left) -->
+<div class="flex items-start gap-3 max-w-xl mr-auto">
+<div class="w-8 h-8 rounded-lg bg-slate-900 text-brand-400 flex items-center justify-center shrink-0 border border-slate-700 shadow-sm mt-1">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-4 shadow-sm">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="font-jakarta font-bold text-xs text-slate-900">Site Owner</span>
+<span class="bg-brand-100 text-brand-700 text-[10px] font-mono font-bold px-1.5 py-0.2 rounded">Creator</span>
+<span class="text-[10px] font-mono text-slate-400">Replied 14m ago</span>
+</div>
+<p class="text-sm font-sans text-slate-700 leading-relaxed">
+                    Fixed! Added 2 alternate OneDrive and Mega mirrors on the Cengage Physics Vol 2 card. Also refreshed the OCR layer so it is fully searchable now.
+                  </p>
+<p class="font-editorial italic text-slate-500 text-xs mt-2">
+                    Back to Thermo revision now, let me know if it downloads smooth! ⚡
+                  </p>
+</div>
+<!-- Message Reactions -->
+<div class="flex items-center gap-2 mt-1.5 ml-2">
+<button class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-600 text-xs hover:bg-slate-200 transition-colors">
+<span>❤️</span>
+<span class="font-mono text-[10px] font-bold">1</span>
+</button>
+<span class="text-[11px] font-sans text-slate-500">"Thanks bhaiya! Saved."</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ================================================================= -->
+<!-- BEGIN: RichComposer (Bottom Interactive Bar)                     -->
+<!-- ================================================================= -->
+<footer class="p-3 sm:p-4 bg-white border-t border-slate-200">
+<form class="bg-slate-50 border border-slate-300/80 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 rounded-2xl p-2 sm:p-3 transition-all shadow-inner">
+<div class="flex items-center gap-1 sm:gap-2">
+<!-- Attachment Controls -->
+<div class="flex items-center gap-1 text-slate-500">
+<button class="p-2 hover:text-slate-800 hover:bg-slate-200/70 rounded-lg transition-colors" title="Attach Screenshot or Doubt Image" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="p-2 hover:text-slate-800 hover:bg-slate-200/70 rounded-lg transition-colors font-mono font-bold text-xs" title="Insert Formula / LaTeX" type="button">
+                  fx
+                </button>
+<button class="p-2 hover:text-slate-800 hover:bg-slate-200/70 rounded-lg transition-colors font-mono font-bold text-xs" title="Insert Physics Symbol" type="button">
+                  Ω
+                </button>
+</div>
+<!-- Text Input Area -->
+<input class="flex-1 bg-transparent border-0 px-2 sm:px-3 py-1.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-0" placeholder="Message the site owner directly (doubts, broken links, book requests)..." type="text"/>
+<!-- Send Button -->
+<div class="flex items-center gap-2">
+<button class="bg-brand-600 hover:bg-brand-700 active:scale-95 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-jakarta font-bold flex items-center gap-1.5 shadow-md shadow-brand-500/20 transition-all" type="button">
+<span>Send</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path></svg>
+</button>
+</div>
+</div>
+</form>
+<!-- Composer Helper Subline -->
+<div class="mt-2 flex items-center justify-between px-2 text-[10px] font-mono text-slate-400">
+<span>Press <kbd class="px-1 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-600">Enter ↵</kbd> to send directly</span>
+<span class="flex items-center gap-1 text-emerald-600 font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Encrypted direct inbox
+            </span>
+</div>
+</footer>
+<!-- END: RichComposer -->
+</section>
+<!-- END: RightChatWorkspace -->
+</div>
+</main>
+<!-- END: MainContentWorkspace -->
+<!-- BEGIN: UniversalFooter -->
+<footer class="mt-auto border-t border-slate-200 bg-white/80 backdrop-blur-xs py-4 px-4 sm:px-8">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-slate-500">
+<div class="flex items-center gap-2">
+<span class="font-syne font-black text-slate-900 tracking-tight text-sm">BOOKIE</span>
+<span>— Crafted with care for fellow aspirants.</span>
+<span class="inline-flex items-center gap-1 text-emerald-600 font-semibold ml-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          Systems 100% Operational
+        </span>
+</div>
+<div class="flex items-center gap-4 text-[11px]">
+<a class="hover:text-slate-900 transition-colors" href="#">Practice</a>
+<a class="hover:text-slate-900 transition-colors" href="#">Progress</a>
+<a class="hover:text-slate-900 transition-colors" href="#">Perform</a>
+<a class="hover:text-slate-900 transition-colors" href="#">DMCA</a>
+<a class="hover:text-slate-900 transition-colors text-amber-600 font-bold" href="#">Chai Support ☕</a>
+<span class="bg-slate-100 px-2 py-0.5 rounded text-slate-600 border border-slate-200 font-bold">AIR TARGET 2027</span>
+</div>
+</div>
+</footer>
+<!-- END: UniversalFooter -->
+</body></html>

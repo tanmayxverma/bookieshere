@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-50" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BOOKIE • Materials Library | Curated for JEE Advanced 2027</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Cabinet Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            amberSoft: '#fef3c7',
+            ink: '#0b1120',
+          },
+          boxShadow: {
+            'brutal-sm': '2px 2px 0px 0px rgba(15, 23, 42, 0.9)',
+            'brutal': '3.5px 3.5px 0px 0px rgba(15, 23, 42, 0.9)',
+            'brutal-lg': '6px 6px 0px 0px rgba(15, 23, 42, 0.9)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Technical Grid Background & Utilities -->
+<style data-purpose="background-patterns">
+    /* Subtle engineer/blueprint graph paper backdrop */
+    .blueprint-grid {
+      background-color: #f8fafc;
+      background-image: 
+        linear-gradient(to right, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .blueprint-grid-fine {
+      background-image: 
+        radial-gradient(rgba(100, 116, 139, 0.2) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+  </style>
+<style data-purpose="custom-decorations">
+    /* Subtle masking tape badge visual */
+    .masking-tape {
+      background-color: rgba(254, 240, 138, 0.85);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transform: rotate(-1.5deg);
+    }
+    /* Custom scrollbar styling for sleek catalog look */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<meta content="web_dashboard" name="shell-type"/></head>
+<body class="blueprint-grid min-h-screen text-slate-800 antialiased selection:bg-brand-500 selection:text-white flex flex-col">
+<!-- BEGIN: NavigationBar -->
+<header class="sticky top-0 z-40 w-full border-b border-slate-900/10 bg-white/90 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<!-- Brand Logo & Main Links -->
+<div class="flex items-center space-x-8">
+<!-- Logo -->
+<a class="flex items-center gap-2 group transition-transform active:scale-95" data-purpose="brand-logo" href="#">
+<div class="w-9 h-9 rounded-lg bg-slate-900 border-2 border-slate-900 flex items-center justify-center text-white shadow-brutal-sm group-hover:bg-brand-600 transition-colors">
+<!-- Book Icon -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="font-display font-black text-2xl tracking-tight text-slate-900">BOOKIE<span class="text-brand-600">.</span></span>
+</a>
+<!-- Desktop Navigation Items -->
+<nav class="hidden lg:flex items-center space-x-1" data-purpose="main-menu">
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Home
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-bold bg-brand-50 text-brand-700 border border-brand-200/60 shadow-sm flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Materials
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Tests
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-2" href="#">
+<span class="flex items-center gap-1.5">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              YPT
+            </span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-800 tracking-wider animate-pulse">LIVE</span>
+</a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Portals
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Community
+          </a>
+<a class="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-all flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Support
+          </a>
+</nav>
+</div>
+<!-- User Stats & Quick Utilities -->
+<div class="flex items-center space-x-3">
+<!-- Chai Button -->
+<button class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-xs font-bold hover:bg-amber-100 transition-colors shadow-sm">
+<span class="">☕ Chai</span>
+</button>
+<!-- Notification Bell -->
+<button aria-label="Notifications" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors relative">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="absolute top-2 right-2 w-2 h-2 bg-brand-600 rounded-full"></span>
+</button>
+<!-- Theme Toggle -->
+<button aria-label="Toggle Theme" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Profile Streak Badge -->
+<div class="flex items-center gap-2 pl-2 border-l border-slate-200" data-purpose="streak-pill">
+<div class="w-8 h-8 rounded-full bg-slate-900 text-white font-mono font-bold text-xs flex items-center justify-center border-2 border-slate-900 shadow-brutal-sm">
+            0
+          </div>
+<span class="text-xs font-mono font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+            0d🔥
+          </span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: NavigationBar -->
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8"><div class="flex flex-col w-full">
+<!-- Top Hero & Reality Check Row -->
+<section class="w-full mb-8">
+<div class="bg-white rounded-xl p-6 sm:p-8 lg:p-10 shadow-md relative overflow-hidden">
+<!-- Decorative background accent glow -->
+<div class="absolute -top-24 -left-24 w-72 h-72 bg-blue-100 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-24 w-80 h-80 bg-amber-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+<!-- Left: Hero Headline & Vision Content -->
+<div class="lg:col-span-7 space-y-5">
+<!-- Kicker Tag -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-mono font-bold tracking-wider">
+<span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+            TEST SERIES &amp; MOCK ARENA // ZERO GASLIGHTING
+          </div>
+<!-- Master Title with multi-font contrast -->
+<h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.08]">
+            Test Series <span class="text-blue-600 inline-block">Hub.</span>
+</h1>
+<!-- Editorial Serif Subtitle -->
+<p class="font-['Newsreader'] italic text-lg sm:text-xl text-slate-600 leading-relaxed font-normal max-w-2xl">
+            Access curated coaching test series, chapterwise mocks, NTA-style battle arena, and full syllabus papers from across the entire JEE ecosystem — zero gaslighting, honest percentile curves.
+          </p>
+<!-- Telemetry Badges Strip -->
+<div class="flex flex-wrap items-center gap-2.5 pt-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-mono text-xs font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+              11 Providers
+            </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-800 font-mono text-xs font-semibold shadow-sm">
+<svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              32 Live Resources
+            </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 font-mono text-xs font-semibold shadow-sm">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              100% NTA Scoring Engine
+            </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 font-mono text-xs font-semibold shadow-sm">
+<span class="material-symbols-outlined text-[14px]">tune</span>
+              NTA Shift Difficulty Normalizer
+            </span>
+</div>
+</div>
+<!-- Right: Elevated "Test Reality Check" Sticky Note Card -->
+<div class="lg:col-span-5 flex justify-center lg:justify-end">
+<div class="relative w-full max-w-md bg-amber-50/90 rounded-2xl p-6 sm:p-7 shadow-xl shadow-amber-900/10 backdrop-blur-sm transform hover:-translate-y-1 transition-all duration-300">
+<!-- Tactile Masking Tape Decoration -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-6 bg-amber-200/90 shadow-sm rounded-sm backdrop-blur-md rotate-[-1.5deg] flex items-center justify-center pointer-events-none">
+<div class="w-full h-px bg-amber-300/40"></div>
+</div>
+<!-- Card Header -->
+<div class="flex items-center justify-between pb-4 pt-1">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-lg bg-amber-200/80 flex items-center justify-center text-amber-900 shadow-sm">
+<span class="material-symbols-outlined text-base">psychology</span>
+</div>
+<span class="font-mono text-xs font-black tracking-widest uppercase text-amber-950">
+                  TEST REALITY CHECK
+                </span>
+</div>
+<span class="font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-900 tracking-wider">
+                JAN 2027 TARGET
+              </span>
+</div>
+<!-- Metrics Block -->
+<div class="space-y-3.5 my-3">
+<!-- Average Aspirant Score -->
+<div class="flex items-center justify-between">
+<span class="font-sans text-xs font-medium text-amber-900/80">Average Aspirant Score</span>
+<span class="font-mono text-xs font-extrabold px-2.5 py-1 rounded bg-amber-200/70 text-amber-950 shadow-sm">
+                  142 / 300
+                </span>
+</div>
+<!-- Safe 99%ile Benchmark -->
+<div class="flex items-center justify-between">
+<span class="font-sans text-xs font-bold text-amber-950">Safe 99%ile Benchmark</span>
+<span class="font-mono text-xs font-black px-2.5 py-1 rounded bg-blue-600 text-white shadow-sm">
+                  210+ Marks
+                </span>
+</div>
+<!-- Benchmark Progress Gauge -->
+<div class="space-y-1.5 pt-1">
+<div class="w-full h-3 rounded-full bg-amber-200/60 overflow-hidden p-0.5">
+<div class="flex h-full rounded-full overflow-hidden">
+<!-- Average fill (142/300 = ~47%) -->
+<div class="bg-amber-500 w-[47%] h-full rounded-l-full" title="Current Average: 142"></div>
+<!-- Gap to 99 percentile (68 marks = ~23%) -->
+<div class="bg-blue-600 w-[23%] h-full" title="Percentile Cutoff: 210"></div>
+</div>
+</div>
+<div class="flex justify-between items-center text-[10px] font-mono text-amber-900/70 px-0.5">
+<span>0 M</span>
+<span class="text-amber-700 font-bold">Δ 68 Marks Target Gap</span>
+<span>300 M</span>
+</div>
+</div>
+</div>
+<!-- Kota Hostel Bathroom Wisdom Quote -->
+<div class="mt-4 pt-3.5 border-t border-amber-200/60 text-center space-y-1">
+<p class="font-['Newsreader'] italic font-medium text-slate-800 text-sm sm:text-base leading-snug">
+                “Mock se darr nahi lagta sahab, analysis se lagta hai.”
+              </p>
+<p class="font-mono text-[10px] uppercase font-bold tracking-wider text-amber-800/80">
+                — Kota Hostel Bathroom Wisdom
+              </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Search & Filter Controls Ribbon -->
+<section class="w-full mb-8 space-y-4">
+<!-- Desktop Search Bar -->
+<div class="bg-white rounded-xl p-2 sm:p-2.5 shadow-sm flex flex-col sm:flex-row items-center gap-3">
+<div class="relative flex-grow w-full flex items-center">
+<span class="material-symbols-outlined text-slate-400 absolute left-3.5 pointer-events-none text-xl">search</span>
+<input class="w-full pl-11 pr-24 py-2.5 bg-slate-50 rounded-lg text-sm font-sans placeholder-slate-400 text-slate-800 focus:outline-none focus:bg-white transition-all border-none" id="resource-search" placeholder="Search test series, institutes, MathOnGo, Narayana, Allen Score, Sri Chaitanya..." type="text"/>
+<div class="absolute right-3 hidden sm:flex items-center gap-1 font-mono text-[10px] font-bold text-slate-500 bg-slate-200/70 px-2 py-1 rounded">
+<span>CTRL</span>
+<span>+</span>
+<span>K</span>
+</div>
+</div>
+<button class="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-sans text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5 whitespace-nowrap">
+<span>Find Tests</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+<!-- Quick Filtering Pill Badges -->
+<div class="flex items-center justify-between gap-3 overflow-x-auto pb-1">
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white font-mono text-xs font-bold shadow-sm whitespace-nowrap">
+          All Tests (11)
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-mono text-xs font-semibold shadow-sm whitespace-nowrap transition-colors flex items-center gap-1">
+<span>🔥 Full Mocks</span>
+<span class="text-slate-400 text-[10px]">(24)</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-mono text-xs font-semibold shadow-sm whitespace-nowrap transition-colors flex items-center gap-1">
+<span>⚔️ Speed Drills</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-mono text-xs font-semibold shadow-sm whitespace-nowrap transition-colors flex items-center gap-1">
+<span>Chapterwise Tests</span>
+<span class="text-slate-400 text-[10px]">(48)</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-mono text-xs font-semibold shadow-sm whitespace-nowrap transition-colors">
+          PYQ Mocks (2019-2024)
+        </button>
+</div>
+<div class="hidden md:flex items-center gap-2 text-xs font-mono text-slate-500 whitespace-nowrap">
+<span>Display:</span>
+<span class="font-bold text-slate-800">Grid (Dense)</span>
+</div>
+</div>
+</section>
+<!-- Verified Test Portals & Series Catalog Grid -->
+<section class="w-full space-y-5">
+<!-- Header of the Series Grid -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-blue-600"></div>
+<h2 class="font-sans text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          Verified Test Portals &amp; Series
+        </h2>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-mono text-xs font-bold">
+          11 Master Providers
+        </span>
+</div>
+<div class="flex items-center gap-2">
+<label class="text-xs font-mono text-slate-500">Sorted by:</label>
+<select class="text-xs font-sans font-bold bg-white rounded-lg px-3 py-1.5 text-slate-700 shadow-sm border-none focus:ring-0">
+<option>Relevance &amp; Accuracy</option>
+<option>Highest Scoring Difficulty</option>
+<option>Most Recent NTA Syllabus</option>
+<option>Student Rating (JEE Adv)</option>
+</select>
+</div>
+</div>
+<!-- Provider Grid (Responsive Bento Catalog) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="materials-catalog-grid">
+<!-- Card 1: MathonGo Quizrr -->
+<article class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+<div>
+<!-- Header metadata -->
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg bg-rose-50 flex items-center justify-center text-rose-600 font-black font-display text-lg shadow-sm group-hover:scale-105 transition-transform">
+                MG
+              </div>
+<div>
+<h3 class="font-sans font-bold text-base text-slate-900 group-hover:text-blue-600 transition-colors">
+                  MathonGo (Quizrr) Test Series
+                </h3>
+<span class="font-mono text-xs text-slate-500">Curated by Anup Sir</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-mono text-[10px] font-bold uppercase tracking-wider">
+              AIR #1 REPUTATION
+            </span>
+</div>
+<p class="font-sans text-xs text-slate-600 mb-4 leading-relaxed">
+            Gold standard test simulator replicating precise NTA user interface, authentic marks vs percentile predictor, and detailed chapter-level heatmaps.
+          </p>
+<!-- Metrics telemetry -->
+<div class="bg-slate-50 rounded-lg p-3 space-y-2 mb-4">
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Curriculum Coverage</span>
+<span class="font-bold text-slate-800">25 Full Mocks + 60 Chapterwise</span>
+</div>
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Target Standard</span>
+<span class="font-bold text-blue-700">Mains + Advanced Focus</span>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-emerald-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            Verified NTA Engine
+          </span>
+<a class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-600 text-white font-sans text-xs font-bold transition-colors flex items-center gap-1 shadow-sm" href="#">
+<span>Enter Portal</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</article>
+<!-- Card 2: Allen Leader / Enthusiast CBT -->
+<article class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+<div>
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 font-black font-display text-lg shadow-sm group-hover:scale-105 transition-transform">
+                AL
+              </div>
+<div>
+<h3 class="font-sans font-bold text-base text-slate-900 group-hover:text-blue-600 transition-colors">
+                  Allen Leader / Enthusiast CBT
+                </h3>
+<span class="font-mono text-xs text-slate-500">Kota Classroom Offline Mirror</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px] font-bold uppercase tracking-wider">
+              BENCHMARK
+            </span>
+</div>
+<p class="font-sans text-xs text-slate-600 mb-4 leading-relaxed">
+            The national testing pool standard with over 150,000 real test takers. Calibrated for tricky calculation speeds and multi-correct conceptual traps.
+          </p>
+<div class="bg-slate-50 rounded-lg p-3 space-y-2 mb-4">
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Paper Structure</span>
+<span class="font-bold text-slate-800">18 Part Tests + 12 Full Papers</span>
+</div>
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Key Feature</span>
+<span class="font-bold text-blue-700">Accurate All-India Rank</span>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-emerald-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            Mirror Cluster Online
+          </span>
+<a class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-600 text-white font-sans text-xs font-bold transition-colors flex items-center gap-1 shadow-sm" href="#">
+<span>Access Mirrors</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</article>
+<!-- Card 3: Physics Wallah (PW Tests) -->
+<article class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+<div>
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-700 font-black font-display text-lg shadow-sm group-hover:scale-105 transition-transform">
+                PW
+              </div>
+<div>
+<h3 class="font-sans font-bold text-base text-slate-900 group-hover:text-blue-600 transition-colors">
+                  PW (Lakshya &amp; Prayas Series)
+                </h3>
+<span class="font-mono text-xs text-slate-500">AITS &amp; Sunday Tests</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-mono text-[10px] font-bold uppercase tracking-wider">
+              VERIFIED
+            </span>
+</div>
+<p class="font-sans text-xs text-slate-600 mb-4 leading-relaxed">
+            High volume question sets mapped strictly to current reduction syllabus guidelines. Includes video solutions from top PW faculty.
+          </p>
+<div class="bg-slate-50 rounded-lg p-3 space-y-2 mb-4">
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Available Tests</span>
+<span class="font-bold text-slate-800">42 Batch Tests + 15 AITS Mocks</span>
+</div>
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Includes</span>
+<span class="font-bold text-blue-700">Detailed Video Explanations</span>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-emerald-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            Sync Updated 2h ago
+          </span>
+<a class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-600 text-white font-sans text-xs font-bold transition-colors flex items-center gap-1 shadow-sm" href="#">
+<span>View Tests</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</article>
+<!-- Card 4: Sri Chaitanya / Narayana (IPL & Apex) -->
+<article class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+<div>
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg bg-purple-50 flex items-center justify-center text-purple-700 font-black font-display text-lg shadow-sm group-hover:scale-105 transition-transform">
+                CN
+              </div>
+<div>
+<h3 class="font-sans font-bold text-base text-slate-900 group-hover:text-blue-600 transition-colors">
+                  Sri Chaitanya / Narayana (Apex)
+                </h3>
+<span class="font-mono text-xs text-slate-500">South Indian Drill Papers</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-rose-50 text-rose-700 font-mono text-[10px] font-bold uppercase tracking-wider">
+              BRUTAL DIFFICULTY
+            </span>
+</div>
+<p class="font-sans text-xs text-slate-600 mb-4 leading-relaxed">
+            Ultra-aggressive calculus and rotational dynamics problem banks. Specially engineered for top 500 AIR aspirants seeking extreme pressure tolerance.
+          </p>
+<div class="bg-slate-50 rounded-lg p-3 space-y-2 mb-4">
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Difficulty Grade</span>
+<span class="font-bold text-rose-600">JEE Advanced Level ++</span>
+</div>
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Available Sets</span>
+<span class="font-bold text-blue-700">14 Grand Tests + Rankers Hub</span>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-emerald-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            All Keys Corrected
+          </span>
+<a class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-600 text-white font-sans text-xs font-bold transition-colors flex items-center gap-1 shadow-sm" href="#">
+<span>Explore Mocks</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</article>
+<!-- Card 5: FIITJEE AITS -->
+<article class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+<div>
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg bg-amber-50 flex items-center justify-center text-amber-700 font-black font-display text-lg shadow-sm group-hover:scale-105 transition-transform">
+                FJ
+              </div>
+<div>
+<h3 class="font-sans font-bold text-base text-slate-900 group-hover:text-blue-600 transition-colors">
+                  FIITJEE AITS (All India Test Series)
+                </h3>
+<span class="font-mono text-xs text-slate-500">The Legacy Stress Simulator</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-mono text-[10px] font-bold uppercase tracking-wider">
+              ADVANCED LEGEND
+            </span>
+</div>
+<p class="font-sans text-xs text-slate-600 mb-4 leading-relaxed">
+            Multi-concept integration questions designed to break autopilot answering habits. Uncompromising marking schemes and matrix match drills.
+          </p>
+<div class="bg-slate-50 rounded-lg p-3 space-y-2 mb-4">
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Structure</span>
+<span class="font-bold text-slate-800">Paper 1 + Paper 2 Real Simulation</span>
+</div>
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Benchmark</span>
+<span class="font-bold text-blue-700">IIT Bombay / Delhi Focus</span>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-emerald-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            PDF &amp; CBT Online
+          </span>
+<a class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-600 text-white font-sans text-xs font-bold transition-colors flex items-center gap-1 shadow-sm" href="#">
+<span>Access Papers</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</article>
+<!-- Card 6: NTA Official Abhyas Papers -->
+<article class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+<div>
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg bg-teal-50 flex items-center justify-center text-teal-700 font-black font-display text-lg shadow-sm group-hover:scale-105 transition-transform">
+                NTA
+              </div>
+<div>
+<h3 class="font-sans font-bold text-base text-slate-900 group-hover:text-blue-600 transition-colors">
+                  NTA Official Abhyas Papers
+                </h3>
+<span class="font-mono text-xs text-slate-500">National Testing Agency Archive</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-teal-50 text-teal-800 font-mono text-[10px] font-bold uppercase tracking-wider">
+              OFFICIAL BENCHMARK
+            </span>
+</div>
+<p class="font-sans text-xs text-slate-600 mb-4 leading-relaxed">
+            108 full-length simulated mock tests developed directly by NTA paper-setters. Essential for decoding the exam agency’s question framing psychology.
+          </p>
+<div class="bg-slate-50 rounded-lg p-3 space-y-2 mb-4">
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Question Pool</span>
+<span class="font-bold text-slate-800">108 Chapterwise + Full Mocks</span>
+</div>
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="text-slate-500">Engine</span>
+<span class="font-bold text-blue-700">Native NTA Scoring Normalizer</span>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-emerald-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            100% Free &amp; Open
+          </span>
+<a class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-600 text-white font-sans text-xs font-bold transition-colors flex items-center gap-1 shadow-sm" href="#">
+<span>Start Drill</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</article>
+</div>
+</section>
+<!-- Interactive Quick-Key Hint Floating Pill for Desktop Aspirants -->
+<aside class="fixed bottom-6 right-6 hidden xl:flex items-center gap-2.5 px-4 py-2 bg-slate-900/90 text-white rounded-full shadow-lg backdrop-blur-md text-xs font-mono pointer-events-none">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+<span>Ready for Session #3 • Press <kbd class="px-1.5 py-0.5 bg-slate-800 rounded font-bold">⌘K</kbd> to jump</span>
+</aside>
+</div></main>
+<!-- BEGIN: MainFooter -->
+<footer class="mt-16 border-t-2 border-slate-900 bg-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200">
+<!-- Logo & Brand Vision -->
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-slate-900 flex items-center justify-center text-white text-xs font-bold">
+              B
+            </div>
+<span class="font-display font-black text-xl text-slate-900 tracking-tight">BOOKIE®</span>
+<span class="text-xs font-mono font-semibold text-brand-600 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">
+              AIR TARGET 2027
+            </span>
+</div>
+<p class="text-xs text-slate-500 max-w-md">
+            Engineered exclusively for JEE Advanced aspirants. Zero distractions, zero spam, mathematically pure signal.
+          </p>
+</div>
+<!-- Footer Navigation Links -->
+<div class="flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-slate-700 font-mono">
+<a class="hover:text-brand-600 transition-colors" href="#">Practice</a>
+<a class="hover:text-brand-600 transition-colors" href="#">Progress</a>
+<a class="hover:text-brand-600 transition-colors" href="#">Perform</a>
+<a class="hover:text-brand-600 transition-colors" href="#">YPT Room</a>
+<a class="hover:text-brand-600 transition-colors" href="#">Chai Support</a>
+<a class="hover:text-brand-600 transition-colors" href="#">DMCA / Fair Use</a>
+</div>
+</div>
+<!-- Legal / Disclaimer Notice -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] font-mono text-slate-400 gap-3">
+<p class="">© 2025 BOOKIE Systems. All materials link to public educational storage mirrors.</p>
+<p class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          All clusters operational &amp; OCR indexes green.
+        </p>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+<!-- BEGIN: InteractiveSearchFilterLogic -->
+<script data-purpose="catalog-search-filter">
+    // Simple fast search filter logic for dynamic card search demonstration
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('resource-search');
+      const cards = document.querySelectorAll('#materials-catalog-grid article');
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase().trim();
+          cards.forEach((card) => {
+            const cardText = card.textContent.toLowerCase();
+            if (cardText.includes(query)) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      // Keyboard shortcut ⌘K / Ctrl+K focus
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          searchInput && searchInput.focus();
+        }
+      });
+    });
+  </script>
+<!-- END: InteractiveSearchFilterLogic -->
+</body></html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BOOKIE — Survive the Syllabus. Rule the Ranks. | JEE Workspace</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Distinct Multi-Font Hierarchy via Google Fonts:
+       1. Syne: Bold Editorial Display Headline
+       2. Plus Jakarta Sans: Primary Clean Editorial Sans & Section Titles
+       3. JetBrains Mono: Technical Metrics, Chips, Countdown Digits, Batch Code
+       4. Newsreader: Literary, Aspirant Trauma Quotes, Italic reflections
+  -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&amp;family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet">
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Syne"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            serif: ['"Newsreader"', 'serif'],
+          },
+          colors: {
+            brand: {
+              50: '#F0F6FE',
+              100: '#E0EDFE',
+              500: '#2563EB',
+              600: '#1D4ED8',
+              700: '#1E40AF',
+              900: '#0F1E3D',
+            },
+            butter: {
+              50: '#FFFDF5',
+              100: '#FEF9E0',
+              200: '#FDECB0',
+              300: '#FCDD80',
+              400: '#F4CA3E',
+              500: '#EAB308',
+            },
+            softBg: '#F8FAFC',
+            paperBorder: '#E2E8F0',
+            charcoal: '#0C111D',
+          },
+          boxShadow: {
+            'soft-card': '0 10px 30px -10px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04)',
+            'soft-card-hover': '0 20px 40px -15px rgba(15, 23, 42, 0.12), 0 6px 16px -2px rgba(15, 23, 42, 0.06)',
+            'editorial-lift': '0 16px 36px -12px rgba(37, 99, 235, 0.18)',
+            'neubrutal-desktop': '4px 4px 0px 0px rgba(12, 17, 29, 0.95)',
+            'neubrutal-sm': '2.5px 2.5px 0px 0px rgba(12, 17, 29, 0.95)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styling">
+    /* Subtle Math & Engineering graph paper grid on warm alabaster/ivory backdrop */
+    .bg-desk-graph {
+      background-color: #F8F9FA;
+      background-image: 
+        linear-gradient(to right, rgba(203, 213, 225, 0.38) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(203, 213, 225, 0.38) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .bg-dark-grid {
+      background-color: #0A0E1A;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    
+    /* Code highlight selection */
+    ::selection {
+      background-color: #DDEAFE;
+      color: #1D4ED8;
+    }
+  </style>
+</head>
+<body class="bg-desk-graph text-slate-900 font-sans antialiased min-h-screen selection:bg-blue-100 flex flex-col justify-between">
+<!-- ========================================================================= -->
+<!-- 1. FULL DESKTOP TOP NAVIGATION BAR                                        -->
+<!-- ========================================================================= -->
+<header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 transition-all">
+<div class="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-6">
+<!-- Left: Logo & Target Status Pill -->
+<div class="flex items-center gap-6 shrink-0">
+<a aria-label="Bookie Home" class="flex items-center gap-2.5 group" href="#">
+<div class="w-9 h-9 rounded-xl bg-butter-100 border border-butter-300/80 flex items-center justify-center text-lg shadow-sm group-hover:scale-105 transition-transform duration-200">
+            🦉
+          </div>
+<div class="flex items-baseline">
+<span class="text-xl font-display font-black tracking-tight text-slate-950">BOOKIE</span>
+<span class="w-2 h-2 rounded-full bg-blue-600 ml-1"></span>
+</div>
+</a>
+<!-- Target Milestone Tag -->
+<div class="hidden xl:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/80 border border-slate-200 text-xs font-mono font-medium text-slate-600">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+<span class="">AIR TARGET 2027</span>
+</div>
+</div>
+<!-- Center: Desktop Navigation Links -->
+<nav class="hidden md:flex items-center gap-1.5 lg:gap-2 text-sm font-semibold text-slate-600">
+<a class="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 font-bold transition flex items-center gap-1.5" href="#">
+<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Home
+        </a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-950 hover:bg-slate-100/70 transition" href="#materials">Materials</a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-950 hover:bg-slate-100/70 transition" href="#tests">Tests</a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-950 hover:bg-slate-100/70 transition flex items-center gap-1.5" href="#ypt">
+          YPT
+          <span class="text-[9px] font-mono font-bold bg-emerald-500 text-white px-1.5 py-0.2 rounded-full uppercase">Live</span>
+</a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-950 hover:bg-slate-100/70 transition" href="#portals">Portals</a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-950 hover:bg-slate-100/70 transition" href="#community">Community</a>
+<a class="px-3 py-1.5 rounded-lg hover:text-slate-950 hover:bg-slate-100/70 transition" href="#support">Support</a>
+</nav>
+<!-- Right: Search Command bar, Chai button, Streak Pill, Theme & Profile -->
+<div class="flex items-center gap-2.5 sm:gap-3">
+<!-- Quick Command Palette / Search Trigger -->
+<button class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200/90 text-xs text-slate-500 hover:border-slate-300 transition">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-medium">Quick jump</span>
+<kbd class="font-mono text-[10px] bg-white border border-slate-200 px-1.5 py-0.5 rounded shadow-2xs text-slate-400">⌘K</kbd>
+</button>
+<!-- Chai Support Button -->
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200/90 shadow-2xs hover:bg-amber-100 transition-colors" href="#support">
+<span class="">☕</span>
+<span class="font-bold">Chai</span>
+</a>
+<!-- Study Streak Pill -->
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950 text-white text-xs font-mono font-bold shadow-sm" title="Active Study Streak">
+<span class="text-amber-400 text-sm">🔥</span>
+<span class="">8d</span>
+</div>
+<!-- Light / Dark Indicator -->
+<button aria-label="Toggle theme" class="p-2 text-slate-500 hover:text-slate-950 rounded-xl hover:bg-slate-100 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- User Profile Avatar & Status -->
+<div class="pl-1 border-l border-slate-200 flex items-center gap-2">
+<button class="flex items-center gap-2 group p-1 rounded-xl hover:bg-slate-100 transition">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white text-xs font-bold flex items-center justify-center ring-2 ring-blue-100 font-mono shadow-xs">
+              OW
+            </div>
+<div class="hidden xl:block text-left text-xs leading-tight">
+<span class="font-bold text-slate-800 block">Owner</span>
+<span class="text-[10px] font-mono text-emerald-600 font-semibold">Online</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- MAIN DESKTOP CANVAS CONTAINER                                            -->
+<!-- ========================================================================= -->
+<main class="max-w-7xl mx-auto px-6 lg:px-10 py-10 space-y-12 flex-1">
+<!-- ======================================================================= -->
+<!-- 2. HERO SECTION: 2-COLUMN BALANCED DESKTOP LAYOUT                       -->
+<!-- ======================================================================= -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center" data-purpose="hero-section">
+<!-- Hero Left: Typography, Badges, Value Proposition, Action CTAs -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Live Target & Welcome Status Ribbon -->
+<div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-blue-50/90 border border-blue-200/70 text-xs font-mono font-medium text-blue-900 shadow-2xs">
+<span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+<span class="font-bold tracking-wide">WELCOME BACK, OWNER</span>
+<span class="text-blue-300">/</span>
+<span class="text-blue-700 font-semibold">JEE 2027 TARGET SYSTEM</span>
+</div>
+<!-- Main Display Headline (Syne font: Geometric, Bold, High Impact) -->
+<h1 class="text-4xl sm:text-5xl xl:text-6xl font-display font-extrabold tracking-tight text-slate-950 leading-[1.05] uppercase">
+          Survive The <br>
+<span class="relative inline-block text-blue-600">
+            Syllabus.
+            <svg class="absolute -bottom-2 left-0 w-full text-amber-400" height="8" preserveAspectRatio="none" viewBox="0 0 100 8"><path d="M0,5 C20,1 40,8 60,3 C80,-1 90,6 100,4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path></svg>
+</span><br>
+          Rule The Ranks.
+        </h1>
+<!-- Subheadline / Value Proposition with warm editorial clarity -->
+<p class="text-base sm:text-lg text-slate-600 leading-relaxed font-normal max-w-2xl">
+          Your single unified desktop workspace for <strong class="text-slate-900 font-semibold">JEE materials</strong>, savagely honest mocks, and test strategies — engineered with mathematical clarity, zero fluff, and anti-burnout humor.
+        </p>
+<!-- Action CTAs Row with Neubrutal / Soft Elevation Button Hierarchy -->
+<div class="flex flex-wrap items-center gap-3 pt-2">
+<a class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-blue-600 text-white font-bold text-sm tracking-wide shadow-neubrutal-sm hover:bg-blue-700 hover:-translate-y-0.5 transition active:translate-x-0.5 active:translate-y-0.5" href="#materials">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            BROWSE MATERIALS →
+          </a>
+<a class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-white border-2 border-slate-900 text-slate-950 font-bold text-sm shadow-neubrutal-sm hover:bg-slate-50 hover:-translate-y-0.5 transition active:translate-x-0.5 active:translate-y-0.5" href="#tests">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            PRACTICE TESTS
+          </a>
+<!-- Chat Guidance Link -->
+<div class="flex items-center gap-2 pl-3 text-xs text-slate-500 font-medium">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">Need guidance?</span>
+<a class="text-blue-600 font-bold hover:underline" href="#support">CHAT SUPPORT</a>
+</div>
+</div>
+</div>
+<!-- Hero Right: Refined Floating Promo Card Component -->
+<div class="lg:col-span-5" data-purpose="promo-card">
+<div class="p-6 rounded-2xl bg-white border-2 border-slate-900 shadow-neubrutal-desktop relative overflow-hidden transition hover:-translate-y-1 duration-300">
+<!-- Top Tagging Header -->
+<div class="flex items-center justify-between mb-4">
+<span class="text-[11px] font-mono tracking-wider font-extrabold text-blue-700 bg-blue-50/90 px-2.5 py-1 rounded-md border border-blue-200 uppercase">
+              PROMO ACTIVE
+            </span>
+<span class="text-[10px] font-mono font-bold bg-blue-600 text-white px-2.5 py-1 rounded-full uppercase tracking-wider">
+              LIMITED
+            </span>
+</div>
+<!-- Promo Headline -->
+<div class="flex items-baseline gap-2 mb-1">
+<h2 class="text-3xl font-display font-black text-slate-950 tracking-tight">10% OFF</h2>
+<span class="text-xs text-slate-500 font-medium font-mono">community privilege</span>
+</div>
+<p class="text-xs text-slate-600 mb-4">On any PW batch with the community code below.</p>
+<!-- Interactive Code Box with Instant Clipboard Action -->
+<div class="flex items-center justify-between bg-slate-50/90 border border-slate-300 rounded-xl px-4 py-3 mb-4 group">
+<div class="flex flex-col">
+<span class="text-[9px] font-mono font-semibold text-slate-400 uppercase tracking-widest">COUPON CODE</span>
+<span class="font-mono font-black text-slate-950 text-base tracking-widest" id="promoCodeDesktop">9906DZRL</span>
+</div>
+<button class="px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-blue-600 bg-white border border-slate-200 rounded-lg shadow-2xs transition active:scale-95 flex items-center gap-1.5" onclick="navigator.clipboard.writeText('9906DZRL'); alert('Discount Code 9906DZRL Copied to clipboard!');" title="Copy Code">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">COPY</span>
+</button>
+</div>
+<a class="inline-flex items-center text-xs font-bold text-blue-600 hover:text-blue-800 gap-1 mb-4 group" href="#">
+<span class="">GET DISCOUNT</span>
+<span class="group-hover:translate-x-0.5 transition-transform">↗</span>
+</a>
+<!-- Value Chips Strip -->
+<div class="pt-4 border-t border-slate-100 grid grid-cols-3 gap-2 text-left">
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+<div class="text-[9px] font-mono text-slate-400 uppercase font-bold tracking-wider">FREE</div>
+<div class="text-xs font-extrabold text-slate-900 mt-0.5">Full Access</div>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+<div class="text-[9px] font-mono text-slate-400 uppercase font-bold tracking-wider">NO</div>
+<div class="text-xs font-extrabold text-slate-900 mt-0.5">Credit Card</div>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+<div class="text-[9px] font-mono text-slate-400 uppercase font-bold tracking-wider">DAILY</div>
+<div class="text-xs font-extrabold text-slate-900 mt-0.5">PYQ Drop</div>
+</div>
+</div>
+<!-- Subtle Sponsor Placement -->
+<p class="text-[11px] text-center text-slate-400 font-normal mt-3">
+            You can advertise yourself here, contact owner through <a class="text-blue-600 underline font-semibold" href="#support">support</a>.
+          </p>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- 3. EXAM COUNTDOWN SECTION: DESKTOP WIDE BAR                             -->
+<!-- ======================================================================= -->
+<section class="bg-white border-2 border-slate-900 rounded-2xl p-6 lg:p-7 shadow-neubrutal-desktop space-y-6" data-purpose="exam-countdown">
+<!-- Top Row: Session Switcher Tabs & Live Marker -->
+<div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-mono font-bold rounded-lg border border-rose-200/80 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+            LIVE EXAM RADAR
+          </span>
+<span class="text-xs text-slate-400 font-mono hidden sm:inline">|</span>
+<span class="text-xs font-semibold text-slate-500 hidden sm:inline">NTA Official Tentative Schedule</span>
+</div>
+<!-- Modern Desktop Pill Filter Switchers -->
+<div class="inline-flex p-1 rounded-xl bg-slate-100/90 border border-slate-200 text-xs font-semibold">
+<button class="px-4 py-1.5 bg-blue-600 text-white font-bold rounded-lg shadow-xs transition">
+            JEE Main Session 1
+          </button>
+<button class="px-4 py-1.5 hover:text-slate-950 text-slate-600 font-medium rounded-lg transition">
+            JEE Main Session 2
+          </button>
+<button class="px-4 py-1.5 hover:text-slate-950 text-slate-600 font-medium rounded-lg transition">
+            JEE Advanced
+          </button>
+</div>
+</div>
+<!-- Main Countdown Grid & Target Details -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+<!-- Left: Headline & Session Target Meta -->
+<div class="lg:col-span-5 space-y-1.5">
+<h2 class="text-2xl lg:text-3xl font-display font-extrabold text-slate-950 tracking-tight">
+            JEE Main Session 1 <span class="text-blue-600">2027</span>
+</h2>
+<div class="flex items-center gap-2 text-xs text-slate-500">
+<svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="font-bold text-slate-800 font-mono">22 Jan 2027</span>
+<span class="">• First shot at your dream percentile.</span>
+</div>
+</div>
+<!-- Right: Countdown Digits (4-Card Soft Grid with Subtle Border Tints) -->
+<div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+<!-- Days Box -->
+<div class="bg-slate-50/90 border border-slate-200/90 rounded-xl p-3.5 text-center flex flex-col justify-center items-center shadow-xs hover:border-slate-300 transition">
+<div class="text-3xl lg:text-4xl font-mono font-black text-slate-950 tracking-tight leading-none">
+              92
+            </div>
+<span class="text-[10px] font-mono font-bold text-slate-500 tracking-wider mt-2 uppercase">DAYS</span>
+</div>
+<!-- Hours Box -->
+<div class="bg-slate-50/90 border border-slate-200/90 rounded-xl p-3.5 text-center flex flex-col justify-center items-center shadow-xs hover:border-slate-300 transition">
+<div class="text-3xl lg:text-4xl font-mono font-black text-slate-950 tracking-tight leading-none">
+              21
+            </div>
+<span class="text-[10px] font-mono font-bold text-slate-500 tracking-wider mt-2 uppercase">HOURS</span>
+</div>
+<!-- Minutes Box -->
+<div class="bg-blue-50/70 border border-blue-200/80 rounded-xl p-3.5 text-center flex flex-col justify-center items-center shadow-xs hover:border-blue-300 transition">
+<div class="text-3xl lg:text-4xl font-mono font-black text-blue-600 tracking-tight leading-none">
+              58
+            </div>
+<span class="text-[10px] font-mono font-bold text-blue-700 tracking-wider mt-2 uppercase">MINUTES</span>
+</div>
+<!-- Seconds Box -->
+<div class="bg-rose-50/70 border border-rose-200/80 rounded-xl p-3.5 text-center flex flex-col justify-center items-center shadow-xs hover:border-rose-300 transition">
+<div class="text-3xl lg:text-4xl font-mono font-black text-rose-500 tracking-tight leading-none">
+              48
+            </div>
+<span class="text-[10px] font-mono font-bold text-rose-600 tracking-wider mt-2 uppercase">SECONDS</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- 4. THE 3 PILLARS OF PREP: CLEAN 3-COLUMN DESKTOP GRID                   -->
+<!-- ======================================================================= -->
+<section class="space-y-6 pt-2" data-purpose="three-pillars">
+<!-- Section Header -->
+<div class="flex flex-wrap items-end justify-between gap-4">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="text-xs font-mono font-bold tracking-wider text-blue-600 uppercase">
+              CURATED FOR CLARITY
+            </span>
+<span class="text-slate-300">•</span>
+<span class="text-xs font-mono font-medium text-slate-500">
+              Updated with 2024-2015 PYQs
+            </span>
+</div>
+<h2 class="text-3xl font-display font-extrabold text-slate-950 tracking-tight">
+            The 3 Pillars of Prep.
+          </h2>
+</div>
+<p class="text-xs text-slate-500 font-mono">
+          (and how we survive them without emotional breakdown)
+        </p>
+</div>
+<!-- 3-Column Desktop Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- CARD 01: Physics Core (Blueprint / Soft Slate Card) -->
+<article class="p-6 bg-white border-2 border-slate-900 rounded-2xl shadow-neubrutal-desktop flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+<div>
+<div class="flex items-center justify-between text-xs font-mono mb-3">
+<span class="text-slate-700 font-bold">01 / PHYSICS CORE</span>
+<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full">94% High-Yield</span>
+</div>
+<!-- Bolder, Larger Normal Font Headline as instructed -->
+<h3 class="text-2xl font-display font-black text-slate-950 leading-snug tracking-tight mb-3">
+              When you finally hit that flow state...
+            </h3>
+<p class="text-xs text-slate-600 leading-relaxed font-normal mb-6">
+              Master Irodov traps, rotational motion inertia shortcuts, and ray diagrams that actually make sense. No 4-page derivations when a 2-line impulse-momentum trick works.
+            </p>
+</div>
+<div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+<span class="text-xs font-semibold text-slate-800">HC Verma + DC Pandey drills</span>
+<a aria-label="Go to Physics drills" class="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-blue-600 transition shadow-2xs" href="#physics">
+              →
+            </a>
+</div>
+</article>
+<!-- CARD 02: The 3 AM Delusion (Soft Warm Marigold / Butter Yellow Card) -->
+<article class="p-6 bg-butter-200 border-2 border-slate-900 rounded-2xl shadow-neubrutal-desktop flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+<div>
+<div class="flex items-center justify-between text-xs font-mono mb-3">
+<span class="text-slate-900 font-bold">02 / THE 3 AM DELUSION</span>
+<span class="bg-white text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-900">Organic Chemistry</span>
+</div>
+<!-- Bolder, Larger Normal Font Headline -->
+<h3 class="text-2xl font-display font-black text-slate-950 leading-snug tracking-tight mb-3">
+              The 3 AM motivation spike.
+            </h3>
+<!-- Literary Quote block with Newsreader italic font -->
+<div class="bg-white/85 border border-slate-900/10 p-3 rounded-xl text-xs italic text-slate-800 font-serif mb-3 leading-relaxed">
+              "Organic Chem at 3 AM makes total sense until you wake up next morning and can't name a single ketone."
+            </div>
+<p class="text-xs text-slate-800 leading-relaxed font-normal mb-6">
+              Reaction mechanism flowcharts, GOC acidity orders, and MS Chouhan question banks indexed with hints.
+            </p>
+</div>
+<div class="pt-4 border-t border-slate-900/15 flex items-center justify-between">
+<span class="text-xs font-bold text-slate-950">Named Reactions Cheat Sheet</span>
+<a aria-label="Go to Chemistry Cheat Sheet" class="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-slate-800 transition shadow-2xs" href="#chemistry">
+              →
+            </a>
+</div>
+</article>
+<!-- CARD 03: Calculus Reality (Obsidian / Deep Charcoal Midnight Tone) -->
+<article class="p-6 bg-charcoal border-2 border-slate-900 rounded-2xl shadow-neubrutal-desktop text-white flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+<div>
+<div class="flex items-center justify-between text-xs font-mono mb-3">
+<span class="text-slate-400 font-bold">03 / REALITY CHECK</span>
+<span class="bg-slate-800 text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-700">Calculus &amp; Vectors</span>
+</div>
+<!-- Bolder, Larger Normal Font Headline -->
+<h3 class="text-2xl font-display font-black text-white leading-snug tracking-tight mb-3">
+              Facing the calculus reality.
+            </h3>
+<div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl text-xs text-slate-300 font-mono mb-3 leading-relaxed">
+              My pending revision pile staring at me while I calculate the absolute minimum marks needed to clear the cutoff.
+            </div>
+<p class="text-xs text-slate-300 leading-relaxed font-normal mb-6">
+              Definite Integrals King's property templates, 3D Geometry vector lines, and probability speed cards.
+            </p>
+</div>
+<div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+<span class="text-xs font-semibold text-slate-200">Black Book Solution Bank</span>
+<a aria-label="Go to Math Solutions" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-500 transition shadow-2xs" href="#maths">
+              →
+            </a>
+</div>
+</article>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- 5. BATCH BUZZ & RELATABLE TRAUMA (COMMUNITY DOSSIER)                    -->
+<!-- ======================================================================= -->
+<section class="space-y-6 pt-2" data-purpose="community-feed">
+<!-- Section Title & Live Feed Status -->
+<div class="flex items-center justify-between">
+<div>
+<span class="text-xs font-mono font-bold tracking-wider text-blue-600 uppercase">
+            COMMUNITY DOSSIER
+          </span>
+<h2 class="text-3xl font-display font-extrabold text-slate-950 tracking-tight">
+            Batch Buzz &amp; Relatable Trauma
+          </h2>
+</div>
+<span class="text-xs font-mono text-emerald-600 font-semibold flex items-center gap-1.5 bg-emerald-50 border border-emerald-200/80 px-3 py-1 rounded-full">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          Live Aspirant Feed
+        </span>
+</div>
+<!-- 3-Column Horizontal Feed Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Post 1: Topper Translator -->
+<div class="p-5 bg-white border-2 border-slate-900 rounded-2xl shadow-neubrutal-desktop space-y-4 flex flex-col justify-between hover:-translate-y-0.5 transition">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="w-7 h-7 rounded-lg bg-amber-500 text-white font-mono text-xs font-black flex items-center justify-center">TT</span>
+<div>
+<span class="text-xs font-bold text-slate-900 block leading-tight">@topper_translator</span>
+<span class="text-[10px] font-mono text-slate-400">TOPPER LOGIC • 2m ago</span>
+</div>
+</div>
+<div class="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full font-mono flex items-center gap-0.5">
+<span class="">▲</span> 7.4K
+              </div>
+</div>
+<!-- Aspirant Quote Box -->
+<div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 text-xs text-slate-800 font-serif italic leading-relaxed">
+              “Kuch nahi padha” ka matlab: Sirf NCERT, 15 saal ke PYQs, coaching modules aur 14 mock tests.
+            </div>
+<div class="text-xs text-slate-600 leading-snug">
+<span class="font-bold text-slate-900">Topper:</span> “Bhai kuch nahi padha.” Also topper: 99.8 percentile in first attempt with neat color-coded notes.
+            </div>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500 font-mono">
+<span class="">💬 683 comments</span>
+<button class="hover:text-blue-600 font-medium transition">Share with batch ↗</button>
+</div>
+</div>
+<!-- Post 2: Damage Control -->
+<div class="p-5 bg-white border-2 border-slate-900 rounded-2xl shadow-neubrutal-desktop space-y-4 flex flex-col justify-between hover:-translate-y-0.5 transition">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="w-7 h-7 rounded-lg bg-rose-500 text-white font-mono text-xs font-black flex items-center justify-center">PR</span>
+<div>
+<span class="text-xs font-bold text-slate-900 block leading-tight">@paper_review_expert</span>
+<span class="text-[10px] font-mono text-slate-400">DAMAGE CONTROL • 18m ago</span>
+</div>
+</div>
+<div class="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full font-mono flex items-center gap-0.5">
+<span class="">▲</span> 5.9K
+              </div>
+</div>
+<!-- Aspirant Quote Box -->
+<div class="bg-rose-50/70 border border-rose-200/80 rounded-xl p-3 text-xs text-slate-800 font-serif italic leading-relaxed">
+              Marks discuss nahi karenge. User experience solid tha. Invigilator bhi chill the.
+            </div>
+<div class="text-xs text-slate-600 leading-snug">
+<span class="font-bold text-slate-900">Mummy:</span> “Beta paper kaisa gaya?” Me: Paper ka font bohot readable tha aur exam hall mein AC sahi temperature pe chal raha tha.
+            </div>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500 font-mono">
+<span class="">💬 447 comments</span>
+<button class="hover:text-blue-600 font-medium transition">Share with batch ↗</button>
+</div>
+</div>
+<!-- Post 3: PYQ Archaeologist -->
+<div class="p-5 bg-white border-2 border-slate-900 rounded-2xl shadow-neubrutal-desktop space-y-4 flex flex-col justify-between hover:-translate-y-0.5 transition">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="w-7 h-7 rounded-lg bg-emerald-600 text-white font-mono text-xs font-black flex items-center justify-center">PA</span>
+<div>
+<span class="text-xs font-bold text-slate-900 block leading-tight">@pyq_archaeologist</span>
+<span class="text-[10px] font-mono text-slate-400">JEE + CET • 1h ago</span>
+</div>
+</div>
+<div class="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full font-mono flex items-center gap-0.5">
+<span class="">▲</span> 4.6K
+              </div>
+</div>
+<!-- Aspirant Quote Box -->
+<div class="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-3 text-xs text-slate-800 font-serif italic leading-relaxed">
+              Chapter: “Main toh bilkul easy hoon.” First PYQ: “Toh ab prove karke dikhao.”
+            </div>
+<div class="text-xs text-slate-600 leading-snug">
+<span class="font-bold text-slate-900">Easy chapter bolke start kiya tha...</span> Do questions baad confidence, calculator aur Sunday — teeno missing report mein hain.
+            </div>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500 font-mono">
+<span class="">💬 318 comments</span>
+<button class="hover:text-blue-600 font-medium transition">Share with batch ↗</button>
+</div>
+</div>
+</div>
+<!-- Plot Twist Call-To-Action Banner: Desktop Wide Layout -->
+<div class="p-6 lg:p-7 bg-butter-200 border-2 border-slate-900 rounded-2xl shadow-neubrutal-desktop flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="space-y-2">
+<span class="text-[10px] font-mono font-black tracking-wider uppercase bg-white px-2.5 py-1 rounded-md border border-slate-900">
+            PLOT TWIST
+          </span>
+<h3 class="text-2xl font-display font-extrabold text-slate-950 tracking-tight leading-tight">
+            Itna scroll kar hi liya? Ab ek test bhi de hi do.
+          </h3>
+<p class="text-xs text-slate-800 font-normal">
+            Memes marks nahi badhaate. Honest timed mocks kabhi-kabhi badha dete hain.
+          </p>
+</div>
+<a class="shrink-0 inline-flex items-center gap-2.5 py-3.5 px-6 bg-slate-950 text-white text-xs font-mono font-black rounded-xl hover:bg-slate-800 shadow-sm transition active:scale-[0.98]" href="#open-mock">
+<span class="">OPEN BOOKIE MOCK</span>
+<span class="">→</span>
+</a>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- 6. TELEGRAM COMMUNITY DROP BANNER: DESKTOP WIDE BLUEPRINT               -->
+<!-- ======================================================================= -->
+<section class="bg-dark-grid text-white border-2 border-slate-900 rounded-2xl p-8 shadow-neubrutal-desktop relative overflow-hidden space-y-6" data-purpose="telegram-banner">
+<!-- Decorative Top Accent -->
+<div class="absolute -top-1 right-12 w-20 h-3 bg-amber-400 rounded-b-md"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<!-- Left: Copy & Value Signal -->
+<div class="lg:col-span-8 space-y-3">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-900/60 border border-blue-700/80 text-[11px] font-mono font-bold text-blue-300">
+<span class="">⚡ STAY IN THE LOOP // ZERO DELAY</span>
+</div>
+<h2 class="text-3xl lg:text-4xl font-display font-extrabold tracking-tight text-white leading-tight">
+            New material drops. Straight to your channel.
+          </h2>
+<p class="text-sm text-slate-300 font-normal leading-relaxed max-w-2xl">
+            Be the first to know when we index fresh Kota test series, PYQ video link updates, Allen milestone modules, and secret classroom notes — no spam, just pure signal.
+          </p>
+</div>
+<!-- Right: Action Buttons -->
+<div class="lg:col-span-4 flex flex-col gap-3">
+<a class="flex items-center justify-center gap-2.5 w-full py-3.5 px-5 rounded-xl bg-blue-600 text-white font-bold text-xs tracking-wide shadow-sm hover:bg-blue-500 transition" href="https://t.me" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"></path></svg>
+            JOIN TELEGRAM CHANNEL ↗
+          </a>
+<a class="flex items-center justify-center gap-2.5 w-full py-3.5 px-5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-bold text-xs hover:bg-slate-800 transition" href="#request">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            REQUEST A RESOURCE ↗
+          </a>
+</div>
+</div>
+<!-- Live Members Status Metatag -->
+<div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between text-xs font-mono text-slate-400">
+<span class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          24.8K ASPIRANTS ACTIVE
+        </span>
+<span class="">AVG CADENCE: 2 CURATED DROPS / WEEK</span>
+</div>
+</section>
+</main>
+<!-- ========================================================================= -->
+<!-- 7. FULL DESKTOP FOOTER                                                    -->
+<!-- ========================================================================= -->
+<footer class="mt-16 bg-white border-t border-slate-200/90 py-12" data-purpose="site-footer">
+<div class="max-w-7xl mx-auto px-6 lg:px-10 space-y-8">
+<!-- Top Row: Brand & Quick Category Links -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-100">
+<div class="flex items-center gap-3">
+<span class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center text-sm">🦉</span>
+<span class="font-display font-extrabold text-slate-950 tracking-tight text-lg">BOOKIE®</span>
+<span class="text-xs text-slate-400 font-mono">| Engineered for Ambitious Aspirants</span>
+</div>
+<!-- Category Links -->
+<div class="flex flex-wrap items-center gap-4 text-xs font-mono uppercase text-slate-600">
+<a class="hover:text-blue-600 transition" href="#practice">PRACTICE</a>
+<span class="">•</span>
+<a class="hover:text-blue-600 transition" href="#progress">PROGRESS</a>
+<span class="">•</span>
+<a class="hover:text-blue-600 transition" href="#perform">PERFORM</a>
+<span class="">•</span>
+<a class="hover:text-amber-700 font-semibold transition" href="#chai">CHAI ☕</a>
+<span class="">•</span>
+<a class="hover:text-blue-600 transition" href="#dmca">DMCA</a>
+<span class="">•</span>
+<span class="text-emerald-600 font-bold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            AIR TARGET 2027
+          </span>
+</div>
+</div>
+<!-- Bottom Row: Copyright, Legal & Google Disclaimer -->
+<div class="flex flex-col lg:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-normal">
+<p class="">© 2026 BOOKIE Systems. All rights reserved.</p>
+<div class="flex flex-wrap items-center gap-3">
+<a class="hover:text-slate-900 underline" href="#terms">Terms of Service</a>
+<span class="">•</span>
+<a class="hover:text-slate-900 underline" href="#privacy">Privacy Policy</a>
+<span class="">•</span>
+<a class="hover:text-slate-900" href="#dmca">DMCA &amp; Copyright</a>
+<span class="">•</span>
+<a class="hover:text-slate-900" href="#support">Support Desk</a>
+</div>
+</div>
+<p class="text-[10px] text-slate-400 max-w-3xl leading-relaxed text-center lg:text-left font-mono">
+        BOOKIE is an educational workspace and study tracker. Google OAuth is used solely for secure sign-in and profile synchronization in adherence to the Google API Services User Data Policy Limited Use requirements. We never sell user data.
+      </p>
+</div>
+</footer>
+<!-- Sticky Quick Actions Assistant FAB -->
+<aside class="fixed bottom-6 right-6 z-40" data-purpose="floating-assistant">
+<button aria-label="Bookie AI Assistant" class="w-12 h-12 rounded-2xl bg-blue-600 text-white shadow-neubrutal-sm flex items-center justify-center hover:bg-blue-700 hover:-translate-y-0.5 transition active:scale-95 group">
+<svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full"></span>
+</button>
+</aside>
+</body></html>

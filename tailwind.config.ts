@@ -14,9 +14,14 @@ export default {
     },
     extend: {
       fontFamily: {
+        ruling: ['Syne', 'sans-serif'],
         display: ['Syne', 'sans-serif'],
+        heading: ['Plus Jakarta Sans', 'sans-serif'],
         sans: ['Plus Jakarta Sans', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+        editorial: ['Newsreader', 'serif'],
+        serif: ['Newsreader', 'serif'],
         hand: ['Caveat', 'cursive'],
         "headline-xl": ['Syne', 'sans-serif'],
         "headline-xl-mobile": ['Syne', 'sans-serif'],

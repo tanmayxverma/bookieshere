@@ -151,31 +151,29 @@ export function TestSeriesHub() {
           </div>
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
             <div className="lg:col-span-8 flex flex-col items-start gap-space-sm">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container/50 text-primary font-label-code-sm text-label-code-sm tracking-wider uppercase font-bold">
-                <Target className="w-[15px] h-[15px] text-primary" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-brand-blue dark:text-blue-400 font-mono text-xs tracking-wider uppercase font-bold border border-blue-200 dark:border-blue-800">
+                <Target className="w-[15px] h-[15px] text-brand-blue" />
                 <span>TEST SERIES & MOCK ARENA</span>
               </div>
               <div className="relative mt-1">
-                <h1 className="font-headline-xl text-headline-xl lg:text-[44px] lg:leading-[50px] tracking-tight font-extrabold text-on-surface italic">
-                  Test Series <span className="relative inline-block text-primary not-italic">Hub.
-                    <span className="absolute -bottom-1 left-0 right-0 h-2.5 bg-secondary-container/70 -z-10 transform -rotate-1 rounded-full"></span>
-                  </span>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-ruling font-black tracking-tight text-slate-950 dark:text-white leading-[1.08]">
+                  Test Series <span className="text-brand-blue inline-block">Hub.</span>
                 </h1>
               </div>
-              <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl pt-1">
+              <p className="font-editorial italic text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed pt-1">
                 Access curated coaching test series, chapterwise mocks, NTA-style 1v1 battle arena, and full syllabus papers from across the entire JEE ecosystem — zero gaslighting, honest percentile curves.
               </p>
-              <div className="flex flex-wrap items-center gap-space-sm pt-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-tertiary"></span>
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 font-mono text-xs text-slate-700 dark:text-slate-300 font-bold shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-slate-400"></span>
                   <span>{(testSeries || []).length} Providers</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
-                  <span className="material-symbols-outlined text-primary text-[15px]">inventory_2</span>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 font-mono text-xs text-brand-blue dark:text-blue-400 font-bold shadow-xs border border-blue-100 dark:border-blue-800">
+                  <span className="material-symbols-outlined text-[15px]">inventory_2</span>
                   <span>{totalResources} Live Resources</span>
                 </div>
-                <div className="hidden sm:inline-flex items-center gap-1 text-on-surface-variant font-label-code-sm text-label-code-sm">
-                  <span className="material-symbols-outlined text-[14px] text-tertiary">verified</span>
+                <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 font-mono text-xs text-emerald-800 dark:text-emerald-300 font-bold shadow-xs border border-emerald-200 dark:border-emerald-800">
+                  <span className="material-symbols-outlined text-[14px] text-emerald-600">verified</span>
                   <span>100% NTA Scoring Engine</span>
                 </div>
               </div>
@@ -183,31 +181,30 @@ export function TestSeriesHub() {
 
             {/* Test Reality Widget */}
             <div className="lg:col-span-4 w-full">
-              <div className="relative w-full bg-secondary-fixed dark:bg-amber-950/40 text-on-secondary-fixed-variant dark:text-amber-100 rounded-xl p-space-md shadow-[0_8px_18px_-3px_rgba(113,63,18,0.18)] transform rotate-1 hover:rotate-0 transition-transform duration-200 brutal-border border-secondary-fixed dark:border-amber-700/60">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/80 backdrop-blur-sm rounded-sm shadow-sm transform -rotate-1 border-t border-b border-dashed border-secondary/40 sticker-tape"></div>
-                <div className="flex items-center justify-between pb-2 mb-2">
-                  <div className="flex items-center gap-1.5 font-label-code-sm text-label-code-sm font-extrabold uppercase tracking-wider text-on-secondary-fixed-variant dark:text-amber-200">
-                    <span className="material-symbols-outlined text-[16px]">psychology_alt</span>
+              <div className="relative w-full bg-amber-50 dark:bg-amber-950/40 text-amber-950 dark:text-amber-100 rounded-2xl p-space-md shadow-sm border-2 border-slate-900 dark:border-amber-700/60">
+                <div className="flex items-center justify-between pb-2 mb-2 border-b border-amber-200 dark:border-amber-800">
+                  <div className="flex items-center gap-1.5 font-mono text-xs font-black uppercase tracking-wider text-amber-950 dark:text-amber-200">
+                    <span className="material-symbols-outlined text-[16px] text-amber-700">psychology_alt</span>
                     <span>TEST REALITY CHECK</span>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-[10px] font-bold">JAN 2027</span>
+                  <span className="px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200 font-mono text-[10px] font-bold">JAN 2027 TARGET</span>
                 </div>
-                <div className="space-y-2 font-body-sm text-body-sm">
-                  <div className="flex items-center justify-between font-label-code-sm">
-                    <span className="text-secondary dark:text-amber-300">Average Aspirant Score</span>
-                    <span className="font-extrabold text-on-secondary-container bg-secondary-container px-2 py-0.5 rounded">142 / 300</span>
+                <div className="space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-amber-900/80 dark:text-amber-300">Average Aspirant Score</span>
+                    <span className="font-mono font-bold text-amber-950 dark:text-amber-100 bg-amber-200/70 dark:bg-amber-900/60 px-2.5 py-0.5 rounded">142 / 300</span>
                   </div>
-                  <div className="flex items-center justify-between font-label-code-sm">
-                    <span className="text-secondary dark:text-amber-300">Safe 99%ile Benchmark</span>
-                    <span className="font-extrabold text-tertiary bg-tertiary-container/30 px-2 py-0.5 rounded">210+ Marks</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-amber-950 dark:text-amber-200">Safe 99%ile Benchmark</span>
+                    <span className="font-mono font-black text-white bg-brand-blue px-2.5 py-0.5 rounded shadow-xs">210+ Marks</span>
                   </div>
-                  <div className="w-full bg-secondary-container/50 h-2 rounded-full overflow-hidden my-1">
-                    <div className="bg-primary h-full rounded-full" style={{ width: '67%' }}></div>
+                  <div className="w-full bg-amber-200/60 dark:bg-amber-900/40 h-2.5 rounded-full overflow-hidden my-1 p-0.5">
+                    <div className="bg-brand-blue h-full rounded-full" style={{ width: '67%' }}></div>
                   </div>
-                  <div className="pt-2 text-center italic font-headline-md text-[13px] leading-tight text-on-secondary-fixed-variant dark:text-amber-200">
+                  <div className="pt-2 text-center font-serif italic text-sm leading-snug text-slate-800 dark:text-amber-100">
                     “Mock se darr nahi lagta sahab, analysis se lagta hai.”
                   </div>
-                  <div className="text-right font-label-code-sm text-[10px] text-secondary dark:text-amber-300/80 font-semibold">
+                  <div className="text-right font-mono text-[10px] uppercase font-bold text-amber-800 dark:text-amber-400">
                     — Kota Hostel Bathroom Wisdom
                   </div>
                 </div>
