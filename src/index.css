@@ -263,9 +263,9 @@
   .blueprint-grid {
     background-color: #faf8ff;
     background-image: 
-      linear-gradient(to right, rgba(194, 198, 217, 0.3) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(194, 198, 217, 0.3) 1px, transparent 1px);
-    background-size: 20px 20px;
+      linear-gradient(to right, rgba(194, 198, 217, 0.15) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(194, 198, 217, 0.15) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
 
   .dark .blueprint-grid {
@@ -273,7 +273,7 @@
     background-image: 
       linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-size: 28px 28px;
   }
 
   .font-display {

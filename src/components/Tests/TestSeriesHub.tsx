@@ -146,24 +146,19 @@ export function TestSeriesHub() {
         
         {/* Hero Header Section */}
         <section className="relative w-full rounded-2xl bg-surface-container-lowest p-space-md lg:p-space-lg shadow-[0_4px_20px_-2px_rgba(19,27,46,0.06)] mt-space-md mb-space-lg overflow-hidden brutal-border">
-          <div className="absolute -right-8 -bottom-10 pointer-events-none select-none text-surface-container-highest/60 font-headline-xl text-[120px] font-black opacity-30 leading-none">
-            TESTS
-          </div>
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
             <div className="lg:col-span-12 flex flex-col items-start gap-space-sm">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container/50 text-primary font-label-code-sm text-label-code-sm tracking-wider uppercase font-bold">
                 <Target className="w-[15px] h-[15px] text-primary" />
-                <span>TEST SERIES & MOCK ARENA</span>
+                <span>TEST SERIES & MOCKS</span>
               </div>
               <div className="relative mt-1">
-                <h1 className="font-headline-xl text-headline-xl lg:text-[44px] lg:leading-[50px] tracking-tight font-extrabold text-on-surface italic">
-                  Test Series <span className="relative inline-block text-primary not-italic">Hub.
-                    <span className="absolute -bottom-1 left-0 right-0 h-2.5 bg-secondary-container/70 -z-10 transform -rotate-1 rounded-full"></span>
-                  </span>
+                <h1 className="font-headline-xl text-headline-xl lg:text-[44px] lg:leading-[50px] tracking-tight font-extrabold text-on-surface">
+                  Test Series <span className="text-primary">Hub.</span>
                 </h1>
               </div>
               <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl pt-1">
-                Access curated coaching test series, chapterwise mocks, NTA-style 1v1 battle arena, and full syllabus papers from across the entire JEE ecosystem — zero gaslighting, honest percentile curves.
+                Access curated coaching test series, chapter-wise mocks and full syllabus papers from across the entire JEE ecosystem, with honest percentile curves.
               </p>
               <div className="flex flex-wrap items-center gap-space-sm pt-2">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container font-label-code-sm text-label-code-sm text-on-surface font-bold shadow-sm">
@@ -269,33 +264,6 @@ export function TestSeriesHub() {
           </div>
         </section>
 
-        {/* Relatable Bottom Punchline / Reality Callout */}
-        <section className="relative w-full rounded-2xl bg-secondary-fixed dark:bg-amber-950/40 text-on-secondary-fixed-variant dark:text-amber-100 p-space-lg lg:p-space-xl shadow-[0_8px_24px_-4px_rgba(69,26,3,0.08)] mb-space-xl overflow-hidden brutal-border border-secondary-fixed dark:border-amber-700/60">
-          <div className="absolute -top-3 left-8 w-28 h-6 bg-secondary-container transform -rotate-2 rounded shadow-sm opacity-80 sticker-tape"></div>
-          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
-            <div className="space-y-space-xs max-w-3xl">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-code-sm text-label-code-sm font-extrabold tracking-wider uppercase">
-                <span className="material-symbols-outlined text-[15px]">psychology</span>
-                <span>PLOT TWIST // REAL TALK</span>
-              </div>
-              <h3 className="font-headline-lg text-headline-lg font-black text-on-secondary-fixed-variant dark:text-amber-100 tracking-tight pt-1">
-                “Itna test series collect kar liya? Ab ek mock test de bhi do.”
-              </h3>
-              <p className="font-body-lg text-body-lg text-secondary dark:text-amber-200/90 leading-relaxed">
-                Drive folder mein 400 GB test papers hoard karne se AIR 1 nahi aati. Give one honest 45-minute timed mock right now without checking answers midway.
-              </p>
-            </div>
-            <div className="w-full lg:w-auto flex flex-col items-stretch sm:items-end">
-              <button className="px-space-lg py-4 rounded-xl bg-inverse-surface dark:bg-slate-800 text-inverse-on-surface dark:text-white font-headline-md text-body-md font-extrabold shadow-[0_4px_0_0_#000000] hover:opacity-90 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 whitespace-nowrap">
-                <span className="material-symbols-outlined text-secondary-container text-[20px]">bolt</span>
-                <span>Start Immediate 45-Min Physics Mock →</span>
-              </button>
-              <span className="font-label-code-sm text-[11px] text-secondary dark:text-amber-300 text-center sm:text-right mt-1.5 font-bold">
-                Includes Rotational Motion + Thermodynamics MCQs
-              </span>
-            </div>
-          </div>
-        </section>
 
       </div>
     </div>

@@ -74,15 +74,12 @@ const Materials = () => {
                   <span className="text-primary font-bold">//</span>
                   <span className="text-primary font-bold">CURATED FOR JEE ADVANCED 2027</span>
                 </div>
-                <h1 className="font-headline-xl text-headline-xl lg:text-[54px] lg:leading-[60px] tracking-tight text-on-surface font-extrabold uppercase italic mt-1 mb-space-sm">
+                <h1 className="font-headline-xl text-headline-xl lg:text-[54px] lg:leading-[60px] tracking-tight text-on-surface font-extrabold uppercase mt-1 mb-space-sm">
                   MATERIALS <span className="relative inline-block text-primary">LIBRARY.
-                    <svg className="absolute -bottom-2 left-0 w-full h-3 text-secondary-container" fill="none" preserveAspectRatio="none" viewBox="0 0 250 12">
-                      <path d="M3 8.5C45 3.5 130 1.5 247 7.5" stroke="currentColor" strokeLinecap="round" strokeWidth="5"></path>
-                    </svg>
                   </span>
                 </h1>
                 <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed mt-space-xs">
-                  Modules, books, PYQs, test series and reference works — every single resource hand-picked, zero filler, organized for serious rankers without the emotional damage.
+                  Modules, books, PYQs, test series and reference works — every single resource hand-picked, zero filler, organized for serious aspirants.
                 </p>
                 <div className="flex flex-wrap items-center gap-space-sm mt-space-md">
                   <div className="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-code-sm text-label-code-sm">
@@ -103,7 +100,6 @@ const Materials = () => {
               {/* Right Floating Snapshot Card */}
               <div className="lg:col-span-4 w-full">
                 <div className="relative bg-surface-container-lowest rounded-xl p-space-md shadow-[0_10px_25px_-5px_rgba(19,27,46,0.06)] flex flex-col gap-space-md brutal-border">
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-5 bg-secondary-container/60 rotate-1 backdrop-blur-sm sticker-tape pointer-events-none"></div>
                   <div className="flex items-center justify-between">
                     <span className="font-label-code-sm text-label-code-sm tracking-wider text-on-surface-variant uppercase flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-primary"></span>
