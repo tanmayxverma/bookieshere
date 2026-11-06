@@ -150,7 +150,7 @@ export function TestSeriesHub() {
             TESTS
           </div>
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
-            <div className="lg:col-span-8 flex flex-col items-start gap-space-sm">
+            <div className="lg:col-span-12 flex flex-col items-start gap-space-sm">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container/50 text-primary font-label-code-sm text-label-code-sm tracking-wider uppercase font-bold">
                 <Target className="w-[15px] h-[15px] text-primary" />
                 <span>TEST SERIES & MOCK ARENA</span>
@@ -181,38 +181,6 @@ export function TestSeriesHub() {
               </div>
             </div>
 
-            {/* Test Reality Widget */}
-            <div className="lg:col-span-4 w-full">
-              <div className="relative w-full bg-secondary-fixed dark:bg-amber-950/40 text-on-secondary-fixed-variant dark:text-amber-100 rounded-xl p-space-md shadow-[0_8px_18px_-3px_rgba(113,63,18,0.18)] transform rotate-1 hover:rotate-0 transition-transform duration-200 brutal-border border-secondary-fixed dark:border-amber-700/60">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/80 backdrop-blur-sm rounded-sm shadow-sm transform -rotate-1 border-t border-b border-dashed border-secondary/40 sticker-tape"></div>
-                <div className="flex items-center justify-between pb-2 mb-2">
-                  <div className="flex items-center gap-1.5 font-label-code-sm text-label-code-sm font-extrabold uppercase tracking-wider text-on-secondary-fixed-variant dark:text-amber-200">
-                    <span className="material-symbols-outlined text-[16px]">psychology_alt</span>
-                    <span>TEST REALITY CHECK</span>
-                  </div>
-                  <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-[10px] font-bold">JAN 2027</span>
-                </div>
-                <div className="space-y-2 font-body-sm text-body-sm">
-                  <div className="flex items-center justify-between font-label-code-sm">
-                    <span className="text-secondary dark:text-amber-300">Average Aspirant Score</span>
-                    <span className="font-extrabold text-on-secondary-container bg-secondary-container px-2 py-0.5 rounded">142 / 300</span>
-                  </div>
-                  <div className="flex items-center justify-between font-label-code-sm">
-                    <span className="text-secondary dark:text-amber-300">Safe 99%ile Benchmark</span>
-                    <span className="font-extrabold text-tertiary bg-tertiary-container/30 px-2 py-0.5 rounded">210+ Marks</span>
-                  </div>
-                  <div className="w-full bg-secondary-container/50 h-2 rounded-full overflow-hidden my-1">
-                    <div className="bg-primary h-full rounded-full" style={{ width: '67%' }}></div>
-                  </div>
-                  <div className="pt-2 text-center italic font-headline-md text-[13px] leading-tight text-on-secondary-fixed-variant dark:text-amber-200">
-                    “Mock se darr nahi lagta sahab, analysis se lagta hai.”
-                  </div>
-                  <div className="text-right font-label-code-sm text-[10px] text-secondary dark:text-amber-300/80 font-semibold">
-                    — Kota Hostel Bathroom Wisdom
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -249,54 +217,6 @@ export function TestSeriesHub() {
           </div>
         </section>
 
-        {/* Featured 1v1 Mock Battle Arena Card */}
-        <section className="relative w-full rounded-2xl bg-gradient-to-r from-primary-fixed to-primary-container/20 dark:from-slate-900 dark:via-blue-950/40 dark:to-slate-900 p-space-md lg:p-space-lg shadow-sm mb-space-xl overflow-hidden brutal-border border-primary-fixed dark:border-slate-800">
-          <div className="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-primary/20 blur-3xl pointer-events-none"></div>
-          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
-            <div className="flex-1 space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-code-sm text-label-code-sm uppercase font-bold tracking-wider flex items-center gap-1">
-                  <Activity className="w-[13px] h-[13px]" />
-                  <span>MULTIPLAYER ARENA • LIVE CONFLICT</span>
-                </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-label-code-sm text-label-code-sm font-bold">
-                  <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
-                  <span>348 aspirants queuing</span>
-                </span>
-              </div>
-              <h2 className="font-headline-lg text-headline-lg font-black text-on-surface tracking-tight flex items-center gap-2">
-                <span>1v1 Mock Test Battle</span>
-                <span className="px-2 py-0.5 text-[11px] rounded bg-secondary-container text-on-secondary-container font-label-code-sm uppercase font-extrabold">Instant Match</span>
-              </h2>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl">
-                NTA-style real-time 1v1 mock test battles — challenge batchmates head-to-head in a 15-minute speed drill. Winner takes rank bragging rights and +50 Bookie Karma Points.
-              </p>
-              <div className="flex flex-wrap items-center gap-space-md pt-2 text-on-surface-variant font-label-code-sm text-label-code-sm">
-                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-primary text-[16px]">timer</span> 15 Mins / 12 MCQs</span>
-                <span>•</span>
-                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-error text-[16px]">balance</span> +4 / -1 Marking</span>
-              </div>
-            </div>
-            
-            <div className="w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-space-md">
-              <div className="flex items-center gap-3 bg-surface-container-lowest/90 px-4 py-2.5 rounded-xl shadow-sm brutal-border border-surface-container-lowest">
-                <div className="flex items-center -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-primary text-on-primary font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">TK</div>
-                  <div className="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">VS</div>
-                  <div className="w-8 h-8 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center ring-2 ring-surface-container-lowest">AG</div>
-                </div>
-                <div className="flex flex-col text-left font-label-code-sm text-[11px]">
-                  <span className="font-bold text-on-surface">Last Match Just Concluded</span>
-                  <span className="text-tertiary font-bold">Tanmay (+36) beat Aniket (+28)</span>
-                </div>
-              </div>
-              <button onClick={() => window.open("https://www.ovibattle.in/", "_blank", "noopener,noreferrer")} className="px-space-lg py-3.5 rounded-xl bg-primary text-on-primary font-headline-md text-body-md font-bold shadow-[0_4px_0_0_#131b2e] hover:bg-primary-container active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 whitespace-nowrap">
-                <span className="material-symbols-outlined text-[20px]">sports_martial_arts</span>
-                <span>Challenge an Aspirant Now →</span>
-              </button>
-            </div>
-          </div>
-        </section>
 
         {/* Section Title & Grid Counter */}
         <div className="flex items-center justify-between mb-space-md">

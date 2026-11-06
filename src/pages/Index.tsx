@@ -68,24 +68,6 @@ const Index = () => {
                 </Link>
               </div>
 
-              {/* Sticky Note Banter Box */}
-              <div className="relative mt-8 pt-4 max-w-lg">
-                <div className="sticker-tape"></div>
-                <div className="bg-brand-softYellow dark:bg-amber-950/40 border-2 border-amber-300/80 dark:border-amber-700/60 rounded-2xl p-4 shadow-sm relative rotate-[-1deg] hover:rotate-0 transition-transform">
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">✨</span>
-                    <div>
-                      <p className="font-mono text-xs font-extrabold text-amber-900 dark:text-amber-300 tracking-wide uppercase">
-                        BATCH REALITY CHECK
-                      </p>
-                      <p className="text-sm font-semibold text-amber-950 dark:text-amber-200 mt-1 leading-snug">
-                        <span className="italic font-bold">Kuchuuu Puchuuu!</span> MathonGo, Allen aur PW ke naye test series questions upload ho chuke hain. 
-                        Ab website pe jao aur test do, warna rank goodnight bol degi!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Right Column: Promo Card + Live Stats Dashboard */}

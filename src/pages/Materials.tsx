@@ -150,35 +150,6 @@ const Materials = () => {
             </div>
           </section>
 
-          {/* Relatable Sticky Note Banner */}
-          <section className="w-full mt-space-lg relative flex justify-center">
-            <div className="w-full max-w-3xl relative bg-secondary-fixed text-on-secondary-fixed rounded-lg p-space-md shadow-[0_8px_18px_-2px_rgba(92,67,0,0.12)] rotate-[-0.6deg] hover:rotate-0 transition-transform duration-200 brutal-border border-secondary-fixed">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-surface-container-lowest/80 backdrop-blur-sm -rotate-2 sticker-tape pointer-events-none flex items-center justify-center">
-                <span className="font-label-code-sm text-[9px] uppercase tracking-widest text-outline">KOTA_DESK_MEMO</span>
-              </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm pt-1">
-                <div className="flex items-start gap-space-sm">
-                  <span className="text-[24px] leading-none select-none">📌</span>
-                  <div>
-                    <span className="font-label-code-sm text-label-code-sm font-bold text-secondary uppercase tracking-wider block">
-                      BATCH REALITY PROTOCOL
-                    </span>
-                    <p className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight mt-0.5">
-                      "Cengage download kar li, ab bas padhna baki hai!"
-                    </p>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                      Day 42 of staring at the Irodov cover page waiting for momentum to appear by Osmosis.
-                    </p>
-                  </div>
-                </div>
-                <div className="self-end sm:self-center shrink-0">
-                  <span className="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-code-sm text-label-code-sm font-bold shadow-[0_2px_0_0_#5c4300]">
-                    🔥 3,842 Aspirants Felt This
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
 
           {/* Search & Quick Navigation Bar */}
           <section className="w-full mt-space-lg">
