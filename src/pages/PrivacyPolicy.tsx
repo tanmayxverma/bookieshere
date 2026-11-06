@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ShieldCheck, Mail, MessageSquare, ArrowLeft, Lock, Trash2, EyeOff, CheckCircle2 } from "lucide-react";
 
 export default function PrivacyPolicy() {
-  const lastUpdated = "January 15, 2025";
+  const lastUpdated = "November 6, 2026";
 
   return (
     <Layout>
@@ -31,7 +31,7 @@ export default function PrivacyPolicy() {
                 Last Updated: {lastUpdated} • Effective Immediately
               </p>
               <p className="mt-4 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-                At <strong>BOOKIE</strong> ("we," "our," or "the Platform"), we respect your personal privacy and are committed to safeguarding your information. This Privacy Policy details the types of information we access and collect, how we use and protect it, our adherence to Google API Services User Data Policies, and your rights regarding data access and deletion.
+                At <strong>BOOKIE</strong> ("we," "our," or "the Platform"), operated at <strong>bookiejee.cv</strong>, a free study platform for JEE aspirants, we respect your personal privacy and are committed to safeguarding your information. This Privacy Policy details the types of information we access and collect, how we use and protect it, our adherence to Google API Services User Data Policies, and your rights regarding data access and deletion.
               </p>
             </div>
           </div>
@@ -150,6 +150,18 @@ export default function PrivacyPolicy() {
               <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                 Data is stored securely on cloud database infrastructure provided by Supabase (PostgreSQL), protected by end-to-end TLS encryption in transit and AES-256 encryption at rest with strict Row-Level Security (RLS) enforcement.
               </p>
+              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                To operate the Platform we rely on the following service providers, who process data only on our behalf and only to provide their service:
+              </p>
+              <ul className="list-disc list-inside text-sm space-y-1.5 pl-2 text-slate-700 dark:text-slate-300">
+                <li><strong>Supabase</strong>: authentication and database hosting (stores your account profile and study data).</li>
+                <li><strong>Vercel</strong>: website hosting and delivery (may process standard technical request logs such as IP address and browser type).</li>
+                <li><strong>Google</strong>: sign-in with Google (OAuth). We receive only the basic profile fields listed in Section 1.</li>
+                <li><strong>OpenRouter</strong>: AI model routing for the optional Bookie AI chat. Only the messages and images you choose to send to Bookie AI are transmitted, and they are used solely to generate a reply. Google account data is never sent to the AI provider. Please do not enter sensitive personal information in the chat.</li>
+              </ul>
+              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                Except for these providers, and where required by law, we do not share your information with anyone.
+              </p>
             </section>
 
             {/* 5. User Rights, Data Retention & Deletion */}
@@ -164,6 +176,7 @@ export default function PrivacyPolicy() {
               <ul className="list-disc list-inside text-sm space-y-1.5 pl-2 text-slate-700 dark:text-slate-300">
                 <li><strong>Profile Customization</strong>: You can update your display name, target batch, or change/remove your avatar photo anytime on the <Link to="/profile" className="text-primary underline font-bold">Profile Page</Link>.</li>
                 <li><strong>Account & Data Deletion</strong>: You have the right to request the permanent deletion of your account, study history, community records, and any associated Google user data.</li>
+                <li><strong>Retention</strong>: We keep your account and study data for as long as your account is active. When you request deletion, your profile, study history, community records and any stored Google profile data are permanently erased from our database, and backups are purged on the provider's normal rotation cycle. Guest data stays only in your own browser and can be cleared at any time by clearing site data.</li>
                 <li><strong>Deletion Fulfillment</strong>: To request complete data erasure, simply submit a request through in-app <Link to="/support" className="text-primary underline font-bold">Support Chat</Link> or send an email to <a href="mailto:capcutwaladiddy@gmail.com" className="text-primary underline font-bold">capcutwaladiddy@gmail.com</a>. Deletion requests are processed and confirmed within <strong>24 to 48 hours</strong>.</li>
               </ul>
             </section>

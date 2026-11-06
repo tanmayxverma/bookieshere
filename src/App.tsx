@@ -48,6 +48,7 @@ const OPEN_PATHS = new Set([
   "/auth",
   "/reset-password",
   "/privacy-policy",
+  "/privacy",
   "/copyright-terms",
   "/terms",
   "/terms-of-service",
@@ -116,6 +117,7 @@ function AppRoutes() {
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/dmca" element={<DMCA />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
