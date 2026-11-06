@@ -6,6 +6,9 @@ import { MaterialFilters } from "@/components/MaterialFilters";
 import { useMaterials } from "@/hooks/useMaterials";
 import { SubjectType, ResourceType } from "@/types/materials";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const PAGE_SIZE = 24;
 
 const Materials = () => {
   const { data: materials, isLoading } = useMaterials();
@@ -36,6 +39,34 @@ const Materials = () => {
   }, [materials, search, selectedSubjects, selectedTypes]);
 
   const hasActiveFilters = selectedSubjects.length > 0 || selectedTypes.length > 0;
+
+  // Pagination slices the FULL filtered list, so search and filters always
+  // run across the entire catalog; only the rendering is paged.
+  const [page, setPage] = useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [search, selectedSubjects, selectedTypes]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredMaterials.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const pagedMaterials = filteredMaterials.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  const goToPage = (next: number) => {
+    setPage(Math.min(Math.max(1, next), pageCount));
+    document.getElementById("catalog-top")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const pageNumbers: (number | "gap")[] = (() => {
+    if (pageCount <= 7) return Array.from({ length: pageCount }, (_, i) => i + 1);
+    const pages = new Set<number>([1, 2, safePage - 1, safePage, safePage + 1, pageCount - 1, pageCount]);
+    const sorted = [...pages].filter(n => n >= 1 && n <= pageCount).sort((a, b) => a - b);
+    const out: (number | "gap")[] = [];
+    sorted.forEach((n, i) => {
+      if (i > 0 && n - sorted[i - 1] > 1) out.push("gap");
+      out.push(n);
+    });
+    return out;
+  })();
 
   const clearFilters = () => {
     setSelectedSubjects([]);
@@ -226,7 +257,7 @@ const Materials = () => {
 
               {/* Right Catalog Cards Grid */}
               <main className="lg:col-span-8 xl:col-span-9 flex flex-col gap-space-md">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+                <div id="catalog-top" className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs scroll-mt-28">
                   <div className="flex items-center gap-space-xs">
                     <span className="font-label-code-sm text-label-code-sm text-on-surface-variant uppercase tracking-wider">SHOWING:</span>
                     <span className="font-label-ui text-label-ui text-primary font-bold uppercase">
@@ -244,7 +275,7 @@ const Materials = () => {
                   </div>
                 ) : filteredMaterials.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
-                    {filteredMaterials.map((material) => (
+                    {pagedMaterials.map((material) => (
                       <MaterialCard key={material.id} material={material} />
                     ))}
                   </div>
@@ -254,6 +285,48 @@ const Materials = () => {
                     <h3 className="font-headline-md text-headline-md font-bold text-on-surface mb-2">Nothing matches that yet</h3>
                     <p className="font-body-sm text-body-sm text-on-surface-variant max-w-sm mx-auto">Try a broader keyword or clear your filters to see the full library.</p>
                   </div>
+                )}
+
+                {!isLoading && pageCount > 1 && (
+                  <nav aria-label="Materials pages" className="flex items-center justify-center gap-1.5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => goToPage(safePage - 1)}
+                      disabled={safePage === 1}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-600 dark:text-slate-300 transition-colors hover:border-slate-400 disabled:opacity-40 disabled:pointer-events-none"
+                    >
+                      <ChevronLeft className="h-3.5 w-3.5" />
+                      Prev
+                    </button>
+                    {pageNumbers.map((n, i) =>
+                      n === "gap" ? (
+                        <span key={`gap-${i}`} className="px-1 text-xs text-slate-400">…</span>
+                      ) : (
+                        <button
+                          key={n}
+                          type="button"
+                          onClick={() => goToPage(n)}
+                          aria-current={n === safePage ? "page" : undefined}
+                          className={
+                            n === safePage
+                              ? "px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold"
+                              : "px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-600 dark:text-slate-300 transition-colors hover:border-slate-400"
+                          }
+                        >
+                          {n}
+                        </button>
+                      )
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => goToPage(safePage + 1)}
+                      disabled={safePage === pageCount}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-600 dark:text-slate-300 transition-colors hover:border-slate-400 disabled:opacity-40 disabled:pointer-events-none"
+                    >
+                      Next
+                      <ChevronRight className="h-3.5 w-3.5" />
+                    </button>
+                  </nav>
                 )}
               </main>
 

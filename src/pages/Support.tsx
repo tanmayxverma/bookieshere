@@ -135,14 +135,14 @@ export default function SupportPage() {
         
 
         {/* Main Content Area */}
-        <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 flex-1 items-stretch bg-surface-container-lowest border-2 border-slate-900 rounded-3xl shadow-[6px_6px_0px_0px_rgba(15,23,42,0.95)] overflow-hidden min-h-[640px]">
+        <main className="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-4 lg:p-5 flex flex-col">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 flex-1 items-stretch bg-surface-container-lowest border-2 border-slate-900 rounded-3xl shadow-[4px_4px_0px_0px_rgba(15,23,42,0.95)] overflow-hidden min-h-[560px] lg:h-[calc(100dvh-10.5rem)] lg:max-h-[840px]">
             
             {/* ───── LEFT SIDEBAR: INBOX & DIRECT LINE INFO ───── */}
             <aside className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex flex-col bg-slate-50/70 dark:bg-slate-900/50">
               
               {/* Header: SLA Status & Direct Line Tag */}
-              <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3">
+              <div className="p-3.5 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white font-display">
@@ -177,9 +177,9 @@ export default function SupportPage() {
               </div>
 
               {/* Sidebar Cards Area */}
-              <div className="p-3.5 flex-1 overflow-y-auto space-y-3">
+              <div className="p-3 flex-1 overflow-y-auto space-y-2.5">
                 {/* Card 1: Solo Dev & Fellow Aspirant */}
-                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
+                <div className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-xl bg-brand-blue text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
                       B
@@ -199,7 +199,7 @@ export default function SupportPage() {
                 </div>
 
                 {/* Card 2: Buy Me a Chai (Encouraging banner) */}
-                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
+                <div className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="text-base leading-none">☕</span>
@@ -224,7 +224,7 @@ export default function SupportPage() {
                 </div>
 
                 {/* Card 3: Quick Topic Starters */}
-                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
+                <div className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
                       QUICK TOPIC STARTERS
@@ -285,7 +285,7 @@ export default function SupportPage() {
               )}
 
               {/* Chat Canvas Header */}
-              <div className="bg-white dark:bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 shrink-0">
+              <div className="bg-white dark:bg-slate-900 px-4 py-2.5 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <div className="w-10 h-10 rounded-xl bg-brand-blue flex items-center justify-center font-bold text-white">
@@ -331,7 +331,7 @@ export default function SupportPage() {
               </div>
 
               {/* Messages Thread Feed */}
-              <div ref={scrollerRef} className="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/50">
+              <div ref={scrollerRef} className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/50 dark:bg-slate-950/50">
                 {loading ? (
                   <div className="h-full flex items-center justify-center p-10 text-sm font-mono text-slate-500 gap-2">
                     <Loader2 className="h-5 w-5 animate-spin text-brand-blue" />
@@ -350,7 +350,7 @@ export default function SupportPage() {
                     </button>
                   </div>
                 ) : filteredMessages.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-md mx-auto space-y-3">
+                  <div className="h-full flex flex-col items-center justify-center text-center p-6 max-w-md mx-auto space-y-3">
                     <div className="w-12 h-12 rounded-2xl bg-blue-100 text-brand-blue flex items-center justify-center shadow-xs border border-blue-200 dark:border-blue-900 dark:bg-blue-950/80">
                       <ShieldCheck className="w-6 h-6 text-brand-blue" />
                     </div>
@@ -377,6 +377,19 @@ export default function SupportPage() {
                       >
                         "Request Coaching Notes"
                       </button>
+                    </div>
+                    <div className="pt-4 mt-1 border-t border-slate-100 dark:border-slate-800 w-full">
+                      <p className="text-[11px] text-slate-400 leading-relaxed">
+                        Bookie is free, with no ads. If it helps your prep, you can{" "}
+                        <button
+                          type="button"
+                          onClick={() => navigate('/donate')}
+                          className="text-brand-blue font-semibold hover:underline underline-offset-2"
+                        >
+                          support it with a chai
+                        </button>
+                        .
+                      </p>
                     </div>
                   </div>
                 ) : (
@@ -440,7 +453,7 @@ export default function SupportPage() {
               </div>
 
               {/* Enhanced Rich Input Bar */}
-              <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-3 sm:p-4 shrink-0">
+              <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-3 shrink-0">
                 
                 {/* Math Symbol Helper Ribbon */}
                 {showSymbolBar && (

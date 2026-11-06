@@ -243,26 +243,6 @@ export function TestSeriesHub() {
           </div>
         )}
 
-        {/* Real Exam Schedule & AYJR Countdown Mini Banner */}
-        <section className="w-full bg-surface-container-high rounded-2xl p-space-md lg:p-space-lg mb-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md brutal-border">
-          <div className="flex items-center gap-space-md">
-            <div className="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center font-headline-md text-headline-md shadow-[0_3px_0_0_#5c4300] brutal-border border-secondary-container">
-              ⚡
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-headline-md text-body-lg font-bold text-on-surface">Next Synchronized All-India Mock: AYJR Jan Shift 1</span>
-                <span className="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-code-sm text-[10px] font-extrabold uppercase">Live in 3 Days</span>
-              </div>
-              <p className="font-body-sm text-body-sm text-on-surface-variant">Simulating shift timings: Morning 09:00 AM - 12:00 PM. Registered aspirants: 68,400+.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-space-sm w-full md:w-auto justify-end">
-            <button className="px-space-md py-2 rounded-xl bg-primary text-on-primary font-headline-md text-label-ui shadow-[0_3px_0_0_#131b2e] hover:bg-primary-container active:translate-y-0.5 active:shadow-none transition-all">
-              Book Free Slot
-            </button>
-          </div>
-        </section>
 
 
       </div>
