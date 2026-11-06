@@ -64,13 +64,13 @@ export function GuestUpgradeBanner({
     <>
       <div
         className={cn(
-          "relative overflow-hidden rounded-2xl border-2 border-slate-900 dark:border-slate-700 bg-surface-container-lowest p-4 sm:p-5 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5",
+          "relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5",
           className
         )}
       >
         <div className="flex items-start sm:items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shrink-0 border border-slate-900 shadow-sm font-bold text-lg">
-            ⚡
+          <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shrink-0">
+            <Zap className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -91,9 +91,9 @@ export function GuestUpgradeBanner({
           <Button
             size="sm"
             onClick={() => setModalOpen(true)}
-            className="w-full sm:w-auto h-9 text-xs font-bold rounded-xl border border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+            className="w-full sm:w-auto h-9 text-xs font-bold rounded-xl"
           >
-            <Sparkles className="w-3.5 h-3.5 mr-1 text-amber-300" />
+            <Sparkles className="w-3.5 h-3.5 mr-1" />
             <span>Link Account</span>
           </Button>
         </div>

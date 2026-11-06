@@ -133,26 +133,6 @@ export default function SupportPage() {
     <Layout>
       <div className="min-h-screen bg-background blueprint-grid text-on-surface flex flex-col">
         
-        {/* Status Banner Ticker */}
-        <aside className="bg-brand-blue text-white border-b border-blue-700 py-1.5 px-4 sm:px-8 shrink-0" data-purpose="live-status-ticker">
-          <div className="max-w-7xl mx-auto flex items-center justify-between font-mono text-[11px] tracking-wide">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
-              </span>
-              <span className="font-bold tracking-wider uppercase">SOLO CREATOR DIRECT INBOX</span>
-              <span className="text-blue-100">• Direct line to the solo developer of BOOKIE</span>
-            </div>
-            <div className="hidden md:flex items-center gap-4 text-blue-100 text-[10px] font-mono tracking-wider">
-              <span>NO BOTS</span>
-              <span>·</span>
-              <span>100% PRIVATE</span>
-              <span>·</span>
-              <span className="text-amber-200 font-bold">REPLIED IN FREE TIME</span>
-            </div>
-          </div>
-        </aside>
 
         {/* Main Content Area */}
         <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
@@ -172,8 +152,8 @@ export default function SupportPage() {
                       1v1
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-300 dark:border-amber-800 font-bold flex items-center gap-1.5 shadow-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 font-bold flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Replies in Free Time
                   </span>
                 </div>
@@ -199,16 +179,16 @@ export default function SupportPage() {
               {/* Sidebar Cards Area */}
               <div className="p-3.5 flex-1 overflow-y-auto space-y-3">
                 {/* Card 1: Solo Dev & Fellow Aspirant */}
-                <div className="p-3.5 bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900/60 rounded-2xl shadow-xs space-y-2.5">
+                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-xl bg-brand-blue text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
-                      💻
+                      B
                     </div>
                     <div className="min-w-0">
                       <h4 className="text-xs font-black text-slate-900 dark:text-white truncate font-display">
                         Solo Dev &amp; Fellow Aspirant
                       </h4>
-                      <p className="text-[10px] text-cyan-600 dark:text-cyan-400 font-mono font-medium truncate">
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-medium truncate">
                         Not a 24/7 corporate team
                       </p>
                     </div>
@@ -219,7 +199,7 @@ export default function SupportPage() {
                 </div>
 
                 {/* Card 2: Buy Me a Chai (Encouraging banner) */}
-                <div className="p-3.5 bg-amber-50/90 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-700/80 rounded-2xl shadow-xs space-y-2.5">
+                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="text-base leading-none">☕</span>
@@ -227,19 +207,19 @@ export default function SupportPage() {
                         Buy Me a Chai
                       </h4>
                     </div>
-                    <span className="text-[9px] font-mono font-black tracking-wider uppercase px-2 py-0.5 rounded-md bg-amber-200/90 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
+                    <span className="text-[9px] font-mono font-black tracking-wider uppercase px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                       SUPPORT
                     </span>
                   </div>
-                  <p className="text-[11px] text-amber-950/80 dark:text-amber-200/90 leading-relaxed font-normal">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                     BOOKIE is 100% free with zero ads. If the notes, mock tools, or YPT timer help your prep, buying a cup of chai keeps the servers alive and fuels late-night coding!
                   </p>
                   <button
                     type="button"
                     onClick={() => navigate('/donate')}
-                    className="w-full py-2 px-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.99] text-slate-950 font-black text-xs rounded-xl shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer font-display"
+                    className="w-full py-2 px-3 bg-brand-blue hover:bg-blue-600 active:scale-[0.99] text-white font-black text-xs rounded-xl shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer font-display"
                   >
-                    <span>☕ Buy Me a Chai ❤️</span>
+                    <span>☕ Buy Me a Chai</span>
                   </button>
                 </div>
 
@@ -255,33 +235,29 @@ export default function SupportPage() {
                     <button
                       type="button"
                       onClick={() => handleQuickTopic('[Broken Link]: ')}
-                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-600 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
+                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-brand-blue dark:hover:text-blue-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
                     >
-                      <span className="text-sm">💥</span>
                       <span className="truncate">Broken Link</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleQuickTopic('[Book Request]: ')}
-                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
+                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-brand-blue dark:hover:text-blue-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
                     >
-                      <span className="text-sm">📖</span>
                       <span className="truncate">Book Request</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleQuickTopic('[Study Doubt]: ')}
-                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
+                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-brand-blue dark:hover:text-blue-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
                     >
-                      <span className="text-sm">❓</span>
                       <span className="truncate">Study Doubt</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleQuickTopic('[Suggest Idea]: ')}
-                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-purple-50 dark:hover:bg-purple-950/40 hover:text-purple-600 dark:hover:text-purple-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
+                      className="text-xs font-medium p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-brand-blue dark:hover:text-blue-400 border border-slate-200 dark:border-slate-700 transition-all text-left flex items-center gap-1.5"
                     >
-                      <span className="text-sm">✨</span>
                       <span className="truncate">Suggest Idea</span>
                     </button>
                   </div>
@@ -309,24 +285,23 @@ export default function SupportPage() {
               )}
 
               {/* Chat Canvas Header */}
-              <div className="bg-slate-900 text-white px-5 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+              <div className="bg-white dark:bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <div className="w-10 h-10 rounded-xl bg-brand-blue border border-white/20 flex items-center justify-center font-bold text-white shadow-inner">
-                      💻
+                    <div className="w-10 h-10 rounded-xl bg-brand-blue flex items-center justify-center font-bold text-white">
+                      B
                     </div>
                   </div>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-sm tracking-tight text-white font-display">
+                      <h3 className="font-bold text-sm tracking-tight text-slate-900 dark:text-white font-display">
                         Site Owner (Solo Creator)
                       </h3>
-                      <span className="bg-amber-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded font-mono uppercase tracking-wide flex items-center gap-1">
-                        <span>⏳</span>
+                      <span className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold text-[9px] px-2 py-0.5 rounded font-mono uppercase tracking-wide flex items-center gap-1">
                         <span>REPLIES IN FREE TIME</span>
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-400 font-mono">
+                    <p className="text-[11px] text-slate-500 font-mono">
                       Direct 1v1 Aspirant Inbox • Real Human Reply
                     </p>
                   </div>
@@ -336,16 +311,8 @@ export default function SupportPage() {
                 <div className="flex items-center gap-2.5">
                   <button
                     type="button"
-                    onClick={() => navigate('/donate')}
-                    className="bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer font-display"
-                  >
-                    <span>☕</span>
-                    <span>Buy Me a Chai</span>
-                  </button>
-                  <button
-                    type="button"
                     onClick={() => refetch()}
-                    className="p-1.5 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+                    className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                     title="Refresh chat"
                   >
                     <RefreshCw className="w-4 h-4" />
@@ -356,10 +323,9 @@ export default function SupportPage() {
               {/* Sub-header Ribbon */}
               <div className="bg-slate-50 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 px-4 py-1.5 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium text-[11px]">
-                  <span>🛡️</span>
                   <span>Direct 1v1 thread with Site Owner — No middleman, no bots.</span>
                 </div>
-                <span className="text-rose-500 dark:text-rose-400 font-mono text-xs font-semibold">
+                <span className="text-slate-500 dark:text-slate-400 font-mono text-xs font-medium">
                   Replies during study breaks
                 </span>
               </div>
@@ -402,14 +368,14 @@ export default function SupportPage() {
                         onClick={() => handleQuickTopic('Check broken test link: ')}
                         className="text-xs font-mono px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full hover:border-brand-blue text-slate-700 dark:text-slate-300 shadow-xs transition-colors"
                       >
-                        ⚡ "Check broken test link"
+                        "Check broken test link"
                       </button>
                       <button
                         type="button"
                         onClick={() => handleQuickTopic('Request Coaching Notes: ')}
                         className="text-xs font-mono px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full hover:border-brand-blue text-slate-700 dark:text-slate-300 shadow-xs transition-colors"
                       >
-                        📚 "Request Coaching Notes"
+                        "Request Coaching Notes"
                       </button>
                     </div>
                   </div>

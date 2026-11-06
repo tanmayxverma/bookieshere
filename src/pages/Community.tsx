@@ -214,7 +214,7 @@ export default function Community() {
 
   const [activeCategory, setActiveCategory] = useState<CommunityCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"hot" | "new" | "top">("hot");
+  const [sortBy, setSortBy] = useState<"hot" | "new" | "top">("new");
   const [filterMode, setFilterMode] = useState<"all" | "bookmarks" | "mine">("all");
   const [bookmarks, setBookmarks] = useState<Set<string>>(() => {
     try {
@@ -411,7 +411,7 @@ export default function Community() {
             
 
             {/* Center Column: Main Community Stream (lg:col-span-6) */}
-            <main className="lg:col-span-12 space-y-4">
+            <main className="lg:col-span-12 space-y-4 max-w-3xl mx-auto w-full">
               {/* Guest Upgrade Encouragement Banner */}
               <GuestUpgradeBanner feature="community" />
 
@@ -477,19 +477,6 @@ export default function Community() {
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-2.5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-2.5">
                 <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl w-full sm:w-auto">
                   <button
-                    onClick={() => setSortBy("hot")}
-                    className={cn(
-                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
-                      sortBy === "hot"
-                        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
-                        : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                    )}
-                  >
-                    <Flame className={cn("h-3.5 w-3.5", sortBy === "hot" ? "text-rose-500" : "")} />
-                    <span>Hot</span>
-                  </button>
-
-                  <button
                     onClick={() => setSortBy("new")}
                     className={cn(
                       "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
@@ -503,6 +490,19 @@ export default function Community() {
                   </button>
 
                   <button
+                    onClick={() => setSortBy("hot")}
+                    className={cn(
+                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                      sortBy === "hot"
+                        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
+                        : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                    )}
+                  >
+                    <Flame className={cn("h-3.5 w-3.5", sortBy === "hot" ? "text-slate-700 dark:text-slate-200" : "")} />
+                    <span>Hot</span>
+                  </button>
+
+                  <button
                     onClick={() => setSortBy("top")}
                     className={cn(
                       "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
@@ -511,7 +511,7 @@ export default function Community() {
                         : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                     )}
                   >
-                    <TrendingUp className={cn("h-3.5 w-3.5", sortBy === "top" ? "text-amber-500" : "")} />
+                    <TrendingUp className={cn("h-3.5 w-3.5", sortBy === "top" ? "text-slate-700 dark:text-slate-200" : "")} />
                     <span>Top</span>
                   </button>
                 </div>
