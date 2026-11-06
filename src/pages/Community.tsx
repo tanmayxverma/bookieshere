@@ -1179,14 +1179,13 @@ function NewPostDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-lg bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-2xl p-6">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <span>Create Discussion Post</span>
+      <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-lg max-h-[92dvh] p-0 flex flex-col gap-0 overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-2xl">
+        <DialogHeader className="px-5 pt-5 pb-3 border-b border-slate-100 dark:border-slate-800 text-left">
+          <DialogTitle className="text-base font-bold text-slate-900 dark:text-white">
+            Create a post
           </DialogTitle>
           <DialogDescription className="text-xs text-slate-500">
-            Share study strategies, memes, mock test results, doubts or resources with fellow aspirants.
+            Share strategies, doubts, mock scores or resources with the community.
           </DialogDescription>
         </DialogHeader>
 
@@ -1196,139 +1195,134 @@ function NewPostDialog({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={cn("space-y-4 mt-2 transition-colors rounded-xl", isDragging && "ring-2 ring-primary/60 bg-primary/5 p-2")}
+          className="flex flex-col min-h-0"
         >
-          {/* Category Selector Pills */}
-          <div>
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
-              Select Flair / Channel
-            </label>
-            <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
-              {CATEGORIES.filter(c => c.id !== "all").map(c => (
+          <div className={cn("overflow-y-auto px-5 py-4 space-y-4 transition-colors", isDragging && "bg-primary/5")}>
+            {/* Flair Selector */}
+            <div>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                Flair
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {CATEGORIES.filter(c => c.id !== "all").map(c => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setSelectedCat(c.id)}
+                    className={cn(
+                      "px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors border",
+                      selectedCat === c.id
+                        ? "bg-primary text-white border-primary font-semibold"
+                        : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500"
+                    )}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Title Input */}
+            <div>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                Title
+              </label>
+              <Input
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                placeholder="Give your post a clear title"
+                className="text-sm bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-xl"
+                required
+              />
+            </div>
+
+            {/* Content Textarea with Math Symbols */}
+            <div>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                Content
+              </label>
+
+              <div className="flex items-center gap-0.5 flex-nowrap overflow-x-auto scrollbar-none mb-1.5 -mx-0.5 px-0.5">
+                {MATH_SYMBOLS.map(sym => (
+                  <button
+                    key={sym}
+                    type="button"
+                    onClick={() => insertSymbol(sym)}
+                    className="px-1.5 py-0.5 text-xs font-mono rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors shrink-0"
+                  >
+                    {sym}
+                  </button>
+                ))}
+              </div>
+
+              <Textarea
+                ref={textareaRef}
+                value={content}
+                onChange={e => setContent(e.target.value)}
+                placeholder="Write your post... (or paste an image with Ctrl+V)"
+                rows={4}
+                className="text-sm bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-xl leading-relaxed resize-none"
+                required
+              />
+            </div>
+
+            {/* Image Upload Area */}
+            <div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
+
+              {imageUrl ? (
+                <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 max-h-40 bg-slate-950">
+                  <img
+                    src={imageUrl}
+                    alt="Attached preview"
+                    className="w-full h-full object-contain max-h-40 bg-black/40"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setImageUrl("")}
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ) : (
                 <button
-                  key={c.id}
                   type="button"
-                  onClick={() => setSelectedCat(c.id)}
+                  onClick={() => fileInputRef.current?.click()}
                   className={cn(
-                    "px-2.5 py-1 rounded-full text-xs font-semibold transition-all border flex items-center gap-1",
-                    selectedCat === c.id
-                      ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 font-bold shadow-xs scale-105"
-                      : "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-400"
+                    "w-full cursor-pointer border border-dashed rounded-xl px-3.5 py-3 text-left transition-colors flex items-center gap-3",
+                    isDragging
+                      ? "border-primary bg-primary/5"
+                      : "border-slate-300 dark:border-slate-700 hover:border-primary/60 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                   )}
                 >
-                  <span>{c.icon}</span>
-                  <span>{c.label}</span>
+                  {isUploadingImage ? (
+                    <span className="flex items-center gap-2 text-xs text-slate-500">
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                      Uploading image...
+                    </span>
+                  ) : (
+                    <>
+                      <ImageIcon className="h-4 w-4 text-slate-400 shrink-0" />
+                      <span className="min-w-0">
+                        <span className="block text-xs font-semibold text-slate-700 dark:text-slate-200">Attach an image</span>
+                        <span className="block text-[11px] text-slate-400 truncate">Drag & drop, paste (Ctrl+V) or click — JPG, PNG, WebP up to 5MB</span>
+                      </span>
+                    </>
+                  )}
                 </button>
-              ))}
+              )}
             </div>
           </div>
 
-          {/* Title Input */}
-          <div>
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              Post Title
-            </label>
-            <Input
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="e.g. Cleared 2024 Physics backlog using Eduniti in 3 weeks (My exact routine)"
-              className="text-xs bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-xl"
-              required
-            />
-          </div>
-
-          {/* Content Textarea with Math Keyboard */}
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Post Content
-              </label>
-            </div>
-
-            {/* Quick Math Symbols Toolbar */}
-            <div className="flex items-center gap-1 flex-wrap p-1.5 mb-1.5 bg-slate-100 dark:bg-slate-950 rounded-lg border border-slate-200/60 dark:border-slate-800/60">
-              <span className="text-[10px] font-bold text-slate-400 px-1">Symbols:</span>
-              {MATH_SYMBOLS.map(sym => (
-                <button
-                  key={sym}
-                  type="button"
-                  onClick={() => insertSymbol(sym)}
-                  className="px-1.5 py-0.5 text-xs font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 transition-colors"
-                >
-                  {sym}
-                </button>
-              ))}
-            </div>
-
-            <Textarea
-              ref={textareaRef}
-              value={content}
-              onChange={e => setContent(e.target.value)}
-              placeholder="Write your advice, meme explanation, rant or doubt clearly (or paste image with Ctrl+V)..."
-              rows={4}
-              className="text-xs bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-xl leading-relaxed resize-none"
-              required
-            />
-          </div>
-
-          {/* Image Upload Area */}
-          <div>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              accept="image/*"
-              className="hidden"
-            />
-
-            {imageUrl ? (
-              <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 max-h-48 bg-slate-950">
-                <img
-                  src={imageUrl}
-                  alt="Attached preview"
-                  className="w-full h-full object-contain max-h-48 bg-black/40"
-                />
-                <button
-                  type="button"
-                  onClick={() => setImageUrl("")}
-                  className="absolute top-2 right-2 p-1.5 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ) : (
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className={cn(
-                  "cursor-pointer border-2 border-dashed rounded-xl p-4 text-center transition-all flex flex-col items-center justify-center gap-1.5",
-                  isDragging
-                    ? "border-primary bg-primary/10 scale-[1.01]"
-                    : "border-slate-200 dark:border-slate-800 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-850"
-                )}
-              >
-                {isUploadingImage ? (
-                  <div className="flex items-center gap-2 text-xs text-slate-500 py-1">
-                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                    <span>Uploading Image...</span>
-                  </div>
-                ) : (
-                  <>
-                    <div className="p-2 rounded-full bg-primary/10 text-primary">
-                      <ImageIcon className="h-4 w-4" />
-                    </div>
-                    <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
-                      Attach Image (Drag & Drop or <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-slate-200 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700">Ctrl+V</kbd>)
-                    </p>
-                    <p className="text-[10px] text-slate-400">
-                      Supports screenshots, JPG, PNG, WebP up to 5MB
-                    </p>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-
-          <DialogFooter className="gap-2 sm:gap-0 pt-2">
+          {/* Sticky Footer */}
+          <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-3 flex items-center justify-end gap-2 shrink-0">
             <Button
               type="button"
               variant="ghost"
@@ -1345,7 +1339,7 @@ function NewPostDialog({
               {isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               <span>Post to Community</span>
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
