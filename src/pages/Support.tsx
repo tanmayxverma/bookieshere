@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
+import logo from "@/assets/logo.png";
 import { useSupportChat, type SupportMessage } from '@/hooks/useSupportChat';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -152,7 +153,7 @@ export default function SupportPage() {
                       1v1
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 font-bold flex items-center gap-1.5">
+                  <span className="text-[10px] font-mono text-amber-800 dark:text-amber-200 bg-amber-100/80 dark:bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-300/70 dark:border-amber-700/60 font-bold flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Replies in Free Time
                   </span>
@@ -181,9 +182,7 @@ export default function SupportPage() {
                 {/* Card 1: Solo Dev & Fellow Aspirant */}
                 <div className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-brand-blue text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
-                      B
-                    </div>
+                    <img src={logo} alt="Bookie" className="w-8 h-8 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0" />
                     <div className="min-w-0">
                       <h4 className="text-xs font-black text-slate-900 dark:text-white truncate font-display">
                         Solo Dev &amp; Fellow Aspirant
@@ -199,7 +198,7 @@ export default function SupportPage() {
                 </div>
 
                 {/* Card 2: Buy Me a Chai (Encouraging banner) */}
-                <div className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
+                <div className="p-3 bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/50 rounded-2xl shadow-xs space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="text-base leading-none">☕</span>
@@ -207,7 +206,7 @@ export default function SupportPage() {
                         Buy Me a Chai
                       </h4>
                     </div>
-                    <span className="text-[9px] font-mono font-black tracking-wider uppercase px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                    <span className="text-[9px] font-mono font-black tracking-wider uppercase px-2 py-0.5 rounded-md bg-amber-100/80 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800/60">
                       SUPPORT
                     </span>
                   </div>
@@ -288,16 +287,14 @@ export default function SupportPage() {
               <div className="bg-white dark:bg-slate-900 px-4 py-2.5 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <div className="w-10 h-10 rounded-xl bg-brand-blue flex items-center justify-center font-bold text-white">
-                      B
-                    </div>
+                    <img src={logo} alt="Bookie" className="w-10 h-10 rounded-xl object-cover border border-slate-200 dark:border-slate-700" />
                   </div>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-sm tracking-tight text-slate-900 dark:text-white font-display">
                         Site Owner (Solo Creator)
                       </h3>
-                      <span className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold text-[9px] px-2 py-0.5 rounded font-mono uppercase tracking-wide flex items-center gap-1">
+                      <span className="bg-amber-100/80 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 font-bold text-[9px] px-2 py-0.5 rounded font-mono uppercase tracking-wide flex items-center gap-1 border border-amber-300/70 dark:border-amber-700/60">
                         <span>REPLIES IN FREE TIME</span>
                       </span>
                     </div>
@@ -410,9 +407,7 @@ export default function SupportPage() {
                         
                         <div className={cn("flex items-end gap-2.5 max-w-[85%] sm:max-w-[78%]", isMine ? "ml-auto justify-end" : "justify-start")}>
                           {!isMine && (
-                            <div className="w-7 h-7 rounded-lg bg-brand-blue text-white flex items-center justify-center text-[10px] font-black shrink-0 mb-1 font-mono shadow-xs">
-                              DEV
-                            </div>
+                            <img src={logo} alt="Bookie" className="w-7 h-7 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0 mb-1" />
                           )}
                           
                           <div className="space-y-1">
