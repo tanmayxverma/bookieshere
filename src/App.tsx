@@ -3,42 +3,42 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { NavigationProgressBar } from "./components/NavigationProgressBar";
 import { BookieLoader, useInitialLoad } from "./components/BookieLoader";
 import { useProfile, ProfileProvider } from "./hooks/useProfile";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import Index from "./pages/Index";
-import Materials from "./pages/Materials";
-import Tests from "./pages/Tests";
-import YPT from "./pages/YPT";
-import Portals from "./pages/Portals";
-import PortalDetail from "./pages/PortalDetail";
-import TestSeriesDetail from "./pages/TestSeriesDetail";
-import Support from "./pages/Support";
-import Auth from "./pages/Auth";
-import AdminOverview from "./pages/admin/AdminOverview";
-import AdminNotifications from "./pages/admin/AdminNotifications";
-import AdminTickets from "./pages/admin/AdminTickets";
-import AdminSupport from "./pages/admin/AdminSupport";
-import AdminCommunity from "./pages/admin/AdminCommunity";
-import AdminUsers from "./pages/admin/AdminUsers";
-import AdminMaterials from "./pages/admin/AdminMaterials";
-import AdminPortals from "./pages/admin/AdminPortals";
-import AdminTests from "./pages/admin/AdminTests";
-import NotificationsPage from "./pages/Notifications";
-import Community from "./pages/Community";
+const Index = lazy(() => import("./pages/Index"));
+const Materials = lazy(() => import("./pages/Materials"));
+const Tests = lazy(() => import("./pages/Tests"));
+const YPT = lazy(() => import("./pages/YPT"));
+const Portals = lazy(() => import("./pages/Portals"));
+const PortalDetail = lazy(() => import("./pages/PortalDetail"));
+const TestSeriesDetail = lazy(() => import("./pages/TestSeriesDetail"));
+const Support = lazy(() => import("./pages/Support"));
+const Auth = lazy(() => import("./pages/Auth"));
+const AdminOverview = lazy(() => import("./pages/admin/AdminOverview"));
+const AdminNotifications = lazy(() => import("./pages/admin/AdminNotifications"));
+const AdminTickets = lazy(() => import("./pages/admin/AdminTickets"));
+const AdminSupport = lazy(() => import("./pages/admin/AdminSupport"));
+const AdminCommunity = lazy(() => import("./pages/admin/AdminCommunity"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminMaterials = lazy(() => import("./pages/admin/AdminMaterials"));
+const AdminPortals = lazy(() => import("./pages/admin/AdminPortals"));
+const AdminTests = lazy(() => import("./pages/admin/AdminTests"));
+const NotificationsPage = lazy(() => import("./pages/Notifications"));
+const Community = lazy(() => import("./pages/Community"));
 import NotFound from "./pages/NotFound";
-import CopyrightTerms from "./pages/CopyrightTerms";
-import TermsOfService from "./pages/TermsOfService";
-import DMCA from "./pages/DMCA";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import Donate from "./pages/Donate";
+const CopyrightTerms = lazy(() => import("./pages/CopyrightTerms"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const DMCA = lazy(() => import("./pages/DMCA"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const Donate = lazy(() => import("./pages/Donate"));
 import Welcome from "./pages/Welcome";
-import Onboarding from "./pages/Onboarding";
-import Profile from "./pages/Profile";
-import ResetPassword from "./pages/ResetPassword";
+const Onboarding = lazy(() => import("./pages/Onboarding"));
+const Profile = lazy(() => import("./pages/Profile"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 const queryClient = new QueryClient();
 
@@ -109,6 +109,7 @@ function AppRoutes() {
   return (
     <ErrorBoundary resetKey={location.pathname}>
       <div className="flex-1 flex flex-col w-full">
+        <Suspense fallback={<BookieLoader fullscreen={false} />}>
         <Routes location={location}>
           <Route path="/" element={<Index />} />
           <Route path="/materials" element={<Materials />} />
@@ -143,6 +144,7 @@ function AppRoutes() {
           <Route path="/donate" element={<Donate />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </div>
     </ErrorBoundary>
   );
