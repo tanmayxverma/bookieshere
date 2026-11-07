@@ -100,12 +100,12 @@ const Materials = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
               {/* Left Hero Column */}
               <div className="lg:col-span-8 flex flex-col items-start">
-                <div className="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high text-on-surface font-label-code-sm text-label-code-sm tracking-wider uppercase mb-space-sm shadow-sm">
-                  <span>📚 STUDY ARSENAL</span>
-                  <span className="text-primary font-bold">//</span>
-                  <span className="text-primary font-bold">CURATED FOR JEE ADVANCED 2027</span>
+                <div className="inline-flex flex-wrap items-center gap-x-space-xs gap-y-0.5 px-space-md py-1 rounded-2xl sm:rounded-full bg-surface-container-high text-on-surface font-label-code-sm text-label-code-sm tracking-wider uppercase mb-space-sm shadow-sm max-w-full">
+                  <span className="whitespace-nowrap">📚 STUDY ARSENAL</span>
+                  <span className="text-primary font-bold hidden sm:inline">//</span>
+                  <span className="text-primary font-bold whitespace-nowrap">CURATED FOR JEE ADVANCED 2027</span>
                 </div>
-                <h1 className="font-headline-xl text-headline-xl lg:text-[54px] lg:leading-[60px] tracking-tight text-on-surface font-extrabold uppercase mt-1 mb-space-sm">
+                <h1 className="font-headline-xl text-headline-xl-mobile sm:text-headline-xl lg:text-[54px] lg:leading-[60px] tracking-tight text-on-surface font-extrabold uppercase mt-1 mb-space-sm">
                   MATERIALS <span className="relative inline-block text-primary">LIBRARY.
                   </span>
                 </h1>

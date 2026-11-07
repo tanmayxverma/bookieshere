@@ -372,7 +372,7 @@ export default function Community() {
           </div>
 
           {/* Mobile Horizontal Sub-community Chips */}
-          <div className="lg:hidden border-t border-slate-100 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/70 overflow-x-auto no-scrollbar">
+          <div className="lg:hidden border-t border-slate-100 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/70 overflow-x-auto scrollbar-none touch-pan-x overscroll-x-contain">
             <div className="px-4 py-2 flex items-center gap-1.5">
               {CATEGORIES.map(cat => {
                 const isActive = activeCategory === cat.id;
@@ -406,12 +406,12 @@ export default function Community() {
         </div>
 
         {/* 3-Column Reddit Style Layout */}
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
 
             {/* Center Column: Main Community Stream (lg:col-span-6) */}
-            <main className="lg:col-span-12 space-y-4 max-w-3xl mx-auto w-full">
+            <main className="lg:col-span-12 space-y-3 sm:space-y-4 max-w-3xl mx-auto w-full">
               {/* Guest Upgrade Encouragement Banner */}
               <GuestUpgradeBanner feature="community" />
 
@@ -441,7 +441,7 @@ export default function Community() {
                 </div>
 
                 {/* Quick Shortcuts */}
-                <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 overflow-x-auto text-xs text-slate-500">
+                <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 overflow-x-auto scrollbar-none touch-pan-x overscroll-x-contain text-xs text-slate-500">
                   <button
                     onClick={() => openNewPostWithCat("memes")}
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
@@ -767,6 +767,8 @@ function PostCard({
               <img
                 src={post.image_url}
                 alt="Post attachment"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white gap-2 font-medium text-xs">
