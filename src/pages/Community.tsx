@@ -592,6 +592,10 @@ function PostCard({
   const { toast } = useToast();
 
   const category = detectCategory(post.title || post.subject, post.category_id);
+  const rawTitle = post.title || post.subject || "Untitled Discussion";
+  const displayTitle = category.tag && rawTitle.startsWith(category.tag)
+    ? rawTitle.slice(category.tag.length).trim() || rawTitle
+    : rawTitle;
   const myId = user?.id || profile?.user_id || profile?.id || deviceId;
   const isOwner = Boolean(
     (profile?.id && post.profile_id === profile.id) ||
@@ -680,7 +684,7 @@ function PostCard({
       {/* Post Body Title & Content */}
       <div className="space-y-1.5">
         <h2 className="text-base font-bold text-slate-900 dark:text-white leading-snug">
-          {post.title || post.subject || "Untitled Discussion"}
+          {displayTitle}
         </h2>
         <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
           {post.content || post.body || ""}
@@ -1089,8 +1093,7 @@ function NewPostDialog({
     }
 
     setIsSubmitting(true);
-    const catDef = CATEGORIES.find(c => c.id === selectedCat);
-    const finalTitle = catDef?.tag ? `${catDef.tag} ${title.trim()}` : title.trim();
+    const finalTitle = title.trim();
 
     try {
       const result = await onCreatePost(finalTitle, content.trim(), selectedCat, imageUrl.trim() || undefined);
