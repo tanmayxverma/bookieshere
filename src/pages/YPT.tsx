@@ -46,6 +46,17 @@ export default function YPT() {
   const { onlineCount, activeUsers } = useYPTPresence(user?.id, user?.name, user?.jee_focus_year);
   const roomSession = useRoomSession(user || null, timer.startSession, timer.endSession, timer.isActive);
   const [tab, setTab] = useState<TabId>('study');
+  const tabBarRef = useRef<HTMLDivElement>(null);
+
+  // Keep the active tab visible in the horizontally scrolling tab bar (mobile)
+  useEffect(() => {
+    const bar = tabBarRef.current;
+    if (!bar) return;
+    const active = bar.querySelector<HTMLElement>(`[data-ypt-tab="${tab}"]`);
+    if (active) {
+      bar.scrollTo({ left: active.offsetLeft - bar.clientWidth / 2 + active.clientWidth / 2, behavior: 'smooth' });
+    }
+  }, [tab]);
   const [animating, setAnimating] = useState(false);
   const prevTab = useRef<TabId>('study');
 
@@ -102,7 +113,7 @@ export default function YPT() {
               </div>
 
               {/* Segmented Module Selector based on YPT Reference */}
-              <div className="flex items-center bg-surface-container-lowest border-2 border-on-surface rounded-xl p-1 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-xs font-bold overflow-x-auto scrollbar-none gap-1 max-w-full touch-pan-x">
+              <div ref={tabBarRef} className="relative flex items-center bg-surface-container-lowest border-2 border-on-surface rounded-xl p-1 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] text-xs font-bold overflow-x-auto scrollbar-none gap-1 max-w-full touch-pan-x overscroll-x-contain scroll-smooth [-webkit-overflow-scrolling:touch]">
                 {TABS.map((t) => {
                   const Icon = t.icon;
                   const isActive = tab === t.id;
@@ -110,6 +121,7 @@ export default function YPT() {
                   return (
                     <button
                       key={t.id}
+                      data-ypt-tab={t.id}
                       onClick={() => switchTab(t.id)}
                       className={cn(
                         "px-3 sm:px-3.5 py-2 sm:py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-all whitespace-nowrap relative shrink-0 min-h-[40px] sm:min-h-0",

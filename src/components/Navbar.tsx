@@ -158,13 +158,13 @@ export function Navbar() {
         <>
           {/* Backdrop for easy outside tap dismissal */}
           <div
-            className="fixed inset-0 bg-slate-950/40 dark:bg-black/60 backdrop-blur-xs z-40 lg:hidden"
+            className="fixed inset-0 bg-slate-950/40 dark:bg-black/60 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
 
           {/* Mobile Navigation Dropdown */}
-          <div className="relative z-50 lg:hidden mt-2 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl p-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
+          <div className="relative z-50 lg:hidden mt-2 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
             {/* Mobile Profile Header Card (Click to open profile & stats) */}
             <Link
               to="/profile"

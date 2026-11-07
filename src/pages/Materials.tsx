@@ -220,8 +220,22 @@ const Materials = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
               
               {/* Filter Sidebar */}
-              <aside className="lg:col-span-4 xl:col-span-3 flex flex-col gap-space-md sticky top-20">
-                <div className="bg-surface-container-lowest rounded-xl p-space-md flex flex-col gap-space-md brutal-border">
+              <aside className="lg:col-span-4 xl:col-span-3 flex flex-col gap-space-md lg:sticky lg:top-20">
+                {/* Mobile-only filter toggle: catalog shows directly, filters on demand */}
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+                  aria-expanded={mobileFiltersOpen}
+                  className="lg:hidden flex items-center justify-between w-full bg-surface-container-lowest rounded-xl px-space-md py-3 brutal-border"
+                >
+                  <span className="font-headline-md text-label-ui uppercase tracking-wider text-on-surface font-bold flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[18px] text-primary">tune</span>
+                    REFINE CATALOG
+                    {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-primary" />}
+                  </span>
+                  <span className="material-symbols-outlined text-[22px] text-on-surface-variant">{mobileFiltersOpen ? "expand_less" : "expand_more"}</span>
+                </button>
+                <div className={`${mobileFiltersOpen ? "flex" : "hidden"} lg:flex bg-surface-container-lowest rounded-xl p-space-md flex-col gap-space-md brutal-border`}>
                   <div className="flex items-center justify-between">
                     <span className="font-headline-md text-label-ui uppercase tracking-wider text-on-surface font-bold flex items-center gap-1.5">
                       <span className="material-symbols-outlined text-[18px] text-primary">tune</span>
