@@ -84,6 +84,28 @@ function ProfileGate() {
 
 function AppRoutes() {
   const location = useLocation();
+
+  // Keep one self-referencing canonical per route. index.html is shared by the
+  // whole SPA, so a static canonical there would point every page at the
+  // homepage; setting it here makes each page canonicalise to itself, and the
+  // duplicate legal routes fold into their primary URLs.
+  useEffect(() => {
+    const alias: Record<string, string> = {
+      "/privacy-policy": "/privacy",
+      "/terms-of-service": "/terms",
+      // The signed-out welcome page is the public face of the homepage.
+      "/welcome": "/",
+    };
+    const path = alias[location.pathname] ?? location.pathname;
+    let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "canonical";
+      document.head.appendChild(link);
+    }
+    link.href = `https://www.bookiejee.cv${path}`;
+  }, [location.pathname]);
+
   return (
     <ErrorBoundary resetKey={location.pathname}>
       <div className="flex-1 flex flex-col w-full">
