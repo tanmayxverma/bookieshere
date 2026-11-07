@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BOOKIE_AI_SYSTEM_PROMPT } from "@/lib/bookieAiPrompt";
+import { BOOKIE_AI_KNOWLEDGE } from "@/lib/bookieAiKnowledge";
+import { buildBookieContext } from "@/lib/bookieAiContext";
 
 type MessageContent = 
   | string 
@@ -18,8 +20,8 @@ const OPENROUTER_DIRECT_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 const INITIAL_MESSAGE: Message = {
   role: "assistant",
-  content: "Hi 👋 I'm Bookie AI — your personal JEE study mentor. Ask me concept doubts, exam strategy, or find any study material 📚💪",
-  displayContent: "Hi 👋 I'm Bookie AI — your personal JEE study mentor. Ask me concept doubts, exam strategy, or find any study material 📚💪",
+  content: "Hey, I'm Bookie AI — your study buddy here on Bookie. Ask me a doubt, which book to use, or how to plan today's session.",
+  displayContent: "Hey, I'm Bookie AI — your study buddy here on Bookie. Ask me a doubt, which book to use, or how to plan today's session.",
 };
 
 export function useBookieChat() {
@@ -93,6 +95,10 @@ export function useBookieChat() {
       const clientOpenRouterKey = import.meta.env.VITE_OPENROUTER_API_KEY;
       const clientOpenRouterModel = import.meta.env.VITE_OPENROUTER_MODEL || "google/gemini-2.0-flash-001";
 
+      // Live knowledge + per-student context, rebuilt for every message so the
+      // AI always works from the site's real data and the student's real state.
+      const dynamicContext = `${BOOKIE_AI_KNOWLEDGE}\n\n${await buildBookieContext()}`;
+
       let response: Response;
 
       if (clientOpenRouterKey && clientOpenRouterKey.trim() !== "") {
@@ -108,7 +114,7 @@ export function useBookieChat() {
           body: JSON.stringify({
             model: clientOpenRouterModel.trim(),
             messages: [
-              { role: "system", content: BOOKIE_AI_SYSTEM_PROMPT },
+              { role: "system", content: `${BOOKIE_AI_SYSTEM_PROMPT}\n\n${dynamicContext}` },
               ...conversationHistory,
             ],
             stream: true,
@@ -129,7 +135,7 @@ export function useBookieChat() {
             apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
             Authorization: authHeader,
           },
-          body: JSON.stringify({ messages: conversationHistory }),
+          body: JSON.stringify({ messages: conversationHistory, context: dynamicContext }),
         });
       }
 

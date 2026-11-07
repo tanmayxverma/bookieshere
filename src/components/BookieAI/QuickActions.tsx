@@ -1,4 +1,4 @@
-import { HelpCircle, BookOpen, GraduationCap } from "lucide-react";
+import { HelpCircle, BookOpen, CalendarClock, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -11,17 +11,22 @@ const actions = [
   {
     icon: HelpCircle,
     label: "Ask a Doubt",
-    message: "I have a doubt about a concept. Can you help me understand it?",
+    message: "I have a doubt — I'll paste the question. Explain the core idea simply, then solve it.",
   },
   {
     icon: BookOpen,
-    label: "Find Material",
-    message: "I'm looking for study materials. What books and resources are available on BOOKIE?",
+    label: "Pick a Book",
+    message: "Which book should I use for organic chemistry if my basics are weak? Pick from what's on Bookie and tell me why.",
   },
   {
-    icon: GraduationCap,
-    label: "Exam Help",
-    message: "I need help with JEE preparation strategy and tips.",
+    icon: CalendarClock,
+    label: "Plan My Day",
+    message: "Plan my study day today — I have about 6 hours. Ask me anything you need first.",
+  },
+  {
+    icon: BarChart3,
+    label: "Mock Analysis",
+    message: "I just gave a mock test. Help me analyse it — ask me my score and where I lost marks.",
   },
 ];
 
