@@ -258,6 +258,19 @@
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
+    /* Safety: if the icon font is slow/blocked, the ligature word collapses
+       into a 1em box instead of blowing up the layout (slow mobile networks). */
+    max-width: 1em;
+    overflow: hidden;
+    flex: none;
+  }
+
+  /* iOS Safari auto-zooms when a focused input's font-size is under 16px;
+     keep mobile inputs at 16px so tapping a search/chat box never zooms. */
+  @media (max-width: 767px) {
+    input, textarea, select {
+      font-size: 16px !important;
+    }
   }
 
   .blueprint-grid {

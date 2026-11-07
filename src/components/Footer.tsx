@@ -85,16 +85,16 @@ export function Footer() {
           </div>
           
           <div className="flex flex-wrap items-center justify-center gap-space-md sm:gap-space-lg">
-            <div className="flex items-center gap-space-md font-label-code-sm text-label-code-sm tracking-wider text-on-surface-variant">
-              <Link to="/materials" className="hover:text-primary transition-colors">PRACTICE</Link>
+            <div className="flex flex-wrap items-center justify-center gap-x-space-md gap-y-1 font-label-code-sm text-label-code-sm tracking-wider text-on-surface-variant">
+              <Link to="/materials" className="hover:text-primary transition-colors whitespace-nowrap py-1.5">PRACTICE</Link>
               <span className="text-outline-variant">•</span>
-              <Link to="/tests" className="hover:text-primary transition-colors">PROGRESS</Link>
+              <Link to="/tests" className="hover:text-primary transition-colors whitespace-nowrap py-1.5">PROGRESS</Link>
               <span className="text-outline-variant">•</span>
-              <Link to="/ypt" className="hover:text-primary transition-colors">PERFORM</Link>
+              <Link to="/ypt" className="hover:text-primary transition-colors whitespace-nowrap py-1.5">PERFORM</Link>
               <span className="text-outline-variant">•</span>
-              <Link to="/donate" className="hover:text-primary transition-colors">CHAI ☕</Link>
+              <Link to="/donate" className="hover:text-primary transition-colors whitespace-nowrap py-1.5">CHAI ☕</Link>
               <span className="text-outline-variant">•</span>
-              <Link to="/dmca" className="hover:text-primary transition-colors">DMCA</Link>
+              <Link to="/dmca" className="hover:text-primary transition-colors whitespace-nowrap py-1.5">DMCA</Link>
             </div>
             <div className="hidden sm:flex items-center gap-space-xs font-label-code-sm text-label-code-sm px-space-sm py-1 rounded-full bg-surface-container text-tertiary font-bold">
               <span className="w-2 h-2 rounded-full bg-tertiary"></span>
@@ -104,7 +104,7 @@ export function Footer() {
         </div>
 
         {/* Legal & Verification Sub-Footer (Restored) */}
-        <div className="border-t border-outline-variant/15 dark:border-slate-800 bg-surface-container-lowest/60 dark:bg-slate-900/40 py-4 mt-space-md">
+        <div className="border-t border-outline-variant/15 dark:border-slate-800 bg-surface-container-lowest/60 dark:bg-slate-900/40 py-4 pb-24 lg:pb-4 mt-space-md">
           <div className="max-w-7xl mx-auto px-margin lg:px-margin-desktop space-y-3">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-on-surface">

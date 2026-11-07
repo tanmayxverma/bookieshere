@@ -215,7 +215,7 @@ export function TestSeriesHub() {
 
         {/* Section Title & Grid Counter */}
         <div className="flex items-center justify-between mb-space-md">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-primary"></div>
             <h3 className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Verified Test Portals & Series</h3>
             <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-code-sm text-label-code-sm font-semibold">{(testSeries || []).length} Master Providers</span>

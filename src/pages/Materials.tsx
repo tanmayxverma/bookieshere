@@ -113,13 +113,15 @@ const Materials = () => {
                   Modules, books, PYQs, test series and reference works — every single resource hand-picked, zero filler, organized for serious aspirants.
                 </p>
                 <div className="flex flex-wrap items-center gap-space-sm mt-space-md">
-                  <div className="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-code-sm text-label-code-sm">
-                    <span className="material-symbols-outlined text-[16px] text-tertiary">verified_user</span>
-                    <span>External verified drives</span>
-                    <span className="text-outline-variant">•</span>
-                    <span>BOOKIE does not host files</span>
-                    <span className="text-outline-variant">•</span>
-                    <span className="text-tertiary font-bold">Pure signal, zero rot</span>
+                  <div className="flex flex-col items-start gap-1.5 sm:inline-flex sm:flex-row sm:items-center sm:gap-space-xs px-space-md py-2.5 sm:py-1.5 rounded-2xl sm:rounded-full bg-surface-container-low text-on-surface-variant font-label-code-sm text-label-code-sm">
+                    <span className="inline-flex items-center gap-space-xs">
+                      <span className="material-symbols-outlined text-[16px] text-tertiary">verified_user</span>
+                      <span>External verified drives</span>
+                    </span>
+                    <span className="text-outline-variant hidden sm:inline">•</span>
+                    <span className="pl-6 sm:pl-0">BOOKIE does not host files</span>
+                    <span className="text-outline-variant hidden sm:inline">•</span>
+                    <span className="text-tertiary font-bold pl-6 sm:pl-0">Pure signal, zero rot</span>
                   </div>
                   <div className="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-ui text-label-ui">
                     <span className="material-symbols-outlined text-[15px]">auto_stories</span>

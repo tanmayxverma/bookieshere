@@ -62,7 +62,7 @@ const Index = () => {
                 </Link>
                 <Link
                   to="/support"
-                  className="inline-flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-brand-blue dark:hover:text-blue-400 font-mono font-bold text-xs sm:text-sm underline underline-offset-4 decoration-2 decoration-blue-200 dark:decoration-blue-800 hover:decoration-brand-blue transition-colors px-2 py-2 text-center"
+                  className="inline-flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-brand-blue dark:hover:text-blue-400 font-mono font-bold text-xs sm:text-sm underline underline-offset-4 decoration-2 decoration-blue-200 dark:decoration-blue-800 hover:decoration-brand-blue transition-colors px-3 sm:px-2 py-3 sm:py-2 text-center"
                 >
                   <span>🎧</span> CHAT SUPPORT
                 </Link>

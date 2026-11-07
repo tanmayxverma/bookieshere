@@ -140,7 +140,7 @@ export default function SupportPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 flex-1 items-stretch bg-surface-container-lowest border-2 border-slate-900 rounded-3xl shadow-[4px_4px_0px_0px_rgba(15,23,42,0.95)] overflow-hidden min-h-[560px] lg:h-[calc(100dvh-10.5rem)] lg:max-h-[840px]">
             
             {/* ───── LEFT SIDEBAR: INBOX & DIRECT LINE INFO ───── */}
-            <aside className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex flex-col bg-slate-50/70 dark:bg-slate-900/50">
+            <aside className="order-2 lg:order-none lg:col-span-4 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex flex-col bg-slate-50/70 dark:bg-slate-900/50">
               
               {/* Header: SLA Status & Direct Line Tag */}
               <div className="p-3.5 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2.5">
@@ -266,7 +266,7 @@ export default function SupportPage() {
 
             {/* ───── RIGHT MAIN CHAT CONVERSATION CANVAS ───── */}
             <section
-              className={cn("lg:col-span-8 flex flex-col h-full bg-white dark:bg-slate-950 relative transition-all", isDragging && "ring-2 ring-brand-blue ring-inset")}
+              className={cn("order-1 lg:order-none lg:col-span-8 flex flex-col h-full bg-white dark:bg-slate-950 relative transition-all", isDragging && "ring-2 ring-brand-blue ring-inset")}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -524,7 +524,7 @@ export default function SupportPage() {
                     maxLength={4000}
                     disabled={!canSend}
                     placeholder={canSend ? "Message the site owner directly (doubts, broken links, book requests)..." : "This conversation is closed"}
-                    className="flex-1 bg-transparent border-none text-xs sm:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0 px-2 py-1"
+                    className="flex-1 min-w-0 bg-transparent border-none text-xs sm:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0 px-2 py-1"
                   />
 
                   <button
