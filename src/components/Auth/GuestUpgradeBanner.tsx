@@ -73,12 +73,14 @@ export function GuestUpgradeBanner({
             <Zap className="w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-950 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-900">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+              <span className="text-[10px] font-mono font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-950 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-900 whitespace-nowrap">
                 Guest Mode Active
               </span>
-              <span className="text-[11px] text-muted-foreground font-mono">
-                · 100% Free · Saved Data Safe
+              <span className="text-[11px] text-muted-foreground font-mono flex items-center gap-2 whitespace-nowrap">
+                <span>100% Free</span>
+                <span aria-hidden="true">·</span>
+                <span>Saved Data Safe</span>
               </span>
             </div>
             <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white mt-1">

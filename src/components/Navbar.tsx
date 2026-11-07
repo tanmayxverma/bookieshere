@@ -67,12 +67,12 @@ export function Navbar() {
 
   return (
     <header className="sticky top-2 sm:top-4 z-50 px-2.5 sm:px-8 max-w-7xl mx-auto w-full" data-purpose="floating-navigation">
-      <nav className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-full px-3 sm:px-5 py-2 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
+      <nav className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-full px-2 sm:px-5 py-2 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
         
         {/* Brand Logo */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden shadow-inner group-hover:scale-105 transition-transform shrink-0 border border-slate-200/80 dark:border-slate-700 bg-white flex items-center justify-center">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <Link to="/" className="flex items-center gap-1.5 sm:gap-2 group">
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full overflow-hidden shadow-inner group-hover:scale-105 transition-transform shrink-0 border border-slate-200/80 dark:border-slate-700 bg-white flex items-center justify-center">
               <img
                 src={logo}
                 alt="BOOKIE Logo"
@@ -83,10 +83,10 @@ export function Navbar() {
               />
             </div>
             <div className="flex items-baseline">
-              <span className="font-display font-black text-xl sm:text-2xl tracking-tighter text-brand-dark dark:text-white group-hover:text-brand-blue transition-colors">
+              <span className="font-display font-black text-base sm:text-2xl tracking-tighter text-brand-dark dark:text-white group-hover:text-brand-blue transition-colors">
                 BOOKIE
               </span>
-              <span className="text-brand-blue font-bold text-xs ml-0.5">®</span>
+              <span className="text-brand-blue font-bold text-xs ml-0.5 hidden sm:inline">®</span>
             </div>
           </Link>
         </div>
@@ -120,7 +120,7 @@ export function Navbar() {
         </div>
 
         {/* User Actions & Compact Profile */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-0.5 sm:gap-2">
           {/* Chai Break Button (hidden on small mobile to preserve room) */}
           <Link
             to="/donate"
@@ -137,14 +137,14 @@ export function Navbar() {
           <ThemeToggle />
 
           {/* Compact User Profile Pill: Just User Icon with Streak badge underneath */}
-          <div className="flex items-center pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-800" data-purpose="user-pill">
+          <div className="flex items-center pl-0 sm:pl-2 sm:border-l border-slate-200 dark:border-slate-800" data-purpose="user-pill">
             <UserMenu compact={true} />
           </div>
 
           {/* Mobile Menu Toggle Button */}
           <button
             type="button"
-            className="p-2 text-slate-600 hover:text-brand-dark dark:text-slate-300 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden transition-colors h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
+            className="p-2 text-slate-600 hover:text-brand-dark dark:text-slate-300 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden transition-colors h-9 w-9 min-h-[36px] min-w-[36px] sm:h-10 sm:w-10 sm:min-h-[40px] sm:min-w-[40px] flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >

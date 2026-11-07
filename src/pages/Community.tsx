@@ -317,7 +317,7 @@ export default function Community() {
     <Layout>
       <div className="min-h-screen bg-slate-50/70 dark:bg-slate-950 pb-20 transition-colors">
         {/* Top Community Navigation Header */}
-        <div className="border-b border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-30">
+        <div className="border-b border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md md:sticky md:top-0 z-30">
           <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <Button
@@ -330,13 +330,13 @@ export default function Community() {
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>Aspirant Lounge</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full font-bold bg-primary/10 text-primary border border-primary/20">
-                      r/Bookieshere
-                    </span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white whitespace-nowrap">
+                    Aspirant Lounge
                   </h1>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-bold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap">
+                    r/Bookieshere
+                  </span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Connect, share memes, compare mock tests, study grind & roadmaps
@@ -344,12 +344,12 @@ export default function Community() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 self-end md:self-auto">
+            <div className="flex items-center gap-2 self-stretch md:self-auto">
               <Button
                 onClick={() => setFilterMode(prev => (prev === "bookmarks" ? "all" : "bookmarks"))}
                 variant={filterMode === "bookmarks" ? "default" : "outline"}
                 size="sm"
-                className="gap-1.5 text-xs h-9 rounded-xl border-slate-200 dark:border-slate-800"
+                className="gap-1.5 text-xs h-9 rounded-xl border-slate-200 dark:border-slate-800 flex-1 md:flex-none justify-center"
               >
                 {filterMode === "bookmarks" ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
                 <span>Saved</span>
@@ -363,7 +363,7 @@ export default function Community() {
               <Button
                 onClick={() => openNewPostWithCat(activeCategory)}
                 size="sm"
-                className="rounded-xl gap-1.5 px-4 h-9 shadow-sm font-semibold"
+                className="rounded-xl gap-1.5 px-4 h-9 shadow-sm font-semibold flex-1 md:flex-none justify-center"
               >
                 <Plus className="h-4 w-4" />
                 <span>Create Post</span>
