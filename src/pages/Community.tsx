@@ -25,7 +25,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import {
-  ArrowLeft,
   BadgeCheck,
   MessageCircle,
   Plus,
@@ -53,7 +52,7 @@ import {
   HelpCircle,
   Compass,
 } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn, safeRandomUUID } from "@/lib/utils";
 import { UpgradeModal } from "@/components/Auth/UpgradeModal";
 import { GuestUpgradeBanner } from "@/components/Auth/GuestUpgradeBanner";
@@ -210,7 +209,6 @@ export default function Community() {
   const { posts, loading, createPost, toggleReaction, deletePost } = useCommunity();
   const { profile, user, deviceId } = useProfile();
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const [activeCategory, setActiveCategory] = useState<CommunityCategory>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -316,94 +314,6 @@ export default function Community() {
   return (
     <Layout>
       <div className="min-h-screen bg-slate-50/70 dark:bg-slate-950 pb-20 transition-colors">
-        {/* Top Community Navigation Header */}
-        <div className="border-b border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md md:sticky md:top-0 z-30">
-          <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 -ml-1 rounded-full text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                onClick={() => navigate(-1)}
-                title="Go back"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-lg md:text-xl font-black tracking-tight text-slate-900 dark:text-white whitespace-nowrap">
-                    Aspirant Lounge
-                  </h1>
-                  <span className="text-xs px-2 py-0.5 rounded-full font-bold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap">
-                    r/Bookieshere
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Connect, share memes, compare mock tests, study grind & roadmaps
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 self-stretch md:self-auto">
-              <Button
-                onClick={() => setFilterMode(prev => (prev === "bookmarks" ? "all" : "bookmarks"))}
-                variant={filterMode === "bookmarks" ? "default" : "outline"}
-                size="sm"
-                className="gap-1.5 text-xs h-9 rounded-xl border-slate-200 dark:border-slate-800 flex-1 md:flex-none justify-center"
-              >
-                {filterMode === "bookmarks" ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
-                <span>Saved</span>
-                {bookmarks.size > 0 && (
-                  <span className="ml-0.5 px-1.5 py-0.2 text-[10px] rounded-full bg-primary-foreground/20 font-bold">
-                    {bookmarks.size}
-                  </span>
-                )}
-              </Button>
-
-              <Button
-                onClick={() => openNewPostWithCat(activeCategory)}
-                size="sm"
-                className="rounded-xl gap-1.5 px-4 h-9 shadow-sm font-semibold flex-1 md:flex-none justify-center"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Create Post</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile Horizontal Sub-community Chips */}
-          <div className="lg:hidden border-t border-slate-100 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/70 overflow-x-auto scrollbar-none touch-pan-x overscroll-x-contain">
-            <div className="px-4 py-2 flex items-center gap-1.5">
-              {CATEGORIES.map(cat => {
-                const isActive = activeCategory === cat.id;
-                const count = cat.id === "all" ? posts.length : (categoryCounts.get(cat.id) || 0);
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-all shrink-0",
-                      isActive
-                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 shadow-xs"
-                        : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300"
-                    )}
-                  >
-                    <span>{cat.icon}</span>
-                    <span>{cat.label}</span>
-                    {count > 0 && (
-                      <span className={cn(
-                        "text-[10px] px-1.5 py-0.2 rounded-full font-bold",
-                        isActive ? "bg-white/20 text-white dark:text-slate-900 dark:bg-slate-900/20" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
-                      )}>
-                        {count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
 
         {/* 3-Column Reddit Style Layout */}
         <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
@@ -412,6 +322,56 @@ export default function Community() {
 
             {/* Center Column: Main Community Stream (lg:col-span-6) */}
             <main className="lg:col-span-12 space-y-3 sm:space-y-4 max-w-3xl mx-auto w-full">
+              {/* Category Rail + Saved filter */}
+              <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none touch-pan-x overscroll-x-contain -mx-1 px-1 py-0.5">
+                {CATEGORIES.map(cat => {
+                  const isActive = activeCategory === cat.id;
+                  const count = cat.id === "all" ? posts.length : (categoryCounts.get(cat.id) || 0);
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-all shrink-0",
+                        isActive
+                          ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 shadow-xs"
+                          : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300"
+                      )}
+                    >
+                      <span>{cat.icon}</span>
+                      <span>{cat.label}</span>
+                      {count > 0 && (
+                        <span className={cn(
+                          "text-[10px] px-1.5 py-0.2 rounded-full font-bold",
+                          isActive ? "bg-white/20 text-white dark:text-slate-900 dark:bg-slate-900/20" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                        )}>
+                          {count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+                <button
+                  onClick={() => setFilterMode(prev => (prev === "bookmarks" ? "all" : "bookmarks"))}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-all shrink-0",
+                    filterMode === "bookmarks"
+                      ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 shadow-xs"
+                      : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300"
+                  )}
+                >
+                  <Bookmark className="h-3.5 w-3.5" />
+                  <span>Saved</span>
+                  {bookmarks.size > 0 && (
+                    <span className={cn(
+                      "text-[10px] px-1.5 py-0.2 rounded-full font-bold",
+                      filterMode === "bookmarks" ? "bg-white/20 text-white dark:text-slate-900 dark:bg-slate-900/20" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                    )}>
+                      {bookmarks.size}
+                    </span>
+                  )}
+                </button>
+              </div>
               {/* Guest Upgrade Encouragement Banner */}
               <GuestUpgradeBanner feature="community" />
 
@@ -440,37 +400,6 @@ export default function Community() {
                   </Button>
                 </div>
 
-                {/* Quick Shortcuts */}
-                <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 overflow-x-auto scrollbar-none touch-pan-x overscroll-x-contain text-xs text-slate-500">
-                  <button
-                    onClick={() => openNewPostWithCat("memes")}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-                  >
-                    <Laugh className="h-3.5 w-3.5 text-pink-500" />
-                    <span>Meme / Joke</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("strategy")}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-                  >
-                    <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
-                    <span>Study Strategy</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("mocks")}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-                  >
-                    <TrendingUp className="h-3.5 w-3.5 text-purple-500" />
-                    <span>Mock Scores</span>
-                  </button>
-                  <button
-                    onClick={() => openNewPostWithCat("physics")}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-                  >
-                    <HelpCircle className="h-3.5 w-3.5 text-blue-500" />
-                    <span>Ask Doubt</span>
-                  </button>
-                </div>
               </div>
 
               {/* Reddit-Style Feed Controls: Sort Tabs + Search */}
