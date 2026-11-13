@@ -6,6 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
+const ACCOUNT_BADGE_STYLES: Record<string, string> = {
+  google: 'border-blue-600 bg-blue-600 text-white',
+  email: 'border-violet-600 bg-violet-600 text-white',
+  guest: 'border-zinc-500 bg-zinc-500 text-white',
+};
+
 export default function AdminUsers() {
   const { call } = useAdminSession();
   const [items, setItems] = useState<any[]>([]);
@@ -24,7 +30,7 @@ export default function AdminUsers() {
                 {items.map(u => (
                   <tr key={u.id} className="border-t border-border/30">
                     <td className="p-3 font-medium">{u.display_name}</td>
-                    <td className="p-3"><Badge variant="outline" className="text-[10px] uppercase">{u.account_type}</Badge></td>
+                    <td className="p-3"><Badge variant="outline" className={`text-[10px] uppercase ${ACCOUNT_BADGE_STYLES[u.account_type] ?? ''}`}>{u.account_type}</Badge></td>
                     <td className="p-3 text-muted-foreground">{u.target_category}</td>
                     <td className="p-3 text-muted-foreground">{formatDistanceToNow(new Date(u.created_at), { addSuffix: true })}</td>
                     <td className="p-3 text-muted-foreground">{formatDistanceToNow(new Date(u.updated_at), { addSuffix: true })}</td>
