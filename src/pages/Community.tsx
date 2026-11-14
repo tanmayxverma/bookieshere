@@ -21,6 +21,7 @@ import {
 } from "@/hooks/useCommunity";
 import { useProfile } from "@/hooks/useProfile";
 import { moderate } from "@/lib/moderation";
+import { compressImageForUpload } from "@/lib/imageCompression";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
@@ -1045,11 +1046,15 @@ function NewPostDialog({
 
     setIsUploadingImage(true);
     try {
-      const ext = file.name ? file.name.split(".").pop() || "jpg" : "jpg";
+      // Compress before upload (phone photos are 2–5 MB) and cache for a
+      // year — the path is a fresh UUID, so the file never changes and
+      // repeat views should never re-download it.
+      const compressed = await compressImageForUpload(file);
+      const ext = compressed ? "jpg" : (file.name ? file.name.split(".").pop() || "jpg" : "jpg");
       const path = `community/${safeRandomUUID()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("room-images")
-        .upload(path, file, { cacheControl: "3600", upsert: false });
+        .upload(path, compressed ?? file, { cacheControl: "31536000", upsert: false });
 
       if (uploadError) throw uploadError;
 

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
 import { cn, safeRandomUUID } from '@/lib/utils';
+import { compressImageForUpload } from '@/lib/imageCompression';
 
 const MATH_SYMBOLS = ['θ', 'π', 'μ', 'λ', 'α', 'β', 'Δ', '∫', 'Σ', '→', '∞', '≈'];
 
@@ -97,9 +98,10 @@ export default function SupportPage() {
     try {
       let image_url: string | null = null;
       if (image) {
-        const ext = image.name.split('.').pop() || 'jpg';
+        const compressed = await compressImageForUpload(image);
+        const ext = compressed ? 'jpg' : (image.name.split('.').pop() || 'jpg');
         const path = `support/${safeRandomUUID()}.${ext}`;
-        const up = await supabase.storage.from('room-images').upload(path, image, { upsert: false });
+        const up = await supabase.storage.from('room-images').upload(path, compressed ?? image, { cacheControl: '31536000', upsert: false });
         if (up.error) throw up.error;
         image_url = supabase.storage.from('room-images').getPublicUrl(path).data.publicUrl;
       }

@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { TIMER_STORAGE_KEY, type TimerState, type TimerMode } from '@/types/ypt';
 
 const THREE_HOURS = 3 * 60 * 60;
-const HEARTBEAT_INTERVAL = 30_000; // 30s
+const HEARTBEAT_INTERVAL = 60_000; // 60s — safe since cleanup_stale_sessions now allows 180s of silence (egress SQL pack, Nov 2026)
 const INACTIVITY_COUNTDOWN = 15; // seconds
 const STALE_CLEANUP_INTERVAL = 5 * 60_000; // 5 min
 /** Wall-clock vs monotonic-clock divergence (ms) treated as impossible */

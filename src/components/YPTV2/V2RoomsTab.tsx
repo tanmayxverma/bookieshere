@@ -15,6 +15,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import { cn } from '@/lib/utils';
+import { compressImageForUpload } from '@/lib/imageCompression';
 import { BOOKIE_AI_SYSTEM_PROMPT } from '@/lib/bookieAiPrompt';
 
 interface TimerControls {
@@ -206,11 +207,14 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     }
     setUploadingImage(true);
     try {
-      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+      // Compress before upload (phone photos are 2–5 MB) and cache for a
+      // year — the path is unique per upload, so the file never changes.
+      const compressed = await compressImageForUpload(file);
+      const ext = compressed ? 'jpg' : (file.name.split('.').pop()?.toLowerCase() || 'jpg');
       const path = `${activeRoomId}/${currentUser.id}-${Date.now()}.${ext}`;
       const { error: upErr } = await (supabase as any).storage
         .from('room-images')
-        .upload(path, file, { contentType: file.type, upsert: false });
+        .upload(path, compressed ?? file, { contentType: compressed ? 'image/jpeg' : file.type, cacheControl: '31536000', upsert: false });
       if (upErr) throw upErr;
       const { data: pub } = (supabase as any).storage.from('room-images').getPublicUrl(path);
       const url = pub?.publicUrl;
@@ -331,13 +335,15 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
   }, [roomOnlineCounts, activeRoomId, presenceMembers.length]);
 
   const fetchMessages = useCallback(async (roomId: string) => {
-    await (supabase as any).rpc('cleanup_old_messages');
+    // No cleanup_old_messages call here: it ran on every fetch for every
+    // room visitor. Old messages are pruned server-side (see the egress
+    // SQL pack); the client just reads the latest 100.
     const { data } = await (supabase as any)
       .from('room_messages')
       .select('*, ypt_users(name)')
       .eq('room_id', roomId)
       .order('created_at', { ascending: true })
-      .limit(200);
+      .limit(100);
     if (data) {
       setMessages(data.map((m: any) => ({
         ...m,
@@ -437,15 +443,9 @@ export function V2RoomsTab({ currentUser, timer, roomSession }: Props) {
     }
   }, [messages]);
 
-  // Auto-cleanup interval
-  useEffect(() => {
-    if (!activeRoomId) return;
-    const interval = setInterval(() => {
-      (supabase as any).rpc('cleanup_old_messages');
-      fetchMessages(activeRoomId);
-    }, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [activeRoomId, fetchMessages]);
+  // No periodic full refetch: the realtime channel above already appends
+  // new messages, and refetching the whole history every 5 minutes per
+  // room visitor was pure egress.
 
   const sendMessage = async () => {
     const text = chatInput.trim();

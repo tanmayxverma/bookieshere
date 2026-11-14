@@ -141,6 +141,8 @@ export function AvatarUploader({
         const { error: upErr } = await supabase.storage.from("avatars").upload(path, blob, {
           upsert: true,
           contentType: "image/jpeg",
+          // Path is unique per upload (timestamped) — cache hard.
+          cacheControl: "31536000",
         });
 
         if (!upErr) {

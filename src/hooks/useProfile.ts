@@ -113,12 +113,21 @@ function useProfileInternal() {
     try {
       if (sess?.user) {
         if (deviceId) {
-          try {
-            await (supabase as any).rpc('migrate_guest_data_to_user', {
-              _device_id: deviceId,
-              _user_id: sess.user.id,
-            });
-          } catch {}
+          // The guest→user migration is a one-time move per device+account.
+          // loadProfile runs on every auth event, so remember it locally
+          // instead of firing the RPC on every load / token refresh.
+          const migrateKey = `bookie_guest_migrated_v1:${sess.user.id}`;
+          let alreadyMigrated = false;
+          try { alreadyMigrated = localStorage.getItem(migrateKey) === '1'; } catch {}
+          if (!alreadyMigrated) {
+            try {
+              await (supabase as any).rpc('migrate_guest_data_to_user', {
+                _device_id: deviceId,
+                _user_id: sess.user.id,
+              });
+              try { localStorage.setItem(migrateKey, '1'); } catch {}
+            } catch {}
+          }
         }
         const googleAvatar = extractGoogleAvatar(sess.user);
         const { data } = await (supabase as any)

@@ -109,8 +109,9 @@ export function useSupportChat() {
         else syncMessages(chatId);
       })
       .subscribe();
-    // Safety net only — realtime is the primary path.
-    const t = setInterval(() => { syncMessages(chatId); }, 45000);
+    // Safety net only — realtime is the primary path. 5 minutes is plenty
+    // for a fallback; 45s refetched the whole thread for every open chat.
+    const t = setInterval(() => { syncMessages(chatId); }, 5 * 60_000);
     return () => { supabase.removeChannel(ch); supabase.removeChannel(events); clearInterval(t); };
   }, [chat?.id, mergeMessage, syncMessages]);
 

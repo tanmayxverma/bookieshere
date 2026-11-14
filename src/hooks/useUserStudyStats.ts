@@ -28,6 +28,10 @@ export function useUserStudyStats(): UserStudyStats {
   const [streak, setStreak] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // The resolved YPT user id, kept in state so the realtime channel below
+  // can be filtered to this user's rows only.
+  const [statsUserId, setStatsUserId] = useState<string | null>(null);
+
   const fetchStats = useCallback(async () => {
     try {
       let yptUserId: string | null = null;
@@ -68,6 +72,7 @@ export function useUserStudyStats(): UserStudyStats {
         setLoading(false);
         return;
       }
+      setStatsUserId(yptUserId);
 
       // 2. Fetch completed sessions
       const { data: sessions, error } = await (supabase as any)
@@ -127,11 +132,21 @@ export function useUserStudyStats(): UserStudyStats {
     const onSessionEnd = () => fetchStats();
     window.addEventListener('study-session-ended', onSessionEnd);
 
+    return () => {
+      window.removeEventListener('study-session-ended', onSessionEnd);
+    };
+  }, [fetchStats]);
+
+  // Realtime, filtered to this user's own sessions. The old unfiltered
+  // channel refetched the full history on ANY user's session change —
+  // including every 30s heartbeat update from anyone studying.
+  useEffect(() => {
+    if (!statsUserId) return;
     const channel = supabase
-      .channel('realtime:study_stats')
+      .channel(`realtime:study_stats:${statsUserId}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'study_sessions' },
+        { event: '*', schema: 'public', table: 'study_sessions', filter: `ypt_user_id=eq.${statsUserId}` },
         () => {
           fetchStats();
         }
@@ -139,10 +154,9 @@ export function useUserStudyStats(): UserStudyStats {
       .subscribe();
 
     return () => {
-      window.removeEventListener('study-session-ended', onSessionEnd);
       supabase.removeChannel(channel);
     };
-  }, [fetchStats]);
+  }, [statsUserId, fetchStats]);
 
   return {
     todaySeconds,

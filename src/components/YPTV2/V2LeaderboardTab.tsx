@@ -27,8 +27,32 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
   const [period, setPeriod] = useState<'today' | 'weekly'>('today');
 
   const fetchLeaderboard = async () => {
+    // Preferred path: server-side aggregation via get_leaderboard_totals
+    // (one small row per ranked user). Falls back to client-side
+    // aggregation of the week's raw sessions until the function exists.
     try {
-      await (supabase as any).rpc('cleanup_stale_sessions');
+      const { data: rpcRows, error: rpcError } = await (supabase as any)
+        .rpc('get_leaderboard_totals', { p_limit: 100, p_viewer: currentUserId || null });
+      if (!rpcError && Array.isArray(rpcRows)) {
+        const toEntry = (r: any, secs: number): LeaderboardEntry => ({
+          userId: r.ypt_user_id,
+          name: r.name || 'Aspirant',
+          jeeYear: r.jee_focus_year || 'JEE',
+          totalSeconds: secs,
+        });
+        setTodayBoard(
+          rpcRows.filter((r: any) => (r.today_seconds || 0) > 0)
+            .map((r: any) => toEntry(r, r.today_seconds || 0))
+            .sort((a: LeaderboardEntry, b: LeaderboardEntry) => b.totalSeconds - a.totalSeconds)
+        );
+        setWeekBoard(
+          rpcRows.filter((r: any) => (r.week_seconds || 0) > 0)
+            .map((r: any) => toEntry(r, r.week_seconds || 0))
+            .sort((a: LeaderboardEntry, b: LeaderboardEntry) => b.totalSeconds - a.totalSeconds)
+        );
+        setLoading(false);
+        return;
+      }
     } catch {}
     const todayStartUTC = getISTTodayStartUTC();
     const weekStartDate = getISTDate();
@@ -74,8 +98,11 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
   };
 
   useEffect(() => {
+    // Finalise stale sessions once on open (was: on every refresh, per viewer)
+    (async () => { try { await (supabase as any).rpc('cleanup_stale_sessions'); } catch {} })();
     fetchLeaderboard();
-    const interval = setInterval(fetchLeaderboard, 30_000);
+    // Refresh every 3 minutes (was 30s)
+    const interval = setInterval(fetchLeaderboard, 180_000);
     return () => clearInterval(interval);
   }, []);
 
@@ -113,7 +140,7 @@ export function V2LeaderboardTab({ currentUserId, liveElapsed = 0 }: Props) {
               All-India Aspirants Leaderboard
             </h2>
             <p className="font-mono text-xs text-on-surface-variant mt-0.5">
-              Live grind rankings across India · Synchronized every 30 seconds
+              Live grind rankings across India · Synchronized every 3 minutes
             </p>
           </div>
 

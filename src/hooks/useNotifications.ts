@@ -50,7 +50,7 @@ export function useNotifications() {
       .or(`expires_at.is.null,expires_at.gt.${nowIso}`)
       .order('is_pinned', { ascending: false })
       .order('publish_at', { ascending: false })
-      .limit(100);
+      .limit(30);
     const list = (notifs as Notification[]) ?? [];
     const validNotifs = list.filter((n) => {
       if (!n || !n.is_active) return false;
@@ -89,12 +89,14 @@ export function useNotifications() {
 
   useEffect(() => { load(); }, [load]);
 
-  // Realtime
+  // Realtime — notifications table only. The notification_reads subscription
+  // is deliberately gone: it was unfiltered, so ANY user marking a
+  // notification read made EVERY connected client refetch the whole list.
+  // Read state is local-first (localStorage + the merge in load()).
   useEffect(() => {
     const chName = `notifications-feed-${Math.random().toString(36).substring(2, 9)}`;
     const ch = supabase.channel(chName)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => load())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'notification_reads' }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [load]);

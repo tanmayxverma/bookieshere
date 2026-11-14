@@ -40,7 +40,17 @@ const Onboarding = lazy(() => import("./pages/Onboarding"));
 const Profile = lazy(() => import("./pages/Profile"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Catalog-style data (materials etc.) barely changes minute to minute.
+      // Without a staleTime every mount and window refocus refetched whole
+      // tables from Supabase — a major egress driver at scale.
+      staleTime: 5 * 60_000,
+      gcTime: 30 * 60_000,
+    },
+  },
+});
 
 const OPEN_PATHS = new Set([
   "/welcome",

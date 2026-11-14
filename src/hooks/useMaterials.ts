@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Material, ExamType, SubjectType, ResourceType } from "@/types/materials";
 import { DEFAULT_MATERIALS } from "@/data/materialsData";
-import { useEffect } from "react";
 
 // Priority materials that should always appear first (ordered by rank)
 const PRIORITY_MATERIALS = [
@@ -32,21 +31,9 @@ function getPriorityRank(materialName?: string | null): number {
 }
 
 export function useMaterials() {
-  const qc = useQueryClient();
-  useEffect(() => {
-    const channelId = `materials-live-${Math.random().toString(36).substring(2, 9)}`;
-    const ch = supabase
-      .channel(channelId)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'materials' }, () => {
-        qc.invalidateQueries({ queryKey: ['materials'] });
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(ch);
-    };
-  }, [qc]);
-
+  // No realtime channel here on purpose: the catalog changes rarely, and a
+  // channel per visitor plus a full-table refetch on every admin edit was
+  // pure egress. The global 5-minute staleTime keeps it fresh enough.
   return useQuery({
     queryKey: ["materials"],
     queryFn: async (): Promise<Material[]> => {

@@ -23,8 +23,29 @@ export function YPTLeaderboard({ currentUserId, liveElapsed = 0 }: Props) {
   const [loading, setLoading] = useState(true);
 
   const fetchLeaderboard = async () => {
-    // Clean stale sessions first
-    await (supabase as any).rpc('cleanup_stale_sessions');
+    // Preferred path: the server aggregates today's totals and returns one
+    // small row per ranked user (get_leaderboard_totals, see the egress SQL
+    // pack). Until that function exists, fall back to aggregating raw
+    // sessions on the client.
+    try {
+      const { data: rpcRows, error: rpcError } = await (supabase as any)
+        .rpc('get_leaderboard_totals', { p_limit: 100, p_viewer: currentUserId || null });
+      if (!rpcError && Array.isArray(rpcRows)) {
+        setLeaderboard(
+          rpcRows
+            .filter((r: any) => (r.today_seconds || 0) > 0)
+            .map((r: any) => ({
+              userId: r.ypt_user_id,
+              name: r.name || 'Unknown',
+              jeeYear: r.jee_focus_year || '',
+              totalSeconds: r.today_seconds || 0,
+            }))
+            .sort((a: LeaderboardEntry, b: LeaderboardEntry) => b.totalSeconds - a.totalSeconds)
+        );
+        setLoading(false);
+        return;
+      }
+    } catch {}
 
     const todayStartUTC = getISTTodayStartUTC();
 
@@ -56,9 +77,12 @@ export function YPTLeaderboard({ currentUserId, liveElapsed = 0 }: Props) {
   };
 
   useEffect(() => {
+    // Finalise stale sessions once on open — previously every viewer ran
+    // this on every 30s refresh.
+    (async () => { try { await (supabase as any).rpc('cleanup_stale_sessions'); } catch {} })();
     fetchLeaderboard();
-    // Auto-refresh every 30s
-    const interval = setInterval(fetchLeaderboard, 30_000);
+    // Auto-refresh every 3 minutes (was 30s — 6x fewer full fetches)
+    const interval = setInterval(fetchLeaderboard, 180_000);
     return () => clearInterval(interval);
   }, []);
 
