@@ -85,18 +85,42 @@ export function useYPTPresence(userId?: string, userName?: string, jeeYear?: str
 
     fetchActive();
 
+    // Coalesce refetches to at most one per 30s. This channel hears EVERY
+    // study_sessions change — including every timer heartbeat update from
+    // every studying user — and fetchActive only reads subject + user, which
+    // heartbeats never change. Refetching on each event multiplied into
+    // thousands of needless requests (and server log lines) per hour.
+    // Starts/stops still appear within 30s, which is fine for this list.
+    let lastFetchAt = Date.now();
+    let trailingTimer: ReturnType<typeof setTimeout> | null = null;
+    const fetchActiveCoalesced = () => {
+      if (document.visibilityState === 'hidden') return;
+      const wait = 30_000 - (Date.now() - lastFetchAt);
+      if (wait <= 0) {
+        lastFetchAt = Date.now();
+        fetchActive();
+      } else if (!trailingTimer) {
+        trailingTimer = setTimeout(() => {
+          trailingTimer = null;
+          lastFetchAt = Date.now();
+          fetchActive();
+        }, wait);
+      }
+    };
+
     const sessionsChannelName = `ypt_sessions_${Math.random().toString(36).substring(2, 9)}`;
     const sessionsChannel = supabase
       .channel(sessionsChannelName)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'study_sessions' },
-        () => { fetchActive(); }
+        () => { fetchActiveCoalesced(); }
       )
       .subscribe();
 
     return () => {
       if (untrackTimeout) clearTimeout(untrackTimeout);
+      if (trailingTimer) clearTimeout(trailingTimer);
       document.removeEventListener('visibilitychange', handleVisibility);
       supabase.removeChannel(presenceChannel);
       supabase.removeChannel(sessionsChannel);

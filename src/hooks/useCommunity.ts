@@ -181,12 +181,28 @@ export function useCommunity(sort: Sort = 'recent') {
 
   useEffect(() => { setLoading(true); load(); }, [load]);
 
+  // Keep the loaded post ids in a ref so realtime handlers can ignore
+  // activity on posts that aren't on screen.
+  const postsRef = useRef<Post[]>([]);
+  useEffect(() => { postsRef.current = posts; }, [posts]);
+
   useEffect(() => {
+    // Reactions/comments on posts outside the loaded window can't change
+    // anything visible, so they no longer trigger a refetch — previously
+    // every reaction or comment anywhere on the site refetched the feed
+    // for every connected reader. DELETE payloads carry no post_id, so
+    // those still refetch (rare, and correctness first).
+    const affectsLoadedPost = (payload: any) => {
+      if (payload?.eventType === 'DELETE') return true;
+      const postId = payload?.new?.post_id;
+      if (!postId) return true;
+      return postsRef.current.some(p => p.id === postId);
+    };
     const chName = `community-feed-${Math.random().toString(36).substring(2, 9)}`;
     const ch = supabase.channel(chName)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'community_posts' }, () => load())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_reactions' }, () => load())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_comments' }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_reactions' }, (payload: any) => { if (affectsLoadedPost(payload)) load(); })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_comments' }, (payload: any) => { if (affectsLoadedPost(payload)) load(); })
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [load]);
