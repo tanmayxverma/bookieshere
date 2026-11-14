@@ -70,7 +70,7 @@ export function MaterialCard({ material }: MaterialCardProps) {
         
         <div className="flex items-center gap-2 mb-1">
           <span className="text-[20px]">{subjectEmoji[material.subject] || "📚"}</span>
-          <h2 className={cn("font-sans text-[17px] md:text-[18px] font-bold text-on-surface tracking-tight leading-snug line-clamp-1 transition-colors", subjectHoverColor[material.subject])}>
+          <h2 className={cn("font-sans text-base sm:text-[17px] md:text-[18px] font-bold text-on-surface tracking-tight leading-snug line-clamp-2 sm:line-clamp-1 transition-colors", subjectHoverColor[material.subject])}>
             {material.name}
           </h2>
         </div>

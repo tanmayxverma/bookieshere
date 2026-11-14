@@ -17,6 +17,15 @@ const Materials = () => {
   const [selectedSubjects, setSelectedSubjects] = useState<SubjectType[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<ResourceType[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [narrowSearch, setNarrowSearch] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const update = () => setNarrowSearch(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     const subjectParam = searchParams.get('subject');
@@ -112,7 +121,7 @@ const Materials = () => {
                 <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed mt-space-xs">
                   Modules, books, PYQs, test series and reference works — every single resource hand-picked, zero filler, organized for serious aspirants.
                 </p>
-                <div className="flex flex-wrap items-center gap-space-sm mt-space-md">
+                <div className="hidden sm:flex flex-wrap items-center gap-space-sm mt-space-md">
                   <div className="flex flex-col items-start gap-1.5 sm:inline-flex sm:flex-row sm:items-center sm:gap-space-xs px-space-md py-2.5 sm:py-1.5 rounded-2xl sm:rounded-full bg-surface-container-low text-on-surface-variant font-label-code-sm text-label-code-sm">
                     <span className="inline-flex items-center gap-space-xs">
                       <span className="material-symbols-outlined text-[16px] text-tertiary">verified_user</span>
@@ -130,8 +139,10 @@ const Materials = () => {
                 </div>
               </div>
 
-              {/* Right Floating Snapshot Card */}
-              <div className="lg:col-span-4 w-full">
+              {/* Right Floating Snapshot Card (desktop only — on phones it
+                  pushed the catalog far down; the same totals appear in the
+                  "All (…)" chip and the showing label) */}
+              <div className="hidden lg:block lg:col-span-4 w-full">
                 <div className="relative bg-surface-container-lowest rounded-xl p-space-md shadow-[0_10px_25px_-5px_rgba(19,27,46,0.06)] flex flex-col gap-space-md brutal-border">
                   <div className="flex items-center justify-between">
                     <span className="font-label-code-sm text-label-code-sm tracking-wider text-on-surface-variant uppercase flex items-center gap-1.5">
@@ -188,12 +199,12 @@ const Materials = () => {
                 <input 
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-12 pr-28 py-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all duration-150 shadow-inner brutal-border" 
-                  placeholder="Search modules, PYQs, Allen sheets, Cengage, MS Chouhan, Black Book..." 
+                  className="w-full pl-12 pr-14 sm:pr-28 py-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all duration-150 shadow-inner brutal-border" 
+                  placeholder={narrowSearch ? "Search modules, PYQs, books…" : "Search modules, PYQs, Allen sheets, Cengage, MS Chouhan, Black Book..."} 
                   type="text" 
                 />
                 <div className="absolute right-space-sm flex items-center gap-1.5">
-                  <kbd className="px-2 py-1 rounded bg-surface-container-highest text-on-surface-variant font-label-code-sm text-label-code-sm font-bold tracking-wider shadow-xs">
+                  <kbd className="hidden sm:block px-2 py-1 rounded bg-surface-container-highest text-on-surface-variant font-label-code-sm text-label-code-sm font-bold tracking-wider shadow-xs">
                     ⌘K
                   </kbd>
                   <button className="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center shadow-[0_2px_0_0_#00174b] active:translate-y-0.5 active:shadow-none transition-all" type="button">
@@ -275,11 +286,16 @@ const Materials = () => {
               <main className="lg:col-span-8 xl:col-span-9 flex flex-col gap-space-md">
                 <div id="catalog-top" className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs scroll-mt-28">
                   <div className="flex items-center gap-space-xs">
-                    <span className="font-label-code-sm text-label-code-sm text-on-surface-variant uppercase tracking-wider">SHOWING:</span>
-                    <span className="font-label-ui text-label-ui text-primary font-bold uppercase">
-                      {search ? `"${search}"` : "ALLEN + STANDARD REFERENCE CLASSICS"}
+                    <span className="sm:hidden font-label-ui text-label-ui text-primary font-bold uppercase">
+                      Showing {filteredMaterials.length} resources{search ? ` for "${search}"` : ""}
                     </span>
-                    <span className="text-on-surface-variant font-label-code-sm text-label-code-sm uppercase">({filteredMaterials.length} RESOURCES)</span>
+                    <div className="hidden sm:flex items-center gap-space-xs">
+                      <span className="font-label-code-sm text-label-code-sm text-on-surface-variant uppercase tracking-wider">SHOWING:</span>
+                      <span className="font-label-ui text-label-ui text-primary font-bold uppercase">
+                        {search ? `"${search}"` : "ALLEN + STANDARD REFERENCE CLASSICS"}
+                      </span>
+                      <span className="text-on-surface-variant font-label-code-sm text-label-code-sm uppercase">({filteredMaterials.length} RESOURCES)</span>
+                    </div>
                   </div>
                 </div>
 

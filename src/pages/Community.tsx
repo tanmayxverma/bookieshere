@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -206,7 +206,7 @@ export function detectCategory(title?: string | null, categoryId?: string | null
 }
 
 export default function Community() {
-  const { posts, loading, createPost, toggleReaction, deletePost } = useCommunity();
+  const { posts, loading, loadingMore, hasMore, loadMore, createPost, toggleReaction, deletePost } = useCommunity();
   const { profile, user, deviceId } = useProfile();
   const { toast } = useToast();
 
@@ -301,6 +301,26 @@ export default function Community() {
   const activeCategoryDef = useMemo(() => {
     return CATEGORIES.find(c => c.id === activeCategory) || CATEGORIES[0];
   }, [activeCategory]);
+
+  // Infinite scroll: fetch the next feed page shortly before the sentinel
+  // scrolls into view (the button inside it is the manual fallback). A
+  // callback ref + a ref to the latest loadMore keep exactly one observer
+  // alive, so it can only fire on real intersection changes.
+  const loadMoreRef = useRef(loadMore);
+  loadMoreRef.current = loadMore;
+  const loadMoreObserverRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreSentinelRef = useCallback((node: HTMLDivElement | null) => {
+    if (loadMoreObserverRef.current) {
+      loadMoreObserverRef.current.disconnect();
+      loadMoreObserverRef.current = null;
+    }
+    if (!node) return;
+    loadMoreObserverRef.current = new IntersectionObserver(
+      entries => { if (entries[0].isIntersecting) loadMoreRef.current(); },
+      { rootMargin: "600px" }
+    );
+    loadMoreObserverRef.current.observe(node);
+  }, []);
 
   const openNewPostWithCat = (catId: CommunityCategory) => {
     if (!user || profile?.account_type === "guest") {
@@ -514,6 +534,22 @@ export default function Community() {
                   ))}
                 </div>
               )}
+
+              {/* Load more: sentinel for infinite scroll + manual fallback */}
+              {!loading && hasMore && (
+                <div ref={loadMoreSentinelRef} className="flex justify-center pt-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={loadMore}
+                    disabled={loadingMore}
+                    className="rounded-full text-xs gap-2"
+                  >
+                    {loadingMore && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                    {loadingMore ? "Loading more posts…" : "Load more posts"}
+                  </Button>
+                </div>
+              )}
             </main>
 
           </div>
@@ -588,7 +624,9 @@ function PostCard({
   onRequireUpgrade,
 }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
-  const { comments, loading: commentsLoading, addComment, deleteComment } = useComments(post.id);
+  // Comments (and their realtime channel) load only when the reader opens
+  // them — mounting a query per card was a big hidden data/render cost.
+  const { comments, loading: commentsLoading, addComment, deleteComment } = useComments(showComments ? post.id : null);
   const { toast } = useToast();
 
   const category = detectCategory(post.title || post.subject, post.category_id);
@@ -695,7 +733,7 @@ function PostCard({
           <div className="pt-2">
             <div
               onClick={() => onImageClick(post.image_url!)}
-              className="relative group rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 max-h-96 bg-slate-950 cursor-pointer"
+              className="relative group rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 max-h-64 sm:max-h-96 bg-slate-950 cursor-pointer"
             >
               <img
                 src={post.image_url}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProfile } from './useProfile';
 
@@ -46,19 +46,24 @@ export interface CommunityComment {
 
 type Sort = 'recent' | 'trending';
 
+// The feed loads one page at a time instead of the newest 200 posts at once:
+// far less data per visit (Supabase egress) and far fewer cards to render.
+export const FEED_PAGE_SIZE = 25;
+
 export function useCommunity(sort: Sort = 'recent') {
   const { profile, isAuthenticated, user, deviceId } = useProfile();
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const loadedCountRef = useRef(0);
+  const refreshInFlightRef = useRef(false);
+  const refreshQueuedRef = useRef(false);
+  const loadMoreInFlightRef = useRef(false);
 
   const myId = user?.id || profile?.user_id || profile?.id || deviceId || null;
 
-  const load = useCallback(async () => {
-    const { data: rows } = await (supabase as any)
-      .from('community_posts')
-      .select('*, author:profiles!community_posts_profile_id_fkey(display_name, avatar_url, target_category)')
-      .order('created_at', { ascending: false })
-      .limit(200);
+  const shapeRows = useCallback(async (rows: any[]): Promise<CommunityPost[]> => {
     const ids = (rows ?? []).map((r: any) => r.id);
     let reactions: any[] = [];
     let comments: any[] = [];
@@ -122,9 +127,57 @@ export function useCommunity(sort: Sort = 'recent') {
         return score(b) - score(a);
       });
     }
-    setPosts(shaped);
-    setLoading(false);
+    return shaped;
   }, [myId, profile?.id, profile?.user_id, sort]);
+
+  const fetchRange = useCallback(async (from: number, count: number) => {
+    const { data: rows } = await (supabase as any)
+      .from('community_posts')
+      .select('*, author:profiles!community_posts_profile_id_fkey(display_name, avatar_url, target_category)')
+      .order('created_at', { ascending: false })
+      .range(from, from + count - 1);
+    const list = rows ?? [];
+    return { list, shaped: await shapeRows(list) };
+  }, [shapeRows]);
+
+  // Refresh only the window the user has already loaded (first page at
+  // minimum), and coalesce bursts of realtime events into one refetch.
+  const load = useCallback(async () => {
+    if (refreshInFlightRef.current) { refreshQueuedRef.current = true; return; }
+    refreshInFlightRef.current = true;
+    try {
+      const count = Math.max(FEED_PAGE_SIZE, loadedCountRef.current);
+      const { list, shaped } = await fetchRange(0, count);
+      loadedCountRef.current = list.length;
+      setHasMore(list.length >= count);
+      setPosts(shaped);
+    } finally {
+      refreshInFlightRef.current = false;
+      setLoading(false);
+      if (refreshQueuedRef.current) { refreshQueuedRef.current = false; load(); }
+    }
+  }, [fetchRange]);
+
+  const loadMore = useCallback(async () => {
+    if (loadMoreInFlightRef.current || loadingMore || !hasMore) return;
+    loadMoreInFlightRef.current = true;
+    setLoadingMore(true);
+    try {
+      const from = loadedCountRef.current;
+      const { list, shaped } = await fetchRange(from, FEED_PAGE_SIZE);
+      loadedCountRef.current = from + list.length;
+      setHasMore(list.length >= FEED_PAGE_SIZE);
+      if (shaped.length) {
+        setPosts(prev => {
+          const seen = new Set(prev.map(p => p.id));
+          return [...prev, ...shaped.filter(p => !seen.has(p.id))];
+        });
+      }
+    } finally {
+      loadMoreInFlightRef.current = false;
+      setLoadingMore(false);
+    }
+  }, [fetchRange, hasMore, loadingMore]);
 
   useEffect(() => { setLoading(true); load(); }, [load]);
 
@@ -245,6 +298,9 @@ export function useCommunity(sort: Sort = 'recent') {
   return {
     posts,
     loading,
+    loadingMore,
+    hasMore,
+    loadMore,
     createPost,
     deletePost,
     setReaction,
