@@ -34,22 +34,24 @@ export function AdminLoginModal({ open, onOpenChange }: { open: boolean; onOpenC
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2"><Lock className="h-4 w-4" /> Admin access</DialogTitle>
-          <DialogDescription>Both passwords are required.</DialogDescription>
+          <DialogDescription>Enter the admin username and password.</DialogDescription>
         </DialogHeader>
-        <div className="space-y-3">
-          <div className="space-y-1.5">
-            <Label>Password 1</Label>
-            <Input type="password" value={p1} onChange={(e) => setP1(e.target.value)} autoComplete="off" />
+        <form onSubmit={(e) => { e.preventDefault(); submit(); }}>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="admin-modal-username">Username</Label>
+              <Input id="admin-modal-username" name="username" type="text" value={p1} onChange={(e) => setP1(e.target.value)} autoComplete="username" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="admin-modal-password">Password</Label>
+              <Input id="admin-modal-password" name="password" type="password" value={p2} onChange={(e) => setP2(e.target.value)} autoComplete="current-password" />
+            </div>
           </div>
-          <div className="space-y-1.5">
-            <Label>Password 2</Label>
-            <Input type="password" value={p2} onChange={(e) => setP2(e.target.value)} autoComplete="off" onKeyDown={(e) => e.key === 'Enter' && submit()} />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={submit} disabled={busy} className="gap-1.5">{busy && <Loader2 className="h-4 w-4 animate-spin" />} Sign in</Button>
-        </DialogFooter>
+          <DialogFooter className="mt-4">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button type="submit" disabled={busy} className="gap-1.5">{busy && <Loader2 className="h-4 w-4 animate-spin" />} Sign in</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

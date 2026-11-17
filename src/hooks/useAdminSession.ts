@@ -51,9 +51,11 @@ export function useAdminSession() {
     return () => clearInterval(id);
   }, [valid, validate]);
 
-  const login = useCallback(async (password1: string, password2: string) => {
+  const login = useCallback(async (username: string, password: string) => {
     const deviceId = localStorage.getItem('ypt_device_id') ?? 'unknown';
-    const res = await invoke<{ token?: string; error?: string }>('admin-login', { password1, password2, device_id: deviceId });
+    // The admin-login edge function still expects the legacy password1/password2
+    // keys: password1 is the admin username, password2 is the admin password.
+    const res = await invoke<{ token?: string; error?: string }>('admin-login', { password1: username, password2: password, device_id: deviceId });
     if (!res.token) throw new Error(res.error || 'login failed');
     setToken(res.token); setTok(res.token); setValid(true); setValidating(false);
     return res.token;

@@ -30,7 +30,7 @@ export function AdminGuard({ children }: { children: ReactNode }) {
     const handleLogin = async (e?: React.FormEvent) => {
       if (e) e.preventDefault();
       if (!p1.trim() || !p2.trim()) {
-        setErrorMsg('Both Password 1 and Password 2 are required.');
+        setErrorMsg('Both username and password are required.');
         return;
       }
       setBusy(true);
@@ -79,7 +79,7 @@ export function AdminGuard({ children }: { children: ReactNode }) {
               Bookie Admin Portal
             </h1>
             <p className="text-xs text-muted-foreground mt-1.5 max-w-xs mx-auto">
-              Dual-layer authentication required. Enter both admin passcodes to unlock the cockpit.
+              Enter the admin username and password to unlock the cockpit.
             </p>
           </div>
 
@@ -92,26 +92,30 @@ export function AdminGuard({ children }: { children: ReactNode }) {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-foreground/80">Primary Passcode (Password 1)</Label>
+              <Label htmlFor="admin-username" className="text-xs font-semibold text-foreground/80">Username</Label>
               <Input
-                type="password"
-                placeholder="Enter password 1"
+                id="admin-username"
+                name="username"
+                type="text"
+                placeholder="Enter username"
                 value={p1}
                 onChange={(e) => setP1(e.target.value)}
-                autoComplete="off"
+                autoComplete="username"
                 disabled={busy}
-                className="h-11 rounded-xl bg-background/50 border-border/60 focus-visible:ring-primary font-mono text-sm"
+                className="h-11 rounded-xl bg-background/50 border-border/60 focus-visible:ring-primary text-sm"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-foreground/80">Secondary Passcode (Password 2)</Label>
+              <Label htmlFor="admin-password" className="text-xs font-semibold text-foreground/80">Password</Label>
               <Input
+                id="admin-password"
+                name="password"
                 type="password"
-                placeholder="Enter password 2"
+                placeholder="Enter password"
                 value={p2}
                 onChange={(e) => setP2(e.target.value)}
-                autoComplete="off"
+                autoComplete="current-password"
                 disabled={busy}
                 className="h-11 rounded-xl bg-background/50 border-border/60 focus-visible:ring-primary font-mono text-sm"
               />
