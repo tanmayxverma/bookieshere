@@ -147,7 +147,13 @@ export function useUserStudyStats(): UserStudyStats {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'study_sessions', filter: `ypt_user_id=eq.${statsUserId}` },
-        () => {
+        (payload: any) => {
+          // Only COMPLETED sessions affect these stats. Ignore heartbeat
+          // updates to the ACTIVE session — refetching full history on
+          // every heartbeat drove the log-ingestion blowout (Nov 2026).
+          if (payload?.eventType === 'INSERT' && payload?.new?.status !== 'completed') return;
+          if (payload?.eventType === 'UPDATE' && payload?.new?.status !== 'completed') return;
+          if (payload?.eventType === 'UPDATE' && payload?.old?.status === 'completed' && payload?.new?.status === 'completed') return;
           fetchStats();
         }
       )

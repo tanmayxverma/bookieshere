@@ -103,7 +103,15 @@ export function useUserStreak() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'study_sessions', filter: `ypt_user_id=eq.${user.id}` },
-        () => {
+        (payload: any) => {
+          // This hook only reads COMPLETED sessions. Heartbeat updates to
+          // the user's ACTIVE session (every heartbeat, status stays
+          // 'active') must not refetch the full history — with the old
+          // unconditional refetch, every heartbeat multiplied into full
+          // study_sessions GETs and drove the log-ingestion blowout.
+          if (payload?.eventType === 'INSERT' && payload?.new?.status !== 'completed') return;
+          if (payload?.eventType === 'UPDATE' && payload?.new?.status !== 'completed') return;
+          if (payload?.eventType === 'UPDATE' && payload?.old?.status === 'completed' && payload?.new?.status === 'completed') return;
           refreshStreak();
         }
       )

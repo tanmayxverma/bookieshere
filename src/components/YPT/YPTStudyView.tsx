@@ -57,7 +57,10 @@ export function YPTStudyView({ user, timer }: Props) {
       }
     };
     fetchStats();
-  }, [user.id, timer.isActive, timer.elapsedSeconds]);
+    // Deliberately NOT timer.elapsedSeconds: it changes every second, so
+    // including it refetched study_sessions every second while a timer ran.
+    // Live elapsed time is already added below via liveTodaySeconds.
+  }, [user.id, timer.isActive]);
 
   // Add live session time to today's total
   const liveTodaySeconds = todaySeconds + (timer.isActive ? timer.elapsedSeconds : 0);

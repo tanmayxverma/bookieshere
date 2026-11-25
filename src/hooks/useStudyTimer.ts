@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { TIMER_STORAGE_KEY, type TimerState, type TimerMode } from '@/types/ypt';
 
 const THREE_HOURS = 3 * 60 * 60;
-const HEARTBEAT_INTERVAL = 60_000; // 60s — safe since cleanup_stale_sessions now allows 180s of silence (egress SQL pack, Nov 2026)
+const HEARTBEAT_INTERVAL = 120_000; // 120s — safe since cleanup_stale_sessions now allows 180s of silence (egress SQL pack, Nov 2026). Was 60s, halved again for log ingestion (Nov 2026)
 const INACTIVITY_COUNTDOWN = 15; // seconds
 const STALE_CLEANUP_INTERVAL = 5 * 60_000; // 5 min
 /** Wall-clock vs monotonic-clock divergence (ms) treated as impossible */
@@ -143,26 +143,41 @@ export function useStudyTimer(yptUserId: string | undefined) {
     } catch {}
   }, [calcElapsed]);
 
-  // Heartbeat: last_heartbeat is the server's source of truth for real duration
+  // Latest timer state in a ref, so the heartbeat effect below does NOT
+  // have to depend on timerState itself.
+  const timerStateRef = useRef<TimerState | null>(null);
+  useEffect(() => { timerStateRef.current = timerState; }, [timerState]);
+
+  // Heartbeat: last_heartbeat is the server's source of truth for real duration.
+  // This effect must depend ONLY on sessionId + paused, never on the whole
+  // timerState object: the 1s tick replaces timerState every second, so the
+  // old [timerState] dependency tore down and re-ran this effect every
+  // second — and sendHeartbeat() on every run turned the intended 60s
+  // heartbeat into a ~1 PATCH/second loop per studying user. Each PATCH
+  // also fired realtime refetches in the streak/stats hooks, multiplying
+  // into ~57k study_sessions requests/day (log-ingestion blowout, Nov 2026).
+  const heartbeatSessionId = timerState?.sessionId;
+  const heartbeatPaused = !!timerState?.pausedAt;
   useEffect(() => {
     if (heartbeatRef.current) clearInterval(heartbeatRef.current);
+    if (!heartbeatSessionId || heartbeatPaused) return;
 
-    if (timerState && !timerState.pausedAt) {
-      const sendHeartbeat = async () => {
-        await (supabase as any)
-          .from('study_sessions')
-          .update({
-            last_heartbeat: new Date().toISOString(),
-            duration_seconds: calcElapsed(timerState),
-          })
-          .eq('id', timerState.sessionId);
-      };
-      sendHeartbeat();
-      heartbeatRef.current = window.setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
-    }
+    const sendHeartbeat = async () => {
+      const state = timerStateRef.current;
+      if (!state || state.pausedAt || state.sessionId !== heartbeatSessionId) return;
+      await (supabase as any)
+        .from('study_sessions')
+        .update({
+          last_heartbeat: new Date().toISOString(),
+          duration_seconds: calcElapsed(state),
+        })
+        .eq('id', heartbeatSessionId);
+    };
+    sendHeartbeat();
+    heartbeatRef.current = window.setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
 
     return () => { if (heartbeatRef.current) clearInterval(heartbeatRef.current); };
-  }, [timerState, calcElapsed]);
+  }, [heartbeatSessionId, heartbeatPaused, calcElapsed]);
 
   // Re-anchor the monotonic guard on every state transition
   useEffect(() => { resetAnchor(timerState); }, [timerState, resetAnchor]);
